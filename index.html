@@ -1,0 +1,356 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="theme-color" content="#0c161a" />
+    <meta
+      name="description"
+      content="An artificial-life laboratory. Write assembly genomes and watch cells forage, divide, connect, signal, and compete."
+    />
+    <title>Cell Soup — evolving life</title>
+    <link rel="stylesheet" href="./style.css" />
+  </head>
+  <body>
+    <header>
+      <div class="brand">
+        <span class="mark" aria-hidden="true">◉</span>
+        <h1>cell soup<span>evolving life</span></h1>
+      </div>
+      <div class="status">
+        <span id="live-dot"></span><span id="run-state">Starting engine</span>
+      </div>
+      <a
+        href="https://github.com/lcrh/turingsoup"
+        target="_blank"
+        rel="noreferrer"
+        >inspired by turing soup ↗</a
+      >
+    </header>
+    <main>
+      <section class="dish" aria-label="Simulation">
+        <div class="toolbar">
+          <div class="group">
+            <button id="pause" class="primary" disabled>Pause</button
+            ><button id="step" title="Advance one tick while paused" disabled>
+              Step</button
+            ><button id="reset" disabled>Reset dish</button>
+          </div>
+          <label class="speed"
+            >Speed
+            <select id="speed">
+              <option value="0.25">¼×</option>
+              <option value="1" selected>1×</option>
+              <option value="2">2×</option>
+              <option value="4">4×</option>
+              <option value="8">8×</option>
+            </select></label
+          >
+        </div>
+        <div class="viewport">
+          <canvas
+            id="world"
+            aria-label="Living cells in a nutrient field. Use the tools to inspect a cell, add food, or seed a genome."
+            tabindex="0"
+          ></canvas>
+          <div class="metrics">
+            <div><strong id="population">—</strong><span>cells</span></div>
+            <div><strong id="bonds">—</strong><span>bonds</span></div>
+            <div><strong id="energy">—</strong><span>mean energy</span></div>
+            <div><strong id="time">0.0s</strong><span>dish time</span></div>
+          </div>
+          <div class="dish-tools" role="group" aria-label="Canvas tool">
+            <button data-tool="inspect" class="active" aria-pressed="true">
+              ↖ Inspect</button
+            ><button data-tool="food" aria-pressed="false">+ Food</button
+            ><button data-tool="seed" aria-pressed="false">⊕ Seed</button
+            ><button data-tool="pan" aria-pressed="false">↔ Pan</button
+            ><button id="fit" title="Fit the whole dish">Fit</button>
+          </div>
+          <div class="canvas-hint" id="canvas-hint">
+            Click a cell to inspect · scroll to zoom · drag to pan
+          </div>
+          <div id="empty" hidden>
+            The dish is empty. Seed a genome or reset to begin again.
+          </div>
+        </div>
+        <footer class="dish-footer">
+          <span
+            ><i class="legend-cell"></i> cell <i class="legend-food"></i> food
+            <i class="legend-bond"></i> bond</span
+          ><span id="performance">WASM · connecting</span>
+        </footer>
+        <div class="ecology">
+          <div class="ecology-title">
+            <span>Population history</span
+            ><span id="events">0 births · 0 deaths</span>
+          </div>
+          <canvas id="history" aria-label="Population over time"></canvas>
+        </div>
+      </section>
+      <aside>
+        <div class="tabs" role="tablist" aria-label="Laboratory panels">
+          <button
+            role="tab"
+            id="tab-genome"
+            aria-controls="panel-genome"
+            aria-selected="true"
+            data-panel="genome"
+            class="active"
+          >
+            Genome</button
+          ><button
+            role="tab"
+            id="tab-inspector"
+            aria-controls="panel-inspector"
+            aria-selected="false"
+            data-panel="inspector"
+            tabindex="-1"
+          >
+            Inspector</button
+          ><button
+            role="tab"
+            id="tab-evolution"
+            aria-controls="panel-evolution"
+            aria-selected="false"
+            data-panel="evolution"
+            tabindex="-1"
+          >
+            Evolution</button
+          ><button
+            role="tab"
+            id="tab-world"
+            aria-controls="panel-world"
+            aria-selected="false"
+            data-panel="world"
+            tabindex="-1"
+          >
+            World
+          </button>
+        </div>
+        <section
+          id="panel-genome"
+          role="tabpanel"
+          aria-labelledby="tab-genome"
+          class="panel"
+        >
+          <div class="section-heading">
+            <h2>Write a living system</h2>
+            <span class="pill">Cell assembly</span>
+          </div>
+          <label for="preset">Example genome</label
+          ><select id="preset"></select>
+          <p id="preset-description" class="description"></p>
+          <label for="source" class="editor-label"
+            ><span>Genome source</span
+            ><span>8 registers · 256 instructions</span></label
+          ><textarea
+            id="source"
+            spellcheck="false"
+            autocapitalize="off"
+            autocomplete="off"
+            aria-describedby="compile-status"
+          ></textarea>
+          <div id="compile-status" role="status">Ready to compile</div>
+          <div class="editor-actions">
+            <button id="seed" class="primary" disabled>Seed 32 cells</button
+            ><button id="download">Export genome</button
+            ><button id="import">Import</button
+            ><input id="file" type="file" accept=".cell,.txt" hidden />
+          </div>
+          <p class="small">
+            Seeding adds this genome to the dish. Editing leaves existing cells
+            running their inherited code.
+          </p>
+          <details id="reference">
+            <summary>Instruction reference <span>35 operations</span></summary>
+            <div class="reference-intro">
+              Values can be numbers or r0–r7. Labels end in “:”. Comments start
+              with “;”. Each tick executes at most the configured budget;
+              execution resumes next tick.
+            </div>
+            <div id="instructions"></div>
+          </details>
+        </section>
+        <section
+          id="panel-inspector"
+          role="tabpanel"
+          aria-labelledby="tab-inspector"
+          class="panel"
+          hidden
+        >
+          <div class="section-heading">
+            <h2 id="cell-title">Select a cell</h2>
+            <span class="pill">Live state</span>
+          </div>
+          <p class="description" id="inspect-hint">
+            Click a cell in the dish to see its energy, registers, ancestry, and
+            executing instruction.
+          </p>
+          <div id="cell-detail" hidden>
+            <dl id="cell-stats"></dl>
+            <h3>Registers</h3>
+            <div id="registers"></div>
+            <h3>Inherited program</h3>
+            <p class="small">
+              The next instruction is highlighted. This includes any inherited
+              code mutations.
+            </p>
+            <pre id="cell-code"></pre>
+            <button id="copy-genome">Load into editor</button>
+          </div>
+        </section>
+        <section
+          id="panel-evolution"
+          role="tabpanel"
+          aria-labelledby="tab-evolution"
+          class="panel"
+          hidden
+        >
+          <div class="section-heading">
+            <h2>Evolution in progress</h2>
+            <span class="pill" id="evo-mode">Mutation on</span>
+          </div>
+          <p class="description">
+            Every daughter inherits code, sometimes changed. Food, physics,
+            predators, and the cost of living decide which variants leave
+            descendants.
+          </p>
+          <div class="evo-metrics">
+            <div>
+              <strong id="evo-variants">3</strong><span>living variants</span>
+            </div>
+            <div>
+              <strong id="evo-mutations">0</strong><span>mutated births</span>
+            </div>
+            <div>
+              <strong id="evo-generation">0</strong
+              ><span>deepest generation</span>
+            </div>
+            <div>
+              <strong id="evo-depth">0</strong><span>inherited mutations</span>
+            </div>
+          </div>
+          <h3>Mutation history</h3>
+          <div id="mutation-mix" class="small">
+            Waiting for the first mutated birth.
+          </div>
+          <h3>
+            Thriving variants <span class="small">by living population</span>
+          </h3>
+          <p class="small">
+            Choose a variant to inspect a living representative and export its
+            evolved code. Births count direct offspring produced by that
+            variant, including mutated daughters.
+          </p>
+          <div id="lineages"></div>
+          <div class="world-note">
+            <h3>An open-ended experiment</h3>
+            <p>
+              There is no assigned score or scripted upgrade. Sterile and
+              inefficient mutants can die out; successful variants propagate
+              through division. The environment supplies food continuously.
+            </p>
+            <p>
+              Extinction is possible. Nothing secretly resets the population or
+              replaces extinct organisms. Lower mutation or increase food if you
+              want a more forgiving ecology.
+            </p>
+          </div>
+        </section>
+        <section
+          id="panel-world"
+          role="tabpanel"
+          aria-labelledby="tab-world"
+          class="panel"
+          hidden
+        >
+          <div class="section-heading"><h2>Conditions in the dish</h2></div>
+          <label for="scenario">On reset</label
+          ><select id="scenario">
+            <option value="ecosystem">
+              Ecosystem: colony + grazers + predators
+            </option>
+            <option value="editor">Current editor genome only</option></select
+          ><label for="random-seed">Random seed</label
+          ><input
+            id="random-seed"
+            type="number"
+            min="1"
+            max="2147483647"
+            value="42"
+          />
+          <p class="small">
+            The same seed, programs, settings, and sequence of interactions
+            reproduce the same simulation.
+          </p>
+          <label for="budget"
+            >Instructions per cell per tick
+            <output id="budget-value">24</output></label
+          ><input id="budget" type="range" min="1" max="128" value="24" /><label
+            for="cap"
+            >Population limit</label
+          ><select id="cap">
+            <option value="2048">2,048</option>
+            <option value="8192" selected>8,192</option>
+            <option value="16384">16,384</option></select
+          ><label for="rain"
+            >Food arrival <output id="rain-value">1×</output></label
+          ><input
+            id="rain"
+            type="range"
+            min="0"
+            max="5"
+            step="0.1"
+            value="1"
+          /><label for="mutation"
+            >Mutation per birth <output id="mutation-value">5%</output></label
+          ><input
+            id="mutation"
+            type="range"
+            min="0"
+            max="30"
+            step="0.1"
+            value="5"
+          />
+          <p class="small">
+            Daughters inherit mutations: 60% operand changes, 20% instruction
+            replacements, 10% insertions, and 10% deletions. Selection comes
+            from survival and reproduction in the dish.
+          </p>
+          <label for="color-mode">Cell color</label
+          ><select id="color-mode">
+            <option value="0">Genome hue</option>
+            <option value="1">Energy: red → green</option>
+            <option value="2">Ancestry</option></select
+          ><label class="check"
+            ><input type="checkbox" id="show-food" checked /> Show food
+            field</label
+          ><label class="check"
+            ><input type="checkbox" id="show-bonds" checked /> Show spring
+            bonds</label
+          >
+          <div class="world-note">
+            <h3>A finite-energy ecology</h3>
+            <p>
+              Food arrives in blobs and diffuses. Cells absorb it automatically.
+              Bonds share energy; every instruction has a small metabolic cost.
+            </p>
+            <p>
+              Division costs 12 energy and shares the remainder. Shields reduce
+              theft by up to 90%. Death returns some embodied energy to the
+              soup.
+            </p>
+            <p>
+              The dish wraps at its edges. Physics runs at 60 ticks per
+              simulated second.
+            </p>
+          </div>
+        </section>
+      </aside>
+    </main>
+    <div id="notice" role="status" aria-live="polite" hidden></div>
+    <noscript>This simulation requires JavaScript and WebAssembly.</noscript>
+    <script type="module" src="./app.js"></script>
+  </body>
+</html>
