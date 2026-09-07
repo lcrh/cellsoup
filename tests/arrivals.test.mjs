@@ -1,7 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { engine, spawn, snapshot, detail, program } from "./helpers.mjs";
-import { assemble, disassemble } from "../web/language.js";
+import { assemble, disassemble, OPS } from "../web/language.js";
 function code(e, g) {
   return new Uint8Array(
     e.memory.buffer,
@@ -35,7 +35,7 @@ test("random founders are independent, valid, diverse programs with reproducible
       ops.add(new DataView(bytes.buffer).getInt32(i, true));
   }
   assert.equal(unique.size, 512);
-  assert.equal(ops.size, 35);
+  assert.equal(ops.size, OPS.length);
   assert.ok(lengths.size > 40);
   assert.equal(snapshot(a).stats[17], 512);
   assert.equal(snapshot(a).stats[2], 0);
@@ -147,4 +147,25 @@ test("archive and random-genome storage stay bounded without blocking inherited 
   full.step(1);
   assert.ok(snapshot(full).stats[2] > 0);
   assert.equal(snapshot(full).stats[7], 2048);
+});
+
+test("steady arrivals continue above the low-population threshold and combine with replenishment", async () => {
+  const e = await engine();
+  spawn(e, "wait 1000", 800, 500, 10, 100);
+  e.configure_arrivals(5, 0, 0, 8);
+  e.step(60);
+  assert.equal(snapshot(e).stats[17], 8);
+  e.step(60);
+  assert.equal(snapshot(e).stats[17], 16);
+  e.reset(42);
+  e.configure_arrivals(100, 0, 0, 8);
+  e.step(60);
+  assert.equal(snapshot(e).stats[0], 72); // 8 steady + 64 low-population arrivals.
+  e.configure(24, 72, 0, 0);
+  e.step(60);
+  assert.equal(snapshot(e).stats[17], 72); // Hard ceiling still applies.
+  e.reset(42);
+  e.configure_arrivals(0, 0, 0, 8);
+  e.step(60);
+  assert.equal(snapshot(e).stats[17], 8); // Trickle does not require a floor.
 });
