@@ -506,6 +506,14 @@ static int split(int i, int connected, int dst) {
   }
   return j;
 }
+// Voluntary spending must leave a positive reserve, including after float32 rounding.
+static int affordable(Cell *c, float amount) { return c->energy - amount >= .001f; }
+static int spend(Cell *c, float amount) {
+  if (!affordable(c, amount))
+    return 0;
+  c->energy -= amount;
+  return 1;
+}
 // Opcodes are shared with web/language.js. All successful instructions advance
 // PC.
 static void execute(int i) {
@@ -525,7 +533,8 @@ static void execute(int i) {
     float a = val(c, in.a), b = val(c, in.b), v = val(c, in.c);
     int d = reg(in.a), target;
     float amount;
-    c->energy -= costs[1];
+    if (!spend(c, costs[1]))
+      continue;
     switch (in.op) {
     case 0:
       break;
@@ -662,22 +671,20 @@ static void execute(int i) {
       return;
     case 20:
       amount = clamp(a, -360, 360);
-      if (c->energy >= absf(amount) * costs[9]) {
-        c->energy -= absf(amount) * costs[9];
+      if (spend(c, absf(amount) * costs[9])) {
         c->heading = wrap(c->heading + amount / 360, 1);
       }
       break;
     case 21:
       amount = clamp(a, -1, 1);
-      if (c->energy >= absf(amount) * costs[3]) {
-        c->energy -= absf(amount) * costs[3];
+      if (spend(c, absf(amount) * costs[3])) {
         c->vx += cosf_(c->heading) * amount * 5;
         c->vy += sinf_(c->heading) * amount * 5;
       }
       break;
     case 22:
       target = a > 0 ? nearby(c, (int)a, -1, 360) : -1;
-      if (target >= 0 && c->energy >= costs[4]) {
+      if (target >= 0 && affordable(c, costs[4])) {
         float x = dx(cells[target].x, c->x, W), y = dx(cells[target].y, c->y, H);
         if (x * x + y * y < 24 * 24 && link_pair(i, target))
           c->energy -= costs[4];
@@ -694,8 +701,7 @@ static void execute(int i) {
             unlink_pair(i, c->bond[k]);
       break;
     case 24:
-      if (c->energy >= costs[5]) {
-        c->energy -= costs[5];
+      if (spend(c, costs[5])) {
         c->rest = clamp(a, .55f, 1.5f);
       }
       break;
@@ -706,17 +712,21 @@ static void execute(int i) {
         Cell *n = &cells[target];
         float x = dx(n->x, c->x, W), y = dx(n->y, c->y, H);
         if (x * x + y * y <= 18 * 18) {
-          if (in.op == 25 && c->energy >= costs[6]) {
-            c->energy -= costs[6];
+          if (in.op == 25 && spend(c, costs[6])) {
             amount = minf(clamp(b, 0, 3) * (1 - n->shield * .9f),
                           minf(maxf(0, n->energy), maxf(0, 200 - c->energy) / .75f));
             n->energy -= amount;
             c->energy += amount * .75f;
           }
           if (in.op == 26) {
-            amount = minf(clamp(b, 0, 10), minf(maxf(0, c->energy), maxf(0, 200 - n->energy)));
-            c->energy -= amount;
-            n->energy += amount;
+            amount = minf(clamp(b, 0, 1) * maxf(0, c->energy),
+                          minf(maxf(0, c->energy - .001f), maxf(0, 200 - n->energy)));
+            // A full donation retains the reserve; use the actual float32 debit.
+            float remaining = maxf(.001f, c->energy - amount);
+            if (c->energy >= remaining) {
+              n->energy += c->energy - remaining;
+              c->energy = remaining;
+            }
           }
         }
       }
@@ -725,14 +735,15 @@ static void execute(int i) {
       c->tag = (int)clamp(a, 0, 255);
       break;
     case 28:
-      c->shield = clamp(a, 0, 1);
+      amount = clamp(a, 0, 1);
+      if (amount == 0 || affordable(c, amount * costs[8] * DT))
+        c->shield = amount;
       break;
     case 29:
       c->tone = wrap(a / 360, 1);
       break;
     case 30:
-      if (c->energy >= costs[7]) {
-        c->energy -= costs[7];
+      if (spend(c, costs[7])) {
         c->signal[(int)clamp(a, 0, 3)] = clamp(b, -100, 100);
       }
       break;
@@ -782,9 +793,8 @@ static void execute(int i) {
         int j = c->bond[k];
         if (j < 0 || !cells[j].alive || (a != 0 && (int)a != cells[j].id))
           continue;
-        if (c->energy < costs[10])
+        if (!spend(c, costs[10]))
           break;
-        c->energy -= costs[10];
         cells[j].pending_mail[channel] = clamp(v, -100, 100);
         cells[j].pending_from[channel] = c->id;
       }
@@ -916,7 +926,9 @@ static void tick_once() {
     float uptake = minf(food[k], minf(.16f, maxf(0, 200 - c->energy)));
     food[k] -= uptake;
     c->energy += uptake;
-    c->energy -= (costs[0] + c->shield * costs[8]) * DT;
+    c->energy -= costs[0] * DT;
+    if (!spend(c, c->shield * costs[8] * DT))
+      c->shield = 0;
     c->age++;
     for (int q = 0; q < 4; q++) {
       c->signal[q] *= .97f;

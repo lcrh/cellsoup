@@ -1,4 +1,4 @@
-# Cell Assembly v0.4
+# Cell Assembly v0.5
 
 A genome is a list of 1–256 instructions. A living cell owns eight registers (`r0`–`r7`), an instruction pointer, a sleep counter, energy, heading, tag, shield, four ambient signal values, four linked-message inboxes, and up to six reciprocal spring bonds. Initial registers are zero. A seed begins with 70 stored energy, no bonds, and a random heading.
 
@@ -8,7 +8,7 @@ Instructions and names are case-insensitive. Separate arguments with spaces or c
 
 Arithmetic is float32. Registers are bounded to ±999999 after each non-yielding instruction; non-finite results are sanitized. Division or remainder by zero produces 0. Branch comparisons are exact float comparisons. Relative angles are clockwise degrees: 0 means straight ahead, positive turns right, negative turns left. The VM cannot read world coordinates or absolute heading. Public tags are integers, clamped to 0–255.
 
-Physics advances at 60 ticks per simulated second. Every cell executes at most the configured 1–128 instructions per tick (default 24), retaining its PC when the budget expires. Passing the end wraps to the beginning. `wait n` ends the current execution slice and sleeps for **n additional ticks** (integer, clamped 0–36000). `wait 0` yields until next tick. Every executed instruction pays its configurable cost (default 0.0005 energy), in addition to action costs and baseline upkeep. Sleeping still pays baseline upkeep.
+Physics advances at 60 ticks per simulated second. Every cell executes at most the configured 1–128 instructions per tick (default 24), retaining its PC when the budget expires. Passing the end wraps to the beginning. `wait n` ends the current execution slice and sleeps for **n additional ticks** (integer, clamped 0–36000). `wait 0` yields until next tick. Every executed instruction pays its configurable cost (default 0.0005 energy), in addition to action costs and baseline upkeep. Sleeping still pays baseline upkeep. If the instruction fee cannot be paid while retaining 0.001 energy, its effects are skipped and the PC advances. Voluntary action charges also retain this reserve; an unaffordable action is a no-op (its affordable instruction fee is still charged). Baseline upkeep and attacks can still kill a cell.
 
 A cell does not execute when it has no energy. It dies if still depleted after bond diffusion, and every incident bond is removed. IDs are stable and never reused within a reset. IDs refer to individuals, not array positions; 0 means no target.
 
@@ -45,7 +45,7 @@ Cells have radius 4 and unit inertial mass. Soft repulsion begins below ten unit
 
 `steal id amount` explicitly targets a neighbor within 18 units. Its default cost is 0.08 to attempt a transfer against an in-range target, takes at most 3 energy per instruction, and multiplies the requested amount by `1 - 0.9 × target.shield`. Transfer is capped by the victim's available energy and the thief's storage space. The thief retains 75% of what leaves the victim; 25% dissipates. With a full shield, only 10% of the requested theft penetrates. Out-of-range and missing targets cause no action charge.
 
-`shield fraction` sets defense to [0,1]. Full-shield upkeep defaults to 0.72 energy per simulated second, scaled by fraction; this cost is configurable. It is inherited at division, so defense competes with reproduction and propulsion for the same budget. `give id amount` transfers at most 10 energy within 18 units, capped by the donor's available energy and the receiver's room. This is conservative and cannot create energy. Transfers to ID 0 do nothing.
+`shield fraction` sets defense to [0,1]. Full-shield upkeep defaults to 0.72 energy per simulated second, scaled by fraction; this cost is configurable. A shield switches off if its upkeep would exhaust the cell; activation is skipped if one tick of shield upkeep is unaffordable. It is inherited at division, so defense competes with reproduction and propulsion for the same budget. `give id fraction` transfers a fraction of the donor's current energy within 18 units. The fraction is clamped to [0,1], with no fixed transfer cap: `give r0 0.25` donates 25%. Transfers are capped by the receiver's room (200 energy maximum), and the donor always retains at least 0.001 energy, even for a fraction of 1. This is conservative and cannot create energy. Transfers to ID 0 do nothing.
 
 Tags are public and forgeable: predators can scan for prey tag 2, inspect a target, refuse kin, or select defended versus undefended prey in code. Link formation is unilateral; a parasite can attach and draw energy through passive sharing. A defender can inspect strangers, unlink, move away, change tags, signal, or shield itself against active theft. Shields do **not** block passive sharing across an existing bond.
 
@@ -171,9 +171,9 @@ Ordinary gameplay begins with designed branching colonies, food-seeking grazers,
 | `unlink v` | Cut bond to target ID; 0 cuts all bonds. |
 | `contract v` | Set own spring rest-length multiplier (0.55…1.5). Default cost 0.08. |
 | `steal v v` | Take up to amount (max 3) energy from target within 18. Default cost 0.08; 75% efficient; shields resist. |
-| `give v v` | Transfer up to amount (max 10) energy to target within 18. |
+| `give v v` | Give a fraction (0…1) of current energy to target within 18, retaining 0.001 energy. Receiver capacity is 200. |
 | `tag v` | Set a public tag, 0…255. Tags can be imitated. |
-| `shield v` | Set protection 0…1; default upkeep 0.72 × shield per second. |
+| `shield v` | Set protection 0…1; default upkeep 0.72 × shield per second. Switches off when unaffordable. |
 | `color v` | Set biological hue in degrees; inherited and visible to color sensors. |
 | `emit v v` | Set signal channel 0…3 to value -100…100. Default cost 0.01; decays each tick. |
 | `listen r v` | Sum nearby signals on channel, weighted by distance within 60. |

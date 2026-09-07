@@ -391,7 +391,10 @@
           <p class="small">
             Charged even while waiting. At the default, an idle cell's initial
             70 energy lasts about 35 simulated seconds without food. Food
-            absorption can offset upkeep.
+            absorption can offset upkeep (up to 9.6 energy per second).
+            Voluntary actions cannot spend the last 0.001 energy; unaffordable
+            actions are skipped. Shields switch off when their upkeep is
+            unaffordable.
           </p>
           <details>
             <summary>Instruction and action costs</summary>

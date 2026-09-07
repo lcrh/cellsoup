@@ -66,10 +66,22 @@ export const OPS = [
     "v v",
     "Take up to amount (max 3) energy from target within 18. Default cost 0.08; 75% efficient; shields resist.",
   ],
-  ["give", "v v", "Transfer up to amount (max 10) energy to target within 18."],
+  [
+    "give",
+    "v v",
+    "Give a fraction (0…1) of current energy to target within 18, retaining 0.001 energy. Receiver capacity is 200.",
+  ],
   ["tag", "v", "Set a public tag, 0…255. Tags can be imitated."],
-  ["shield", "v", "Set protection 0…1; default upkeep 0.72 × shield per second."],
-  ["color", "v", "Set biological hue in degrees; inherited and visible to color sensors."],
+  [
+    "shield",
+    "v",
+    "Set protection 0…1; default upkeep 0.72 × shield per second. Switches off when unaffordable.",
+  ],
+  [
+    "color",
+    "v",
+    "Set biological hue in degrees; inherited and visible to color sensors.",
+  ],
   [
     "emit",
     "v v",

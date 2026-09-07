@@ -61,19 +61,19 @@ Runtime assets are all local static files. The checked-in binary can be served i
 
 The default dish starts with 512 independent random programs, zero division mutation, ±12° daughter heading jitter, 8 steady arrivals/second, a replenishment threshold of 2,048, 50% archive sampling, 80% mutation on resampled arrivals, and 2 energy/second baseline upkeep. `npm run soak` advances three seeds for 30 simulated minutes each with these defaults. It checks finite state, population limits, valid bytecode, arrival/division/death accounting, archive formation and mutated reintroduction, and that all mutations come from resampling.
 
-Behavior tests execute the compiled WASM: energy and fork accounting; bounded archives and genome pools; replay; relative food gradients; circular color filtering; next-tick, per-link mailboxes; an end-to-end weighted ReLU relay; configurable costs; idle starvation; forward/backward and rotational force transfer; collision spacing; and offspring heading jitter. Weather tests check OU mean, variance and lag correlation against the transition law, and verify that VM behavior cannot change the weather RNG. A real worker test exercises Max playback, skipped snapshots, responsive pause and exact single-step.
+Behavior tests execute the compiled WASM: energy and fork accounting; bounded archives and genome pools; replay; relative food gradients; circular color filtering; next-tick, per-link mailboxes; an end-to-end weighted ReLU relay; configurable costs; exact-cost action rejection, fractional transfer conservation and capacity, shield shutdown, fed CPU exhaustion, predation and idle starvation; forward/backward and rotational force transfer; collision spacing; and offspring heading jitter. Weather tests check OU mean, variance and lag correlation against the transition law, and verify that VM behavior cannot change the weather RNG. A real worker test exercises Max playback, skipped snapshots, responsive pause and exact single-step.
 
-Verified v0.4 default runs (30 simulated minutes per seed):
+Verified v0.5 default runs (30 simulated minutes per seed):
 
 | Seed | Final cells | Divisions | Random arrivals | Resampled arrivals | Resampling mutations | Division mutations |
 | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
-| 42 | 960 | 154,429 | 65,794 | 64,318 | 51,578 | 0 |
-| 97 | 857 | 180,546 | 65,751 | 64,361 | 51,440 | 0 |
-| 321 | 877 | 174,219 | 65,677 | 64,435 | 51,497 | 0 |
+| 42 | 853 | 157,671 | 65,922 | 64,190 | 51,242 | 0 |
+| 97 | 1,125 | 176,729 | 65,848 | 64,264 | 51,442 | 0 |
+| 321 | 813 | 196,702 | 65,548 | 64,564 | 51,766 | 0 |
 
-All archives reached 128 entries, and resampled mutant variants reproduced in all three runs. These measurements include correlated food, the increased baseline cost, rotating spring attachments, relative sensors and linked communication.
+All archives reached 128 entries, and resampled mutant variants reproduced in all three runs. These measurements include voluntary spending guards and fractional gifts, correlated food, the increased baseline cost, rotating spring attachments, relative sensors and linked communication.
 
-Earlier v0.2 and v0.3 measurements describe different founder/arrival/physics settings and are not performance or evolution guarantees for the current ecology. Steady arrivals now continue above the replenishment threshold, allowing continued mutation without division mutation. The threshold is a replenishment target rather than a guaranteed floor; losses can exceed arrivals. The archive explicitly selects reproductive persistence, not intelligence or increasing complexity.
+Earlier v0.2–v0.4 measurements describe different founder/arrival/physics settings and are not performance or evolution guarantees for the current ecology. Steady arrivals now continue above the replenishment threshold, allowing continued mutation without division mutation. The threshold is a replenishment target rather than a guaranteed floor; losses can exceed arrivals. The archive explicitly selects reproductive persistence, not intelligence or increasing complexity.
 
 The background worker keeps the page responsive, but browsers may throttle or suspend background tabs. Closing the tab stops the simulation and discards the archive. “Autonomous” means no ongoing user intervention while the simulation runs. The archive copies genomes, not whole connected bodies; individual divisions construct physical organisms.
 

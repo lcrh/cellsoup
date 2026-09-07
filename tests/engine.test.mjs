@@ -128,7 +128,7 @@ test("energy transfer does not create energy", async () => {
   const e = await engine();
   spawn(e, "wait 1000", 800, 500);
   e.step(1);
-  spawn(e, "give 1 10\nwait 1000", 810, 500);
+  spawn(e, "give 1 0.25\nwait 1000", 810, 500);
   const before = snapshot(e).stats[6];
   e.step(1);
   assert.ok(Math.abs(before - snapshot(e).stats[6] - 0.009) < 0.002);
@@ -314,7 +314,7 @@ test("passive bond diffusion equalizes unequal stores without introducing energy
   const e = await engine(31);
   spawn(
     e,
-    "bud r0\njz r0 parent\nwait 1000\nparent: give 2 10\nwait 1000",
+    "bud r0\njz r0 parent\nwait 1000\nparent: give 2 0.5\nwait 1000",
     800,
     500,
   );
