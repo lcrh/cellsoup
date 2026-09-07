@@ -169,6 +169,13 @@ export function assemble(source) {
     lines: instructions.map((i) => i.line),
   };
 }
+function formatFloat(value) {
+  for (let digits = 1; digits <= 9; digits++) {
+    const candidate = Number(value.toPrecision(digits));
+    if (Math.fround(candidate) === value) return String(candidate);
+  }
+  return String(value);
+}
 export function disassemble(buffer) {
   const view = new DataView(buffer),
     rows = [];
@@ -190,7 +197,7 @@ export function disassemble(buffer) {
         if (type === "p") return FIELDS[Math.trunc(v)] ?? "energy";
         return v <= -1000000
           ? `r${Math.trunc(-v - 1000000) & 7}`
-          : String(Number(v.toPrecision(9)));
+          : formatFloat(v);
       });
     rows.push(`L${i}: ${schema[0]} ${args.join(" ")}`.trimEnd());
   }

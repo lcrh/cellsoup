@@ -235,3 +235,95 @@ test("exhausting genome storage skips mutation while preserving viable births", 
   assert.equal(stats[8], 2047);
   assert.ok(cells.every(Number.isFinite));
 });
+
+test("fine spatial searches match brute-force nearest neighbors at buckets and world seams", async () => {
+  const { shortestDelta } = await import("../web/camera.js");
+  for (const [x, y] of [
+    [0.01, 0.01],
+    [19.99, 20.01],
+    [1599.9, 999.9],
+    [799.99, 499.99],
+  ]) {
+    const e = await engine();
+    spawn(e, "wait 1000", x + 35, y - 22, 40, 80);
+    e.step(1);
+    const { cells } = snapshot(e);
+    let expected = 0,
+      best = 3600;
+    for (let k = 0; k < cells.length; k += 8) {
+      const d =
+        shortestDelta(cells[k] - x, 1600) ** 2 +
+        shortestDelta(cells[k + 1] - y, 1000) ** 2;
+      if (d < best) {
+        best = d;
+        expected = cells[k + 4];
+      }
+    }
+    spawn(e, "scan r0 -1 360\nwait 1000", x, y);
+    e.step(1);
+    assert.equal(detail(e, 41)[10], expected);
+  }
+});
+test("connected-body inspection crosses the world seam without including unrelated cells", async () => {
+  const e = await engine();
+  spawn(e, "wait 1000", 1, 500);
+  e.step(1);
+  spawn(e, "link 1\nwait 1000", 1592, 500);
+  spawn(e, "wait 1000", 800, 500);
+  e.step(1);
+  const d = new Float32Array(e.memory.buffer, e.inspect(1), 32);
+  assert.equal(d[24], 2);
+  assert.ok(d[28] < 25);
+  assert.ok(Math.abs(d[25] - detail(e, 1)[1] - detail(e, 2)[1]) < 0.001);
+  const body = new Float32Array(e.memory.buffer, e.organism_ptr(), d[24] * 8);
+  assert.deepEqual([body[4], body[12]].sort(), [1, 2]);
+  assert.ok(Math.abs(body[0] - body[8]) < 20);
+});
+test("inspection is read-only and does not alter subsequent evolution", async () => {
+  const a = await engine(17),
+    b = await engine(17);
+  for (const e of [a, b]) {
+    e.configure(24, 1024, 0.1, 1);
+    spawn(e, PRESETS.colony.source, 800, 500, 64, 70);
+  }
+  for (let k = 0; k < 30; k++) {
+    a.inspect(1);
+    a.step(20);
+    b.step(20);
+  }
+  assert.deepEqual(snapshot(a), snapshot(b));
+});
+
+test("contracted springs physically shorten a connected body", async () => {
+  async function run(rest) {
+    const e = await engine(22);
+    spawn(e, `bud r0\ncontract ${rest}\nwait 1000`);
+    e.step(300);
+    const a = snapshot(e).cells;
+    const dx = a[8] - a[0],
+      dy = a[9] - a[1];
+    return Math.hypot(dx, dy);
+  }
+  const short = await run(0.6),
+    long = await run(1.4);
+  assert.ok(short > 6 && short < 10);
+  assert.ok(long > 14 && long < 19);
+  assert.ok(long - short > 5);
+});
+test("passive bond diffusion equalizes unequal stores without introducing energy", async () => {
+  const e = await engine(31);
+  spawn(
+    e,
+    "bud r0\njz r0 parent\nwait 1000\nparent: give 2 10\nwait 1000",
+    800,
+    500,
+  );
+  spawn(e, "wait 1000", 815, 500);
+  e.step(2);
+  const before = Math.abs(detail(e, 1)[1] - detail(e, 3)[1]),
+    energy = snapshot(e).stats[6];
+  assert.ok(before > 9);
+  e.step(100);
+  assert.ok(Math.abs(detail(e, 1)[1] - detail(e, 3)[1]) < before * 0.15);
+  assert.ok(snapshot(e).stats[6] < energy);
+});

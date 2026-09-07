@@ -1,17 +1,18 @@
+import { followBody, fitBody } from "./camera.js";
 const vertex = `#version 300 es
 precision highp float;
 in vec2 position;in float energy;in float hue;in float id;in float shield;in float heading;in float lineage;
-uniform vec2 resolution;uniform vec2 center;uniform float scale;uniform float dpr;uniform float selected;uniform float mode;
+uniform vec2 resolution;uniform vec2 center;uniform float scale;uniform float dpr;uniform float selected;uniform float mode;uniform float emphasis;
 out vec3 tint;out float armor;out float chosen;out float rotation;
 vec3 hsv(float h){return clamp(abs(fract(vec3(h)+vec3(0.,.6667,.3333))*6.-3.)-1.,0.,1.);}
-void main(){vec2 p=(position-center)*scale;gl_Position=vec4(p.x/resolution.x*2.,-p.y/resolution.y*2.,0.,1.);gl_PointSize=max(3.,12.*scale*dpr);tint=mix(vec3(.2),hsv(hue),.8)*(.35+.65*clamp(energy/100.,0.,1.));if(mode>1.5)tint=mix(vec3(.2),hsv(lineage),.8)*(.35+.65*clamp(energy/100.,0.,1.));else if(mode>0.5)tint=mix(vec3(.95,.23,.15),vec3(.3,1.,.67),clamp(energy/140.,0.,1.));armor=shield;chosen=abs(id-selected)<.1?1.:0.;rotation=heading*6.283185;}`;
+void main(){vec2 delta=position-center;delta-=floor(delta/vec2(1600.,1000.)+.5)*vec2(1600.,1000.);vec2 p=delta*scale;gl_Position=vec4(p.x/resolution.x*2.,-p.y/resolution.y*2.,0.,1.);gl_PointSize=max(3.,10.*scale*dpr);tint=mix(vec3(.2),hsv(hue),.8)*(.35+.65*clamp(energy/100.,0.,1.));if(mode>1.5)tint=mix(vec3(.2),hsv(lineage),.8)*(.35+.65*clamp(energy/100.,0.,1.));else if(mode>0.5)tint=mix(vec3(.95,.23,.15),vec3(.3,1.,.67),clamp(energy/140.,0.,1.));armor=shield;chosen=(abs(id-selected)<.1?1.:0.)+emphasis;rotation=heading*6.283185;}`;
 const fragment = `#version 300 es
 precision highp float;
 in vec3 tint;in float armor;in float chosen;in float rotation;out vec4 outColor;
 void main(){vec2 p=gl_PointCoord*2.-1.;float d=length(p);if(d>1.)discard;float rim=smoothstep(.62,.82,d);vec3 c=mix(tint*.35,tint+vec3(.18),rim);c+=chosen*vec3(.65);if(armor>.05&&d>.9)c=mix(c,vec3(.85,.9,1.),armor);vec2 tip=vec2(cos(rotation),sin(rotation))*.36;if(length(p-tip)<.14)c+=.35;outColor=vec4(c,1.-smoothstep(.92,1.,d));}`;
 const lineVertex = `#version 300 es
-in vec2 position;uniform vec2 resolution;uniform vec2 center;uniform float scale;
-void main(){vec2 p=(position-center)*scale;gl_Position=vec4(p.x/resolution.x*2.,-p.y/resolution.y*2.,0.,1.);}`;
+in vec4 endpoints;uniform vec2 resolution;uniform vec2 center;uniform float scale;
+void main(){vec2 delta=endpoints.xy-center;delta-=floor(delta/vec2(1600.,1000.)+.5)*vec2(1600.,1000.);vec2 p=(delta+(gl_VertexID==0?vec2(0.):endpoints.zw-endpoints.xy))*scale;gl_Position=vec4(p.x/resolution.x*2.,-p.y/resolution.y*2.,0.,1.);}`;
 const lineFragment = `#version 300 es
 precision highp float;out vec4 outColor;void main(){outColor=vec4(.28,.66,.57,.36);}`;
 const foodVertex = `#version 300 es
@@ -19,7 +20,7 @@ in vec2 position;out vec2 uv;void main(){uv=position*.5+.5;gl_Position=vec4(posi
 const foodFragment = `#version 300 es
 precision highp float;
 in vec2 uv;uniform sampler2D soup;uniform vec2 resolution;uniform vec2 center;uniform float scale;uniform float visible;out vec4 outColor;
-void main(){vec2 p=(vec2(uv.x,1.-uv.y)-.5)*resolution/scale+center;vec2 f=p/vec2(1600.,1000.);float v=texture(soup,f).r*visible;float boundary=step(0.,p.x)*step(p.x,1600.)*step(0.,p.y)*step(p.y,1000.);vec3 bg=vec3(.018,.037,.042);float grid=step(.965,fract(p.x/100.))+step(.965,fract(p.y/100.));bg+=grid*.008*boundary;bg+=vec3(.12,.22,.09)*(1.-exp(-v*.09))*boundary;bg*=.6+.4*boundary;outColor=vec4(bg,1.);}`;
+void main(){vec2 p=(vec2(uv.x,1.-uv.y)-.5)*resolution/scale+center;vec2 f=p/vec2(1600.,1000.);float v=texture(soup,f).r*visible;float boundary=1.;vec3 bg=vec3(.018,.037,.042);float grid=step(.965,fract(p.x/100.))+step(.965,fract(p.y/100.));bg+=grid*.008*boundary;bg+=vec3(.12,.22,.09)*(1.-exp(-v*.09))*boundary;bg*=.6+.4*boundary;outColor=vec4(bg,1.);}`;
 export class Renderer {
   constructor(canvas) {
     this.canvas = canvas;
@@ -35,6 +36,7 @@ export class Renderer {
     this.showFood = true;
     this.showBonds = true;
     const gl = this.gl;
+    this.maxAttributes = gl.getParameter(gl.MAX_VERTEX_ATTRIBS);
     const program = (vs, fs) => {
       const p = gl.createProgram();
       for (const [type, source] of [
@@ -107,6 +109,14 @@ export class Renderer {
     this.center[1] += before[1] - after[1];
     if (this.frame) this.draw(this.frame);
   }
+  focusBody(detail) {
+    this.center = followBody(this.center, detail);
+    this.zoom = fitBody(detail, this.width, this.height, this.baseScale);
+    this.scale = this.baseScale * this.zoom;
+  }
+  trackBody(detail) {
+    this.center = followBody(this.center, detail);
+  }
   uniforms(p) {
     const g = this.gl;
     g.useProgram(p);
@@ -153,16 +163,26 @@ export class Renderer {
       this.uniforms(this.linesProgram);
       g.bindBuffer(g.ARRAY_BUFFER, this.linesBuffer);
       g.bufferData(g.ARRAY_BUFFER, frame.links, g.DYNAMIC_DRAW);
-      this.attrib(this.linesProgram, "position", 2, 0, 0);
-      g.drawArrays(g.LINES, 0, frame.links.length / 2);
+      this.attrib(this.linesProgram, "endpoints", 4, 0, 0);
+      const location = g.getAttribLocation(this.linesProgram, "endpoints");
+      g.vertexAttribDivisor(location, 1);
+      g.drawArraysInstanced(g.LINES, 0, 2, frame.links.length / 4);
+      g.vertexAttribDivisor(location, 0);
     }
-    const p = this.cellsProgram;
+    this.drawCells(frame.cells, 0);
+    if (frame.body?.length) this.drawCells(frame.body, 0.35);
+    for (let i = 0; i < this.maxAttributes; i++) g.disableVertexAttribArray(i);
+  }
+  drawCells(data, emphasis) {
+    const g = this.gl,
+      p = this.cellsProgram;
     this.uniforms(p);
+    g.uniform1f(g.getUniformLocation(p, "emphasis"), emphasis);
     g.uniform1f(g.getUniformLocation(p, "dpr"), this.dpr);
     g.uniform1f(g.getUniformLocation(p, "selected"), this.selected);
     g.uniform1f(g.getUniformLocation(p, "mode"), this.mode);
     g.bindBuffer(g.ARRAY_BUFFER, this.cellsBuffer);
-    g.bufferData(g.ARRAY_BUFFER, frame.cells, g.DYNAMIC_DRAW);
+    g.bufferData(g.ARRAY_BUFFER, data, g.DYNAMIC_DRAW);
     for (const [name, size, offset] of [
       ["position", 2, 0],
       ["energy", 1, 8],
@@ -173,9 +193,6 @@ export class Renderer {
       ["lineage", 1, 28],
     ])
       this.attrib(p, name, size, 32, offset);
-    g.drawArrays(g.POINTS, 0, frame.cells.length / 8);
-    // Attribute arrays belong to the context, so disable them before differently sized draws.
-    for (let i = 0; i < g.getParameter(g.MAX_VERTEX_ATTRIBS); i++)
-      g.disableVertexAttribArray(i);
+    g.drawArrays(g.POINTS, 0, data.length / 8);
   }
 }

@@ -700,3 +700,25 @@ input[type="checkbox"] {
 .lineage-row .small {
   font-size: 11px;
 }
+.organism-actions {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+.organism-actions button {
+  font-size: 12px;
+}
+.tracking {
+  position: absolute;
+  bottom: 100px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 6px 11px;
+  background: #162e28e8;
+  border: 1px solid #3b6252;
+  color: #c5f9dc;
+  border-radius: 20px;
+  font: 12px var(--mono);
+  white-space: nowrap;
+  pointer-events: none;
+}

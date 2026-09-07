@@ -70,11 +70,13 @@ function frame(force = false) {
   const cells = new Float32Array(mem, engine.render_ptr(), n * 8).slice();
   const links = new Float32Array(mem, engine.lines_ptr(), stats[4] * 4).slice();
   const food = new Float32Array(mem, engine.food_ptr(), 128 * 80).slice();
+  let body = new Float32Array(0);
   let detail = null,
     genome = null;
   const ptr = selected ? engine.inspect(selected) : 0;
   if (ptr) {
-    detail = new Float32Array(mem, ptr, 24).slice();
+    detail = new Float32Array(mem, ptr, 32).slice();
+    body = new Float32Array(mem, engine.organism_ptr(), detail[24] * 8).slice();
     genome = new Uint8Array(
       mem,
       engine.genome_ptr(detail[8]),
@@ -83,13 +85,26 @@ function frame(force = false) {
   }
   outstanding = true;
   postMessage(
-    { type: "frame", cells, links, food, stats, lineages, ms, detail, genome },
+    {
+      type: "frame",
+      cells,
+      links,
+      food,
+      stats,
+      lineages,
+      ms,
+      detail,
+      genome,
+      body,
+      selection: selected,
+    },
     [
       cells.buffer,
       links.buffer,
       food.buffer,
       stats.buffer,
       lineages.buffer,
+      body.buffer,
       ...(detail ? [detail.buffer, genome] : []),
     ],
   );

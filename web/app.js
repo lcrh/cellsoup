@@ -1,3 +1,4 @@
+import { shortestDelta } from "./camera.js";
 import { assemble, disassemble, OPS } from "./language.js";
 import { PRESETS } from "./presets.js";
 import { Renderer } from "./renderer.js";
@@ -12,7 +13,9 @@ let renderer,
   history = [],
   currentGenome = "",
   noticeTimer,
-  selectedId = 0;
+  selectedId = 0,
+  following = false,
+  focusPending = false;
 function notice(text, error = false) {
   $("notice").textContent = text;
   $("notice").style.background = error ? "#612e27" : "#25483a";
@@ -26,6 +29,26 @@ function notice(text, error = false) {
 function send(data) {
   if (ready) worker.postMessage(data);
 }
+function setFollowing(value) {
+  following = value;
+  $("follow-body").setAttribute("aria-pressed", String(value));
+  $("follow-body").classList.toggle("active", value);
+  $("follow-body").textContent = value ? "Stop following" : "Follow organism";
+  $("tracking").hidden = !value;
+}
+$("focus-body").onclick = () => {
+  if (!frame?.detail) return;
+  renderer.focusBody(frame.detail);
+  setFollowing(true);
+  renderer.draw(frame);
+  $("world").scrollIntoView({ behavior: "smooth", block: "center" });
+};
+$("follow-body").onclick = () => {
+  if (!frame?.detail) return;
+  setFollowing(!following);
+  if (following) renderer.trackBody(frame.detail);
+  renderer.draw(frame);
+};
 function validate() {
   try {
     const p = assemble($("source").value);
@@ -115,6 +138,8 @@ $("reset").onclick = () => {
   lastTick = -1;
   selectedId = 0;
   renderer.selected = 0;
+  setFollowing(false);
+  focusPending = false;
   send({
     type: "reset",
     source: $("source").value,
@@ -156,6 +181,7 @@ for (const [id, prop] of [
     if (frame) renderer.draw(frame);
   };
 $("fit").onclick = () => {
+  setFollowing(false);
   renderer.center = [800, 500];
   renderer.zoom = 1;
   renderer.resize();
@@ -217,6 +243,7 @@ document.addEventListener("keydown", (e) => {
 });
 function inspect(detail, genome) {
   if (!detail) {
+    if (following) setFollowing(false);
     $("cell-detail").hidden = true;
     $("cell-title").textContent = selectedId
       ? "Cell no longer alive"
@@ -230,6 +257,10 @@ function inspect(detail, genome) {
   $("cell-detail").hidden = false;
   $("inspect-hint").hidden = true;
   $("cell-title").textContent = `Cell ${detail[0]}`;
+  $("organism-summary").textContent =
+    `Connected body: ${detail[24]} ${detail[24] === 1 ? "cell" : "cells"} · ${detail[25].toFixed(1)} total energy`;
+  $("tracking").textContent =
+    `Following #${detail[0]} · ${detail[24]} connected ${detail[24] === 1 ? "cell" : "cells"}`;
   const entries = [
     ["Energy", detail[1].toFixed(2)],
     ["Age", `${detail[3].toFixed(1)} s`],
@@ -315,6 +346,8 @@ function evolution(m) {
     button.onclick = () => {
       selectedId = row[9];
       renderer.selected = row[9];
+      focusPending = true;
+      setFollowing(true);
       send({ type: "inspect", id: row[9] });
       panel("inspector");
     };
@@ -384,6 +417,12 @@ try {
     }
     if (m.type === "frame") {
       frame = m;
+      if (m.detail?.[0] === selectedId) {
+        if (focusPending) {
+          renderer.focusBody(m.detail);
+          focusPending = false;
+        } else if (following) renderer.trackBody(m.detail);
+      }
       renderer.draw(m);
       $("population").textContent = m.stats[0].toLocaleString();
       $("bonds").textContent = m.stats[4].toLocaleString();
@@ -394,7 +433,7 @@ try {
       $("performance").textContent =
         `${m.ms.toFixed(2)} ms / tick · ${m.stats[7]} genomes · WASM`;
       $("empty").hidden = m.stats[0] > 0;
-      inspect(m.detail, m.genome);
+      if (m.selection === selectedId) inspect(m.detail, m.genome);
       evolution(m);
       if (m.stats[1] - lastTick >= 30 || lastTick < 0) {
         history.push([m.stats[1], m.stats[0]]);
@@ -435,6 +474,7 @@ try {
     pointer.x = e.clientX;
     pointer.y = e.clientY;
     if (tool === "pan" || (tool === "inspect" && pointer.moved)) {
+      setFollowing(false);
       renderer.center[0] -= dx / renderer.scale;
       renderer.center[1] -= dy / renderer.scale;
       if (frame) renderer.draw(frame);
@@ -457,7 +497,9 @@ try {
         let best = Math.max(10, 12 / renderer.scale) ** 2,
           id = 0;
         for (let k = 0; k < frame.cells.length; k += 8) {
-          const d = (frame.cells[k] - x) ** 2 + (frame.cells[k + 1] - y) ** 2;
+          const d =
+            shortestDelta(frame.cells[k] - x, 1600) ** 2 +
+            shortestDelta(frame.cells[k + 1] - y, 1000) ** 2;
           if (d < best) {
             best = d;
             id = frame.cells[k + 4];

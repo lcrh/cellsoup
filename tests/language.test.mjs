@@ -44,3 +44,7 @@ test("evolved float32 operands survive export and import exactly", () => {
     assert.deepEqual(assemble(disassemble(a.buffer)).buffer, a.buffer);
   }
 });
+
+test("disassembly displays readable decimals without sacrificing float32 identity", () => {
+  assert.equal(disassemble(assemble("shield 0.3").buffer), "L0: shield 0.3");
+});

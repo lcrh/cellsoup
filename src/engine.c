@@ -10,8 +10,9 @@
 #define H 1000.f
 #define FW 128
 #define FH 80
-#define GX 40
-#define GY 25
+#define GRID 20.f
+#define GX 80
+#define GY 50
 #define DT (1.f / 60.f)
 #define API __attribute__((visibility("default")))
 void *memset(void *p, int v, size_t n) {
@@ -76,6 +77,8 @@ static int genome_sample[GENOMES];
 static int active_genome;
 static float render[MAX * 8], lines[MAX * BONDS * 4], inspect_data[32], stats[24];
 static int line_count;
+static float organism_render[MAX * 8];
+static int organism_queue[MAX], organism_seen[MAX];
 static uint32_t random_u() {
   rng ^= rng << 13;
   rng ^= rng >> 17;
@@ -95,7 +98,7 @@ static float wrap(float x, float size) { return x - __builtin_floorf(x / size) *
 static int food_at(float x, float y) {
   return (int)(wrap(y, H) * FH / H) * FW + (int)(wrap(x, W) * FW / W);
 }
-static int bucket(Cell *c) { return (int)(c->y / 40) * GX + (int)(c->x / 40); }
+static int bucket(Cell *c) { return (int)(c->y / GRID) * GX + (int)(c->x / GRID); }
 static void grid() {
   for (int k = 0; k < GX * GY; k++)
     heads[k] = -1;
@@ -139,11 +142,16 @@ static int link_pair(int a, int b) {
   return 1;
 }
 static int nearby(Cell *c, int id, float tag, float cone) {
-  int bx = (int)(c->x / 40), by = (int)(c->y / 40), best = -1;
-  float dist = 60 * 60;
-  for (int oy = -2; oy <= 2; oy++)
-    for (int ox = -2; ox <= 2; ox++) {
-      int k = ((by + oy + GY) % GY) * GX + (bx + ox + GX) % GX;
+  int best = -1;
+  int x0 = (int)__builtin_floorf((c->x - 60) / GRID),
+      x1 = (int)__builtin_floorf((c->x + 60) / GRID);
+  int y0 = (int)__builtin_floorf((c->y - 60) / GRID),
+      y1 = (int)__builtin_floorf((c->y + 60) / GRID);
+  float dist = 3600, hx = cosf_(c->heading), hy = sinf_(c->heading),
+        threshold = cosf_(clamp(cone, 0, 360) / 720);
+  for (int by = y0; by <= y1; by++)
+    for (int bx = x0; bx <= x1; bx++) {
+      int k = ((by + GY) % GY) * GX + (bx + GX) % GX;
       for (int j = heads[k]; j >= 0; j = cells[j].next) {
         Cell *n = &cells[j];
         if (!n->alive || n == c)
@@ -155,10 +163,10 @@ static int nearby(Cell *c, int id, float tag, float cone) {
         float x = dx(n->x, c->x, W), y = dx(n->y, c->y, H), d = x * x + y * y;
         if (d >= dist)
           continue;
-        if (cone < 360 && d > .001f &&
-            (x * cosf_(c->heading) + y * sinf_(c->heading)) / root(d) <
-                cosf_(clamp(cone, 0, 360) / 720))
+        if (cone < 360 && d > .001f && (x * hx + y * hy) / root(d) < threshold)
           continue;
+        if (id > 0)
+          return j;
         dist = d;
         best = j;
       }
@@ -574,11 +582,13 @@ static void execute(int i) {
       break;
     case 31: {
       c->r[d] = 0;
-      int bx = (int)(c->x / 40), by = (int)(c->y / 40);
-      for (int oy = -2; oy <= 2; oy++)
-        for (int ox = -2; ox <= 2; ox++)
-          for (int j = heads[((by + oy + GY) % GY) * GX + (bx + ox + GX) % GX]; j >= 0;
-               j = cells[j].next) {
+      int x0 = (int)__builtin_floorf((c->x - 60) / GRID),
+          x1 = (int)__builtin_floorf((c->x + 60) / GRID);
+      int y0 = (int)__builtin_floorf((c->y - 60) / GRID),
+          y1 = (int)__builtin_floorf((c->y + 60) / GRID);
+      for (int by = y0; by <= y1; by++)
+        for (int bx = x0; bx <= x1; bx++)
+          for (int j = heads[((by + GY) % GY) * GX + (bx + GX) % GX]; j >= 0; j = cells[j].next) {
             Cell *n = &cells[j];
             float x = dx(n->x, c->x, W), y = dx(n->y, c->y, H);
             if (n != c && n->alive && x * x + y * y < 3600)
@@ -705,11 +715,13 @@ static void tick_once() {
     if (!c->alive)
       continue;
     // Broad phase buckets, short-range soft-disc collisions, damped spring bonds.
-    int bx = (int)(c->x / 40), by = (int)(c->y / 40);
-    for (int oy = -1; oy <= 1; oy++)
-      for (int ox = -1; ox <= 1; ox++)
-        for (int j = heads[((by + oy + GY) % GY) * GX + (bx + ox + GX) % GX]; j >= 0;
-             j = cells[j].next) {
+    int x0 = (int)__builtin_floorf((c->x - 8) / GRID),
+        x1 = (int)__builtin_floorf((c->x + 8) / GRID);
+    int y0 = (int)__builtin_floorf((c->y - 8) / GRID),
+        y1 = (int)__builtin_floorf((c->y + 8) / GRID);
+    for (int by = y0; by <= y1; by++)
+      for (int bx = x0; bx <= x1; bx++)
+        for (int j = heads[((by + GY) % GY) * GX + (bx + GX) % GX]; j >= 0; j = cells[j].next) {
           if (j <= i)
             continue;
           Cell *n = &cells[j];
@@ -865,6 +877,51 @@ API int render_ptr() { return (int)(uintptr_t)render; }
 API int lines_ptr() { return (int)(uintptr_t)lines; }
 API int food_ptr() { return (int)(uintptr_t)food; }
 API int stats_ptr() { return (int)(uintptr_t)stats; }
+static void inspect_organism(int start) {
+  memset(organism_seen, 0, sizeof(organism_seen));
+  int n = 1, read = 0;
+  float energy = 0, minx = cells[start].x, maxx = minx, miny = cells[start].y, maxy = miny;
+  organism_queue[0] = start;
+  organism_seen[start] = 1;
+  organism_render[0] = minx;
+  organism_render[1] = miny;
+  while (read < n) {
+    int slot = organism_queue[read];
+    Cell *c = &cells[slot];
+    float *r = organism_render + read * 8;
+    r[2] = c->energy;
+    r[3] = c->tone;
+    r[4] = c->id;
+    r[5] = c->shield;
+    r[6] = c->heading;
+    r[7] = wrap(genomes[c->genome].founder * .618034f + genomes[c->genome].depth * .037f, 1);
+    energy += c->energy;
+    minx = minf(minx, r[0]);
+    maxx = maxf(maxx, r[0]);
+    miny = minf(miny, r[1]);
+    maxy = maxf(maxy, r[1]);
+    for (int k = 0; k < BONDS; k++) {
+      int j = c->bond[k];
+      if (j < 0 || organism_seen[j] || !cells[j].alive)
+        continue;
+      organism_seen[j] = 1;
+      organism_queue[n] = j;
+      organism_render[n * 8] = r[0] + dx(cells[j].x, c->x, W);
+      organism_render[n * 8 + 1] = r[1] + dx(cells[j].y, c->y, H);
+      n++;
+    }
+    read++;
+  }
+  inspect_data[24] = n;
+  inspect_data[25] = energy;
+  inspect_data[26] = (minx + maxx) * .5f;
+  inspect_data[27] = (miny + maxy) * .5f;
+  inspect_data[28] = maxx - minx + 8;
+  inspect_data[29] = maxy - miny + 8;
+  inspect_data[30] = cells[start].x;
+  inspect_data[31] = cells[start].y;
+}
+API int organism_ptr() { return (int)(uintptr_t)organism_render; }
 API int inspect(int id) {
   for (int i = 0; i < high; i++)
     if (cells[i].alive && cells[i].id == id) {
@@ -888,6 +945,7 @@ API int inspect(int id) {
       inspect_data[21] = g->depth;
       inspect_data[22] = g->born_tick;
       inspect_data[23] = g->offspring;
+      inspect_organism(i);
       return (int)(uintptr_t)inspect_data;
     }
   return 0;

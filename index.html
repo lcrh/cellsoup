@@ -67,6 +67,7 @@
             ><button data-tool="pan" aria-pressed="false">↔ Pan</button
             ><button id="fit" title="Fit the whole dish">Fit</button>
           </div>
+          <div id="tracking" class="tracking" hidden></div>
           <div class="canvas-hint" id="canvas-hint">
             Click a cell to inspect · scroll to zoom · drag to pan
           </div>
@@ -188,6 +189,13 @@
             executing instruction.
           </p>
           <div id="cell-detail" hidden>
+            <div class="organism-actions">
+              <button id="focus-body" class="primary">Focus body</button
+              ><button id="follow-body" aria-pressed="false">
+                Follow organism
+              </button>
+            </div>
+            <p id="organism-summary" class="small"></p>
             <dl id="cell-stats"></dl>
             <h3>Registers</h3>
             <div id="registers"></div>
