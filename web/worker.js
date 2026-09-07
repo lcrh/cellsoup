@@ -10,7 +10,15 @@ let engine,
   lastFrame = 0,
   accumulator = 0,
   ms = 0;
-let settings = { steps: 24, cap: 8192, mutation: 0.05, food: 1 };
+let settings = {
+  steps: 24,
+  cap: 8192,
+  mutation: 0,
+  food: 1,
+  floor: 2048,
+  archiveShare: 0.5,
+  sampleMutation: 0.8,
+};
 function load(source) {
   const p = assemble(source);
   new Uint8Array(
@@ -26,6 +34,11 @@ function load(source) {
   return g;
 }
 function config() {
+  engine.configure_arrivals(
+    settings.floor,
+    settings.archiveShare,
+    settings.sampleMutation,
+  );
   engine.configure(
     settings.steps,
     settings.cap,
@@ -33,12 +46,14 @@ function config() {
     settings.food,
   );
 }
-function reset(source, seed, ecosystem) {
+function reset(source, seed, scenario = "random") {
   engine.reset(seed);
   config();
   selected = 0;
   accumulator = 0;
-  if (ecosystem) {
+  if (scenario === "random") {
+    engine.seed_random(Math.min(512, settings.cap));
+  } else if (scenario === "ecosystem") {
     const colony = load(PRESETS.colony.source);
     engine.seed_cells(96, 560, 500, 230, colony);
     const grazer = load(PRESETS.grazer.source);
@@ -133,7 +148,7 @@ self.onmessage = ({ data: m }) => {
         }
         break;
       case "reset":
-        reset(m.source, m.seed, m.ecosystem);
+        reset(m.source, m.seed, m.scenario);
         break;
       case "config":
         Object.assign(settings, m.settings);
@@ -168,7 +183,7 @@ try {
     {},
   );
   engine = result.instance.exports;
-  reset(PRESETS.colony.source, 42, true);
+  reset(null, 42, "random");
   postMessage({ type: "ready" });
   setInterval(() => {
     const now = performance.now(),

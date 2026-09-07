@@ -1,20 +1,14 @@
-import { engine, spawn, snapshot } from "./helpers.mjs";
-import { PRESETS } from "../web/presets.js";
+import { engine, snapshot } from "./helpers.mjs";
 import { assemble, disassemble } from "../web/language.js";
 const minutes = Number(process.env.MINUTES || 30),
   seeds = (process.env.SEEDS || "42,97,321").split(",").map(Number);
 for (const seed of seeds) {
   const e = await engine(seed);
   e.reset(seed);
-  e.configure(24, 8192, 0.05, 1);
-  spawn(e, PRESETS.colony.source, 560, 500, 96, 230);
-  spawn(e, PRESETS.grazer.source, 1050, 500, 180, 310);
-  spawn(e, PRESETS.predator.source, 850, 350, 32, 160);
-  e.add_food(560, 500, 20);
-  e.add_food(690, 460, 20);
-  e.add_food(470, 630, 20);
+  e.configure(24, 8192, 0, 1);
+  e.configure_arrivals(2048, 0.5, 0.8);
+  e.seed_random(512);
   const started = performance.now();
-  let mutatedReproductions = 0;
   for (let second = 0; second < minutes * 60; second += 10) {
     e.step(600);
     const { stats, cells } = snapshot(e);
@@ -40,7 +34,6 @@ for (const seed of seeds) {
       );
       for (let k = 0; k < lineages.length; k += 12)
         if (lineages[k + 6] > 0) repro += lineages[k + 4];
-      mutatedReproductions = Math.max(mutatedReproductions, repro);
       console.log(
         JSON.stringify({
           seed,
@@ -53,13 +46,22 @@ for (const seed of seeds) {
           generation: stats[9],
           mutationDepth: stats[10],
           mutantOffspring: repro,
+          randomArrivals: stats[17],
+          resampledArrivals: stats[18],
+          archive: stats[19],
+          resamplingMutations: stats[20],
+          divisionMutations: stats[21],
         }),
       );
     }
   }
   const { stats } = snapshot(e);
-  if (stats[8] < 10 || stats[9] < 3 || mutatedReproductions < 1)
-    throw Error("No sustained heritable evolution observed");
+  if (stats[21] !== 0 || stats[20] !== stats[8])
+    throw Error("Default mutation must come exclusively from resampling");
+  if (stats[17] + stats[18] + stats[2] - stats[3] !== stats[0])
+    throw Error("Arrival / division accounting mismatch");
+  if (stats[19] < 1 || stats[18] < 1 || stats[20] < 1)
+    throw Error("No successful archive and mutated reintroduction observed");
   console.log(
     `Seed ${seed} passed in ${((performance.now() - started) / 1000).toFixed(1)}s wall time.`,
   );

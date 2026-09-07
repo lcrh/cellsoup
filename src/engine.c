@@ -5,6 +5,7 @@
 #define MAX 16384
 #define GENOMES 2048
 #define CODE 256
+#define ARCHIVE 128
 #define BONDS 6
 #define W 1600.f
 #define H 1000.f
@@ -33,7 +34,8 @@ static float maxf(float a, float b) { return a > b ? a : b; }
 static float clamp(float x, float a, float b) { return x != x ? a : minf(b, maxf(a, x)); }
 static float absf(float x) { return x < 0 ? -x : x; }
 static float root(float x) { return __builtin_sqrtf(x); }
-// Angles in turns internally; sufficiently accurate smooth polynomial for forces/sensing.
+// Angles in turns internally; sufficiently accurate smooth polynomial for
+// forces/sensing.
 static float sinf_(float x) {
   x -= __builtin_floorf(x + .5f);
   float y = 16 * x * (.5f - absf(x));
@@ -57,7 +59,7 @@ typedef struct {
 } Ins;
 typedef struct {
   Ins code[CODE];
-  int len, refs, serial, parent_serial, founder, born_tick, offspring, depth;
+  int len, refs, serial, parent_serial, founder, born_tick, offspring, depth, archived;
 } Genome;
 typedef struct {
   float x, y, vx, vy, energy, heading, r[8], signal[4], tag, shield, tone, rest;
@@ -70,7 +72,11 @@ static float food[FW * FH], scratch[FW * FH];
 static int heads[GX * GY], free_slots[MAX], free_n, high, count, tick, births, deaths,
     limit = 8192, budget = 24, next_id = 1;
 static uint32_t rng = 1;
-static float mutation = .05f, rain = 1;
+static float mutation = 0, rain = 1;
+static Genome archive[ARCHIVE];
+static int archive_n, successful_variants, arrival_floor, random_arrivals, sampled_arrivals,
+    sampled_mutations;
+static float archive_share = .5f, sample_mutation = .8f;
 static int next_genome_id = 1, mutation_counts[4], total_mutations, max_generation;
 static float lineage_data[16 * 12], genome_energy[GENOMES];
 static int genome_sample[GENOMES];
@@ -204,7 +210,8 @@ static int free_genome() {
   return -1;
 }
 
-// Mutation operates on typed instructions, so every descendant remains a valid bounded program.
+// Mutation operates on typed instructions, so every descendant remains a valid
+// bounded program.
 static float random_operand(char type, int len) {
   static const float constants[] = {-1, 0, 1, 2, 3, 5, 10, 25, 60, 90, 120, .25f, .5f};
   if (type == 'r')
@@ -301,6 +308,69 @@ static int mutate_genome(Genome *g, Cell *child) {
   total_mutations++;
   return kind;
 }
+// Reservoir sampling gives every qualifying variant a chance at long-term
+// retention. Copies survive extinction and genome-slot reuse. Immigration never
+// counts as offspring.
+static void archive_successes() {
+  for (int g = 0; g < GENOMES; g++) {
+    Genome *v = &genomes[g];
+    if (!v->refs || v->archived || v->offspring < 3 || tick - v->born_tick < 600)
+      continue;
+    v->archived = 1;
+    successful_variants++;
+    int slot = archive_n < ARCHIVE ? archive_n++ : random_u() % successful_variants;
+    if (slot < ARCHIVE)
+      archive[slot] = *v;
+  }
+}
+static int arrive(int n, int random_only) {
+  int made = 0;
+  while (made < n && count < limit) {
+    int g = free_genome();
+    if (g < 0)
+      break;
+    int sampled = !random_only && archive_n && randf() < archive_share;
+    Genome *v = &genomes[g];
+    if (sampled) {
+      *v = archive[random_u() % archive_n];
+      v->parent_serial = v->serial;
+    } else {
+      memset(v, 0, sizeof(*v));
+      v->len = 8 + random_u() % 57;
+      for (int k = 0; k < v->len; k++)
+        v->code[k] = random_instruction(v->len, -1);
+    }
+    v->serial = next_genome_id++;
+    if (!sampled)
+      v->founder = v->serial;
+    v->refs = v->offspring = v->archived = 0;
+    v->born_tick = tick;
+    int i = alloc_cell(g, randf() * W, randf() * H, 70);
+    if (i < 0)
+      break;
+    if (sampled && sample_mutation > 0 && randf() < sample_mutation) {
+      mutate_genome(v, &cells[i]);
+      v->depth++;
+      sampled_mutations++;
+    }
+    // Arrivals start execution at the beginning, including after a structural
+    // mutation.
+    cells[i].pc = 0;
+    cells[i].tone = wrap(v->founder * .618034f + v->depth * .037f, 1);
+    if (sampled)
+      sampled_arrivals++;
+    else
+      random_arrivals++;
+    made++;
+  }
+  return made;
+}
+API void configure_arrivals(int floor, float share, float mut) {
+  arrival_floor = (int)clamp(floor, 0, MAX);
+  archive_share = clamp(share, 0, 1);
+  sample_mutation = clamp(mut, 0, 1);
+}
+API int seed_random(int n) { return arrive((int)clamp(n, 0, MAX), 1); }
 static void die(int i) {
   Cell *c = &cells[i];
   for (int k = 0; k < BONDS; k++)
@@ -352,6 +422,7 @@ static int split(int i, int connected, int dst) {
       genomes[g].serial = next_genome_id++;
       genomes[g].born_tick = tick;
       genomes[g].offspring = 0;
+      genomes[g].archived = 0;
       genomes[g].depth++;
       genomes[c->genome].refs--;
       c->genome = g;
@@ -361,7 +432,8 @@ static int split(int i, int connected, int dst) {
   }
   return j;
 }
-// Opcodes are shared with web/language.js. All successful instructions advance PC.
+// Opcodes are shared with web/language.js. All successful instructions advance
+// PC.
 static void execute(int i) {
   Cell *c = &cells[i];
   if (c->sleep > 0) {
@@ -622,6 +694,7 @@ API int load_program(int len) {
   genomes[g].founder = genomes[g].serial;
   genomes[g].born_tick = tick;
   genomes[g].offspring = 0;
+  genomes[g].archived = 0;
   genomes[g].depth = 0;
   genomes[g].refs = 0;
   memcpy(genomes[g].code, upload, len * sizeof(Ins));
@@ -668,6 +741,8 @@ API void reset(int seed) {
   total_mutations = max_generation = 0;
   memset(mutation_counts, 0, sizeof(mutation_counts));
   active_genome = -1;
+  archive_n = successful_variants = random_arrivals = sampled_arrivals = sampled_mutations = 0;
+  memset(archive, 0, sizeof(archive));
   rng = seed ? seed : 1;
   for (int k = 0; k < 20; k++)
     add_food(randf() * W, randf() * H, 12);
@@ -690,7 +765,8 @@ static void tick_once() {
   grid();
   int original_high = high;
   int cutoff = next_id;
-  // All cells sample this tick's food before any program runs. Newborns start next tick.
+  // All cells sample this tick's food before any program runs. Newborns start
+  // next tick.
   for (int i = 0; i < original_high; i++) {
     Cell *c = &cells[i];
     if (!c->alive)
@@ -714,7 +790,8 @@ static void tick_once() {
     Cell *c = &cells[i];
     if (!c->alive)
       continue;
-    // Broad phase buckets, short-range soft-disc collisions, damped spring bonds.
+    // Broad phase buckets, short-range soft-disc collisions, damped spring
+    // bonds.
     int x0 = (int)__builtin_floorf((c->x - 8) / GRID),
         x1 = (int)__builtin_floorf((c->x + 8) / GRID);
     int y0 = (int)__builtin_floorf((c->y - 8) / GRID),
@@ -775,6 +852,12 @@ static void tick_once() {
     c->x = wrap(c->x + c->vx * DT, W);
     c->y = wrap(c->y + c->vy * DT, H);
   }
+  if (tick % 60 == 0) {
+    archive_successes();
+    int missing = (int)minf(arrival_floor, limit) - count;
+    if (missing > 0)
+      arrive((int)minf(missing, 64), 0);
+  }
 }
 API void step(int n) {
   n = (int)clamp(n, 0, 600);
@@ -828,6 +911,13 @@ API int snapshot() {
     gs += genomes[g].refs > 0;
   stats[7] = gs;
   stats[8] = total_mutations;
+  stats[17] = random_arrivals;
+  stats[18] = sampled_arrivals;
+  stats[19] = archive_n;
+  stats[20] = sampled_mutations;
+  stats[21] = total_mutations - sampled_mutations;
+  stats[22] = minf(arrival_floor, limit);
+  stats[23] = successful_variants;
   stats[9] = max_generation;
   stats[10] = 0;
   stats[11] = next_genome_id - 1;

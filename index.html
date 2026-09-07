@@ -160,8 +160,8 @@
             ><input id="file" type="file" accept=".cell,.txt" hidden />
           </div>
           <p class="small">
-            Seeding adds this genome to the dish. Editing leaves existing cells
-            running their inherited code.
+            Examples are optional: the dish starts with random programs. Seeding
+            adds this genome; editing leaves existing cells unchanged.
           </p>
           <details id="reference">
             <summary>Instruction reference <span>35 operations</span></summary>
@@ -217,19 +217,19 @@
         >
           <div class="section-heading">
             <h2>Evolution in progress</h2>
-            <span class="pill" id="evo-mode">Mutation on</span>
+            <span class="pill" id="evo-mode">Archive 0 / 128</span>
           </div>
           <p class="description">
-            Every daughter inherits code, sometimes changed. Food, physics,
-            predators, and the cost of living decide which variants leave
-            descendants.
+            Random programs compete for food and reproduce. Successful genomes
+            enter the archive; resampled arrivals mutate independently of
+            division. The controls in World set both rates.
           </p>
           <div class="evo-metrics">
             <div>
-              <strong id="evo-variants">3</strong><span>living variants</span>
+              <strong id="evo-variants">512</strong><span>living variants</span>
             </div>
             <div>
-              <strong id="evo-mutations">0</strong><span>mutated births</span>
+              <strong id="evo-mutations">0</strong><span>code mutations</span>
             </div>
             <div>
               <strong id="evo-generation">0</strong
@@ -240,6 +240,7 @@
             </div>
           </div>
           <h3>Mutation history</h3>
+          <p id="arrival-stats" class="small" aria-live="off"></p>
           <div id="mutation-mix" class="small">
             Waiting for the first mutated birth.
           </div>
@@ -255,14 +256,15 @@
           <div class="world-note">
             <h3>An open-ended experiment</h3>
             <p>
-              There is no assigned score or scripted upgrade. Sterile and
-              inefficient mutants can die out; successful variants propagate
-              through division. The environment supplies food continuously.
+              There is no scripted upgrade. Sterile and inefficient mutants can
+              die out; successful variants propagate through division. The
+              environment supplies food continuously.
             </p>
             <p>
-              Extinction is possible. Nothing secretly resets the population or
-              replaces extinct organisms. Lower mutation or increase food if you
-              want a more forgiving ecology.
+              Low populations are replenished with random or archived genomes.
+              Resampling is the default source of mutation; ordinary division
+              copies code exactly. Arrival counts and archive size are reported
+              here. Disable arrivals in World to run a closed population.
             </p>
           </div>
         </section>
@@ -276,6 +278,9 @@
           <div class="section-heading"><h2>Conditions in the dish</h2></div>
           <label for="scenario">On reset</label
           ><select id="scenario">
+            <option value="random" selected>
+              Random programs (512 independent cells)
+            </option>
             <option value="ecosystem">
               Ecosystem: colony + grazers + predators
             </option>
@@ -312,19 +317,60 @@
             step="0.1"
             value="1"
           /><label for="mutation"
-            >Mutation per birth <output id="mutation-value">5%</output></label
+            >Mutation per division
+            <output id="mutation-value">0%</output></label
           ><input
             id="mutation"
             type="range"
             min="0"
-            max="30"
+            max="100"
             step="0.1"
-            value="5"
+            value="0"
           />
           <p class="small">
-            Daughters inherit mutations: 60% operand changes, 20% instruction
-            replacements, 10% insertions, and 10% deletions. Selection comes
-            from survival and reproduction in the dish.
+            Division copies the parent's code exactly at 0%. Resampled arrivals
+            have a separate mutation rate below.
+          </p>
+          <h3>Spontaneous arrivals</h3>
+          <label for="arrival-floor"
+            >Replenish below
+            <output id="arrival-floor-value">2048</output> cells</label
+          >
+          <input
+            id="arrival-floor"
+            type="range"
+            min="0"
+            max="8192"
+            step="64"
+            value="2048"
+          />
+          <label for="archive-share"
+            >Arrivals from archive
+            <output id="archive-share-value">50%</output></label
+          >
+          <input id="archive-share" type="range" min="0" max="100" value="50" />
+          <label for="sample-mutation"
+            >Mutation per resampled arrival
+            <output id="sample-mutation-value">80%</output></label
+          >
+          <input
+            id="sample-mutation"
+            type="range"
+            min="0"
+            max="100"
+            value="80"
+          />
+          <p class="small">
+            Below the threshold, up to 64 cells arrive each simulated second.
+            Each gets a fresh random program or a sampled archive genome. An
+            empty archive falls back to random. Set the threshold to 0 to
+            disable arrivals.
+          </p>
+          <p class="small">
+            A resampled mutation makes one code edit. The archive keeps up to
+            128 variants that produced at least 3 offspring and persisted for 10
+            seconds. Reset clears the archive. Random programs contain 8–64
+            instructions.
           </p>
           <label for="color-mode">Cell color</label
           ><select id="color-mode">

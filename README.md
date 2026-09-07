@@ -14,7 +14,7 @@ npm start
 
 Open **http://localhost:8000**. Node 20 or newer is required for the development scripts. The application itself runs entirely in the browser.
 
-The initial dish mixes branching colonies, wandering grazers, and selective predators. Pause or single-step, inspect a cell, paint food, and seed an edited genome into the running world. Select a variant in Evolution to zoom to a living representative. The Inspector highlights its connected body and reports total body energy; use Focus body or Follow organism to keep it in view across the wrapping world. Scroll to zoom and drag to pan. The World panel controls the instruction budget, population limit, food arrival, mutation, and reset scenario. Space pauses when focus is outside an editing control.
+The default dish starts with 512 independently random programs. Below 2,048 cells, spontaneous arrivals draw either fresh random genomes or genomes from an archive of past reproductive successes. Resampled arrivals mutate at 80% by default; ordinary division has 0% mutation. Both rates and the random/archive mixture are independent controls. Authored organisms remain optional editor examples and reset scenarios. Pause or single-step, inspect a cell, paint food, and seed an edited genome into the running world. Select a variant in Evolution to zoom to a living representative. The Inspector highlights its connected body and reports total body energy; use Focus body or Follow organism to keep it in view across the wrapping world. Scroll to zoom and drag to pan. The World panel controls the instruction budget, population limit, food arrival, mutation, and reset scenario. Space pauses when focus is outside an editing control.
 
 ## What is implemented
 
@@ -24,7 +24,7 @@ The initial dish mixes branching colonies, wandering grazers, and selective pred
 - Soft-disc collisions, damped springs, propulsion, contraction, adhesion, detachment, and a toroidal world.
 - Directional neighbor scans, food sensors, target inspection, four local signal channels, public tags, and kinship checks.
 - Selective energy theft, costly shields, and targeted energy gifts. Predators can choose individuals or public tags; tags can be imitated.
-- Editable examples, genome import/export, individual inspection with live registers and instruction position, organism focus/tracking, population history, and inherited code mutation enabled by default.
+- Editable examples, genome import/export, individual inspection with live registers and instruction position, organism focus/tracking, population history, random founders, a bounded success archive, and independently controlled resampling/division mutation.
 - A C/WASM simulation in a dedicated worker and WebGL 2 rendering. Fixed 32 MiB WASM memory; up to 16,384 live cells, six bonds per cell, and 2,048 simultaneously retained genomes.
 
 See [the language specification](docs/language.md) for exact semantics and [the architecture notes](docs/architecture.md) for scheduling, performance, limits, and the GPU migration path.
@@ -69,6 +69,10 @@ PORT=8001 node scripts/serve.mjs --dist
 
 ## Scope
 
-The dish runs autonomously with 5% mutation per birth by default. Mutations change operands, replace instructions, insert instructions, or delete instructions. Successful variants propagate through division; inefficient or sterile descendants face ecological selection. The Evolution panel tracks living variants, ancestry, mutation depth, and offspring counts. Three unattended two-hour simulated runs passed without extinction, reaching 48–200 generations with reproducing mutant descendants. The current benchmark processes 16,384 cells in 2.46 ms per tick on an Apple M4 Pro; this excludes rendering and is not a universal frame-rate guarantee. This is demonstrated heritable evolution from designed founder genomes, not a claim of spontaneous abiogenesis or guaranteed open-ended complexity. Physics and VM execution run on the CPU via WASM; rendering runs on the GPU. Dense local clusters still have expensive neighbor searches. The benchmark reports these limits rather than promising a universal cell count or frame rate.
+Fresh random programs contain 8–64 well-typed instructions sampled from all 35 opcodes, with random operands and branches. They contain no authored reproduction or survival template. Division inherits the parent's program; mutations are concentrated at archive reintroduction by default. Every simulated second, up to 64 arrivals fill the gap below the configured threshold, without removing existing cells. The default mixture is 50% archive / 50% random; an empty archive falls back to random. When the population stays above the threshold, arrivals and therefore default mutation pause.
+
+The archive holds up to 128 variant genomes that have produced at least three direct offspring and still have living members ten seconds after introduction. Reservoir sampling retains a uniform sample of all variants that have qualified; arrivals sample retained entries uniformly. Reintroduced cells start with fresh state and energy, with no copied bonds or body structure. Reset clears the archive. This is an explicit reproduction-based sampling rule, not a guarantee of increasing complexity. See the language reference for identity, mutation, and resource accounting.
+
+Physics and VM execution run on the CPU via WASM; rendering runs on the GPU. The measured benchmark processes 16,384 cells in 2.54 ms per tick on an Apple M4 Pro, excluding rendering. Dense local clusters can be expensive; this is not a universal frame-rate guarantee.
 
 MIT licensed; see [LICENSE](LICENSE).

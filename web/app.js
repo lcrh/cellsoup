@@ -144,7 +144,7 @@ $("reset").onclick = () => {
     type: "reset",
     source: $("source").value,
     seed: Number($("random-seed").value) || 42,
-    ecosystem: $("scenario").value === "ecosystem",
+    scenario: $("scenario").value,
   });
   notice("Dish reset.");
 };
@@ -160,13 +160,27 @@ function settings() {
       cap: Number($("cap").value),
       mutation: Number($("mutation").value) / 100,
       food: Number($("rain").value),
+      floor: Number($("arrival-floor").value),
+      archiveShare: Number($("archive-share").value) / 100,
+      sampleMutation: Number($("sample-mutation").value) / 100,
     },
   });
+  $("arrival-floor-value").textContent = $("arrival-floor").value;
+  $("archive-share-value").textContent = `${$("archive-share").value}%`;
+  $("sample-mutation-value").textContent = `${$("sample-mutation").value}%`;
   $("budget-value").textContent = $("budget").value;
   $("rain-value").textContent = `${$("rain").value}×`;
   $("mutation-value").textContent = `${$("mutation").value}%`;
 }
-for (const id of ["budget", "cap", "mutation", "rain"])
+for (const id of [
+  "budget",
+  "cap",
+  "mutation",
+  "rain",
+  "arrival-floor",
+  "archive-share",
+  "sample-mutation",
+])
   $(id).oninput = settings;
 $("color-mode").onchange = () => {
   renderer.mode = Number($("color-mode").value);
@@ -310,8 +324,9 @@ function evolution(m) {
   $("evo-mutations").textContent = m.stats[8].toLocaleString();
   $("evo-generation").textContent = m.stats[9];
   $("evo-depth").textContent = m.stats[10];
-  $("evo-mode").textContent =
-    Number($("mutation").value) > 0 ? "Mutation on" : "Mutation off";
+  $("evo-mode").textContent = `Archive ${m.stats[19]} / 128`;
+  $("arrival-stats").textContent =
+    `${m.stats[17].toLocaleString()} random arrivals · ${m.stats[18].toLocaleString()} resampled · ${m.stats[20].toLocaleString()} resampling mutations · ${m.stats[21].toLocaleString()} division mutations`;
   $("mutation-mix").textContent =
     `${m.stats[12]} operand · ${m.stats[13]} replaced · ${m.stats[14]} inserted · ${m.stats[15]} deleted`;
   if (!paused && performance.now() - lastLineageUpdate < 700) return;
@@ -429,7 +444,7 @@ try {
       $("energy").textContent = m.stats[5].toFixed(1);
       $("time").textContent = `${(m.stats[1] / 60).toFixed(paused ? 2 : 1)}s`;
       $("events").textContent =
-        `${m.stats[2].toLocaleString()} births · ${m.stats[3].toLocaleString()} deaths`;
+        `${m.stats[2].toLocaleString()} divisions · ${m.stats[3].toLocaleString()} deaths`;
       $("performance").textContent =
         `${m.ms.toFixed(2)} ms / tick · ${m.stats[7]} genomes · WASM`;
       $("empty").hidden = m.stats[0] > 0;
