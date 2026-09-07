@@ -1,4 +1,61 @@
 export const PRESETS = {
+  relu: {
+    name: "Linked ReLU relay",
+    description:
+      "On a linked message in channel 0, compute max(0, 0.75 × input − 0.2) and broadcast on channel 1. Needs a linked sender; send/receive expose sender IDs for routing.",
+    source: `; channel 0 input -> channel 1 output
+loop:
+  receive r0 r1 0
+  jz r1 rest
+  mul r0 0.75
+  add r0 -0.2
+  max r0 0
+  send 0 1 r0
+rest:
+  wait 0
+  jmp loop`,
+  },
+  gradient: {
+    name: "Gradient foragers",
+    description:
+      "Read the local food gradient, turn toward it, and move forward. An optional example, never used to initialize the random dish.",
+    source: `color 200
+loop:
+  gradient r0 r1
+  turn r0
+  move 0.5
+  sense r2 energy
+  jlt r2 82 rest
+  split r3
+rest:
+  wait 4
+  jmp loop`,
+  },
+  chromatic: {
+    name: "Color-selective hunters",
+    description:
+      "Find green cells (120° ± 30°), turn toward them, and steal energy. Change the hue and tolerance to tune the sensor.",
+    source: `color 320
+loop:
+  scan_color r0 120 30
+  jz r0 forage
+  peek r1 r0 bearing
+  turn r1
+  move 0.4
+  steal r0 2
+  jmp grow
+forage:
+  gradient r1 r2
+  turn r1
+  move 0.3
+grow:
+  sense r3 energy
+  jlt r3 82 rest
+  split r4
+rest:
+  wait 4
+  jmp loop`,
+  },
   colony: {
     name: "Branching colony",
     description:

@@ -1,6 +1,6 @@
 import { readFile } from "node:fs/promises";
 import { assemble } from "../web/language.js";
-export async function engine(seed = 42) {
+export async function engine(seed = 42, { legacyCosts = true } = {}) {
   const { instance } = await WebAssembly.instantiate(
     await readFile(new URL("../web/engine.wasm", import.meta.url)),
     {},
@@ -8,6 +8,7 @@ export async function engine(seed = 42) {
   const e = instance.exports;
   e.reset(seed);
   e.configure(24, 16384, 0, 0);
+  if (legacyCosts) e.set_cost(0, 0.24); // Legacy baseline for focused mechanics fixtures.
   new Float32Array(e.memory.buffer, e.food_ptr(), 128 * 80).fill(0);
   return e;
 }

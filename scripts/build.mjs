@@ -1,4 +1,4 @@
-import { OPS } from "../web/language.js";
+import { OPS, SENSORS, FIELDS } from "../web/language.js";
 import { spawnSync } from "node:child_process";
 import {
   existsSync,
@@ -9,7 +9,7 @@ import {
 } from "node:fs";
 writeFileSync(
   "src/opcodes.h",
-  "// Generated from web/language.js by scripts/build.mjs.\nstatic const char *ARG_TYPES[]={" +
+  `// Generated from web/language.js by scripts/build.mjs.\n#define OP_COUNT ${OPS.length}\n#define SENSOR_COUNT ${SENSORS.length}\n#define FIELD_COUNT ${FIELDS.length}\nstatic const char *ARG_TYPES[]={` +
     OPS.map((o) => JSON.stringify(o[1].replaceAll(" ", ""))).join(",") +
     "};\n",
 );

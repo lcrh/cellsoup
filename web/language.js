@@ -18,7 +18,7 @@ export const OPS = [
   [
     "sense",
     "r s",
-    "Read a sensor: energy, food, age, bonds, heading, id, generation, tag, ahead, left, right.",
+    "Read a sensor: energy, food, age, bonds, rotation, id, generation, tag, ahead, left, right, color.",
   ],
   [
     "scan",
@@ -28,48 +28,52 @@ export const OPS = [
   [
     "peek",
     "r v p",
-    "Read target ID: energy, tag, distance, bearing, kin, shield, bonds. Missing target returns 0.",
+    "Read target ID: energy, tag, distance, bearing, kin, shield, bonds, color. Missing target returns 0.",
   ],
   [
     "split",
     "r",
-    "Detached division: 0 parent, 1 child, -1 failure. Costs 12; requires 32 energy.",
+    "Detached division: 0 parent, 1 child, -1 failure. Default cost 12; requires division cost + 20 energy.",
   ],
   [
     "bud",
     "r",
     "Connected division. Same return values and energy rules as split.",
   ],
-  ["turn", "v", "Rotate clockwise by degrees."],
+  [
+    "turn",
+    "v",
+    "Rotate by signed degrees (positive clockwise). Rotating spring anchors tug linked cells. Default cost 0.001 × |degrees|.",
+  ],
   [
     "move",
     "v",
-    "Propel along heading, strength -1…1. Costs 0.04 × |strength|.",
+    "Forward (+) or backward (−) thrust along heading, strength -1…1. Pulls linked cells through springs. Default cost 0.04 × |strength|.",
   ],
   [
     "link",
     "v",
-    "Bond to target ID within 24 units. Costs 0.5 on success; six bonds maximum.",
+    "Bond to target ID within 24 units. Default cost 0.5 on success; six bonds maximum.",
   ],
   ["unlink", "v", "Cut bond to target ID; 0 cuts all bonds."],
   [
     "contract",
     "v",
-    "Set own spring rest-length multiplier (0.55…1.5). Costs 0.08.",
+    "Set own spring rest-length multiplier (0.55…1.5). Default cost 0.08.",
   ],
   [
     "steal",
     "v v",
-    "Take up to amount (max 3) energy from target within 18. Costs 0.08; 75% efficient; shields resist.",
+    "Take up to amount (max 3) energy from target within 18. Default cost 0.08; 75% efficient; shields resist.",
   ],
   ["give", "v v", "Transfer up to amount (max 10) energy to target within 18."],
   ["tag", "v", "Set a public tag, 0…255. Tags can be imitated."],
-  ["shield", "v", "Set protection 0…1; upkeep 0.012 × shield per tick."],
-  ["color", "v", "Set display hue in degrees; inherited at division."],
+  ["shield", "v", "Set protection 0…1; default upkeep 0.72 × shield per second."],
+  ["color", "v", "Set biological hue in degrees; inherited and visible to color sensors."],
   [
     "emit",
     "v v",
-    "Set signal channel 0…3 to value -100…100. Costs 0.01; decays each tick.",
+    "Set signal channel 0…3 to value -100…100. Default cost 0.01; decays each tick.",
   ],
   [
     "listen",
@@ -79,19 +83,41 @@ export const OPS = [
   ["abs", "r v", "Absolute value."],
   ["min", "r v", "Clamp register down to value."],
   ["max", "r v", "Clamp register up to value."],
+  [
+    "gradient",
+    "r r",
+    "Food gradient: relative bearing in first register (degrees), strength in second. Zero if flat.",
+  ],
+  [
+    "scan_color",
+    "r v v",
+    "Nearest cell within 60 matching hue ± tolerance (degrees). Circular hue matching; returns ID or 0.",
+  ],
+  ["bond", "r v", "Read linked neighbor ID in slot 0–5, or 0 if empty."],
+  [
+    "send",
+    "v v v",
+    "Send target ID (0 = all links), channel 0–3, value. Delivered next tick. Default cost 0.01 per recipient.",
+  ],
+  [
+    "receive",
+    "r r v",
+    "Read and clear a linked-message channel: value in first register, sender ID in second (0 = empty).",
+  ],
 ];
 export const SENSORS = [
   "energy",
   "food",
   "age",
   "bonds",
-  "heading",
+  "rotation",
   "id",
   "generation",
   "tag",
   "ahead",
   "left",
   "right",
+  "color",
 ];
 export const FIELDS = [
   "energy",
@@ -101,6 +127,7 @@ export const FIELDS = [
   "kin",
   "shield",
   "bonds",
+  "color",
 ];
 const opcode = new Map(OPS.map((o, i) => [o[0], i]));
 export function assemble(source) {

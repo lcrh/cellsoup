@@ -44,6 +44,7 @@
               <option value="2">2×</option>
               <option value="4">4×</option>
               <option value="8">8×</option>
+              <option value="max">Max</option>
             </select></label
           >
         </div>
@@ -164,7 +165,7 @@
             adds this genome; editing leaves existing cells unchanged.
           </p>
           <details id="reference">
-            <summary>Instruction reference <span>35 operations</span></summary>
+            <summary>Instruction reference <span>40 operations</span></summary>
             <div class="reference-intro">
               Values can be numbers or r0–r7. Labels end in “:”. Comments start
               with “;”. Each tick executes at most the configured budget;
@@ -261,10 +262,11 @@
               environment supplies food continuously.
             </p>
             <p>
-              Low populations are replenished with random or archived genomes.
-              Resampling is the default source of mutation; ordinary division
-              copies code exactly. Arrival counts and archive size are reported
-              here. Disable arrivals in World to run a closed population.
+              Random or archived genomes arrive steadily, with extra arrivals
+              when populations are low. Resampling is the default source of
+              mutation; ordinary division copies code exactly. Arrival counts
+              and archive size are reported here. Disable arrivals in World to
+              run a closed population.
             </p>
           </div>
         </section>
@@ -297,6 +299,18 @@
             The same seed, programs, settings, and sequence of interactions
             reproduce the same simulation.
           </p>
+          <label for="draw-every">Max speed: draw every</label>
+          <select id="draw-every">
+            <option value="15">15 ticks</option>
+            <option value="60" selected>60 ticks</option>
+            <option value="240">240 ticks</option>
+            <option value="600">600 ticks</option>
+          </select>
+          <p class="small">
+            Max speed runs as fast as possible and skips intermediate drawings.
+            Physics uses the same fixed timestep. Choose Max in the speed
+            control above the dish.
+          </p>
           <label for="budget"
             >Instructions per cell per tick
             <output id="budget-value">24</output></label
@@ -309,14 +323,34 @@
             <option value="16384">16,384</option></select
           ><label for="rain"
             >Food arrival <output id="rain-value">1×</output></label
-          ><input
-            id="rain"
+          ><input id="rain" type="range" min="0" max="5" step="0.1" value="1" />
+          <label for="food-memory"
+            >Food memory <output id="food-memory-value">20s</output></label
+          >
+          <input id="food-memory" type="range" min="1" max="120" value="20" />
+          <label for="food-wander"
+            >Food wandering range
+            <output id="food-wander-value">22%</output></label
+          >
+          <input id="food-wander" type="range" min="0" max="100" value="22" />
+          <label for="food-variation"
+            >Food amount variation
+            <output id="food-variation-value">40%</output></label
+          >
+          <input
+            id="food-variation"
             type="range"
             min="0"
-            max="5"
-            step="0.1"
-            value="1"
-          /><label for="mutation"
+            max="100"
+            value="40"
+          />
+          <p class="small">
+            Drops wander and fluctuate in amount with Ornstein–Uhlenbeck
+            randomness. Longer memory means more persistent patches; the drop
+            location drifts around a randomly placed home region. Zero range
+            fixes its position; zero variation fixes its amount.
+          </p>
+          <label for="mutation"
             >Mutation per division
             <output id="mutation-value">0%</output></label
           ><input
@@ -331,7 +365,137 @@
             Division copies the parent's code exactly at 0%. Resampled arrivals
             have a separate mutation rate below.
           </p>
+          <label for="birth-jitter"
+            >Daughter heading jitter ±<output id="birth-jitter-value"
+              >12°</output
+            ></label
+          >
+          <input id="birth-jitter" type="range" min="0" max="90" value="12" />
+          <p class="small">
+            Daughters inherit heading with a small random offset. This changes
+            orientation only, independently of genome mutation.
+          </p>
+          <h3>Energy costs</h3>
+          <label for="cost-0"
+            >Baseline upkeep / second
+            <output id="cost-0-value">2</output></label
+          >
+          <input
+            id="cost-0"
+            type="range"
+            min="0"
+            max="12"
+            step="0.1"
+            value="2"
+          />
+          <p class="small">
+            Charged even while waiting. At the default, an idle cell's initial
+            70 energy lasts about 35 simulated seconds without food. Food
+            absorption can offset upkeep.
+          </p>
+          <details>
+            <summary>Instruction and action costs</summary>
+            <label for="cost-1">Each executed instruction</label>
+            <input
+              id="cost-1"
+              type="number"
+              min="0"
+              max="10"
+              step="0.0001"
+              value="0.0005"
+            />
+            <label for="cost-2">Division (split or bud)</label>
+            <input
+              id="cost-2"
+              type="number"
+              min="0"
+              max="180"
+              step="1"
+              value="12"
+            />
+            <label for="cost-3">Movement at full force</label>
+            <input
+              id="cost-3"
+              type="number"
+              min="0"
+              max="200"
+              step="0.01"
+              value="0.04"
+            />
+            <label for="cost-4">Successful link</label>
+            <input
+              id="cost-4"
+              type="number"
+              min="0"
+              max="200"
+              step="0.1"
+              value="0.5"
+            />
+            <label for="cost-5">Contraction</label>
+            <input
+              id="cost-5"
+              type="number"
+              min="0"
+              max="200"
+              step="0.01"
+              value="0.08"
+            />
+            <label for="cost-6">Theft attempt in range</label>
+            <input
+              id="cost-6"
+              type="number"
+              min="0"
+              max="200"
+              step="0.01"
+              value="0.08"
+            />
+            <label for="cost-7">Signal emission</label>
+            <input
+              id="cost-7"
+              type="number"
+              min="0"
+              max="200"
+              step="0.01"
+              value="0.01"
+            />
+            <label for="cost-10">Linked message per recipient</label>
+            <input
+              id="cost-10"
+              type="number"
+              min="0"
+              max="200"
+              step="0.01"
+              value="0.01"
+            />
+            <label for="cost-9">Rotation per degree</label>
+            <input
+              id="cost-9"
+              type="number"
+              min="0"
+              max="200"
+              step="0.001"
+              value="0.001"
+            />
+            <label for="cost-8">Full shield upkeep / second</label>
+            <input
+              id="cost-8"
+              type="number"
+              min="0"
+              max="60"
+              step="0.01"
+              value="0.72"
+            />
+            <p class="small">
+              All actions also pay instruction cost. Division requires its
+              configured cost plus 20 energy; the remainder is shared equally.
+            </p>
+          </details>
           <h3>Spontaneous arrivals</h3>
+          <label for="arrival-rate"
+            >Steady arrivals per second
+            <output id="arrival-rate-value">8</output></label
+          >
+          <input id="arrival-rate" type="range" min="0" max="64" value="8" />
           <label for="arrival-floor"
             >Replenish below
             <output id="arrival-floor-value">2048</output> cells</label
@@ -361,10 +525,11 @@
             value="80"
           />
           <p class="small">
-            Below the threshold, up to 64 cells arrive each simulated second.
-            Each gets a fresh random program or a sampled archive genome. An
-            empty archive falls back to random. Set the threshold to 0 to
-            disable arrivals.
+            The steady trickle continues above the replenishment threshold.
+            Below it, up to 64 extra cells arrive per simulated second. Arrivals
+            stop at the hard population limit. Each gets random or archived
+            code, with random fallback when the archive is empty. Set both
+            arrival controls to 0 to disable arrivals.
           </p>
           <p class="small">
             A resampled mutation makes one code edit. The archive keeps up to
@@ -391,9 +556,9 @@
               Bonds share energy; every instruction has a small metabolic cost.
             </p>
             <p>
-              Division costs 12 energy and shares the remainder. Shields reduce
-              theft by up to 90%. Death returns some embodied energy to the
-              soup.
+              Division pays its configured cost and shares the remainder.
+              Shields reduce theft by up to 90%. Death returns some embodied
+              energy to the soup.
             </p>
             <p>
               The dish wraps at its edges. Physics runs at 60 ticks per

@@ -130,8 +130,7 @@ function togglePause() {
 }
 $("pause").onclick = togglePause;
 $("step").onclick = () => send({ type: "step" });
-$("speed").onchange = () =>
-  send({ type: "speed", value: Number($("speed").value) });
+$("speed").onchange = () => send({ type: "speed", value: $("speed").value });
 $("reset").onclick = () => {
   if ($("scenario").value === "editor" && !validate()) return;
   history = [];
@@ -157,14 +156,27 @@ function settings() {
     type: "config",
     settings: {
       steps: Number($("budget").value),
+      costs: Array.from({ length: 11 }, (_, i) => Number($("cost-" + i).value)),
       cap: Number($("cap").value),
       mutation: Number($("mutation").value) / 100,
+      birthJitter: Number($("birth-jitter").value),
       food: Number($("rain").value),
+      foodMemory: Number($("food-memory").value),
+      foodWander: Number($("food-wander").value) / 100,
+      foodVariation: Number($("food-variation").value) / 100,
       floor: Number($("arrival-floor").value),
+      arrivalRate: Number($("arrival-rate").value),
+      drawEvery: Number($("draw-every").value),
       archiveShare: Number($("archive-share").value) / 100,
       sampleMutation: Number($("sample-mutation").value) / 100,
     },
   });
+  $("birth-jitter-value").textContent = `${$("birth-jitter").value}°`;
+  $("cost-0-value").textContent = $("cost-0").value;
+  $("food-memory-value").textContent = `${$("food-memory").value}s`;
+  $("food-wander-value").textContent = `${$("food-wander").value}%`;
+  $("food-variation-value").textContent = `${$("food-variation").value}%`;
+  $("arrival-rate-value").textContent = $("arrival-rate").value;
   $("arrival-floor-value").textContent = $("arrival-floor").value;
   $("archive-share-value").textContent = `${$("archive-share").value}%`;
   $("sample-mutation-value").textContent = `${$("sample-mutation").value}%`;
@@ -176,8 +188,15 @@ for (const id of [
   "budget",
   "cap",
   "mutation",
+  "birth-jitter",
   "rain",
   "arrival-floor",
+  "arrival-rate",
+  "draw-every",
+  "food-memory",
+  "food-wander",
+  "food-variation",
+  ...Array.from({ length: 11 }, (_, i) => "cost-" + i),
   "archive-share",
   "sample-mutation",
 ])

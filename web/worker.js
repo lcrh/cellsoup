@@ -9,13 +9,21 @@ let engine,
   last = performance.now(),
   lastFrame = 0,
   accumulator = 0,
-  ms = 0;
+  ms = 0,
+  ticksSinceFrame = 0;
 let settings = {
   steps: 24,
   cap: 8192,
   mutation: 0,
+  birthJitter: 12,
   food: 1,
+  foodMemory: 20,
+  foodWander: 0.22,
+  foodVariation: 0.4,
   floor: 2048,
+  arrivalRate: 8,
+  drawEvery: 60,
+  costs: [2, 0.0005, 12, 0.04, 0.5, 0.08, 0.08, 0.01, 0.72, 0.001, 0.01],
   archiveShare: 0.5,
   sampleMutation: 0.8,
 };
@@ -34,10 +42,18 @@ function load(source) {
   return g;
 }
 function config() {
+  engine.configure_births(settings.birthJitter);
+  settings.costs.forEach((cost, i) => engine.set_cost(i, cost));
+  engine.configure_food(
+    settings.foodMemory,
+    settings.foodWander,
+    settings.foodVariation,
+  );
   engine.configure_arrivals(
     settings.floor,
     settings.archiveShare,
     settings.sampleMutation,
+    settings.arrivalRate,
   );
   engine.configure(
     settings.steps,
@@ -51,6 +67,7 @@ function reset(source, seed, scenario = "random") {
   config();
   selected = 0;
   accumulator = 0;
+  ticksSinceFrame = 0;
   if (scenario === "random") {
     engine.seed_random(Math.min(512, settings.cap));
   } else if (scenario === "ecosystem") {
@@ -74,6 +91,7 @@ function frame(force = false) {
   if (force) dirty = true;
   if (outstanding) return;
   dirty = false;
+  ticksSinceFrame = 0;
   const n = engine.snapshot(),
     mem = engine.memory.buffer;
   const stats = new Float32Array(mem, engine.stats_ptr(), 24).slice();
@@ -102,6 +120,8 @@ function frame(force = false) {
   postMessage(
     {
       type: "frame",
+      paused,
+      speed,
       cells,
       links,
       food,
@@ -139,7 +159,12 @@ self.onmessage = ({ data: m }) => {
         frame(true);
         break;
       case "speed":
-        speed = m.value;
+        speed =
+          m.value === "max"
+            ? "max"
+            : Math.max(0.25, Math.min(8, Number(m.value) || 1));
+        accumulator = 0;
+        last = performance.now();
         break;
       case "step":
         if (paused) {
@@ -190,17 +215,37 @@ try {
       elapsed = Math.min(100, now - last);
     last = now;
     if (!paused) {
-      accumulator += elapsed * speed;
-      const ticks = Math.min(12, Math.floor(accumulator / (1000 / 60)));
+      const started = performance.now();
+      let ticks = 0;
+      if (speed === "max") {
+        // Bounded batches let messages interrupt between passes. Physics stays at 60 Hz.
+        do {
+          engine.step(4);
+          ticks += 4;
+        } while (performance.now() - started < 12);
+      } else {
+        accumulator += elapsed * speed;
+        ticks = Math.min(12, Math.floor(accumulator / (1000 / 60)));
+        if (ticks) {
+          engine.step(ticks);
+          accumulator -= ticks * (1000 / 60);
+          accumulator = Math.min(accumulator, 200);
+        }
+      }
       if (ticks) {
-        const t = performance.now();
-        engine.step(ticks);
-        ms = ms * 0.85 + ((performance.now() - t) / ticks) * 0.15;
-        accumulator -= ticks * (1000 / 60);
-        accumulator = Math.min(accumulator, 200);
+        ms = ms * 0.85 + ((performance.now() - started) / ticks) * 0.15;
+        ticksSinceFrame += ticks;
       }
     }
-    if (!paused && now - lastFrame > 33) {
+    const drawEvery = Math.max(
+      1,
+      Math.min(3600, Number(settings.drawEvery) || 60),
+    );
+    if (
+      !paused &&
+      now - lastFrame > 33 &&
+      (speed !== "max" || ticksSinceFrame >= drawEvery)
+    ) {
       frame();
       lastFrame = now;
     }

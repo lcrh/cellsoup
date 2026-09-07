@@ -6,7 +6,8 @@ for (const seed of seeds) {
   const e = await engine(seed);
   e.reset(seed);
   e.configure(24, 8192, 0, 1);
-  e.configure_arrivals(2048, 0.5, 0.8);
+  e.set_cost(0, 2);
+  e.configure_arrivals(2048, 0.5, 0.8, 8);
   e.seed_random(512);
   const started = performance.now();
   for (let second = 0; second < minutes * 60; second += 10) {

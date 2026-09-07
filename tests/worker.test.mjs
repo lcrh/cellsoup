@@ -57,6 +57,44 @@ test("real browser worker initializes independent random genomes, pauses, steps 
       (m) => m.stats[0] === stepped.stats[0] + 4,
     );
     assert.equal(seeded.stats[7], stepped.stats[7] + 1);
+    worker.postMessage({
+      type: "config",
+      settings: {
+        floor: 0,
+        arrivalRate: 0,
+        drawEvery: 600,
+        food: 0,
+        costs: Array(11).fill(0),
+      },
+    });
+    worker.postMessage({
+      type: "reset",
+      scenario: "editor",
+      source: "wait 36000",
+      seed: 42,
+    });
+    await next("frame", (m) => m.stats[0] === 128 && m.stats[1] === 0);
+    messages.length = 0;
+    worker.postMessage({ type: "speed", value: "max" });
+    worker.postMessage({ type: "pause", value: false });
+    const fast = await next(
+      "frame",
+      (m) => m.speed === "max" && m.stats[1] >= 600,
+    );
+    const later = await next(
+      "frame",
+      (m) => !m.paused && m.stats[1] > fast.stats[1],
+    );
+    assert.ok(later.stats[1] - fast.stats[1] >= 600);
+    messages.length = 0;
+    worker.postMessage({ type: "pause", value: true });
+    const stopped = await next("frame", (m) => m.paused);
+    worker.postMessage({ type: "step" });
+    const single = await next(
+      "frame",
+      (m) => m.paused && m.stats[1] > stopped.stats[1],
+    );
+    assert.equal(single.stats[1], stopped.stats[1] + 1);
   } finally {
     await worker.terminate();
   }

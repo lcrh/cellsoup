@@ -2,20 +2,20 @@
 
 ## Execution path
 
-The main thread owns the editor, interaction, inspector, graph, and WebGL 2 renderer. A dedicated module worker owns a single C engine compiled to WebAssembly. The module has no imports, network calls, allocator, or WASI dependency. Its 32 MiB memory contains fixed cell slots, a free-list, a shared genome pool, spatial buckets, food fields, a 128-entry archive of copied genomes, and snapshot buffers.
+The main thread owns the editor, interaction, inspector, graph, and WebGL 2 renderer. A dedicated module worker owns a single C engine compiled to WebAssembly. The module has no imports, network calls, allocator, or WASI dependency. Its 32 MiB memory contains fixed cell slots, a free-list, a shared genome pool, spatial buckets, food fields, a 128-entry genome archive, bounded message inboxes, and snapshots.
 
-The worker accumulates elapsed time and advances fixed 1/60-second ticks. Playback speed changes the number of ticks requested, not the physics timestep. Catch-up is limited to 12 ticks per scheduling pass and capped accumulated lag; overloaded devices run slower than requested rather than taking unstable large steps. Paused single-step advances exactly one tick.
+The worker accumulates elapsed time and advances fixed 1/60-second ticks. Playback speed changes the number of ticks requested, not the physics timestep. Catch-up is limited to 12 ticks per scheduling pass and capped accumulated lag; overloaded devices run slower than requested rather than taking unstable large steps. Paused single-step advances exactly one tick. Max mode ignores wall-time accumulation and executes four-tick chunks for approximately 12 ms per worker pass, then yields for messages. It keeps the fixed timestep and only sends periodic snapshots after at least the selected N ticks (default 60), also bounded to about 30 snapshots/second. Explicit pause/step/reset/inspect updates remain immediate; ACK backpressure still applies.
 
 A tick:
 
-1. Adds periodic food and, every fourth tick, diffuses and decays the food grid.
-2. Rebuilds the spatial hash and absorbs food, charges upkeep, ages cells, and decays signals.
+1. Advances an independent seeded OU food source and adds periodic food and, every fourth tick, diffuses and decays the food grid.
+2. Rebuilds the spatial hash and absorbs food, charges upkeep, ages cells, decays ambient signals and delivers last tick’s pending linked messages.
 3. Executes bounded programs in a rotating order. Children cannot execute in the tick they are created. Sensors see positions indexed at the start of the VM phase; newborns enter neighbor queries after the next grid rebuild.
-4. Rebuilds the hash, applies pairwise soft collisions, spring forces, and conservative bond energy exchange.
+4. Rebuilds the hash, applies pairwise soft collisions, spring endpoint forces/torques, and conservative bond energy exchange.
 5. Removes depleted cells and their bonds, damps and bounds velocities, and integrates positions with periodic boundaries.
-6. Every 60 ticks, records newly qualifying reproductive variants and replenishes low populations with at most 64 random/archive arrivals. Both operations run inside WASM using the simulation RNG, independent of frame rate and inspection.
+6. Every 60 ticks, records newly qualifying reproductive variants and adds steady random/archive arrivals plus at most 64 extra arrivals for low populations. Both operations run inside WASM using the simulation RNG, independent of frame rate and inspection.
 
-The 80 × 50 spatial hash has 20-unit buckets. Queries visit only buckets intersecting the axis-aligned bounds of their actual radius: eight units for collisions and 60 for senses. Exact distance and directional checks filter the candidates. Targeted actions return immediately once their unique in-range ID is found; directional thresholds are calculated once per search. This avoids global all-pairs loops and greatly reduces irrelevant candidates at ordinary densities. Dense clusters still approach quadratic local work. Bond work is bounded by six edges per cell; genomes are shared until a daughter mutates, rather than copied into every cell.
+The 80 × 50 spatial hash has 20-unit buckets. Queries visit only buckets intersecting the axis-aligned bounds of their actual radius: ten units for collisions and 60 for senses. Exact distance and directional checks filter the candidates. Targeted actions return immediately once their unique in-range ID is found; directional thresholds are calculated once per search. This avoids global all-pairs loops and greatly reduces irrelevant candidates at ordinary densities. Dense clusters still approach quadratic local work. Bond work is bounded by six edges per cell; genomes are shared until a daughter mutates, rather than copied into every cell.
 
 The finer hash changes contact traversal order, so long numerical trajectories can differ from earlier versions. Replay remains deterministic within the same implementation and runtime. Tests compare the optimized nearest-neighbor queries to a brute-force reference at grid boundaries and world seams.
 
@@ -27,18 +27,18 @@ WebGL draws circular point sprites in one cell draw call, bonds as instanced lin
 
 ## Measured baseline
 
-`npm run bench` warms up 60 ticks and times 120 individual ticks using the actual WASM engine in Node, with 24-instruction budgets, food arrival enabled, and colony/grazer cells in four seeded patches. It includes physics, sensing, and VM execution. It excludes rendering, snapshot copies, and browser main-thread work. These are short-run measurements, not guarantees for evolved dense colonies, arbitrary genomes, phones, or all browsers.
+`npm run bench` warms up 60 ticks and times 120 individual ticks using the actual WASM engine in Node, with a fixed legacy 0.24/second baseline upkeep fixture, 24-instruction budgets, food arrival enabled, and colony/grazer cells in four seeded patches. It includes physics, sensing, and VM execution. It excludes rendering, snapshot copies, and browser main-thread work. These are short-run measurements, not guarantees for evolved dense colonies, arbitrary genomes, phones, or all browsers.
 
 On an Apple M4 Pro, Node v24.4.1:
 
 | Seeded / surviving cells | Median ms/tick | p95 ms/tick |
 | ---: | ---: | ---: |
-| 1,024 | 0.042 | 0.093 |
-| 4,096 | 0.195 | 0.375 |
-| 8,192 | 0.720 | 1.084 |
-| 16,384 | 2.539 | 3.283 |
+| 1,024 | 0.047 | 0.096 |
+| 4,096 | 0.242 | 0.421 |
+| 8,192 | 0.791 | 1.182 |
+| 16,384 | 3.253 | 4.307 |
 
-The earlier 40-unit hash measured 16.842 ms median at 16,384 cells on this machine; the current bounded searches are about 6.6 times faster in this benchmark. A 60 Hz tick budget is 16.67 ms. The default population limit is 8,192; 16,384 is available as a stress setting, not promised to sustain 60 Hz. The UI reports the measured worker time per tick as the actual dish evolves. Deterministic replay is tested with the same seed, programs, settings, and operation sequence in the same runtime; cross-browser bit-identical floating-point trajectories are not guaranteed.
+The earlier 40-unit hash measured 16.842 ms median at 16,384 cells on this machine; the current bounded searches are about 5.2 times faster in this benchmark. A 60 Hz tick budget is 16.67 ms. The default population limit is 8,192; 16,384 is available as a stress setting, not promised to sustain 60 Hz. The UI reports the measured worker time per tick as the actual dish evolves. Deterministic replay is tested with the same seed, programs, settings, and operation sequence in the same runtime; cross-browser bit-identical floating-point trajectories are not guaranteed.
 
 ## Why CPU WASM first
 
@@ -59,21 +59,23 @@ Runtime assets are all local static files. The checked-in binary can be served i
 
 ## Autonomous evolution verification
 
-The default dish starts with 512 independent random programs, 0% division mutation, a replenishment threshold of 2,048, 50% archive sampling, and 80% mutation on resampled arrivals. `npm run soak` advances three seeds for 30 simulated minutes each. It checks finite state, population limits, valid evolved bytecode, exact arrival/division/death accounting, archive formation and mutated reintroduction, and that all mutations come from resampling. Focused WASM tests verify archive qualification, retention after extinction and slot reuse, independent mutation rates, capped replenishment, disabling arrivals, reset, and deterministic replay with different step chunking and inspection frequency.
+The default dish starts with 512 independent random programs, zero division mutation, ±12° daughter heading jitter, 8 steady arrivals/second, a replenishment threshold of 2,048, 50% archive sampling, 80% mutation on resampled arrivals, and 2 energy/second baseline upkeep. `npm run soak` advances three seeds for 30 simulated minutes each with these defaults. It checks finite state, population limits, valid bytecode, arrival/division/death accounting, archive formation and mutated reintroduction, and that all mutations come from resampling.
 
-Verified v0.3 results (30 simulated minutes per seed, default settings):
+Behavior tests execute the compiled WASM: energy and fork accounting; bounded archives and genome pools; replay; relative food gradients; circular color filtering; next-tick, per-link mailboxes; an end-to-end weighted ReLU relay; configurable costs; idle starvation; forward/backward and rotational force transfer; collision spacing; and offspring heading jitter. Weather tests check OU mean, variance and lag correlation against the transition law, and verify that VM behavior cannot change the weather RNG. A real worker test exercises Max playback, skipped snapshots, responsive pause and exact single-step.
+
+Verified v0.4 default runs (30 simulated minutes per seed):
 
 | Seed | Final cells | Divisions | Random arrivals | Resampled arrivals | Resampling mutations | Division mutations |
 | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
-| 42 | 903 | 187,553 | 54,723 | 53,448 | 42,861 | 0 |
-| 97 | 1,070 | 191,943 | 57,177 | 56,787 | 45,621 | 0 |
-| 321 | 2,552 | 22,826 | 2,165 | 1,100 | 857 | 0 |
+| 42 | 960 | 154,429 | 65,794 | 64,318 | 51,578 | 0 |
+| 97 | 857 | 180,546 | 65,751 | 64,361 | 51,440 | 0 |
+| 321 | 877 | 174,219 | 65,677 | 64,435 | 51,497 | 0 |
 
-All three archives reached 128 entries, and resampled mutant variants produced offspring. Seed 321 stayed above the replenishment threshold after about ten minutes, so further mutations stopped, as specified with 0% division mutation. The threshold is a replenishment target, not a guaranteed population floor: losses can exceed the 64 arrivals/second limit. These runs demonstrate the sampling mechanism, not guaranteed continuous novelty or increasing complexity.
+All archives reached 128 entries, and resampled mutant variants reproduced in all three runs. These measurements include correlated food, the increased baseline cost, rotating spring attachments, relative sensors and linked communication.
 
-The earlier v0.2 authored-founder scenario was tested for two simulated hours per seed, reaching 48–200 generations with 5% division mutation. Those results describe that older scenario, not the new random-start default. The fixed benchmark above continues using authored colony/grazer programs for comparable performance measurements.
+Earlier v0.2 and v0.3 measurements describe different founder/arrival/physics settings and are not performance or evolution guarantees for the current ecology. Steady arrivals now continue above the replenishment threshold, allowing continued mutation without division mutation. The threshold is a replenishment target rather than a guaranteed floor; losses can exceed arrivals. The archive explicitly selects reproductive persistence, not intelligence or increasing complexity.
 
-The background worker keeps the page responsive, but browsers may throttle or suspend background tabs. Closing the tab stops the simulation and discards the archive. “Autonomous” means no ongoing user intervention while the simulation runs, not an external always-on service. The archive copies genomes, not whole connected organisms; individual divisions still create all physical bodies in the running world.
+The background worker keeps the page responsive, but browsers may throttle or suspend background tabs. Closing the tab stops the simulation and discards the archive. “Autonomous” means no ongoing user intervention while the simulation runs. The archive copies genomes, not whole connected bodies; individual divisions construct physical organisms.
 
 ## Connected-organism inspection
 

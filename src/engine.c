@@ -7,6 +7,8 @@
 #define CODE 256
 #define ARCHIVE 128
 #define BONDS 6
+#define BOND_LENGTH 18.f
+#define CONTACT 10.f
 #define W 1600.f
 #define H 1000.f
 #define FW 128
@@ -62,8 +64,10 @@ typedef struct {
   int len, refs, serial, parent_serial, founder, born_tick, offspring, depth, archived;
 } Genome;
 typedef struct {
-  float x, y, vx, vy, energy, heading, r[8], signal[4], tag, shield, tone, rest;
-  int id, genome, pc, sleep, age, generation, parent, alive, bond[BONDS], next;
+  float x, y, vx, vy, energy, heading, r[8], signal[4], tag, shield, tone, rest, omega,
+      anchor[BONDS], inbox[4], pending_mail[4];
+  int id, genome, pc, sleep, age, generation, parent, alive, bond[BONDS], next, inbox_from[4],
+      pending_from[4];
 } Cell;
 static Cell cells[MAX];
 static Genome genomes[GENOMES];
@@ -71,11 +75,24 @@ static Ins upload[CODE];
 static float food[FW * FH], scratch[FW * FH];
 static int heads[GX * GY], free_slots[MAX], free_n, high, count, tick, births, deaths,
     limit = 8192, budget = 24, next_id = 1;
-static uint32_t rng = 1;
-static float mutation = 0, rain = 1;
+static uint32_t rng = 1, food_rng = 1;
+static float food_process[12], food_memory = 20, food_wander = .22f, food_variation = .4f;
+static float mutation = 0, rain = 1, birth_jitter = 12;
+API void configure_births(float degrees) { birth_jitter = clamp(degrees, 0, 180); }
+// Baseline and full-shield upkeep are per simulated second; others per action.
+static float costs[11] = {2, .0005f, 12, .04f, .5f, .08f, .08f, .01f, .72f, .001f, .01f};
+API void set_cost(int kind, float value) {
+  if (kind >= 0 && kind < 11)
+    costs[kind] = clamp(value, 0,
+                        kind == 0 || kind == 8 ? 60
+                        : kind == 1            ? 10
+                        : kind == 2            ? 180
+                                               : 200);
+}
+API int costs_ptr() { return (int)(uintptr_t)costs; }
 static Genome archive[ARCHIVE];
 static int archive_n, successful_variants, arrival_floor, random_arrivals, sampled_arrivals,
-    sampled_mutations;
+    sampled_mutations, arrival_rate;
 static float archive_share = .5f, sample_mutation = .8f;
 static int next_genome_id = 1, mutation_counts[4], total_mutations, max_generation;
 static float lineage_data[16 * 12], genome_energy[GENOMES];
@@ -92,6 +109,53 @@ static uint32_t random_u() {
   return rng;
 }
 static float randf() { return (random_u() >> 8) * (1.f / 16777216.f); }
+// Food has its own seeded random stream: VM scheduling cannot change its weather.
+static float food_random() {
+  food_rng ^= food_rng << 13;
+  food_rng ^= food_rng >> 17;
+  food_rng ^= food_rng << 5;
+  return (food_rng >> 8) * (1.f / 16777216.f);
+}
+// Log for positive normal float32 inputs. Range reduction and an atanh series
+// avoid a libc dependency in the freestanding WASM module.
+static float log_positive(float x) {
+  union {
+    float f;
+    uint32_t u;
+  } bits = {.f = x};
+  int exponent = (int)((bits.u >> 23) & 255) - 127;
+  bits.u = (bits.u & 0x7fffff) | 0x3f800000;
+  float z = (bits.f - 1) / (bits.f + 1), z2 = z * z;
+  float term = z, sum = z;
+  for (int k = 3; k <= 15; k += 2) {
+    term *= z2;
+    sum += term / k;
+  }
+  return exponent * .6931471805599453f + 2 * sum;
+}
+static float food_normal() {
+  float x, y, r;
+  do {
+    x = 2 * food_random() - 1;
+    y = 2 * food_random() - 1;
+    r = x * x + y * y;
+  } while (r <= .0000001f || r >= 1);
+  return x * root(-2 * log_positive(r) / r);
+}
+API void configure_food(float memory, float wander, float variation) {
+  food_memory = clamp(memory, 1, 120);
+  food_wander = clamp(wander, 0, 1);
+  food_variation = clamp(variation, 0, 1);
+  // exp(-0.5 / tau), with |argument| <= 0.5. Taylor error < 6e-9.
+  float x = -.5f / food_memory, term = 1, a = 1;
+  for (int k = 1; k <= 8; k++) {
+    term *= x / k;
+    a += term;
+  }
+  food_process[8] = a;
+  food_process[9] = root(maxf(0, 1 - a * a));
+}
+API int food_process_ptr() { return (int)(uintptr_t)food_process; }
 static float dx(float a, float b, float size) {
   float d = a - b;
   if (d > size * .5f)
@@ -136,18 +200,21 @@ static int link_pair(int a, int b) {
   for (int k = 0; k < BONDS; k++) {
     if (cells[a].bond[k] == b)
       return 0;
-    if (cells[a].bond[k] < 0)
+    if (sa < 0 && cells[a].bond[k] < 0)
       sa = k;
-    if (cells[b].bond[k] < 0)
+    if (sb < 0 && cells[b].bond[k] < 0)
       sb = k;
   }
   if (sa < 0 || sb < 0)
     return 0;
   cells[a].bond[sa] = b;
   cells[b].bond[sb] = a;
+  float bearing = angle(dx(cells[b].x, cells[a].x, W), dx(cells[b].y, cells[a].y, H));
+  cells[a].anchor[sa] = bearing - cells[a].heading;
+  cells[b].anchor[sb] = bearing + .5f - cells[b].heading;
   return 1;
 }
-static int nearby(Cell *c, int id, float tag, float cone) {
+static int nearby_filtered(Cell *c, int id, float tag, float cone, float hue, float tolerance) {
   int best = -1;
   int x0 = (int)__builtin_floorf((c->x - 60) / GRID),
       x1 = (int)__builtin_floorf((c->x + 60) / GRID);
@@ -166,6 +233,8 @@ static int nearby(Cell *c, int id, float tag, float cone) {
           continue;
         if (id == 0 && tag >= 0 && (int)n->tag != (int)tag)
           continue;
+        if (hue >= 0 && absf(dx(n->tone * 360, hue, 360)) > tolerance)
+          continue;
         float x = dx(n->x, c->x, W), y = dx(n->y, c->y, H), d = x * x + y * y;
         if (d >= dist)
           continue;
@@ -178,6 +247,9 @@ static int nearby(Cell *c, int id, float tag, float cone) {
       }
     }
   return best;
+}
+static int nearby(Cell *c, int id, float tag, float cone) {
+  return nearby_filtered(c, id, tag, cone, -1, 180);
 }
 static float val(Cell *c, float v) { return v <= -1000000.f ? c->r[(int)(-v - 1000000.f) & 7] : v; }
 static int reg(float v) { return (int)(-v - 1000000.f) & 7; }
@@ -219,16 +291,16 @@ static float random_operand(char type, int len) {
   if (type == 'l')
     return random_u() % len;
   if (type == 's')
-    return random_u() % 11;
+    return random_u() % SENSOR_COUNT;
   if (type == 'p')
-    return random_u() % 7;
+    return random_u() % FIELD_COUNT;
   return randf() < .25f ? -1000000.f - (random_u() % 8) : constants[random_u() % 13];
 }
 static Ins random_instruction(int len, int avoid) {
   Ins in = {0};
-  in.op = random_u() % 35;
+  in.op = random_u() % OP_COUNT;
   if (in.op == avoid)
-    in.op = (in.op + 1) % 35;
+    in.op = (in.op + 1) % OP_COUNT;
   float *values = &in.a;
   for (int k = 0; ARG_TYPES[in.op][k]; k++)
     values[k] = random_operand(ARG_TYPES[in.op][k], len);
@@ -290,9 +362,9 @@ static int mutate_genome(Genome *g, Cell *child) {
         if (type == 'r')
           *v = -1000000.f - (((int)(-old - 1000000) + 1) % 8);
         else if (type == 's')
-          *v = ((int)old + 1) % 11;
+          *v = ((int)old + 1) % SENSOR_COUNT;
         else if (type == 'p')
-          *v = ((int)old + 1) % 7;
+          *v = ((int)old + 1) % FIELD_COUNT;
         else if (type == 'l')
           *v = ((int)old + 1) % g->len;
         else
@@ -365,10 +437,11 @@ static int arrive(int n, int random_only) {
   }
   return made;
 }
-API void configure_arrivals(int floor, float share, float mut) {
+API void configure_arrivals(int floor, float share, float mut, int rate) {
   arrival_floor = (int)clamp(floor, 0, MAX);
   archive_share = clamp(share, 0, 1);
   sample_mutation = clamp(mut, 0, 1);
+  arrival_rate = (int)clamp(rate, 0, 64);
 }
 API int seed_random(int n) { return arrive((int)clamp(n, 0, MAX), 1); }
 static void die(int i) {
@@ -385,19 +458,20 @@ static void die(int i) {
 }
 static int split(int i, int connected, int dst) {
   Cell *p = &cells[i];
-  if (p->energy < 32 || count >= limit || (connected && degree(p) >= BONDS)) {
+  if (p->energy < costs[2] + 20 || count >= limit || (connected && degree(p) >= BONDS)) {
     p->r[dst] = -1;
     return -1;
   }
-  int j = alloc_cell(p->genome, p->x + cosf_(p->heading) * 9, p->y + sinf_(p->heading) * 9,
-                     (p->energy - 12) * .5f);
+  int j = alloc_cell(p->genome, p->x + cosf_(p->heading) * 14, p->y + sinf_(p->heading) * 14,
+                     (p->energy - costs[2]) * .5f);
   if (j < 0) {
     p->r[dst] = -1;
     return -1;
   }
   Cell *c = &cells[j];
   c->pc = p->pc;
-  c->heading = p->heading + .5f;
+  c->heading =
+      wrap(p->heading + (birth_jitter > 0 ? (2 * randf() - 1) * birth_jitter / 360 : 0), 1);
   c->generation = p->generation + 1;
   c->parent = p->id;
   c->tag = p->tag;
@@ -451,7 +525,7 @@ static void execute(int i) {
     float a = val(c, in.a), b = val(c, in.b), v = val(c, in.c);
     int d = reg(in.a), target;
     float amount;
-    c->energy -= .0005f;
+    c->energy -= costs[1];
     switch (in.op) {
     case 0:
       break;
@@ -517,7 +591,7 @@ static void execute(int i) {
         c->r[d] = degree(c);
         break;
       case 4:
-        c->r[d] = wrap(c->heading, 1) * 360;
+        c->r[d] = c->omega * 360;
         break;
       case 5:
         c->r[d] = c->id;
@@ -538,6 +612,9 @@ static void execute(int i) {
       case 10:
         c->r[d] = food[food_at(c->x + cosf_(c->heading + .125f) * 25,
                                c->y + sinf_(c->heading + .125f) * 25)];
+        break;
+      case 11:
+        c->r[d] = c->tone * 360;
         break;
       }
       break;
@@ -573,6 +650,9 @@ static void execute(int i) {
         case 6:
           c->r[d] = degree(n);
           break;
+        case 7:
+          c->r[d] = n->tone * 360;
+          break;
         }
       }
       break;
@@ -581,22 +661,26 @@ static void execute(int i) {
       split(i, in.op == 19, d);
       return;
     case 20:
-      c->heading = wrap(c->heading + clamp(a, -360, 360) / 360, 1);
+      amount = clamp(a, -360, 360);
+      if (c->energy >= absf(amount) * costs[9]) {
+        c->energy -= absf(amount) * costs[9];
+        c->heading = wrap(c->heading + amount / 360, 1);
+      }
       break;
     case 21:
       amount = clamp(a, -1, 1);
-      if (c->energy >= absf(amount) * .04f) {
-        c->energy -= absf(amount) * .04f;
+      if (c->energy >= absf(amount) * costs[3]) {
+        c->energy -= absf(amount) * costs[3];
         c->vx += cosf_(c->heading) * amount * 5;
         c->vy += sinf_(c->heading) * amount * 5;
       }
       break;
     case 22:
       target = a > 0 ? nearby(c, (int)a, -1, 360) : -1;
-      if (target >= 0 && c->energy >= .5f) {
+      if (target >= 0 && c->energy >= costs[4]) {
         float x = dx(cells[target].x, c->x, W), y = dx(cells[target].y, c->y, H);
         if (x * x + y * y < 24 * 24 && link_pair(i, target))
-          c->energy -= .5f;
+          c->energy -= costs[4];
       }
       break;
     case 23:
@@ -610,8 +694,8 @@ static void execute(int i) {
             unlink_pair(i, c->bond[k]);
       break;
     case 24:
-      if (c->energy >= .08f) {
-        c->energy -= .08f;
+      if (c->energy >= costs[5]) {
+        c->energy -= costs[5];
         c->rest = clamp(a, .55f, 1.5f);
       }
       break;
@@ -622,8 +706,8 @@ static void execute(int i) {
         Cell *n = &cells[target];
         float x = dx(n->x, c->x, W), y = dx(n->y, c->y, H);
         if (x * x + y * y <= 18 * 18) {
-          if (in.op == 25 && c->energy >= .08f) {
-            c->energy -= .08f;
+          if (in.op == 25 && c->energy >= costs[6]) {
+            c->energy -= costs[6];
             amount = minf(clamp(b, 0, 3) * (1 - n->shield * .9f),
                           minf(maxf(0, n->energy), maxf(0, 200 - c->energy) / .75f));
             n->energy -= amount;
@@ -647,8 +731,8 @@ static void execute(int i) {
       c->tone = wrap(a / 360, 1);
       break;
     case 30:
-      if (c->energy >= .01f) {
-        c->energy -= .01f;
+      if (c->energy >= costs[7]) {
+        c->energy -= costs[7];
         c->signal[(int)clamp(a, 0, 3)] = clamp(b, -100, 100);
       }
       break;
@@ -676,6 +760,44 @@ static void execute(int i) {
     case 34:
       c->r[d] = maxf(c->r[d], b);
       break;
+    case 35: {
+      float hx = cosf_(c->heading) * 25, hy = sinf_(c->heading) * 25;
+      float forward = food[food_at(c->x + hx, c->y + hy)] - food[food_at(c->x - hx, c->y - hy)];
+      float right = food[food_at(c->x - hy, c->y + hx)] - food[food_at(c->x + hy, c->y - hx)];
+      c->r[d] = wrap(angle(forward, right) + .5f, 1) * 360 - 180;
+      c->r[reg(in.b)] = root(forward * forward + right * right) / 50;
+      break;
+    }
+    case 36:
+      target = nearby_filtered(c, 0, -1, 360, wrap(b, 360), clamp(v, 0, 180));
+      c->r[d] = target < 0 ? 0 : cells[target].id;
+      break;
+    case 37:
+      target = b >= 0 && b < BONDS ? c->bond[(int)b] : -1;
+      c->r[d] = target >= 0 && cells[target].alive ? cells[target].id : 0;
+      break;
+    case 38: {
+      int channel = (int)clamp(b, 0, 3);
+      for (int k = 0; k < BONDS; k++) {
+        int j = c->bond[k];
+        if (j < 0 || !cells[j].alive || (a != 0 && (int)a != cells[j].id))
+          continue;
+        if (c->energy < costs[10])
+          break;
+        c->energy -= costs[10];
+        cells[j].pending_mail[channel] = clamp(v, -100, 100);
+        cells[j].pending_from[channel] = c->id;
+      }
+      break;
+    }
+    case 39: {
+      int channel = (int)clamp(v, 0, 3);
+      c->r[d] = c->inbox_from[channel] ? c->inbox[channel] : 0;
+      c->r[reg(in.b)] = c->inbox_from[channel];
+      c->inbox[channel] = 0;
+      c->inbox_from[channel] = 0;
+      break;
+    }
     }
     for (int k = 0; k < 8; k++)
       c->r[k] = clamp(c->r[k], -999999, 999999);
@@ -744,14 +866,33 @@ API void reset(int seed) {
   archive_n = successful_variants = random_arrivals = sampled_arrivals = sampled_mutations = 0;
   memset(archive, 0, sizeof(archive));
   rng = seed ? seed : 1;
+  food_rng = rng ^ 0x9e3779b9u;
+  if (!food_rng)
+    food_rng = 1;
+  memset(food_process, 0, sizeof(food_process));
+  food_process[0] = food_random() * W;
+  food_process[1] = food_random() * H;
+  configure_food(food_memory, food_wander, food_variation);
   for (int k = 0; k < 20; k++)
     add_food(randf() * W, randf() * H, 12);
   grid();
 }
 static void tick_once() {
   tick++;
-  if (rain > 0 && tick % 30 == 0)
-    add_food(randf() * W, randf() * H, 8 * rain);
+  if (tick % 30 == 0) {
+    float a = food_process[8], b = food_process[9];
+    // Exact OU transition law at the fixed half-second drop interval.
+    food_process[2] = a * food_process[2] + b * food_wander * W * food_normal();
+    food_process[3] = a * food_process[3] + b * food_wander * H * food_normal();
+    food_process[4] = a * food_process[4] + b * food_variation * food_normal();
+    food_process[5] = wrap(food_process[0] + food_process[2], W);
+    food_process[6] = wrap(food_process[1] + food_process[3], H);
+    food_process[7] = 8 * rain * clamp(1 + food_process[4], 0, 3);
+    food_process[10] += food_process[7] > 0;
+    food_process[11] = tick;
+    if (food_process[7] > 0)
+      add_food(food_process[5], food_process[6], food_process[7]);
+  }
   if (tick % 4 == 0) {
     for (int y = 0; y < FH; y++)
       for (int x = 0; x < FW; x++) {
@@ -775,10 +916,16 @@ static void tick_once() {
     float uptake = minf(food[k], minf(.16f, maxf(0, 200 - c->energy)));
     food[k] -= uptake;
     c->energy += uptake;
-    c->energy -= .004f + c->shield * .012f;
+    c->energy -= (costs[0] + c->shield * costs[8]) * DT;
     c->age++;
-    for (int q = 0; q < 4; q++)
+    for (int q = 0; q < 4; q++) {
       c->signal[q] *= .97f;
+      if (c->pending_from[q]) {
+        c->inbox[q] = c->pending_mail[q];
+        c->inbox_from[q] = c->pending_from[q];
+        c->pending_from[q] = 0;
+      }
+    }
   }
   for (int offset = 0; offset < original_high; offset++) {
     int i = (offset + tick) % original_high;
@@ -792,10 +939,10 @@ static void tick_once() {
       continue;
     // Broad phase buckets, short-range soft-disc collisions, damped spring
     // bonds.
-    int x0 = (int)__builtin_floorf((c->x - 8) / GRID),
-        x1 = (int)__builtin_floorf((c->x + 8) / GRID);
-    int y0 = (int)__builtin_floorf((c->y - 8) / GRID),
-        y1 = (int)__builtin_floorf((c->y + 8) / GRID);
+    int x0 = (int)__builtin_floorf((c->x - CONTACT) / GRID),
+        x1 = (int)__builtin_floorf((c->x + CONTACT) / GRID);
+    int y0 = (int)__builtin_floorf((c->y - CONTACT) / GRID),
+        y1 = (int)__builtin_floorf((c->y + CONTACT) / GRID);
     for (int by = y0; by <= y1; by++)
       for (int bx = x0; bx <= x1; bx++)
         for (int j = heads[((by + GY) % GY) * GX + (bx + GX) % GX]; j >= 0; j = cells[j].next) {
@@ -803,12 +950,12 @@ static void tick_once() {
             continue;
           Cell *n = &cells[j];
           float x = dx(n->x, c->x, W), y = dx(n->y, c->y, H), dist2 = x * x + y * y;
-          if (dist2 < 64) {
+          if (dist2 < CONTACT * CONTACT) {
             if (dist2 < .0001f) {
               x = .01f;
               dist2 = .0001f;
             }
-            float dist = root(dist2), force = (8 - dist) * 35 * DT / dist;
+            float dist = root(dist2), force = (CONTACT - dist) * 55 * DT / dist;
             c->vx -= x * force;
             c->vy -= y * force;
             n->vx += x * force;
@@ -825,11 +972,29 @@ static void tick_once() {
         unlink_pair(i, j);
         continue;
       }
-      float force = (dist - 12 * (c->rest + n->rest) * .5f) * 24 * DT / maxf(dist, .01f);
-      c->vx += x * force;
-      c->vy += y * force;
-      n->vx -= x * force;
-      n->vy -= y * force;
+      int other = 0;
+      while (other < BONDS && n->bond[other] != i)
+        other++;
+      if (other == BONDS)
+        continue;
+      // Spring attachment points rotate with each cell, at radius 3 inside its rim.
+      // Equal/opposite endpoint forces induce both translation and passive torque.
+      float ca = c->heading + c->anchor[k], na = n->heading + n->anchor[other];
+      float cx = 3 * cosf_(ca), cy = 3 * sinf_(ca);
+      float nx = 3 * cosf_(na), ny = 3 * sinf_(na);
+      x += nx - cx;
+      y += ny - cy;
+      dist = root(x * x + y * y);
+      float rest = maxf(.5f, BOND_LENGTH * (c->rest + n->rest) * .5f - 6);
+      float force = (dist - rest) * 24 * DT / maxf(dist, .01f);
+      float fx = x * force, fy = y * force;
+      c->vx += fx;
+      c->vy += fy;
+      n->vx -= fx;
+      n->vy -= fy;
+      // Uniform radius-4 unit-mass discs: I=8, convert radians to turns.
+      c->omega += (cx * fy - cy * fx) * .019894368f;
+      n->omega -= (nx * fy - ny * fx) * .019894368f;
       float flow = (c->energy - n->energy) * .012f;
       if (flow > 0)
         flow = minf(flow, maxf(0, c->energy));
@@ -847,6 +1012,8 @@ static void tick_once() {
       die(i);
       continue;
     }
+    c->omega = clamp(c->omega * .94f, -2, 2);
+    c->heading = wrap(c->heading + c->omega * DT, 1);
     c->vx = clamp(c->vx * .94f, -100, 100);
     c->vy = clamp(c->vy * .94f, -100, 100);
     c->x = wrap(c->x + c->vx * DT, W);
@@ -855,8 +1022,9 @@ static void tick_once() {
   if (tick % 60 == 0) {
     archive_successes();
     int missing = (int)minf(arrival_floor, limit) - count;
-    if (missing > 0)
-      arrive((int)minf(missing, 64), 0);
+    int arrivals = arrival_rate + (int)clamp(missing, 0, 64);
+    if (arrivals > 0)
+      arrive(arrivals, 0);
   }
 }
 API void step(int n) {
@@ -892,10 +1060,15 @@ API int snapshot() {
         continue;
       Cell *b = &cells[j];
       float *l = lines + line_count * 4;
-      l[0] = c->x;
-      l[1] = c->y;
-      l[2] = c->x + dx(b->x, c->x, W);
-      l[3] = c->y + dx(b->y, c->y, H);
+      int other = 0;
+      while (other < BONDS && b->bond[other] != i)
+        other++;
+      float ca = c->heading + c->anchor[k];
+      float ba = b->heading + b->anchor[other < BONDS ? other : 0];
+      l[0] = c->x + 3 * cosf_(ca);
+      l[1] = c->y + 3 * sinf_(ca);
+      l[2] = c->x + dx(b->x, c->x, W) + 3 * cosf_(ba);
+      l[3] = c->y + dx(b->y, c->y, H) + 3 * sinf_(ba);
       line_count++;
     }
   }

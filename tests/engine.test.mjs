@@ -92,19 +92,19 @@ test("ID zero cannot accidentally steal, give, peek, or link to nearest", async 
   assert.equal(snapshot(e).stats[4], 0);
   assert.ok(detail(e, 1)[1] > 69.98);
 });
-test("directional sensing filters cells behind the heading", async () => {
+test("directional sensing uses the caller's facing without exposing a compass", async () => {
   const e = await engine();
-  spawn(e, "tag 7\nwait 500", 820, 500);
-  e.step(1);
+  spawn(e, "wait 0\nscan r1 7 40\nturn 180\nscan r2 7 40\nwait 500", 800, 500);
+  const facing = snapshot(e).cells[6] * Math.PI * 2;
   spawn(
     e,
-    "sense r0 heading\nmul r0 -1\nturn r0\nscan r1 7 40\nturn 180\nscan r2 7 40\nwait 500",
-    800,
-    500,
+    "tag 7\nwait 500",
+    800 + Math.cos(facing) * 20,
+    500 + Math.sin(facing) * 20,
   );
-  e.step(1);
-  assert.equal(detail(e, 2)[11], 1);
-  assert.equal(detail(e, 2)[12], 0);
+  e.step(2);
+  assert.equal(detail(e, 1)[11], 2);
+  assert.equal(detail(e, 1)[12], 0);
 });
 test("signals are sensed nearby and decay", async () => {
   const e = await engine();
@@ -306,9 +306,9 @@ test("contracted springs physically shorten a connected body", async () => {
   }
   const short = await run(0.6),
     long = await run(1.4);
-  assert.ok(short > 6 && short < 10);
-  assert.ok(long > 14 && long < 19);
-  assert.ok(long - short > 5);
+  assert.ok(short > 9 && short < 13);
+  assert.ok(long > 23 && long < 27);
+  assert.ok(long - short > 10);
 });
 test("passive bond diffusion equalizes unequal stores without introducing energy", async () => {
   const e = await engine(31);
