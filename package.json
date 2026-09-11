@@ -10,9 +10,16 @@
     "start": "node scripts/serve.mjs",
     "test": "node --test tests/*.test.mjs",
     "bench": "node tests/benchmark.mjs",
-    "soak": "node tests/evolution-soak.mjs"
+    "soak": "node tests/evolution-soak.mjs",
+    "headless": "node scripts/headless.mjs",
+    "research:check": "node research/native-check.mjs",
+    "gpu:check": "node research/gpu-check.mjs",
+    "gpu:bench": "node research/gpu-bench.mjs"
   },
   "engines": {
     "node": ">=20"
+  },
+  "devDependencies": {
+    "webgpu": "^0.6.0"
   }
 }

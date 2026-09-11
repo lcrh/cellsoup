@@ -78,3 +78,7 @@ The archive holds up to 128 variant genomes that have produced at least three di
 Physics and VM execution run on the CPU via WASM; rendering runs on the GPU. The measured benchmark processes 16,384 cells in 3.25 ms per tick on an Apple M4 Pro, excluding rendering. Dense local clusters can be expensive; this is not a universal frame-rate guarantee.
 
 MIT licensed; see [LICENSE](LICENSE).
+
+## Research in progress
+
+The [evolution and scaling laboratory](research/README.md) contains a native headless client, exported evolved programs, ecological ablations, and a separately validated WebGPU scaling prototype. The prototype is not yet the live ecology backend; its measurements and remaining work are documented explicitly.

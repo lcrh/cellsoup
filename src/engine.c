@@ -62,6 +62,10 @@ typedef struct {
 typedef struct {
   Ins code[CODE];
   int len, refs, serial, parent_serial, founder, born_tick, offspring, depth, archived;
+#ifdef CELLSOUP_RESEARCH
+  double harvested, stolen, donated;
+  uint64_t executed[CODE];
+#endif
 } Genome;
 typedef struct {
   float x, y, vx, vy, energy, heading, r[8], signal[4], tag, shield, tone, rest, omega,
@@ -73,6 +77,10 @@ static Cell cells[MAX];
 static Genome genomes[GENOMES];
 static Ins upload[CODE];
 static float food[FW * FH], scratch[FW * FH];
+#ifdef CELLSOUP_RESEARCH
+static double research_food_added, research_absorbed, research_imported;
+static int research_selection;
+#endif
 static int heads[GX * GY], free_slots[MAX], free_n, high, count, tick, births, deaths,
     limit = 8192, budget = 24, next_id = 1;
 static uint32_t rng = 1, food_rng = 1;
@@ -388,6 +396,11 @@ static void archive_successes() {
     Genome *v = &genomes[g];
     if (!v->refs || v->archived || v->offspring < 3 || tick - v->born_tick < 600)
       continue;
+#ifdef CELLSOUP_RESEARCH
+    if (research_selection &&
+        (v->offspring < 8 || v->harvested < 280 || tick - v->born_tick < 3600))
+      continue;
+#endif
     v->archived = 1;
     successful_variants++;
     int slot = archive_n < ARCHIVE ? archive_n++ : random_u() % successful_variants;
@@ -417,6 +430,11 @@ static int arrive(int n, int random_only) {
       v->founder = v->serial;
     v->refs = v->offspring = v->archived = 0;
     v->born_tick = tick;
+#ifdef CELLSOUP_RESEARCH
+    v->harvested = v->stolen = v->donated = 0;
+    memset(v->executed, 0, sizeof(v->executed));
+    research_imported += 70;
+#endif
     int i = alloc_cell(g, randf() * W, randf() * H, 70);
     if (i < 0)
       break;
@@ -535,6 +553,9 @@ static void execute(int i) {
     float amount;
     if (!spend(c, costs[1]))
       continue;
+#ifdef CELLSOUP_RESEARCH
+    g->executed[c->pc - 1]++;
+#endif
     switch (in.op) {
     case 0:
       break;
@@ -717,6 +738,9 @@ static void execute(int i) {
                           minf(maxf(0, n->energy), maxf(0, 200 - c->energy) / .75f));
             n->energy -= amount;
             c->energy += amount * .75f;
+#ifdef CELLSOUP_RESEARCH
+            g->stolen += amount * .75f;
+#endif
           }
           if (in.op == 26) {
             amount = minf(clamp(b, 0, 1) * maxf(0, c->energy),
@@ -724,6 +748,9 @@ static void execute(int i) {
             // A full donation retains the reserve; use the actual float32 debit.
             float remaining = maxf(.001f, c->energy - amount);
             if (c->energy >= remaining) {
+#ifdef CELLSOUP_RESEARCH
+              g->donated += c->energy - remaining;
+#endif
               n->energy += c->energy - remaining;
               c->energy = remaining;
             }
@@ -844,6 +871,9 @@ API void add_food(float x, float y, float strength) {
     for (int ox = -7; ox <= 7; ox++) {
       float f = maxf(0, 1 - (ox * ox + oy * oy) / 49.f);
       int k = food_at(x + ox * W / FW, y + oy * H / FH);
+#ifdef CELLSOUP_RESEARCH
+      research_food_added += minf(80, food[k] + strength * f * f) - food[k];
+#endif
       food[k] = minf(80, food[k] + strength * f * f);
     }
 }
@@ -861,6 +891,9 @@ API int seed_cells(int n, float x, float y, float spread, int g) {
   return made;
 }
 API void reset(int seed) {
+#ifdef CELLSOUP_RESEARCH
+  research_food_added = research_absorbed = research_imported = 0;
+#endif
   memset(cells, 0, sizeof(cells));
   memset(genomes, 0, sizeof(genomes));
   memset(food, 0, sizeof(food));
@@ -925,6 +958,10 @@ static void tick_once() {
     int k = food_at(c->x, c->y);
     float uptake = minf(food[k], minf(.16f, maxf(0, 200 - c->energy)));
     food[k] -= uptake;
+#ifdef CELLSOUP_RESEARCH
+    research_absorbed += uptake;
+    genomes[c->genome].harvested += uptake;
+#endif
     c->energy += uptake;
     c->energy -= costs[0] * DT;
     if (!spend(c, c->shield * costs[8] * DT))

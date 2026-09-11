@@ -1,0 +1,80 @@
+{
+  "hardware": "Apple M4 Pro, 20 GPU cores, 24 GB unified memory",
+  "runtime": "Node 24.4.1, webgpu 0.6.0, Metal",
+  "scope": "Fixed population and two-bond chains; 4096 shared programs, 32 instructions each, 24 instruction budget. Arithmetic/control flow/sensing/movement subset, spatial hash, collisions, springs. No births, mutation, energy transactions, dynamic linking, ecological selection or rendering.",
+  "warmupTicks": 64,
+  "batchTicks": 256,
+  "batches": 5,
+  "records": [
+    {
+      "count": 8192,
+      "msPerTick": 0.050029785156250006,
+      "cellTicksPerSecond": 163742458.10601103,
+      "relativeToRealtime": 333.1348838419821,
+      "measurements": [
+        0.047437824218750035,
+        0.049416664062500004,
+        0.050029785156250006,
+        0.05549885937500004,
+        0.10474267578124996
+      ],
+      "maxspeed": 98.83015031420634
+    },
+    {
+      "count": 32768,
+      "msPerTick": 0.0844497070312501,
+      "cellTicksPerSecond": 388017923.94465506,
+      "relativeToRealtime": 197.35612179802197,
+      "measurements": [
+        0.08379785156249997,
+        0.08390722656250005,
+        0.0844497070312501,
+        0.08648014062499998,
+        0.09024479296874999
+      ],
+      "maxspeed": 115.09068295294011
+    },
+    {
+      "count": 131072,
+      "msPerTick": 0.28378173828124975,
+      "cellTicksPerSecond": 461876091.08975667,
+      "relativeToRealtime": 58.73058205792194,
+      "measurements": [
+        0.27574951171875006,
+        0.2811612968749999,
+        0.28378173828124975,
+        0.28378336718749986,
+        0.2847164687500001
+      ],
+      "maxspeed": 123.42067188825902
+    },
+    {
+      "count": 524288,
+      "msPerTick": 1.0566365546874996,
+      "cellTicksPerSecond": 496185748.7081338,
+      "relativeToRealtime": 15.773320156991764,
+      "measurements": [
+        1.0228582343749997,
+        1.0484672851562502,
+        1.0566365546874996,
+        1.0588787460937503,
+        1.0642596015625
+      ],
+      "maxspeed": 132.7731803640158
+    },
+    {
+      "count": 1048576,
+      "msPerTick": 2.0618430976562507,
+      "cellTicksPerSecond": 508562461.02913594,
+      "relativeToRealtime": 8.083382622864024,
+      "measurements": [
+        2.0100613593749994,
+        2.047780921874999,
+        2.0618430976562507,
+        2.0712467460937507,
+        2.073979980468753
+      ],
+      "maxspeed": 120.32937520592253
+    }
+  ]
+}
