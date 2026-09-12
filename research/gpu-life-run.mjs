@@ -69,7 +69,7 @@ device.addEventListener("uncapturederror", (e) => {
 if (args.substrate && !["assembly", "trees"].includes(args.substrate))
   throw Error("Invalid substrate");
 const options = {
-  treePrograms: Number(args.substrate === "trees"),
+  treePrograms: Number(args.substrate !== "assembly"),
   capacity,
   genomeCapacity: Math.max(128, Math.floor(capacity / 4)),
   initial: Number(args.initial ?? Math.floor(capacity / 4)),

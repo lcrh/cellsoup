@@ -240,6 +240,24 @@ async function start() {
     ? "Random typed-tree genomes"
     : "Random assembly genomes";
   renderReference(Boolean(cfg.treePrograms));
+  const treeExamples = {
+    "photosynthesize r0": "(photosynthesize)",
+    "store r0 amount": "(store amount)",
+    "mobilize r0 amount": "(mobilize amount)",
+    "attack target amount": "(attack target amount)",
+    "eat r0": "(eat)",
+    "sense r0 energy": "(energy)",
+    "sense r1 storage": "(storage)",
+    "gradient r0 r1": "(sunlight-bearing)",
+    "storage_gradient r0 r1 kind": "(storage-bearing kind)",
+    "peek r0 target alive": "(alive target)",
+  };
+  for (const code of document.querySelectorAll(".explanation code")) {
+    code.dataset.assembly ??= code.textContent;
+    code.textContent = cfg.treePrograms
+      ? (treeExamples[code.dataset.assembly] ?? code.dataset.assembly)
+      : code.dataset.assembly;
+  }
   failed = false;
   paused = false;
   selection = null;
@@ -386,6 +404,21 @@ async function observe(now) {
   if (needSnapshot) {
     updateSelection();
     await readSelectedGenome();
+    $("memory-panel").hidden = !selection || !engine.cfg.treePrograms;
+    if (selection && engine.cfg.treePrograms) {
+      const memory = await engine.cellMemory(selection.slot);
+      $("cell-memory").replaceChildren(
+        ...[...memory].map((value, i) => {
+          const item = document.createElement("div"),
+            name = document.createElement("span"),
+            amount = document.createElement("b");
+          name.textContent = `state${i}`;
+          amount.textContent = Number(value.toPrecision(5)).toLocaleString();
+          item.append(name, amount);
+          return item;
+        }),
+      );
+    }
   }
   if (now - lastMetrics > 1000) {
     const c = await engine.counters();
@@ -657,15 +690,33 @@ function renderReference(trees) {
     ? "Typed-tree reference"
     : "Assembly reference";
   $("reference-note").textContent = trees
-    ? "Up to 32 typed nodes. Numbers feed arithmetic, conditions and actions; cell references select targets. Memory m0–m7 persists between evaluations. Division copies the tree and memory; birth-result is 0 for the parent, 1 for its daughter, or −1 on failure. New arrivals may cross compatible subtrees and then mutate."
+    ? "Up to 32 typed nodes. Numbers feed arithmetic, conditions and actions; cell references select targets. Use state for once-initialized numeric memory, let for per-evaluation numeric locals, and set! for updates. Eight values persist across ticks. Division copies the tree and memory; birth-result is 0 for the parent, 1 for its daughter, or −1 on failure. New arrivals may cross compatible subtrees and then mutate."
     : "Eight registers, relative sensing and motion, at most 64 instructions per genome. Division copies code exactly. Archive resampling is the mutation source.";
   const dl = document.createElement("dl");
   if (trees) {
+    const example = document.createElement("pre");
+    example.textContent =
+      "(state ((accumulator 0))\n  (let ((light (sunlight)))\n    (set! accumulator\n      (+ (* 0.9 accumulator) light))))";
+    dl.append(example);
     for (const node of TREE_SCHEMA) {
       const dt = document.createElement("dt"),
         dd = document.createElement("dd");
       dt.textContent = node.name;
-      dd.textContent = `${node.args.join(", ") || "No inputs"} → ${node.result === "Any" ? "matching branch type" : node.result}`;
+      const forms = {
+        state: [
+          "(state ((name initial)) body)",
+          "Numeric memory initialized once per cell. Read name directly; update with set!. Division inherits the value.",
+        ],
+        let: [
+          "(let ((name expression)) body)",
+          "A numeric local evaluated once each time this form runs. Names are available inside the body.",
+        ],
+      };
+      dd.textContent = `${node.args.join(", ") || "No inputs"} → ${node.result === "Any" ? "body or branch type" : node.result}`;
+      if (forms[node.name]) {
+        dt.textContent = forms[node.name][0];
+        dd.textContent = forms[node.name][1];
+      }
       dl.append(dt, dd);
     }
   } else
@@ -685,8 +736,11 @@ function substrateSettings() {
     ? "Random typed trees. Archived arrivals can combine two parents, then mutate independently. Division always copies the genome."
     : "Division copies genomes exactly. New arrivals mix random founders and archived lineages.";
 }
-if (new URLSearchParams(location.search).get("substrate") === "trees")
-  $("substrate").value = "trees";
+const requestedSubstrate = new URLSearchParams(location.search).get(
+  "substrate",
+);
+if (["trees", "assembly"].includes(requestedSubstrate))
+  $("substrate").value = requestedSubstrate;
 $("substrate").addEventListener("change", substrateSettings);
 substrateSettings();
 try {

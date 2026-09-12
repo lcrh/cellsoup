@@ -120,3 +120,29 @@ test("arrival crossover and subsequent mutation have independent controls and pa
     /probability/,
   );
 });
+
+test("named state and let are numeric, scoped and bounded", () => {
+  const tree = parseTree(
+    "(state ((sum 0)) (let ((sample (sunlight))) (set! sum (+ sum sample))))",
+  );
+  assert.match(compileTree(tree).source, /mem_ready/);
+  assert.match(formatTree(tree), /set! state0/);
+  assert.equal(printTree(parseTree(formatTree(tree))), printTree(tree));
+  assert.throws(() => parseTree("(set! missing 1)"), /bound variable/);
+  assert.throws(
+    () => parseTree("(state ((x 0) (x 1)) (move x))"),
+    /Duplicate binding/,
+  );
+  assert.throws(() => parseTree("(let ((x true)) (move 1))"), /Type mismatch/);
+  assert.throws(
+    () => parseTree("(seq (let ((x 1)) (move x)) (move x))"),
+    /Unbound variable/,
+  );
+  assert.throws(
+    () =>
+      parseTree(
+        "(state ((a 0)(b 0)(c 0)(d 0)(e 0)(f 0)(g 0)(h 0)(i 0)) (move a))",
+      ),
+    /eight/,
+  );
+});

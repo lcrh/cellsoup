@@ -687,3 +687,20 @@ dialog textarea {
     height: 82vh;
   }
 }
+
+.cell-memory {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px 8px;
+  margin: 12px 0;
+}
+.cell-memory span {
+  display: block;
+  color: #adc3bd;
+  font-size: 10px;
+}
+.cell-memory b {
+  display: block;
+  font-size: 12px;
+  overflow-wrap: anywhere;
+}

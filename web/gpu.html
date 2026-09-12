@@ -92,7 +92,7 @@
             <span class="dot"></span>
           </div>
           <p>
-            <span id="genome-kind">Random assembly genomes</span> harvest
+            <span id="genome-kind">Random typed-tree genomes</span> harvest
             sunlight, store reserves, move, divide and attack. Death leaves
             edible remains. Clouds drift and change shape slowly.
           </p>
@@ -127,6 +127,10 @@
             </div>
             <p id="genome-detail"></p>
             <pre id="source" tabindex="0"></pre>
+            <details id="memory-panel" hidden open>
+              <summary>Cell memory</summary>
+              <div id="cell-memory" class="cell-memory"></div>
+            </details>
           </div>
           <p class="hint">
             <span id="mutations">0</span> resampling mutations ·
@@ -154,8 +158,10 @@
             <label
               >Genome language
               <select id="substrate">
+                <option value="trees" selected>
+                  Typed Lisp trees (experimental)
+                </option>
                 <option value="assembly">Assembly</option>
-                <option value="trees">Typed Lisp trees (experimental)</option>
               </select>
             </label>
             <p class="hint" id="substrate-note">
@@ -189,7 +195,7 @@
             <p>
               <code>store r0 amount</code> creates stable reserves. Linked cells
               share storage. <code>mobilize r0 amount</code> turns reserves back
-              into usable energy. Both return the amount converted.
+              into usable energy. These conversions are explicit actions.
             </p>
             <p>
               <code>attack target amount</code> costs energy and damages the

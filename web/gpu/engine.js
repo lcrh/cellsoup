@@ -32,7 +32,7 @@ const stages = [
   "arrivals",
 ];
 export const defaults = {
-  treePrograms: 0,
+  treePrograms: 1,
   crossover: 0.25,
   capacity: 131072,
   genomeCapacity: 32768,
@@ -460,7 +460,9 @@ export async function createLifeEngine(device, options = {}) {
   return {
     cfg,
     fingerprint,
-    genomeSampler: cfg.treePrograms ? "typed-sequences-v1" : "assembly-v1",
+    genomeSampler: cfg.treePrograms
+      ? "typed-sequences-state-v2"
+      : "assembly-v1",
     buffers: { state, scratch, genomes, archive, food, intents, activity },
     get tick() {
       return tick;
@@ -561,6 +563,14 @@ export async function createLifeEngine(device, options = {}) {
         crossovers: c[24],
         raw: [...c],
       };
+    },
+    async cellMemory(slot) {
+      if (!cfg.treePrograms) return null;
+      if (!Number.isInteger(slot) || slot < 0 || slot >= n)
+        throw Error("Invalid cell slot");
+      return new Float32Array(
+        await read(scratch, treeMemoryOffset + slot * 48, 32),
+      );
     },
     async treeMemory() {
       if (!cfg.treePrograms) throw Error("Tree memory is disabled");

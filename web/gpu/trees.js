@@ -8,6 +8,8 @@ export const TREE_VM_OPS = [
   ...GPU_OPS,
   ["mem_load", "r v", "Read persistent tree memory."],
   ["mem_save", "v v", "Write persistent tree memory."],
+  ["mem_ready", "r v", "Test whether a state binding has been initialized."],
+  ["mem_init", "v v", "Initialize state once per cell; inherited on division."],
 ];
 const entry = (name, result, args = []) => ({ name, result, args });
 export const TREE_SCHEMA = [
@@ -89,6 +91,9 @@ export const TREE_SCHEMA = [
   entry("give", "Action", ["Cell", "Number"]),
   entry("emit", "Action", ["Channel", "Number"]),
   entry("send", "Action", ["Cell", "Channel", "Number"]),
+  entry("state", "Any", ["Memory", "Number", "Any"]),
+  entry("let", "Any", ["Memory", "Number", "Any"]),
+  entry("do", "Any", ["Action", "Any"]),
 ];
 const byName = new Map(TREE_SCHEMA.map((s, i) => [s.name, { ...s, id: i }]));
 const node = (op, args = [], value) =>
@@ -122,14 +127,18 @@ export function checkTree(
         throw Error("Invalid index");
     } else if (t.value !== undefined) throw Error("Unexpected literal");
     const types = t.args.map((a) => visit(a, level + 1));
-    const result = t.op === "if" ? types[1] : s.result;
+    const result = ["state", "let"].includes(t.op)
+      ? types[2]
+      : ["if", "do"].includes(t.op)
+        ? types[1]
+        : s.result;
     s.args.forEach((type, i) => {
       if (types[i] !== (type === "Any" ? result : type))
         throw Error(
           `Type mismatch in ${t.op}: expected ${type}, got ${types[i]}`,
         );
     });
-    if (t.op === "if" && ["Memory", "Channel"].includes(result))
+    if (s.result === "Any" && ["Memory", "Channel"].includes(result))
       throw Error("Index selectors must be literal");
     return result;
   }
@@ -140,35 +149,106 @@ export function checkTree(
 }
 export function parseTree(source) {
   const tokens = source.replace(/;[^\n]*/g, "").match(/\(|\)|[^\s()]+/g) || [];
+  if (tokens.length > 4096) throw Error("Tree source limit exceeded");
   let at = 0;
+  const allocated = new Set();
   function read(depth = 0) {
-    if (depth > 16) throw Error("Tree depth limit exceeded");
+    if (depth > 64) throw Error("Tree depth limit exceeded");
     const token = tokens[at++];
     if (token === undefined) throw Error("Unexpected end of tree");
-    if (token === "(") {
-      const op = tokens[at++],
-        args = [];
-      while (at < tokens.length && tokens[at] !== ")")
-        args.push(read(depth + 1));
-      if (tokens[at++] !== ")") throw Error("Missing closing parenthesis");
-      if (op === "seq" && args.length > 2) {
-        let rest = args.pop();
-        while (args.length) rest = node("seq", [args.pop(), rest]);
-        return rest;
-      }
-      return node(op, args);
-    }
     if (token === ")") throw Error("Unexpected closing parenthesis");
-    if (/^[+-]?(?:\d+(?:\.\d*)?|\.\d+)(?:e[+-]?\d+)?$/i.test(token))
-      return node("number", [], Math.fround(Number(token)));
-    if (token === "true" || token === "false")
-      return node("bool", [], Number(token === "true"));
-    if (/^m[0-7]$/.test(token)) return node("slot", [], Number(token[1]));
-    if (/^c[0-3]$/.test(token)) return node("channel", [], Number(token[1]));
-    return node(token);
+    if (token !== "(") return token;
+    const list = [];
+    while (at < tokens.length && tokens[at] !== ")") list.push(read(depth + 1));
+    if (tokens[at++] !== ")") throw Error("Missing closing parenthesis");
+    return list;
   }
-  const tree = read();
+  function sequence(forms) {
+    if (!forms.length) throw Error("Expected a body");
+    let result = forms.at(-1);
+    for (let i = forms.length - 2; i >= 0; i--) {
+      result = node(checkTree(result, null).type === "Action" ? "seq" : "do", [
+        forms[i],
+        result,
+      ]);
+    }
+    return result;
+  }
+  function lower(raw, scope = new Map()) {
+    if (!Array.isArray(raw)) {
+      if (/^[+-]?(?:\d+(?:\.\d*)?|\.\d+)(?:e[+-]?\d+)?$/i.test(raw))
+        return node("number", [], Math.fround(Number(raw)));
+      if (raw === "true" || raw === "false")
+        return node("bool", [], Number(raw === "true"));
+      if (scope.has(raw))
+        return node("memory", [node("slot", [], scope.get(raw))]);
+      if (/^m[0-7]$/.test(raw)) return node("slot", [], Number(raw[1]));
+      if (/^c[0-3]$/.test(raw)) return node("channel", [], Number(raw[1]));
+      if (!byName.has(raw))
+        throw Error("Unbound variable or unknown operation " + raw);
+      return node(raw);
+    }
+    const [op, ...args] = raw;
+    if (typeof op !== "string") throw Error("Expected an operation");
+    if ((op === "state" || op === "let") && Array.isArray(args[0])) {
+      const declarations = args[0],
+        inner = new Map(scope),
+        names = new Set(),
+        bindings = [];
+      if (!declarations.length || args.length < 2)
+        throw Error("Expected bindings and a body");
+      for (const pair of declarations) {
+        if (
+          !Array.isArray(pair) ||
+          pair.length !== 2 ||
+          typeof pair[0] !== "string" ||
+          !/^[a-zA-Z_][a-zA-Z0-9_!?-]*$/.test(pair[0]) ||
+          /^(?:m[0-7]|c[0-3]|true|false)$/.test(pair[0])
+        )
+          throw Error("Invalid binding");
+        const [name, value] = pair;
+        if (names.has(name)) throw Error("Duplicate binding " + name);
+        names.add(name);
+        // Canonical names retain slot identity when inspecting evolved trees.
+        const fixed = /^(?:state|local)([0-7])$/.exec(name);
+        let slot = fixed ? Number(fixed[1]) : 0;
+        if (!fixed) while (allocated.has(slot)) slot++;
+        if (slot >= TREE_MEMORY_SLOTS)
+          throw Error("At most eight state and local bindings");
+        allocated.add(slot);
+        inner.set(name, slot);
+        bindings.push([node("slot", [], slot), lower(value, scope)]);
+      }
+      let body = sequence(args.slice(1).map((x) => lower(x, inner)));
+      for (let i = bindings.length - 1; i >= 0; i--)
+        body = node(op, [...bindings[i], body]);
+      return body;
+    }
+    if (op === "set!") {
+      if (args.length !== 2 || !scope.has(args[0]))
+        throw Error("set! requires a bound variable");
+      return node("set", [
+        node("slot", [], scope.get(args[0])),
+        lower(args[1], scope),
+      ]);
+    }
+    const lowered = args.map((x) => lower(x, scope));
+    if (op === "seq" && lowered.length > 2) {
+      let tail = lowered.pop();
+      while (lowered.length) tail = node("seq", [lowered.pop(), tail]);
+      return tail;
+    }
+    return node(op, lowered);
+  }
+  const raw = read();
+  // Named locals must not overwrite explicitly addressed legacy memory.
+  function reserveExplicit(value) {
+    if (Array.isArray(value)) value.forEach(reserveExplicit);
+    else if (/^m[0-7]$/.test(value)) allocated.add(Number(value[1]));
+  }
+  reserveExplicit(raw);
   if (at !== tokens.length) throw Error("Expected one program tree");
+  const tree = lower(raw);
   checkTree(tree);
   return tree;
 }
@@ -181,9 +261,19 @@ export function printTree(t) {
 }
 // Presentation preserves the same tree; long programs use readable Lisp lines.
 export function formatTree(tree, width = 54) {
-  function render(t, indent) {
-    const compact = printTree(t);
-    if (indent + compact.length <= width || !t.args.length) return compact;
+  function render(t, indent, scope = new Map()) {
+    if (t.op === "memory" && scope.has(t.args[0].value))
+      return scope.get(t.args[0].value);
+    if (t.op === "state" || t.op === "let") {
+      const slot = t.args[0].value,
+        name = `${t.op === "state" ? "state" : "local"}${slot}`;
+      const inner = new Map(scope);
+      inner.set(slot, name);
+      return `(${t.op} ((${name} ${render(t.args[1], indent + 2, scope)}))\n${" ".repeat(indent + 2)}${render(t.args[2], indent + 2, inner)}\n${" ".repeat(indent)})`;
+    }
+    if (t.op === "set" && scope.has(t.args[0].value))
+      return `(set! ${scope.get(t.args[0].value)} ${render(t.args[1], indent + 2, scope)})`;
+    if (!t.args.length) return printTree(t);
     let args = t.args;
     if (t.op === "seq") {
       args = [];
@@ -194,7 +284,10 @@ export function formatTree(tree, width = 54) {
       }
       args.push(tail);
     }
-    return `(${t.op}\n${args.map((a) => " ".repeat(indent + 2) + render(a, indent + 2)).join("\n")}\n${" ".repeat(indent)})`;
+    const inline = `(${t.op} ${args.map((a) => render(a, indent + 2, scope)).join(" ")})`;
+    if (!inline.includes("\n") && indent + inline.length <= width)
+      return inline;
+    return `(${t.op}\n${args.map((a) => " ".repeat(indent + 2) + render(a, indent + 2, scope)).join("\n")}\n${" ".repeat(indent)})`;
   }
   checkTree(tree);
   return render(tree, 0);
@@ -263,9 +356,30 @@ export function compileTree(tree) {
     next += n;
     return r;
   }
+  function binding(t, body) {
+    const start = next,
+      slot = t.args[0].value,
+      ready = mark();
+    if (t.op === "state") {
+      const r = reserve();
+      emit("mem_ready", reg(r), slot);
+      emit("jnz", reg(r), ready);
+      next = start;
+    }
+    const initial = expr(t.args[1]);
+    emit(t.op === "state" ? "mem_init" : "mem_save", slot, reg(initial));
+    if (t.op === "state") emit(ready + ":");
+    next = start;
+    return body(t.args[2]);
+  }
   function expr(t) {
     const start = next,
       op = t.op;
+    if (op === "state" || op === "let") return binding(t, expr);
+    if (op === "do") {
+      action(t.args[0]);
+      return expr(t.args[1]);
+    }
     if (op === "if") {
       const condition = expr(t.args[0]),
         otherwise = mark(),
@@ -374,8 +488,13 @@ export function compileTree(tree) {
     return r;
   }
   function action(t) {
-    const op = t.op;
-    if (op === "seq") {
+    const op = t.op,
+      base = next;
+    if (op === "state" || op === "let") {
+      binding(t, action);
+      return;
+    }
+    if (op === "seq" || op === "do") {
       action(t.args[0]);
       action(t.args[1]);
       return;
@@ -385,7 +504,7 @@ export function compileTree(tree) {
         otherwise = mark(),
         end = mark();
       emit("jz", reg(r), otherwise);
-      next = 0;
+      next = base;
       action(t.args[1]);
       emit("jmp", end);
       emit(otherwise + ":");
@@ -394,10 +513,11 @@ export function compileTree(tree) {
       return;
     }
     if (op === "nop") emit("nop");
-    else if (op === "photosynthesize" || op === "eat") emit(op, "r0");
+    else if (op === "photosynthesize" || op === "eat") emit(op, reg(reserve()));
     else if (op === "bud" || op === "split") {
-      emit(op, "r0");
-      emit("mem_save", 8, "r0");
+      const r = reg(reserve());
+      emit(op, r);
+      emit("mem_save", 8, r);
     } else if (op === "set") {
       const r = expr(t.args[1]);
       emit("mem_save", t.args[0].value, reg(r));
@@ -414,7 +534,7 @@ export function compileTree(tree) {
       if (op === "store" || op === "mobilize") emit(name, values[0], values[0]);
       else emit(name, ...values);
     }
-    next = 0;
+    next = base;
   }
   emit("ROOT:");
   action(tree);
@@ -447,7 +567,8 @@ function grow(type, budget, depth, rng) {
   const options = TREE_SCHEMA.filter(
     (s) =>
       (s.result === type ||
-        (s.name === "if" && !["Memory", "Channel"].includes(type))) &&
+        (["if", "state", "let", "do"].includes(s.name) &&
+          !["Memory", "Channel"].includes(type))) &&
       s.args.length < budget &&
       (depth > 1 || s.args.length === 0),
   );

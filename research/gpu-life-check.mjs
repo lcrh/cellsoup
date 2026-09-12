@@ -17,6 +17,7 @@ const device = await adapter.requestDevice();
 let errors = [];
 device.addEventListener("uncapturederror", (e) => errors.push(e.error.message));
 const options = {
+  treePrograms: 0,
   capacity: 64,
   genomeCapacity: 32,
   initial: 0,
@@ -862,6 +863,123 @@ await test("a crossed typed genome executes its donor expression on the GPU", as
   const e = await setup([{ tree: crossed.tree }], [{}], { treePrograms: 1 });
   await e.step();
   assert.equal((await e.treeMemory())[0], 12);
+  e.destroy();
+});
+await test("named state accumulates across ticks while let refreshes each evaluation", async () => {
+  const e = await setup(
+    [
+      {
+        tree: "(state ((accumulator 5)) (let ((previous accumulator)) (set! accumulator (+ previous 1))))",
+      },
+    ],
+    [{}],
+    { treePrograms: 1, budget: 128 },
+  );
+  await e.step(3);
+  const memory = await e.treeMemory();
+  assert.equal(memory[0], 8);
+  assert.equal(memory[1], 7);
+  assert.equal(memory[9], 1);
+  assert.deepEqual([...(await e.cellMemory(0))], [...memory.slice(0, 8)]);
+  e.destroy();
+});
+await test("let evaluates once and expression effects preserve outer temporaries", async () => {
+  const e = await setup(
+    [
+      { tree: "(set m0 (let ((sample (random 100))) (- sample sample)))" },
+      { tree: "(set m0 (+ 100 (let ((value 7)) (do (move 0) (+ value 3)))))" },
+    ],
+    [
+      { x: 20, y: 20 },
+      { genome: 1, x: 200, y: 200 },
+    ],
+    { treePrograms: 1, budget: 128 },
+  );
+  await e.step();
+  const memory = await e.treeMemory();
+  assert.equal(memory[0], 0);
+  assert.equal(memory[12], 110);
+  e.destroy();
+});
+await test("a state initializer does not consume later linked messages", async () => {
+  const e = await setup(
+    [
+      {
+        tree: "(state ((accumulator (receive c0))) (set! accumulator (+ accumulator 1)))",
+      },
+      { tree: "(seq (send (none) c0 9) (wait 1000))" },
+    ],
+    [
+      { x: 100, y: 100, links: [2, 0, 0, 0] },
+      {
+        genome: 1,
+        x: 118,
+        y: 100,
+        links: [1, 0, 0, 0],
+        anchors: [0.5, 0, 0, 0],
+      },
+    ],
+    { treePrograms: 1, budget: 128 },
+  );
+  await e.step(3);
+  assert.equal((await e.treeMemory())[0], 3);
+  assert.equal(new Float32Array(await e.state())[20], 9);
+  e.destroy();
+});
+await test("division inherits initialized named state without running its initializer again", async () => {
+  const e = await setup(
+    [
+      {
+        tree: "(state ((counter 10)) (if (> counter 10) (wait 1000) (seq (set! counter (+ counter 1)) (bud))))",
+      },
+    ],
+    [{}],
+    { treePrograms: 1, budget: 128 },
+  );
+  await e.step(5);
+  const c = await state(e),
+    memory = await e.treeMemory();
+  const living = c.map((c, i) => ({ c, i })).filter((x) => x.c.alive === 1);
+  assert.equal(living.length, 2);
+  assert.ok(
+    living.every((x) => memory[x.i * 12] === 11 && memory[x.i * 12 + 9] === 1),
+  );
+  assert.deepEqual(living.map((x) => memory[x.i * 12 + 8]).sort(), [0, 1]);
+  assert.equal(living[0].c.genome, living[1].c.genome);
+  e.destroy();
+});
+await test("archived arrivals initialize their own state instead of copying a parent's accumulator", async () => {
+  const e = await setup(
+    [
+      {
+        tree: "(state ((accumulator 7)) (set! accumulator (+ accumulator 1)))",
+      },
+    ],
+    [{ x: 20, y: 20 }],
+    {
+      treePrograms: 1,
+      budget: 128,
+      rate: 1,
+      share: 1,
+      crossover: 0,
+      mutation: 0,
+      archiveEnabled: 1,
+      archiveAge: 0,
+      archiveHarvest: 0,
+      archiveOffspring: 0,
+    },
+  );
+  await e.step(60);
+  const cells = await state(e),
+    slot = cells.findIndex((c) => c.alive === 1 && c.genome !== 0);
+  assert.ok(slot > 0);
+  let memory = await e.treeMemory();
+  assert.equal(memory[slot * 12], 0);
+  assert.equal(memory[slot * 12 + 9], 0);
+  await e.step();
+  memory = await e.treeMemory();
+  assert.equal(memory[0], 68);
+  assert.equal(memory[slot * 12], 8);
   e.destroy();
 });
 await test("tree worlds create random founders and constant-rate random arrivals", async () => {

@@ -837,6 +837,16 @@ ${
         case 47u:{
           if(a>=0&&a<9&&a==floor(a)){let slot=u32(a);s.treeMemory[i*3u+slot/4u][slot%4u]=clamp(b,-999999.0,999999.0);}
         }
+        case 48u:{
+          c.r[d]=0;
+          if(b>=0&&b<8&&b==floor(b)){c.r[d]=select(0.0,1.0,(u32(s.treeMemory[i*3u+2u].y)&(1u<<u32(b)))!=0u);}
+        }
+        case 49u:{
+          if(a>=0&&a<8&&a==floor(a)){
+            let slot=u32(a);let mask=u32(s.treeMemory[i*3u+2u].y);let bit=1u<<slot;
+            if((mask&bit)==0u){s.treeMemory[i*3u+slot/4u][slot%4u]=clamp(b,-999999.0,999999.0);s.treeMemory[i*3u+2u].y=f32(mask|bit);}
+          }
+        }
 `
     : ""
 }

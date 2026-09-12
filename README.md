@@ -2,7 +2,7 @@
 
 **[GPU ecology](https://lcrh.github.io/cellsoup/gpu.html)** · [Classic laboratory](https://lcrh.github.io/cellsoup/) · [Language reference](docs/language.md)
 
-An autonomously evolving artificial-life laboratory inspired by [Turing Soup](https://github.com/lcrh/turingsoup). Small physical cells execute assembly genomes. Food, metabolism, division, spring bonds, communication, and targeted predation connect those programs to a shared ecology.
+An autonomously evolving artificial-life laboratory inspired by [Turing Soup](https://github.com/lcrh/turingsoup). Small physical cells execute programmable genomes. Food, metabolism, division, spring bonds, communication, and targeted predation connect those programs to a shared ecology.
 
 ## Large-population GPU ecology
 
@@ -95,4 +95,4 @@ MIT licensed; see [LICENSE](LICENSE).
 
 The [evolution and scaling laboratory](research/README.md) contains a native headless client, exported evolved programs, ecological ablations, and a separately validated WebGPU scaling prototype. The prototype is not yet the live ecology backend; its measurements and remaining work are documented explicitly.
 
-The [typed-tree experiment](research/typed-trees.md) is available under **Genome language** or at `/gpu.html?substrate=trees`. It runs autonomous random tree populations, archives successful genomes, and supports separate crossover and resampling-mutation sliders. Division still copies genomes exactly. Trees remain experimental: the first closed-population comparison retained fewer cells than assembly.
+The [typed-tree world](research/typed-trees.md) is now the default at `/gpu.html`. Assembly remains available under **Genome language**. It runs autonomous random tree populations, archives successful genomes, and supports separate crossover and resampling-mutation sliders. Named `state`, `let`, and `set!` forms support iterated computation. Division copies genomes and memory exactly. Trees remain experimental: the first closed-population comparison retained fewer cells than assembly.

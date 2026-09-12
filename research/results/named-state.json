@@ -1,0 +1,19 @@
+{
+  "sampler": "typed-sequences-state-v2",
+  "scope": "180-second random-population smoke test, with immigration enabled. Not evidence of long-term stability or evolved computation.",
+  "seed": 42,
+  "capacity": 32768,
+  "initial": 8192,
+  "final": {
+    "seconds": 180,
+    "living": 949,
+    "births": 6282,
+    "sampledArrivals": 495,
+    "mutations": 395,
+    "crossovers": 117,
+    "archive": 27,
+    "movingBodies": 4,
+    "livingMaxGeneration": 53
+  },
+  "run": "research/runs/named-state-42/run.json"
+}
