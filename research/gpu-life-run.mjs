@@ -9,6 +9,9 @@ const args = Object.fromEntries(
   }),
 );
 const allowed = [
+  "substrate",
+  "crossover",
+  "mutation",
   "capacity",
   "seconds",
   "sample",
@@ -63,7 +66,10 @@ device.addEventListener("uncapturederror", (e) => {
   gpuError = e.error;
   console.error(e.error.message);
 });
+if (args.substrate && !["assembly", "trees"].includes(args.substrate))
+  throw Error("Invalid substrate");
 const options = {
+  treePrograms: Number(args.substrate === "trees"),
   capacity,
   genomeCapacity: Math.max(128, Math.floor(capacity / 4)),
   initial: Number(args.initial ?? Math.floor(capacity / 4)),
@@ -74,6 +80,8 @@ const options = {
   floor: Number(args.floor ?? Math.floor(capacity / 64)),
 };
 for (const [flag, key] of [
+  ["crossover", "crossover"],
+  ["mutation", "mutation"],
   ["minimum-birth-energy", "minimumBirthEnergy"],
   ["seed-energy", "seedEnergy"],
   ["seed-storage", "seedStorage"],
@@ -263,13 +271,15 @@ for (let i = 0; i < capacity; i++)
 for (let g = 0; g < counts.length; g++)
   if (counts[g] !== genes.stats[g * 4])
     throw Error(`Genome reference count mismatch at ${g}`);
-const leaders = records.at(-1).leaders.map(([slot, living]) => ({
-  slot,
-  living,
-  ...describeGenome(genes.data, slot),
-  recordedBirths: genes.stats[slot * 4 + 1],
-  recordedHarvest: genes.stats[slot * 4 + 2] / 256,
-}));
+const leaders = await Promise.all(
+  records.at(-1).leaders.map(async ([slot, living]) => ({
+    slot,
+    living,
+    ...(await engine.genome(slot)),
+    recordedBirths: genes.stats[slot * 4 + 1],
+    recordedHarvest: genes.stats[slot * 4 + 2] / 256,
+  })),
+);
 const archive = await engine.archived(),
   archived = Array.from({ length: 128 }, (_, i) =>
     describeGenome(archive, i),
@@ -282,9 +292,11 @@ await writeFile(
       finalConfig: engine.cfg,
       closure,
       kernel: engine.fingerprint,
+      genomeSampler: engine.genomeSampler,
       records,
       leaders,
       archived,
+      archivedTrees: engine.archivedTrees(),
     },
     null,
     2,
@@ -295,7 +307,7 @@ await writeFile(
   leaders
     .map(
       (g) =>
-        `## Variant ${g.serial}: ${g.living} living, ${g.recordedBirths} births\n\nHarvest ${g.recordedHarvest}, depth ${g.depth}.\n\n\`\`\`asm\n${g.source}\n\`\`\``,
+        `## Variant ${g.serial}: ${g.living} living, ${g.recordedBirths} births\n\nHarvest ${g.recordedHarvest}, depth ${g.depth}.\n\n\`\`\`${g.tree ? "lisp" : "asm"}\n${g.source}\n\`\`\``,
     )
     .join("\n\n") + "\n",
 );

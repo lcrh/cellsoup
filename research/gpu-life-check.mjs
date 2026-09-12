@@ -1,5 +1,10 @@
 import assert from "node:assert/strict";
-import { crossoverTrees, parseTree, treeRng } from "../web/gpu/trees.js";
+import {
+  crossoverTrees,
+  parseTree,
+  treeRng,
+  printTree,
+} from "../web/gpu/trees.js";
 import { create, globals } from "webgpu";
 import { createLifeEngine, describeGenome } from "../web/gpu/engine.js";
 Object.assign(globalThis, globals);
@@ -857,10 +862,129 @@ await test("a crossed typed genome executes its donor expression on the GPU", as
   const e = await setup([{ tree: crossed.tree }], [{}], { treePrograms: 1 });
   await e.step();
   assert.equal((await e.treeMemory())[0], 12);
-  assert.throws(
-    () => e.setImmigration({ rate: 1, floor: 0 }),
-    /not integrated/,
+  e.destroy();
+});
+await test("tree worlds create random founders and constant-rate random arrivals", async () => {
+  const founders = await createLifeEngine(device, {
+    ...options,
+    treePrograms: 1,
+    initial: 16,
+  });
+  const sources = new Set();
+  for (let i = 0; i < 16; i++) {
+    const gene = await founders.genome(i);
+    assert.equal(gene.substrate, "tree");
+    parseTree(gene.source);
+    sources.add(gene.source);
+  }
+  assert.ok(sources.size > 8);
+  founders.destroy();
+  const e = await createLifeEngine(device, {
+    ...options,
+    treePrograms: 1,
+    rate: 4,
+  });
+  await e.step(60);
+  const c = await e.counters();
+  assert.equal(c.randomArrivals, 4);
+  assert.equal(c.living, 4);
+  for (const cell of (await state(e)).filter((c) => c.alive === 1)) {
+    const gene = await e.genome(cell.genome);
+    assert.equal(gene.parent, 0);
+    parseTree(gene.source);
+  }
+  assert.ok((await e.treeMemory()).every((x) => x === 0));
+  await e.step(120);
+  assert.equal((await e.counters()).randomArrivals, 12);
+  e.setImmigration({ rate: 0, floor: 0 });
+  await e.step(60);
+  assert.equal((await e.counters()).randomArrivals, 12);
+  e.destroy();
+});
+await test("tree replenishment runs below the floor with the constant rate disabled", async () => {
+  const e = await createLifeEngine(device, {
+    ...options,
+    treePrograms: 1,
+    rate: 0,
+    floor: 8,
+  });
+  await e.step(120);
+  assert.equal((await e.counters()).randomArrivals, 2);
+  e.destroy();
+});
+await test("successful trees reenter through actual two-parent crossover without forced mutation", async () => {
+  const e = await setup(
+    [
+      { tree: "(seq (set m0 (+ 1 2)) (wait 1000))" },
+      { tree: "(seq (set m1 (* 3 4)) (wait 1000))" },
+    ],
+    [
+      { x: 20, y: 20 },
+      { genome: 1, x: 200, y: 200 },
+    ],
+    {
+      treePrograms: 1,
+      rate: 4,
+      share: 1,
+      crossover: 1,
+      mutation: 0,
+      archiveEnabled: 1,
+      archiveAge: 0,
+      archiveHarvest: 0,
+      archiveOffspring: 0,
+    },
   );
+  await e.step(60);
+  const c = await e.counters();
+  assert.equal(c.archive, 2);
+  assert.equal(c.sampledArrivals, 4);
+  assert.equal(c.crossovers, 4);
+  assert.equal(c.mutations, 0);
+  const archive = e.archivedTrees();
+  assert.equal(archive.length, 2);
+  for (const cell of (await state(e)).filter(
+    (c) => c.alive === 1 && c.genome > 1,
+  )) {
+    const gene = await e.genome(cell.genome);
+    assert.deepEqual([gene.parent, gene.secondParent].sort(), [1, 2]);
+    assert.equal(gene.depth, 0);
+    assert.ok(
+      archive.every(
+        (parent) =>
+          printTree(parent.tree) !== printTree(parseTree(gene.source)),
+      ),
+    );
+  }
+  e.destroy();
+});
+await test("tree archive mutation is independent of crossover and survives slot recycling", async () => {
+  const e = await setup(
+    [{ tree: "(seq (set m0 4) (wait 1000))" }],
+    [{ energy: 1 }],
+    {
+      treePrograms: 1,
+      rate: 1,
+      share: 1,
+      crossover: 0,
+      mutation: 1,
+      genomeCapacity: 2,
+      upkeep: 0.6,
+      corpseLifetime: 1,
+      corpseEnergy: 0,
+      archiveEnabled: 1,
+      archiveAge: 0,
+      archiveHarvest: 0,
+      archiveOffspring: 0,
+    },
+  );
+  await e.step(180);
+  const c = await e.counters();
+  assert.ok(c.sampledArrivals >= 2);
+  assert.equal(c.crossovers, 0);
+  assert.equal(c.mutations, c.sampledArrivals);
+  assert.ok(e.archivedTrees().length >= 1);
+  for (const cell of (await state(e)).filter((c) => c.alive === 1))
+    parseTree((await e.genome(cell.genome)).source);
   e.destroy();
 });
 await test("successful archive resampling creates a mutated genome, not division mutations", async () => {

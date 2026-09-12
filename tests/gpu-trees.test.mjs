@@ -3,6 +3,7 @@ import assert from "node:assert/strict";
 import {
   parseTree,
   printTree,
+  formatTree,
   checkTree,
   compileTree,
   packTree,
@@ -46,6 +47,10 @@ test("random trees, mutations and same-type crossovers remain bounded and serial
     for (const candidate of [tree, mutated, child.tree]) {
       assert.ok(checkTree(candidate).count <= 32);
       assert.ok(compileTree(candidate).length <= 64);
+      assert.equal(
+        printTree(parseTree(formatTree(candidate))),
+        printTree(candidate),
+      );
       const packed = packTree(candidate);
       assert.equal(
         printTree(unpackTree(packed.data, packed.count)),

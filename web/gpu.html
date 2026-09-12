@@ -92,9 +92,9 @@
             <span class="dot"></span>
           </div>
           <p>
-            Random assembly genomes harvest sunlight, store reserves, move,
-            divide and attack. Death leaves edible remains. Clouds drift and
-            change shape slowly.
+            <span id="genome-kind">Random assembly genomes</span> harvest
+            sunlight, store reserves, move, divide and attack. Death leaves
+            edible remains. Clouds drift and change shape slowly.
           </p>
           <div class="selection-heading">
             <h2>Under the lens</h2>
@@ -131,6 +131,7 @@
           <p class="hint">
             <span id="mutations">0</span> resampling mutations ·
             <span id="archive">0</span> archived lineages ·
+            <span id="crossovers">0</span> crossovers ·
             <span id="kills">0</span> attack kills ·
             <span id="eaten">0</span> energy eaten
           </p>
@@ -150,6 +151,17 @@
                 <option value="262144">262,144</option>
               </select></label
             >
+            <label
+              >Genome language
+              <select id="substrate">
+                <option value="assembly">Assembly</option>
+                <option value="trees">Typed Lisp trees (experimental)</option>
+              </select>
+            </label>
+            <p class="hint" id="substrate-note">
+              Division copies genomes exactly. New arrivals mix random founders
+              and archived lineages.
+            </p>
             <div id="settings-fields"></div>
             <button id="restart" class="primary" disabled>
               Start new world
@@ -197,9 +209,9 @@
           </div>
         </details>
         <details>
-          <summary>Assembly reference</summary>
+          <summary id="reference-title">Assembly reference</summary>
           <div class="reference">
-            <p>
+            <p id="reference-note">
               Eight registers, relative sensing and motion, at most 64
               instructions per genome. Target handles can be reused after a cell
               or corpse disappears. Division copies code exactly. Archive

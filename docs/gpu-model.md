@@ -1,6 +1,6 @@
 # GPU sunlight ecology
 
-The interactive `/gpu.html` prototype runs assembly, physics, evolution and rendering on WebGPU. Founders are random programs; division copies genomes exactly, while archived reintroductions have their own mutation control. Programs have eight registers and up to 64 instructions. Division requires its configured cost plus twice the minimum offspring energy, and conserves the remaining usable energy and stores. It keeps a positive energy reserve for each daughter. The default minimum is 12 energy per daughter, so division requires 36 energy including the 12-energy division cost. Cells have up to four reciprocal spring links.
+The interactive `/gpu.html` prototype runs program execution, physics, evolution and rendering on WebGPU. Assembly is the default; an optional [typed-tree world](../research/typed-trees.md) creates and compiles newcomer genomes on the CPU at immigration boundaries. Founders are random programs; division copies genomes exactly, while archived reintroductions have their own mutation control. Programs have eight registers and up to 64 instructions. Division requires its configured cost plus twice the minimum offspring energy, and conserves the remaining usable energy and stores. It keeps a positive energy reserve for each daughter. The default minimum is 12 energy per daughter, so division requires 36 energy including the 12-energy division cost. Cells have up to four reciprocal spring links.
 
 ## Energy and storage
 
@@ -57,3 +57,5 @@ Each trial starts with 8,192 random founders in 32,768 slots. Steady arrivals an
 All three lower-cost trials retained reproducing populations without further newcomers. Most subsequent harvested energy came from sunlight. Moving bodies are connected groups of at least four cells with mean velocity above 2 units/sec, not proof of coordinated navigation or cooperation. The dominant lineage in seed 42 was an unmutated random founder; selection favored its moving, budding, photosynthetic program. Predation remained sparse. These short trials establish a useful ecological improvement, not open-ended evolution.
 
 [Compact results](../research/results/thermal-survival.json). Full configurations, shader fingerprints, trajectories and surviving programs are in `research/runs/thermal-control-42/` and `research/runs/affordable-motion-{42,97,321}/`. The seed-42 affordable trial preceded the newcomer reservation fix; no sampled state was at capacity, and the other two trials include the fix.
+
+Spring links are soft collision barriers. Cells near a segment are repelled and its endpoints receive opposite, distance-weighted reactions. This respects periodic boundaries and allows occasional fast crossings.

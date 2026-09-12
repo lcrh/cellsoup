@@ -1,4 +1,5 @@
 import { createLifeEngine, defaults } from "./engine.js";
+import { TREE_SCHEMA } from "./trees.js";
 import { createRenderer } from "./renderer.js";
 import { GPU_OPS, GPU_SENSORS, GPU_FIELDS } from "./language.js";
 import {
@@ -24,6 +25,7 @@ const settingGroups = [
       ["floor", "Population floor", 0, 262144, 1],
       ["share", "Archive share", 0, 1, 0.05],
       ["mutation", "Resampling mutation", 0, 1, 0.05],
+      ["crossover", "Crossover (trees)", 0, 1, 0.05],
     ],
   ],
   [
@@ -103,6 +105,17 @@ for (const [title, fields] of settingGroups) {
     input.step = step;
     input.value = defaults[id];
     label.append(input);
+    if (["mutation", "crossover"].includes(id)) {
+      input.type = "range";
+      const output = document.createElement("output");
+      output.htmlFor = id;
+      const update = () => {
+        output.textContent = `${Math.round(Number(input.value) * 100)}%`;
+      };
+      input.addEventListener("input", update);
+      update();
+      label.append(output);
+    }
     section.append(label);
   }
   $("settings-fields").append(section);
@@ -164,6 +177,7 @@ function options() {
   const cfg = {
     capacity,
     genomeCapacity: capacity / 4,
+    treePrograms: Number($("substrate").value === "trees"),
     initial: capacity / 4,
     side: Math.ceil(Math.sqrt(capacity / 2)),
     sources: 1,
@@ -222,6 +236,10 @@ async function start() {
     engine,
     navigator.gpu.getPreferredCanvasFormat(),
   );
+  $("genome-kind").textContent = cfg.treePrograms
+    ? "Random typed-tree genomes"
+    : "Random assembly genomes";
+  renderReference(Boolean(cfg.treePrograms));
   failed = false;
   paused = false;
   selection = null;
@@ -330,8 +348,9 @@ async function readSelectedGenome() {
   if (!gene) return;
   selectedGenome = { ...gene, slot };
   $("genome-name").textContent = `Genome ${gene.serial}`;
-  $("genome-detail").textContent =
-    `Founder ${gene.founder} · ${gene.depth} resampling mutations along ancestry · ${gene.length} instructions`;
+  $("genome-detail").textContent = gene.tree
+    ? `${gene.nodes} nodes · ${gene.parent ? `Parents ${gene.parent}${gene.secondParent ? " + " + gene.secondParent : ""}` : "Random founder"} · ${gene.depth} mutations along primary ancestry`
+    : `Founder ${gene.founder} · ${gene.depth} resampling mutations along ancestry · ${gene.length} instructions`;
   $("source").textContent = gene.source;
   $("export").disabled = false;
 }
@@ -378,6 +397,7 @@ async function observe(now) {
     $("kills").textContent = formatNumber(c.kills);
     $("eaten").textContent = formatNumber(c.eaten);
     $("mutations").textContent = formatNumber(c.mutations);
+    $("crossovers").textContent = formatNumber(c.crossovers);
     $("archive").textContent = c.archive;
     const actual = (engine.tick - speedTick) / 60 / ((now - speedTime) / 1000);
     $("throughput").textContent = paused ? "Paused" : `${actual.toFixed(1)}×`;
@@ -632,15 +652,43 @@ const overrides = {
   sense: `Read a sensor: ${GPU_SENSORS.join(", ")}.`,
   peek: `Read a nearby living cell or corpse field: ${GPU_FIELDS.join(", ")}.`,
 };
-const dl = document.createElement("dl");
-for (const [op, args, description] of GPU_OPS) {
-  const dt = document.createElement("dt"),
-    dd = document.createElement("dd");
-  dt.textContent = `${op} ${args}`;
-  dd.textContent = overrides[op] || description;
-  dl.append(dt, dd);
+function renderReference(trees) {
+  $("reference-title").textContent = trees
+    ? "Typed-tree reference"
+    : "Assembly reference";
+  $("reference-note").textContent = trees
+    ? "Up to 32 typed nodes. Numbers feed arithmetic, conditions and actions; cell references select targets. Memory m0–m7 persists between evaluations. Division copies the tree and memory; birth-result is 0 for the parent, 1 for its daughter, or −1 on failure. New arrivals may cross compatible subtrees and then mutate."
+    : "Eight registers, relative sensing and motion, at most 64 instructions per genome. Division copies code exactly. Archive resampling is the mutation source.";
+  const dl = document.createElement("dl");
+  if (trees) {
+    for (const node of TREE_SCHEMA) {
+      const dt = document.createElement("dt"),
+        dd = document.createElement("dd");
+      dt.textContent = node.name;
+      dd.textContent = `${node.args.join(", ") || "No inputs"} → ${node.result === "Any" ? "matching branch type" : node.result}`;
+      dl.append(dt, dd);
+    }
+  } else
+    for (const [op, args, description] of GPU_OPS) {
+      const dt = document.createElement("dt"),
+        dd = document.createElement("dd");
+      dt.textContent = `${op} ${args}`;
+      dd.textContent = overrides[op] || description;
+      dl.append(dt, dd);
+    }
+  $("reference").replaceChildren(dl);
 }
-$("reference").append(dl);
+function substrateSettings() {
+  const trees = $("substrate").value === "trees";
+  $("crossover").disabled = !trees;
+  $("substrate-note").textContent = trees
+    ? "Random typed trees. Archived arrivals can combine two parents, then mutate independently. Division always copies the genome."
+    : "Division copies genomes exactly. New arrivals mix random founders and archived lineages.";
+}
+if (new URLSearchParams(location.search).get("substrate") === "trees")
+  $("substrate").value = "trees";
+$("substrate").addEventListener("change", substrateSettings);
+substrateSettings();
 try {
   await start();
 } catch (error) {

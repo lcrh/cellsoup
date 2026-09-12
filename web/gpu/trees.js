@@ -179,6 +179,26 @@ export function printTree(t) {
   if (t.op === "channel") return "c" + t.value;
   return `(${t.op}${t.args.length ? " " + t.args.map(printTree).join(" ") : ""})`;
 }
+// Presentation preserves the same tree; long programs use readable Lisp lines.
+export function formatTree(tree, width = 54) {
+  function render(t, indent) {
+    const compact = printTree(t);
+    if (indent + compact.length <= width || !t.args.length) return compact;
+    let args = t.args;
+    if (t.op === "seq") {
+      args = [];
+      let tail = t;
+      while (tail.op === "seq") {
+        args.push(tail.args[0]);
+        tail = tail.args[1];
+      }
+      args.push(tail);
+    }
+    return `(${t.op}\n${args.map((a) => " ".repeat(indent + 2) + render(a, indent + 2)).join("\n")}\n${" ".repeat(indent)})`;
+  }
+  checkTree(tree);
+  return render(tree, 0);
+}
 export function packTree(tree) {
   checkTree(tree);
   const data = new Float32Array(MAX_TREE_NODES * 4);
@@ -455,7 +475,21 @@ function grow(type, budget, depth, rng) {
 }
 export function randomTree(rng = Math.random, maxNodes = MAX_TREE_NODES) {
   for (let i = 0; i < 64; i++) {
-    const t = grow("Action", maxNodes, 6, rng);
+    // Sample a program of 1–6 random actions, not predominantly one action.
+    // This changes structure only: no metabolic or reproductive primitive is
+    // guaranteed, and there are no hand-written behavior templates.
+    const count = 1 + Math.floor(rng() * Math.min(6, Math.ceil(maxNodes / 2)));
+    let remaining = maxNodes - (count - 1);
+    const actions = [];
+    for (let k = 0; k < count; k++) {
+      const left = count - k;
+      const allowance = Math.max(1, Math.floor(remaining / left));
+      const action = grow("Action", allowance, 6, rng);
+      actions.push(action);
+      remaining -= checkTree(action, null).count;
+    }
+    let t = actions.pop();
+    while (actions.length) t = node("seq", [actions.pop(), t]);
     try {
       compileTree(t);
       return t;

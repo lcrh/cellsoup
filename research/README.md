@@ -4,6 +4,8 @@ This is ongoing work toward larger, faster, visibly interesting autonomous evolu
 
 The current GPU checks run with `npm run gpu:life-check`. `node research/sunlight-field-check.mjs` checks rare bright peaks across three seeds. `npm run gpu:life-run -- --capacity=8192 --seconds=180 --sample=30` records a small autonomous trial. Add `--close-at=300 --seconds=900` for a ten-minute survival interval without immigrants after five minutes of establishment. `--minimum-birth-energy`, `--cpu-cost`, `--move-cost`, and `--turn-cost` support matched cost experiments. These use Dawn and require access to the local GPU. Historical run configurations and shader fingerprints distinguish model versions.
 
+Tree trials add `--substrate=trees --crossover=0.25`; use `--crossover=0` to disable recombination. The [typed-tree notes](typed-trees.md) describe random program structure, host-assisted arrivals, and limitations.
+
 ## Reproduce
 
 Run commands from the repository root. Native experiments require Clang and the platform C SDK. `CLANG` can override the compiler. On macOS the runner obtains the SDK path from `xcrun`; the compiler's stale default SDK is not used.

@@ -1275,7 +1275,10 @@ ${treePrograms ? "      for(var q=0u;q<3u;q++){s.treeMemory[j*3u+q]=s.treeMemory
   let identity=atomicAdd(&s.counter[11],1u);
   let serial=atomicAdd(&s.counter[12],1u);
   let rng=hash(cfg.sim.x+tick()*917u+r);
-  var source=NONE;
+${
+  treePrograms
+    ? ""
+    : `  var source=NONE;
   if(random(rng)<cfg.arrivals.y) {
     for(var k=0u;k<ARCH;k++) {
       let a=(hash(rng)%ARCH+k)%ARCH;
@@ -1333,6 +1336,8 @@ ${treePrograms ? "      for(var q=0u;q<3u;q++){s.treeMemory[j*3u+q]=s.treeMemory
       atomicAdd(&s.counter[10],1u);
     }
   }
+`
+}
   atomicStore(&s.genes[g].refs,1u);
   atomicStore(&s.genes[g].births,0u);
   atomicStore(&s.genes[g].harvest,0u);

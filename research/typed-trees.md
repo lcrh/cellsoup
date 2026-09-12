@@ -1,16 +1,15 @@
-# Typed-tree experiment
+# Autonomous typed-tree worlds
 
-This is an experimental genome compiler and immigration sampler. The interactive
-world still creates and mutates assembly genomes. Tree populations, a two-parent
-archive, and browser controls are not wired into the autonomous GPU world yet.
-No evolutionary advantage over assembly has been demonstrated.
+Choose **Typed Lisp trees** under **Genome language**, or open
+`/gpu.html?substrate=trees`. Assembly remains the default. Both run the same
+sunlight, temperature, attack, corpse and spring-barrier physics. Tree evolution
+is experimental; no advantage over assembly has been established.
 
-Trees have Number, Bool, Cell, Memory, Channel, and Action types. A genome has at
-most 32 nodes and must compile into at most 64 instructions using eight temporary
-registers. Eight separate, cell-local memory slots persist between evaluations;
-a ninth internal slot records division's parent/daughter/failure result. Programs
-resume across ticks under the existing instruction budget. An evaluation ends
-with a yield before starting again. Effects in untaken branches do not execute.
+A tree has at most 32 nodes, compiles into at most 64 instructions, and uses the
+same per-tick instruction and energy budget as assembly. Eight temporary
+registers evaluate expressions. Eight separate cell-local memory slots persist
+between evaluations; division copies them and the genome exactly. A ninth
+internal slot retains the parent/daughter/failure return from division.
 
 ```lisp
 (seq
@@ -18,45 +17,66 @@ with a yield before starting again. Effects in untaken branches do not execute.
   (move (memory m0)))
 ```
 
-The vocabulary includes current cell sensors, relative gradients, linked
-communication, targeting, photosynthesis, eating, storage/mobilization, attacks,
-movement, and division. Numbers compose directly into actions and comparisons;
-no hand-matched registers are required. The spelling is documented by
-`TREE_SCHEMA` in `web/gpu/trees.js`.
+Number, Bool, Cell, Memory, Channel, and Action types prevent incompatible
+connections. The vocabulary includes relative gradients, linked communication,
+targeting, photosynthesis, eating, reserves, attacks, movement, and division.
+Execution resumes across ticks. Untaken branches do not execute their effects.
+The inspector shows the tree, its parents, and mutations along primary ancestry;
+exports include the typed genotype and compiled bytecode.
 
-## New arrivals and crossover
+## Random programs and arrivals
 
-`sampleTreeArrival(archive, options)` chooses an entirely random tree or samples
-an archived successful genome. `archiveShare` controls that choice.
-`crossoverRate` is independently adjustable: it attempts a same-type subtree
-swap with a distinct second archive entry. Only proper recipient subtrees are
-replaced, retaining part of the first parent. A result identical to either whole
-parent is not counted as recombination. The size, depth, temporary-register, and
-instruction limits all apply. If no compatible mixed child fits, the sampler
-reports an archive copy instead of a crossover.
+Founders and random arrivals are independently sampled programs of 1–6 random
+actions, including randomly generated expressions and branches. All samples
+must satisfy node, depth, temporary-register and instruction limits. No action
+is guaranteed and there are no hand-written survival templates. The first
+sampler, which chose a single random root action, mostly produced programs that
+could only do one thing; its 300-second pilot produced six divisions and no
+qualifying archives. Changing random program structure is an explicit sampling
+bias, not evidence that typed trees intrinsically evolve better.
 
-`mutationRate` applies afterward to archived arrivals, including crossed ones.
-It is separate from crossover and does not mutate the parents. Entirely random
-arrivals are already newly sampled programs. This sampler is intended for both
-constant-rate arrivals and population replenishment, never division. Division
-retains the same genome and copies persistent memory. Parent IDs and whether
-crossover and mutation occurred are returned for future lineage reporting.
+Both the steady arrival rate and low-population replenishment use the same
+sampler. **Archive share** chooses between fresh random programs and archived
+successes. **Crossover** independently controls attempts to combine two distinct
+archive entries by replacing a proper subtree with a same-type donor subtree.
+Results identical to either whole parent do not count as crossovers. If no mixed
+child fits the limits, an archive copy is reported instead.
 
-The sampler accepts an explicit seeded random generator for reproducible trials.
-Archive entries are `{id, tree}` and must already have been selected for success;
-the sampler does not invent a new fitness criterion.
+**Resampling mutation** applies afterward to archived arrivals, including crossed
+ones. Mutation and crossover are independent, and neither changes the parents.
+Division bypasses this sampler entirely. New arrivals start with fresh cell
+state. Both parent IDs are retained in the genotype header and export, and
+successful crossover counts are visible separately from mutations.
 
-## Validation and remaining integration
+## Implementation and validation
 
-Node tests check type errors, immutable parents, packed-tree round trips, 1,000
-random programs with mutations and crossovers, independent arrival probabilities,
-and explicit crossover failure. Real GPU fixtures check ReLU evaluation,
-persistent memory, conditional effects, and unchanged genomes across division.
+Physics and execution stay on the GPU. Once per simulated second, tree mode
+pauses at the immigration boundary, mirrors the GPU-selected archive, creates
+and compiles newcomers on the CPU, and uploads their programs into free genome
+slots. The GPU initializes their cells using the same reservation rules as
+assembly, so division cannot take slots reserved for arrivals. There is no
+per-cell state readback for reproduction. The host retains at most one genotype
+per genome slot plus the 128 archive entries; recycled slots do not lose archived
+trees. This implementation adds synchronization at immigration boundaries and
+has not been demonstrated at million-cell scale.
 
-Still needed before switching the live world: retain typed genotypes alongside
-compiled code, archive those trees with both parent identities, connect the
-sampler to actual arrivals and UI controls, and compare autonomous populations
-against assembly under matched ecology and compute budgets. Internal memory
-opcodes are deliberately excluded from random assembly generation.
+The existing GPU archive rules are unchanged: minimum age, harvest and direct
+births, with founder buckets and decaying scores. Tree parents are sampled
+uniformly from occupied archive entries. All random generation is seeded;
+GPU allocation and physical contention can still change complete trajectories.
 
-Tree execution is opt-in with `treePrograms: 1` and an empty, closed, archive-disabled engine. Supply `{tree}` fixture programs. The normal world allocates no tree memory. Automatic immigration is rejected in this experimental mode until typed genotype/archive integration is available.
+Node tests exercise type checking, immutable parents, 1,000 random programs with
+mutations/crossovers, serialization, and separate arrival probabilities. GPU
+checks cover memory, ReLU, branch effects, exact division, autonomous founders,
+steady arrivals, replenishment, two-parent reintroduction, and slot recycling.
+
+Reproduce a closed-population trial:
+
+```sh
+npm run gpu:life-run -- --substrate=trees --crossover=0.25 --capacity=32768 --initial=8192 --seconds=900 --close-at=300 --sample=60 --seed=42
+```
+
+Use `--substrate=assembly` for the same ecology with assembly, or `--crossover=0`
+for trees without recombination. These are different stochastic trajectories;
+a single seed cannot establish a causal benefit from crossover. See the saved
+trial summary in `research/results/typed-arrivals.json` for current evidence.
