@@ -1,10 +1,12 @@
-import { createLifeEngine } from "./engine.js";
+import { createLifeEngine, defaults } from "./engine.js";
 import { createRenderer } from "./renderer.js";
-import { GPU_OPS, GPU_SENSORS } from "./language.js";
+import { GPU_OPS, GPU_SENSORS, GPU_FIELDS } from "./language.js";
 import {
   snapshot,
   bodyAt,
   largestBody,
+  movingBody,
+  bodyMotion,
   bodyBounds,
   nearest,
   stride,
@@ -13,30 +15,101 @@ import {
 const $ = (id) => document.getElementById(id);
 const canvas = $("world"),
   camera = { x: 4096, y: 4096, width: 8192, height: 8192 };
-const numericSettings = [
-  "seed",
-  "rate",
-  "floor",
-  "share",
-  "mutation",
-  "foodRate",
-  "seedEnergy",
-  "upkeep",
-  "cpuCost",
-  "divisionCost",
-  "exchange",
-  "budget",
-  "jitter",
-  "moveCost",
-  "turnCost",
-  "linkCost",
-  "contractCost",
-  "stealCost",
-  "emitCost",
-  "sendCost",
-  "shieldUpkeep",
-  "foodMemory",
+const settingGroups = [
+  [
+    "Evolution",
+    [
+      ["seed", "Random seed", 0, 4294967295, 1],
+      ["rate", "Newcomers / second", 0, 262144, 1],
+      ["floor", "Population floor", 0, 262144, 1],
+      ["share", "Archive share", 0, 1, 0.05],
+      ["mutation", "Resampling mutation", 0, 1, 0.05],
+    ],
+  ],
+  [
+    "Sunlight & clouds",
+    [
+      ["solarRate", "Peak photosynthesis / second", 0, 20, 0.5],
+      ["sunContrast", "Bright peak rarity", 1, 8, 0.25],
+      ["cloudCover", "Cloud coverage", 0, 1, 0.05],
+      ["cloudOpacity", "Cloud opacity", 0, 1, 0.05],
+      ["cloudScale", "Cloud size (units)", 64, 8192, 1],
+      ["cloudSpeed", "Cloud drift (units / sec)", 0, 100, 1],
+      ["cloudMorph", "Cloud morph time (sec)", 1, 3600, 1],
+    ],
+  ],
+  [
+    "Energy & reserves",
+    [
+      ["seedEnergy", "Newcomer energy", 1, 200, 1],
+      ["seedStorage", "Newcomer storage", 0, 400, 1],
+      ["upkeep", "Basic upkeep / sec", 0, 20, 0.05],
+      ["energyDecay", "Energy decay / sec", 0, 1, 0.01],
+      ["exchange", "Storage sharing / tick", 0, 0.25, 0.01],
+      ["corpseLifetime", "Uneaten corpse lifetime (sec)", 1, 7200, 1],
+      ["corpseEnergy", "Body material value", 0, 100, 1],
+    ],
+  ],
+  [
+    "Temperature",
+    [
+      ["ambientTemperature", "Ambient temperature (°C)", 0, 100, 1],
+      ["sunlightHeating", "Sun heating (°C / sec)", 0, 10, 0.1],
+      ["activityHeating", "Activity heat (°C / energy)", 0, 10, 0.01],
+      ["cooling", "Cooling / sec", 0, 10, 0.01],
+      ["thermalExchange", "Linked heat sharing / tick", 0, 0.25, 0.01],
+      ["crowdInsulation", "Crowding insulation", 0, 20, 0.1],
+      ["safeTemperature", "Overheating threshold (°C)", 0, 100, 1],
+      ["heatDamage", "Overheating energy cost / °C / sec", 0, 20, 0.1],
+    ],
+  ],
+  [
+    "Actions & movement",
+    [
+      ["cpuCost", "Instruction cost", 0, 1, 0.00001],
+      ["budget", "Instructions / tick", 0, 128, 1],
+      ["divisionCost", "Division cost", 0, 150, 1],
+      ["minimumBirthEnergy", "Minimum energy per daughter", 1, 100, 1],
+      ["jitter", "Daughter heading jitter", 0, 180, 1],
+      ["moveCost", "Movement cost", 0, 10, 0.001],
+      ["turnCost", "Turn cost / degree", 0, 1, 0.0001],
+      ["attackCost", "Attack base cost", 0, 10, 0.01],
+      ["attackDamageCost", "Attack cost / damage", 0, 10, 0.05],
+      ["eatCost", "Eating cost", 0, 10, 0.01],
+      ["linkCost", "Link cost", 0, 20, 0.1],
+      ["contractCost", "Contraction cost", 0, 10, 0.01],
+      ["shieldUpkeep", "Shield upkeep / sec", 0, 20, 0.01],
+      ["sendCost", "Message cost", 0, 10, 0.01],
+      ["emitCost", "Signal cost", 0, 10, 0.01],
+    ],
+  ],
 ];
+const numericSettings = [];
+for (const [title, fields] of settingGroups) {
+  const section = document.createElement("details"),
+    summary = document.createElement("summary");
+  summary.textContent = title;
+  section.append(summary);
+  section.open = title === "Sunlight & clouds";
+  for (const [id, title, min, max, step] of fields) {
+    numericSettings.push(id);
+    const label = document.createElement("label"),
+      input = document.createElement("input");
+    label.textContent = title;
+    input.id = id;
+    input.type = "number";
+    input.min = min;
+    input.max = max;
+    input.step = step;
+    input.value = defaults[id];
+    label.append(input);
+    section.append(label);
+  }
+  $("settings-fields").append(section);
+}
+$("rate").value = 8;
+$("floor").value = 512;
+
 let device,
   engine,
   renderer,
@@ -81,7 +154,7 @@ function fail(error) {
   $("restart").disabled = false;
 }
 function controls(enabled) {
-  for (const id of ["pause", "step", "find", "fit", "restart"])
+  for (const id of ["pause", "step", "find", "find-moving", "fit", "restart"])
     $(id).disabled = !enabled;
   $("step").disabled = !enabled || !paused;
   $("pause").textContent = paused ? "Resume" : "Pause";
@@ -93,7 +166,7 @@ function options() {
     genomeCapacity: capacity / 4,
     initial: capacity / 4,
     side: Math.ceil(Math.sqrt(capacity / 2)),
-    sources: Math.ceil(capacity / 4096),
+    sources: 1,
   };
   for (const id of numericSettings) {
     const input = $(id);
@@ -195,12 +268,12 @@ function selectSlot(slot, fit = false) {
 function updateSelection(fit = false) {
   if (!selection || !snap) return;
   if (
-    !snap.u[selection.slot * stride + 31] ||
+    snap.u[selection.slot * stride + 31] !== 1 ||
     snap.u[selection.slot * stride + 24] !== selection.identity
   ) {
     const survivor = members.find(
       (m) =>
-        snap.u[m.slot * stride + 31] &&
+        snap.u[m.slot * stride + 31] === 1 &&
         snap.u[m.slot * stride + 24] === m.identity,
     );
     if (survivor) {
@@ -241,9 +314,13 @@ function updateSelection(fit = false) {
   $("body-size").textContent = body.length;
   $("cell-energy").textContent = (snap.f[k + 4] / 4096).toFixed(1);
   $("cell-age").textContent = time(snap.u[k + 28] / 60);
+  $("cell-storage").textContent = (snap.f[k + 38] / 4096).toFixed(1);
+  $("body-motion").textContent = bodyMotion(snap, body).toFixed(1);
+  $("cell-light").textContent = `${Math.round(snap.f[k + 37] * 100)}%`;
+  $("cell-temperature").textContent = `${snap.f[k + 39].toFixed(1)} °C`;
   $("cell-detail").textContent =
-    `Cell ${selection.identity} · generation ${snap.u[k + 29]} · reserves A ${snap.f[k + 38].toFixed(1)} / B ${snap.f[k + 39].toFixed(1)} · instruction ${snap.u[k + 26] + 1}`;
-  $("enzyme-fill").style.width = `${snap.f[k + 37] * 100}%`;
+    `Cell ${selection.identity} · generation ${snap.u[k + 29]} · instruction ${snap.u[k + 26] + 1}`;
+  $("light-fill").style.width = `${snap.f[k + 37] * 100}%`;
 }
 async function readSelectedGenome() {
   if (!selection) return;
@@ -266,8 +343,9 @@ async function observe(now) {
     lastSnapshot = now;
   }
   if (pendingFind) {
+    const moving = pendingFind === "moving";
     pendingFind = false;
-    const body = largestBody(snap);
+    const body = moving ? movingBody(snap) : largestBody(snap);
     if (body.length) {
       selectSlot(body[0], true);
       if (body.length === 1)
@@ -276,7 +354,9 @@ async function observe(now) {
         );
     } else
       notice(
-        "No living cells yet. Newcomers arrive once per simulated second.",
+        moving
+          ? "No connected body of 4+ cells is currently traveling above 2 units/sec."
+          : "No living cells yet. Newcomers arrive once per simulated second.",
       );
   }
   if (pendingPick) {
@@ -293,6 +373,10 @@ async function observe(now) {
     $("living").textContent = formatNumber(c.living);
     $("elapsed").textContent = time(engine.tick / 60);
     $("births").textContent = formatNumber(c.births);
+    $("corpses").textContent = formatNumber(c.corpses);
+    $("attacks").textContent = formatNumber(c.attacks);
+    $("kills").textContent = formatNumber(c.kills);
+    $("eaten").textContent = formatNumber(c.eaten);
     $("mutations").textContent = formatNumber(c.mutations);
     $("archive").textContent = c.archive;
     const actual = (engine.tick - speedTick) / 60 / ((now - speedTime) / 1000);
@@ -365,6 +449,7 @@ async function frame(now) {
       await observe(performance.now());
       renderer.draw(camera, {
         food: $("food").checked,
+        activity: $("activity").checked,
         links: $("links").checked,
         color: Number($("color").value),
         slot: selection?.slot,
@@ -394,6 +479,9 @@ $("restart").onclick = () => {
 $("find").onclick = () => {
   pendingFind = true;
 };
+$("find-moving").onclick = () => {
+  pendingFind = "moving";
+};
 $("fit").onclick = () => {
   fitWorld();
   notice("");
@@ -410,18 +498,13 @@ $("capacity").onchange = () => {
   $("rate").value = Math.max(1, n / 4096);
   $("floor").value = n / 64;
 };
-for (const id of ["share", "mutation"])
-  $(id).oninput = () => {
-    document.querySelector(`output[for="${id}"]`).textContent =
-      `${Math.round(Number($(id).value) * 100)}%`;
-  };
 let exportURL = null;
 $("export").onclick = () => {
   if (!selectedGenome) return;
   const { slot, ...genome } = selectedGenome;
   const json = JSON.stringify(
     {
-      model: "cellsoup-gpu-1",
+      model: "cellsoup-thermal-1",
       observedTick: engine.tick,
       config: engine.cfg,
       kernel: engine.fingerprint,
@@ -541,12 +624,13 @@ canvas.addEventListener("keydown", (event) => {
 // The classic grammar shares opcodes, but the GPU model has distinct costs/limits.
 const overrides = {
   split:
-    "Detached division: 0 parent, 1 child, −1 failure. Requires division cost + 40 energy. Division yields this tick.",
+    "Detached division: 0 parent, 1 child, −1 failure. Requires division cost plus twice the minimum daughter energy. Division yields this tick.",
   bud: "Connected division, with the same return values and energy threshold as split. Four links maximum.",
   link: "Try to link to a target within 24 units; four links maximum. A paid attempt may lose under contention.",
-  bond: "Read linked neighbor handle in slot 0–3; 0 if empty.",
+  bond: "Read linked neighbor handle in slot 0–3; 0 if empty. Use peek to inspect its storage.",
   give: "Give a fraction 0–1 of remaining energy to a target within 18. Keeps one energy quantum; transfers respect recipient capacity.",
   sense: `Read a sensor: ${GPU_SENSORS.join(", ")}.`,
+  peek: `Read a nearby living cell or corpse field: ${GPU_FIELDS.join(", ")}.`,
 };
 const dl = document.createElement("dl");
 for (const [op, args, description] of GPU_OPS) {

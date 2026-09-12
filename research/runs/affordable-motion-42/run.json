@@ -1,0 +1,2269 @@
+{
+  "config": {
+    "capacity": 32768,
+    "genomeCapacity": 8192,
+    "side": 128,
+    "sources": 1,
+    "initial": 8192,
+    "seed": 42,
+    "budget": 24,
+    "floor": 512,
+    "rate": 8,
+    "share": 0.5,
+    "mutation": 0.8,
+    "seedEnergy": 24,
+    "seedStorage": 24,
+    "upkeep": 0.5,
+    "ambientTemperature": 20,
+    "sunlightHeating": 1,
+    "activityHeating": 0.12,
+    "cooling": 0.2,
+    "thermalExchange": 0.12,
+    "crowdInsulation": 1,
+    "safeTemperature": 28,
+    "heatDamage": 0.5,
+    "energyDecay": 0.05,
+    "divisionCost": 12,
+    "minimumBirthEnergy": 12,
+    "exchange": 0.12,
+    "shieldUpkeep": 0.72,
+    "cpuCost": 0.00005,
+    "moveCost": 0.004,
+    "turnCost": 0.0001,
+    "linkCost": 0.5,
+    "contractCost": 0.08,
+    "attackCost": 0.08,
+    "attackDamageCost": 0.2,
+    "emitCost": 0.01,
+    "sendCost": 0.01,
+    "jitter": 12,
+    "archiveAge": 60,
+    "archiveHarvest": 120,
+    "archiveOffspring": 8,
+    "archiveEnabled": 1,
+    "solarRate": 4,
+    "sunContrast": 2,
+    "cloudCover": 0.5,
+    "cloudOpacity": 0.95,
+    "cloudScale": 1200,
+    "cloudSpeed": 12,
+    "cloudMorph": 180,
+    "solarEnabled": 1,
+    "corpseEnergy": 8,
+    "corpseLifetime": 900,
+    "eatCost": 0.04,
+    "storageCapacity": 400
+  },
+  "finalConfig": {
+    "capacity": 32768,
+    "genomeCapacity": 8192,
+    "side": 128,
+    "sources": 1,
+    "initial": 8192,
+    "seed": 42,
+    "budget": 24,
+    "floor": 0,
+    "rate": 0,
+    "share": 0.5,
+    "mutation": 0.8,
+    "seedEnergy": 24,
+    "seedStorage": 24,
+    "upkeep": 0.5,
+    "ambientTemperature": 20,
+    "sunlightHeating": 1,
+    "activityHeating": 0.12,
+    "cooling": 0.2,
+    "thermalExchange": 0.12,
+    "crowdInsulation": 1,
+    "safeTemperature": 28,
+    "heatDamage": 0.5,
+    "energyDecay": 0.05,
+    "divisionCost": 12,
+    "minimumBirthEnergy": 12,
+    "exchange": 0.12,
+    "shieldUpkeep": 0.72,
+    "cpuCost": 0.00005,
+    "moveCost": 0.004,
+    "turnCost": 0.0001,
+    "linkCost": 0.5,
+    "contractCost": 0.08,
+    "attackCost": 0.08,
+    "attackDamageCost": 0.2,
+    "emitCost": 0.01,
+    "sendCost": 0.01,
+    "jitter": 12,
+    "archiveAge": 60,
+    "archiveHarvest": 120,
+    "archiveOffspring": 8,
+    "archiveEnabled": 1,
+    "solarRate": 4,
+    "sunContrast": 2,
+    "cloudCover": 0.5,
+    "cloudOpacity": 0.95,
+    "cloudScale": 1200,
+    "cloudSpeed": 12,
+    "cloudMorph": 180,
+    "solarEnabled": 1,
+    "corpseEnergy": 8,
+    "corpseLifetime": 900,
+    "eatCost": 0.04,
+    "storageCapacity": 400
+  },
+  "closure": {
+    "second": 300,
+    "arrivals": 10592,
+    "births": 10792,
+    "living": 3318
+  },
+  "kernel": "379b58044edebd3a725afa41557fcf9b9c6afcf78e2578c04b271be65c0a3cd8",
+  "records": [
+    {
+      "seconds": 0,
+      "tick": 0,
+      "living": 8192,
+      "corpses": 0,
+      "kills": 0,
+      "attacks": 0,
+      "eaten": 0,
+      "moves": 0,
+      "photosynthesis": 0,
+      "attackDamage": 0,
+      "free": 0,
+      "birthAttempts": 0,
+      "archive": 0,
+      "births": 0,
+      "deaths": 0,
+      "randomArrivals": 8192,
+      "sampledArrivals": 0,
+      "mutations": 0,
+      "energy": 196608,
+      "reserves": 196608,
+      "mature": 0,
+      "meanTemperature": 20,
+      "maxTemperature": 20,
+      "overheated": 0,
+      "meanAge": 0,
+      "livingMaxGeneration": 0,
+      "bodies": 8192,
+      "largestBody": 1,
+      "linkedCells": 0,
+      "movingBodies": 0,
+      "movingBodyCells": 0,
+      "largestMovingBody": 0,
+      "variants": 8192,
+      "leaders": [
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          1
+        ],
+        [
+          3,
+          1
+        ],
+        [
+          4,
+          1
+        ],
+        [
+          5,
+          1
+        ],
+        [
+          6,
+          1
+        ],
+        [
+          7,
+          1
+        ],
+        [
+          8,
+          1
+        ],
+        [
+          9,
+          1
+        ],
+        [
+          10,
+          1
+        ],
+        [
+          11,
+          1
+        ]
+      ],
+      "computeMs": 0
+    },
+    {
+      "seconds": 60,
+      "tick": 3600,
+      "living": 2799,
+      "corpses": 405,
+      "kills": 8,
+      "attacks": 82,
+      "eaten": 284979.6555175781,
+      "moves": 9653952,
+      "photosynthesis": 186386.03002929688,
+      "attackDamage": 108.19921875,
+      "free": 29572,
+      "birthAttempts": 0,
+      "archive": 53,
+      "births": 6043,
+      "deaths": 11916,
+      "randomArrivals": 8667,
+      "sampledArrivals": 5,
+      "mutations": 2,
+      "energy": 39115.722412109375,
+      "reserves": 20132.721435546875,
+      "mature": 723,
+      "meanTemperature": 23.95432856083768,
+      "maxTemperature": 33.46235656738281,
+      "overheated": 113,
+      "meanAge": 38.286173633440455,
+      "livingMaxGeneration": 21,
+      "bodies": 2569,
+      "largestBody": 18,
+      "linkedCells": 325,
+      "movingBodies": 12,
+      "movingBodyCells": 85,
+      "largestMovingBody": 11,
+      "variants": 921,
+      "leaders": [
+        [
+          6920,
+          367
+        ],
+        [
+          1465,
+          169
+        ],
+        [
+          1960,
+          134
+        ],
+        [
+          7729,
+          82
+        ],
+        [
+          3624,
+          65
+        ],
+        [
+          3172,
+          62
+        ],
+        [
+          5612,
+          61
+        ],
+        [
+          1627,
+          57
+        ],
+        [
+          5066,
+          56
+        ],
+        [
+          6370,
+          43
+        ],
+        [
+          6255,
+          42
+        ],
+        [
+          7818,
+          41
+        ]
+      ],
+      "computeMs": 4499.6474160000025
+    },
+    {
+      "seconds": 120,
+      "tick": 7200,
+      "living": 2017,
+      "corpses": 210,
+      "kills": 8,
+      "attacks": 103,
+      "eaten": 321784.82763671875,
+      "moves": 14923757,
+      "photosynthesis": 355184.8193359375,
+      "attackDamage": 157.469970703125,
+      "free": 30549,
+      "birthAttempts": 0,
+      "archive": 54,
+      "births": 6943,
+      "deaths": 14078,
+      "randomArrivals": 8926,
+      "sampledArrivals": 226,
+      "mutations": 179,
+      "energy": 27977.075439453125,
+      "reserves": 12847.486572265625,
+      "mature": 1135,
+      "meanTemperature": 22.987038263898707,
+      "maxTemperature": 31.159095764160156,
+      "overheated": 51,
+      "meanAge": 67.38374648818383,
+      "livingMaxGeneration": 22,
+      "bodies": 1793,
+      "largestBody": 28,
+      "linkedCells": 278,
+      "movingBodies": 7,
+      "movingBodyCells": 63,
+      "largestMovingBody": 17,
+      "variants": 594,
+      "leaders": [
+        [
+          6920,
+          612
+        ],
+        [
+          1465,
+          112
+        ],
+        [
+          7729,
+          71
+        ],
+        [
+          2378,
+          46
+        ],
+        [
+          811,
+          43
+        ],
+        [
+          1557,
+          41
+        ],
+        [
+          7236,
+          35
+        ],
+        [
+          8123,
+          29
+        ],
+        [
+          2115,
+          28
+        ],
+        [
+          3048,
+          28
+        ],
+        [
+          3885,
+          25
+        ],
+        [
+          172,
+          19
+        ]
+      ],
+      "computeMs": 7715.661082000005
+    },
+    {
+      "seconds": 180,
+      "tick": 10800,
+      "living": 2073,
+      "corpses": 193,
+      "kills": 8,
+      "attacks": 103,
+      "eaten": 349782.7683105469,
+      "moves": 19231370,
+      "photosynthesis": 518846.3820800781,
+      "attackDamage": 157.469970703125,
+      "free": 30511,
+      "birthAttempts": 1,
+      "archive": 57,
+      "births": 8113,
+      "deaths": 15672,
+      "randomArrivals": 9147,
+      "sampledArrivals": 485,
+      "mutations": 390,
+      "energy": 36407.53076171875,
+      "reserves": 8215.47802734375,
+      "mature": 940,
+      "meanTemperature": 24.013953197422204,
+      "maxTemperature": 34.1486930847168,
+      "overheated": 164,
+      "meanAge": 69.8270059495096,
+      "livingMaxGeneration": 24,
+      "bodies": 1652,
+      "largestBody": 52,
+      "linkedCells": 485,
+      "movingBodies": 17,
+      "movingBodyCells": 177,
+      "largestMovingBody": 30,
+      "variants": 424,
+      "leaders": [
+        [
+          6920,
+          742
+        ],
+        [
+          811,
+          196
+        ],
+        [
+          2115,
+          52
+        ],
+        [
+          2378,
+          46
+        ],
+        [
+          1557,
+          41
+        ],
+        [
+          7236,
+          35
+        ],
+        [
+          4587,
+          34
+        ],
+        [
+          7420,
+          31
+        ],
+        [
+          4879,
+          30
+        ],
+        [
+          8123,
+          29
+        ],
+        [
+          3048,
+          28
+        ],
+        [
+          3737,
+          23
+        ]
+      ],
+      "computeMs": 11131.104248000014
+    },
+    {
+      "seconds": 240,
+      "tick": 14400,
+      "living": 2556,
+      "corpses": 139,
+      "kills": 10,
+      "attacks": 121,
+      "eaten": 372518.7497558594,
+      "moves": 24192707,
+      "photosynthesis": 725014.4145507812,
+      "attackDamage": 209.14501953125,
+      "free": 30080,
+      "birthAttempts": 0,
+      "archive": 58,
+      "births": 9420,
+      "deaths": 16976,
+      "randomArrivals": 9381,
+      "sampledArrivals": 731,
+      "mutations": 576,
+      "energy": 42737.28955078125,
+      "reserves": 7536.80419921875,
+      "mature": 1223,
+      "meanTemperature": 23.986093798713505,
+      "maxTemperature": 33.54853057861328,
+      "overheated": 162,
+      "meanAge": 75.47989697443931,
+      "livingMaxGeneration": 25,
+      "bodies": 1775,
+      "largestBody": 54,
+      "linkedCells": 872,
+      "movingBodies": 43,
+      "movingBodyCells": 493,
+      "largestMovingBody": 54,
+      "variants": 383,
+      "leaders": [
+        [
+          6920,
+          703
+        ],
+        [
+          811,
+          508
+        ],
+        [
+          4912,
+          76
+        ],
+        [
+          2115,
+          52
+        ],
+        [
+          7420,
+          49
+        ],
+        [
+          2378,
+          46
+        ],
+        [
+          4587,
+          44
+        ],
+        [
+          1557,
+          41
+        ],
+        [
+          7236,
+          35
+        ],
+        [
+          5815,
+          32
+        ],
+        [
+          969,
+          31
+        ],
+        [
+          994,
+          30
+        ]
+      ],
+      "computeMs": 14682.548418000017
+    },
+    {
+      "seconds": 300,
+      "tick": 18000,
+      "living": 3318,
+      "corpses": 77,
+      "kills": 10,
+      "attacks": 121,
+      "eaten": 390381.95751953125,
+      "moves": 30331864,
+      "photosynthesis": 992650.9709472656,
+      "attackDamage": 209.14501953125,
+      "free": 29381,
+      "birthAttempts": 0,
+      "archive": 58,
+      "births": 10792,
+      "deaths": 18066,
+      "randomArrivals": 9602,
+      "sampledArrivals": 990,
+      "mutations": 774,
+      "energy": 56404.5546875,
+      "reserves": 9177.86474609375,
+      "mature": 1805,
+      "meanTemperature": 23.97054769563129,
+      "maxTemperature": 35.217140197753906,
+      "overheated": 232,
+      "meanAge": 87.38764315852927,
+      "livingMaxGeneration": 27,
+      "bodies": 2536,
+      "largestBody": 36,
+      "linkedCells": 919,
+      "movingBodies": 62,
+      "movingBodyCells": 552,
+      "largestMovingBody": 36,
+      "variants": 442,
+      "leaders": [
+        [
+          6920,
+          984
+        ],
+        [
+          811,
+          507
+        ],
+        [
+          4912,
+          83
+        ],
+        [
+          2372,
+          60
+        ],
+        [
+          2454,
+          51
+        ],
+        [
+          7420,
+          49
+        ],
+        [
+          2378,
+          46
+        ],
+        [
+          4587,
+          44
+        ],
+        [
+          1991,
+          42
+        ],
+        [
+          1557,
+          41
+        ],
+        [
+          1465,
+          40
+        ],
+        [
+          2115,
+          39
+        ]
+      ],
+      "computeMs": 17978.189877000008
+    },
+    {
+      "seconds": 360,
+      "tick": 21600,
+      "living": 5295,
+      "corpses": 14,
+      "kills": 10,
+      "attacks": 121,
+      "eaten": 397933.2043457031,
+      "moves": 39449078,
+      "photosynthesis": 1458780.0942382812,
+      "attackDamage": 209.14501953125,
+      "free": 27461,
+      "birthAttempts": 2,
+      "archive": 59,
+      "births": 13265,
+      "deaths": 18562,
+      "randomArrivals": 9602,
+      "sampledArrivals": 990,
+      "mutations": 774,
+      "energy": 96728.66137695312,
+      "reserves": 6986.100341796875,
+      "mature": 2834,
+      "meanTemperature": 24.639121939035043,
+      "maxTemperature": 33.283538818359375,
+      "overheated": 561,
+      "meanAge": 93.00174378344329,
+      "livingMaxGeneration": 28,
+      "bodies": 4033,
+      "largestBody": 56,
+      "linkedCells": 1439,
+      "movingBodies": 95,
+      "movingBodyCells": 814,
+      "largestMovingBody": 27,
+      "variants": 316,
+      "leaders": [
+        [
+          6920,
+          1745
+        ],
+        [
+          811,
+          864
+        ],
+        [
+          5027,
+          93
+        ],
+        [
+          4912,
+          83
+        ],
+        [
+          3492,
+          82
+        ],
+        [
+          1465,
+          81
+        ],
+        [
+          2478,
+          80
+        ],
+        [
+          2454,
+          70
+        ],
+        [
+          2372,
+          64
+        ],
+        [
+          1999,
+          56
+        ],
+        [
+          2377,
+          53
+        ],
+        [
+          2379,
+          50
+        ]
+      ],
+      "computeMs": 21602.315874
+    },
+    {
+      "seconds": 420,
+      "tick": 25200,
+      "living": 7746,
+      "corpses": 12,
+      "kills": 10,
+      "attacks": 121,
+      "eaten": 403530.0949707031,
+      "moves": 56079965,
+      "photosynthesis": 2151441.927734375,
+      "attackDamage": 209.14501953125,
+      "free": 25010,
+      "birthAttempts": 1,
+      "archive": 59,
+      "births": 16276,
+      "deaths": 19122,
+      "randomArrivals": 9602,
+      "sampledArrivals": 990,
+      "mutations": 774,
+      "energy": 118355.76684570312,
+      "reserves": 5943.234619140625,
+      "mature": 4744,
+      "meanTemperature": 23.914441953048883,
+      "maxTemperature": 31.374969482421875,
+      "overheated": 510,
+      "meanAge": 105.12304845511635,
+      "livingMaxGeneration": 28,
+      "bodies": 5316,
+      "largestBody": 56,
+      "linkedCells": 2767,
+      "movingBodies": 250,
+      "movingBodyCells": 2174,
+      "largestMovingBody": 56,
+      "variants": 284,
+      "leaders": [
+        [
+          6920,
+          2527
+        ],
+        [
+          811,
+          2143
+        ],
+        [
+          5027,
+          152
+        ],
+        [
+          3492,
+          143
+        ],
+        [
+          4912,
+          83
+        ],
+        [
+          2478,
+          83
+        ],
+        [
+          2325,
+          80
+        ],
+        [
+          1465,
+          78
+        ],
+        [
+          950,
+          75
+        ],
+        [
+          2372,
+          64
+        ],
+        [
+          2389,
+          60
+        ],
+        [
+          2377,
+          59
+        ]
+      ],
+      "computeMs": 25746.407088000004
+    },
+    {
+      "seconds": 480,
+      "tick": 28800,
+      "living": 8405,
+      "corpses": 144,
+      "kills": 10,
+      "attacks": 121,
+      "eaten": 427391.0478515625,
+      "moves": 80241483,
+      "photosynthesis": 2957047.8061523438,
+      "attackDamage": 209.14501953125,
+      "free": 24221,
+      "birthAttempts": 2,
+      "archive": 60,
+      "births": 19841,
+      "deaths": 22028,
+      "randomArrivals": 9602,
+      "sampledArrivals": 990,
+      "mutations": 774,
+      "energy": 135057.55200195312,
+      "reserves": 4093.1279296875,
+      "mature": 4923,
+      "meanTemperature": 24.976526587836307,
+      "maxTemperature": 35.178199768066406,
+      "overheated": 1825,
+      "meanAge": 103.36494546896644,
+      "livingMaxGeneration": 29,
+      "bodies": 4743,
+      "largestBody": 62,
+      "linkedCells": 4178,
+      "movingBodies": 414,
+      "movingBodyCells": 3598,
+      "largestMovingBody": 62,
+      "variants": 205,
+      "leaders": [
+        [
+          811,
+          3665
+        ],
+        [
+          6920,
+          2227
+        ],
+        [
+          3492,
+          150
+        ],
+        [
+          5026,
+          135
+        ],
+        [
+          5027,
+          121
+        ],
+        [
+          950,
+          99
+        ],
+        [
+          1875,
+          91
+        ],
+        [
+          8123,
+          87
+        ],
+        [
+          2325,
+          65
+        ],
+        [
+          2372,
+          64
+        ],
+        [
+          2886,
+          62
+        ],
+        [
+          2317,
+          58
+        ]
+      ],
+      "computeMs": 31232.973255000008
+    },
+    {
+      "seconds": 540,
+      "tick": 32400,
+      "living": 8003,
+      "corpses": 179,
+      "kills": 10,
+      "attacks": 121,
+      "eaten": 459459.46044921875,
+      "moves": 103510284,
+      "photosynthesis": 3886451.8452148438,
+      "attackDamage": 209.14501953125,
+      "free": 24587,
+      "birthAttempts": 1,
+      "archive": 60,
+      "births": 23372,
+      "deaths": 25961,
+      "randomArrivals": 9602,
+      "sampledArrivals": 990,
+      "mutations": 774,
+      "energy": 157329.60375976562,
+      "reserves": 3279.034423828125,
+      "mature": 4594,
+      "meanTemperature": 26.588241592878166,
+      "maxTemperature": 36.02798080444336,
+      "overheated": 3104,
+      "meanAge": 99.06299096172276,
+      "livingMaxGeneration": 30,
+      "bodies": 3700,
+      "largestBody": 62,
+      "linkedCells": 4893,
+      "movingBodies": 495,
+      "movingBodyCells": 4224,
+      "largestMovingBody": 37,
+      "variants": 148,
+      "leaders": [
+        [
+          811,
+          4603
+        ],
+        [
+          6920,
+          1055
+        ],
+        [
+          8123,
+          311
+        ],
+        [
+          1913,
+          252
+        ],
+        [
+          1557,
+          173
+        ],
+        [
+          5026,
+          160
+        ],
+        [
+          2378,
+          153
+        ],
+        [
+          950,
+          99
+        ],
+        [
+          2450,
+          82
+        ],
+        [
+          3492,
+          74
+        ],
+        [
+          4078,
+          71
+        ],
+        [
+          2886,
+          62
+        ]
+      ],
+      "computeMs": 38208.309918
+    },
+    {
+      "seconds": 600,
+      "tick": 36000,
+      "living": 7633,
+      "corpses": 133,
+      "kills": 10,
+      "attacks": 121,
+      "eaten": 482380.8857421875,
+      "moves": 124418242,
+      "photosynthesis": 4787723.297607422,
+      "attackDamage": 209.14501953125,
+      "free": 25003,
+      "birthAttempts": 1,
+      "archive": 60,
+      "births": 25778,
+      "deaths": 28737,
+      "randomArrivals": 9602,
+      "sampledArrivals": 990,
+      "mutations": 774,
+      "energy": 120529.3203125,
+      "reserves": 3119.021728515625,
+      "mature": 5270,
+      "meanTemperature": 25.444775454294913,
+      "maxTemperature": 36.024864196777344,
+      "overheated": 1631,
+      "meanAge": 114.63428970697461,
+      "livingMaxGeneration": 30,
+      "bodies": 3676,
+      "largestBody": 51,
+      "linkedCells": 4570,
+      "movingBodies": 499,
+      "movingBodyCells": 3978,
+      "largestMovingBody": 30,
+      "variants": 120,
+      "leaders": [
+        [
+          811,
+          4466
+        ],
+        [
+          6920,
+          597
+        ],
+        [
+          2378,
+          432
+        ],
+        [
+          8123,
+          350
+        ],
+        [
+          1913,
+          329
+        ],
+        [
+          1557,
+          252
+        ],
+        [
+          5026,
+          119
+        ],
+        [
+          7236,
+          107
+        ],
+        [
+          4078,
+          96
+        ],
+        [
+          950,
+          53
+        ],
+        [
+          3048,
+          51
+        ],
+        [
+          898,
+          47
+        ]
+      ],
+      "computeMs": 46277.27804400002
+    },
+    {
+      "seconds": 660,
+      "tick": 39600,
+      "living": 5364,
+      "corpses": 114,
+      "kills": 10,
+      "attacks": 121,
+      "eaten": 505527.8984375,
+      "moves": 141383482,
+      "photosynthesis": 5235236.028808594,
+      "attackDamage": 209.14501953125,
+      "free": 27290,
+      "birthAttempts": 0,
+      "archive": 60,
+      "births": 26344,
+      "deaths": 31572,
+      "randomArrivals": 9602,
+      "sampledArrivals": 990,
+      "mutations": 774,
+      "energy": 54884.113037109375,
+      "reserves": 2756.161376953125,
+      "mature": 4820,
+      "meanTemperature": 23.067136501750333,
+      "maxTemperature": 29.07049560546875,
+      "overheated": 18,
+      "meanAge": 155.62984402187456,
+      "livingMaxGeneration": 30,
+      "bodies": 2500,
+      "largestBody": 33,
+      "linkedCells": 3407,
+      "movingBodies": 403,
+      "movingBodyCells": 2865,
+      "largestMovingBody": 23,
+      "variants": 103,
+      "leaders": [
+        [
+          811,
+          3442
+        ],
+        [
+          6920,
+          423
+        ],
+        [
+          2378,
+          419
+        ],
+        [
+          1913,
+          105
+        ],
+        [
+          4078,
+          92
+        ],
+        [
+          2115,
+          90
+        ],
+        [
+          7236,
+          70
+        ],
+        [
+          950,
+          53
+        ],
+        [
+          898,
+          46
+        ],
+        [
+          3363,
+          45
+        ],
+        [
+          3492,
+          37
+        ],
+        [
+          964,
+          33
+        ]
+      ],
+      "computeMs": 53866.327921000026
+    },
+    {
+      "seconds": 720,
+      "tick": 43200,
+      "living": 5180,
+      "corpses": 75,
+      "kills": 11,
+      "attacks": 123,
+      "eaten": 521179.46728515625,
+      "moves": 155989062,
+      "photosynthesis": 5733450.553955078,
+      "attackDamage": 214.069580078125,
+      "free": 27513,
+      "birthAttempts": 0,
+      "archive": 60,
+      "births": 28032,
+      "deaths": 33444,
+      "randomArrivals": 9602,
+      "sampledArrivals": 990,
+      "mutations": 774,
+      "energy": 103368.83837890625,
+      "reserves": 2223.3544921875,
+      "mature": 3533,
+      "meanTemperature": 26.019720447201525,
+      "maxTemperature": 33.80083084106445,
+      "overheated": 1702,
+      "meanAge": 159.22948841698906,
+      "livingMaxGeneration": 31,
+      "bodies": 1849,
+      "largestBody": 30,
+      "linkedCells": 3868,
+      "movingBodies": 414,
+      "movingBodyCells": 3307,
+      "largestMovingBody": 29,
+      "variants": 77,
+      "leaders": [
+        [
+          811,
+          3968
+        ],
+        [
+          6920,
+          306
+        ],
+        [
+          5026,
+          141
+        ],
+        [
+          2115,
+          90
+        ],
+        [
+          4078,
+          85
+        ],
+        [
+          1875,
+          62
+        ],
+        [
+          950,
+          58
+        ],
+        [
+          3363,
+          50
+        ],
+        [
+          898,
+          41
+        ],
+        [
+          3492,
+          34
+        ],
+        [
+          2328,
+          29
+        ],
+        [
+          2319,
+          26
+        ]
+      ],
+      "computeMs": 58682.00429500003
+    },
+    {
+      "seconds": 780,
+      "tick": 46800,
+      "living": 6417,
+      "corpses": 39,
+      "kills": 11,
+      "attacks": 123,
+      "eaten": 527308.6958007812,
+      "moves": 174856546,
+      "photosynthesis": 6495574.3544921875,
+      "attackDamage": 214.069580078125,
+      "free": 26312,
+      "birthAttempts": 0,
+      "archive": 60,
+      "births": 29969,
+      "deaths": 34144,
+      "randomArrivals": 9602,
+      "sampledArrivals": 990,
+      "mutations": 774,
+      "energy": 129610.9677734375,
+      "reserves": 1942.54931640625,
+      "mature": 4496,
+      "meanTemperature": 26.17954953125152,
+      "maxTemperature": 34.45130157470703,
+      "overheated": 1750,
+      "meanAge": 159.97138849929965,
+      "livingMaxGeneration": 31,
+      "bodies": 1988,
+      "largestBody": 34,
+      "linkedCells": 5165,
+      "movingBodies": 601,
+      "movingBodyCells": 4564,
+      "largestMovingBody": 34,
+      "variants": 60,
+      "leaders": [
+        [
+          811,
+          5287
+        ],
+        [
+          6920,
+          263
+        ],
+        [
+          5026,
+          223
+        ],
+        [
+          4078,
+          104
+        ],
+        [
+          1875,
+          72
+        ],
+        [
+          964,
+          47
+        ],
+        [
+          950,
+          38
+        ],
+        [
+          898,
+          34
+        ],
+        [
+          2387,
+          31
+        ],
+        [
+          3492,
+          27
+        ],
+        [
+          3363,
+          27
+        ],
+        [
+          2319,
+          26
+        ]
+      ],
+      "computeMs": 63897.45158900003
+    },
+    {
+      "seconds": 840,
+      "tick": 50400,
+      "living": 7633,
+      "corpses": 7,
+      "kills": 11,
+      "attacks": 123,
+      "eaten": 529776.0810546875,
+      "moves": 197708861,
+      "photosynthesis": 7356305.695800781,
+      "attackDamage": 214.069580078125,
+      "free": 25129,
+      "birthAttempts": 1,
+      "archive": 60,
+      "births": 31445,
+      "deaths": 34404,
+      "randomArrivals": 9602,
+      "sampledArrivals": 990,
+      "mutations": 774,
+      "energy": 152462.90576171875,
+      "reserves": 1985.279541015625,
+      "mature": 6159,
+      "meanTemperature": 26.189023476291666,
+      "maxTemperature": 36.11507797241211,
+      "overheated": 2079,
+      "meanAge": 182.35394777064556,
+      "livingMaxGeneration": 33,
+      "bodies": 2231,
+      "largestBody": 30,
+      "linkedCells": 6342,
+      "movingBodies": 784,
+      "movingBodyCells": 5613,
+      "largestMovingBody": 30,
+      "variants": 56,
+      "leaders": [
+        [
+          811,
+          6380
+        ],
+        [
+          6920,
+          261
+        ],
+        [
+          5026,
+          233
+        ],
+        [
+          4078,
+          98
+        ],
+        [
+          2387,
+          98
+        ],
+        [
+          964,
+          84
+        ],
+        [
+          1875,
+          72
+        ],
+        [
+          2115,
+          42
+        ],
+        [
+          950,
+          38
+        ],
+        [
+          898,
+          34
+        ],
+        [
+          3363,
+          27
+        ],
+        [
+          2319,
+          26
+        ]
+      ],
+      "computeMs": 69877.76050700006
+    },
+    {
+      "seconds": 900,
+      "tick": 54000,
+      "living": 10516,
+      "corpses": 23,
+      "kills": 11,
+      "attacks": 123,
+      "eaten": 534545.1428222656,
+      "moves": 226052094,
+      "photosynthesis": 8632444.82055664,
+      "attackDamage": 214.069580078125,
+      "free": 22229,
+      "birthAttempts": 0,
+      "archive": 60,
+      "births": 34927,
+      "deaths": 35003,
+      "randomArrivals": 9602,
+      "sampledArrivals": 990,
+      "mutations": 774,
+      "energy": 223989.28686523438,
+      "reserves": 1932.75927734375,
+      "mature": 7061,
+      "meanTemperature": 27.388280003004628,
+      "maxTemperature": 35.425411224365234,
+      "overheated": 4622,
+      "meanAge": 171.44704260174964,
+      "livingMaxGeneration": 34,
+      "bodies": 2790,
+      "largestBody": 33,
+      "linkedCells": 8957,
+      "movingBodies": 1054,
+      "movingBodyCells": 8064,
+      "largestMovingBody": 33,
+      "variants": 54,
+      "leaders": [
+        [
+          811,
+          8750
+        ],
+        [
+          6920,
+          276
+        ],
+        [
+          2387,
+          237
+        ],
+        [
+          5026,
+          231
+        ],
+        [
+          950,
+          171
+        ],
+        [
+          1875,
+          158
+        ],
+        [
+          2115,
+          119
+        ],
+        [
+          4078,
+          107
+        ],
+        [
+          964,
+          85
+        ],
+        [
+          2319,
+          48
+        ],
+        [
+          898,
+          35
+        ],
+        [
+          3363,
+          31
+        ]
+      ],
+      "computeMs": 75878.38388100009
+    }
+  ],
+  "leaders": [
+    {
+      "slot": 811,
+      "living": 8750,
+      "length": 36,
+      "serial": 812,
+      "founder": 812,
+      "depth": 0,
+      "parent": 0,
+      "bornTick": 0,
+      "score": 0,
+      "source": "L0: bud r7\nL1: min r1 360\nL2: nop\nL3: div r7 60\nL4: jmp L19\nL5: store r1 r4\nL6: sub r2 25\nL7: gradient r0 r5\nL8: max r3 2\nL9: sense r7 crowding\nL10: tag 60\nL11: jnz 90 L25\nL12: max r7 3\nL13: turn 120\nL14: gradient r3 r1\nL15: storage_gradient r2 r7 3\nL16: eat r4\nL17: storage_gradient r6 r1 0.75\nL18: max r4 r7\nL19: abs r0 90\nL20: bond r3 0.5\nL21: mov r0 r4\nL22: max r2 r1\nL23: mobilize r0 r3\nL24: bond r6 3\nL25: mul r4 90\nL26: max r0 0.75\nL27: scan_corpse r4 r4\nL28: listen r0 120\nL29: eat r4\nL30: mov r1 r3\nL31: mod r1 0.75\nL32: unlink 0.25\nL33: move 5\nL34: photosynthesize r1\nL35: link 90",
+      "recordedBirths": 16429,
+      "recordedHarvest": 5048144.19921875
+    },
+    {
+      "slot": 6920,
+      "living": 276,
+      "length": 58,
+      "serial": 6921,
+      "founder": 6921,
+      "depth": 0,
+      "parent": 0,
+      "bornTick": 0,
+      "score": 0,
+      "source": "L0: listen r7 2\nL1: eat r3\nL2: jlt r4 1 L50\nL3: mobilize r7 0.25\nL4: rand r7 r0\nL5: shield 90\nL6: mod r1 0.75\nL7: shield 0.1\nL8: mov r2 r0\nL9: photosynthesize r5\nL10: jeq r4 r3 L3\nL11: jeq 2 0 L27\nL12: bond r6 120\nL13: scan_color r2 5 0.75\nL14: jz 90 L48\nL15: scan r4 r4 0.75\nL16: eat r1\nL17: mod r6 r7\nL18: move 1\nL19: sense r1 ahead\nL20: receive r1 r3 360\nL21: gradient r0 r1\nL22: scan r6 3 -1\nL23: abs r6 90\nL24: jgt 3 r7 L3\nL25: receive r2 r5 r6\nL26: gradient r6 r4\nL27: unlink 3\nL28: mov r7 2\nL29: shield -1\nL30: mov r0 5\nL31: storage_gradient r7 r5 1\nL32: jz 0.75 L43\nL33: storage_gradient r2 r3 r2\nL34: eat r0\nL35: eat r7\nL36: scan r2 0.5 25\nL37: jgt 3 5 L26\nL38: eat r6\nL39: contract 0.25\nL40: tag 1\nL41: jeq 0 r7 L9\nL42: mod r5 10\nL43: mov r3 3\nL44: eat r0\nL45: store r5 0.1\nL46: sub r7 0.1\nL47: storage_gradient r1 r2 0.25\nL48: bud r2\nL49: sub r0 120\nL50: mobilize r1 1\nL51: split r6\nL52: photosynthesize r1\nL53: photosynthesize r3\nL54: color r2\nL55: move r2\nL56: abs r0 0\nL57: move 10",
+      "recordedBirths": 4940,
+      "recordedHarvest": 1226068.27734375
+    },
+    {
+      "slot": 2387,
+      "living": 237,
+      "length": 12,
+      "serial": 10285,
+      "founder": 4913,
+      "depth": 1,
+      "parent": 4913,
+      "bornTick": 15720,
+      "score": 0,
+      "source": "L0: photosynthesize r7\nL1: nop\nL2: peek r1 -1 temperature\nL3: jeq r1 0.75 L1\nL4: nop\nL5: split r3\nL6: abs r5 5\nL7: mod r3 2\nL8: add r5 2\nL9: nop\nL10: abs r3 r0\nL11: unlink 0.25",
+      "recordedBirths": 236,
+      "recordedHarvest": 47393.46484375
+    },
+    {
+      "slot": 5026,
+      "living": 231,
+      "length": 59,
+      "serial": 10435,
+      "founder": 8554,
+      "depth": 1,
+      "parent": 8554,
+      "bornTick": 16860,
+      "score": 0,
+      "source": "L0: sub r1 5\nL1: sub r5 60\nL2: storage_gradient r0 r4 120\nL3: rand r1 120\nL4: scan r6 1 5\nL5: scan_color r6 r4 3\nL6: scan_color r0 5 0.25\nL7: mobilize r0 0\nL8: gradient r3 r7\nL9: unlink 120\nL10: eat r4\nL11: contract 0.5\nL12: bond r4 0\nL13: storage_gradient r2 r3 0\nL14: turn r2\nL15: photosynthesize r3\nL16: eat r5\nL17: rand r3 -1\nL18: link r3\nL19: div r2 0.25\nL20: give 0 r1\nL21: split r7\nL22: unlink 0.1\nL23: scan_corpse r4 -1\nL24: gradient r4 r5\nL25: mobilize r1 2\nL26: rand r0 10\nL27: jnz 60 L47\nL28: sense r1 linked_storage\nL29: contract 0.1\nL30: nop\nL31: mobilize r0 r3\nL32: gradient r1 r2\nL33: scan_corpse r4 25\nL34: move r1\nL35: contract r6\nL36: scan_corpse r5 0.5\nL37: jnz 5 L16\nL38: mobilize r1 3\nL39: color 0.75\nL40: sub r4 60\nL41: rand r2 1\nL42: shield 120\nL43: bud r3\nL44: mul r4 0\nL45: jeq r5 0.5 L48\nL46: abs r1 360\nL47: jnz 360 L15\nL48: emit 5 r0\nL49: jgt 360 0.25 L35\nL50: listen r3 90\nL51: store r4 r6\nL52: receive r6 r4 120\nL53: eat r6\nL54: link 90\nL55: eat r6\nL56: rand r7 25\nL57: wait 0.25\nL58: storage_gradient r2 r5 90",
+      "recordedBirths": 407,
+      "recordedHarvest": 136777.94921875
+    },
+    {
+      "slot": 950,
+      "living": 171,
+      "length": 12,
+      "serial": 10260,
+      "founder": 4913,
+      "depth": 0,
+      "parent": 4913,
+      "bornTick": 15540,
+      "score": 0,
+      "source": "L0: photosynthesize r7\nL1: nop\nL2: peek r1 -1 temperature\nL3: jeq r1 0.75 L1\nL4: nop\nL5: split r3\nL6: photosynthesize r5\nL7: mod r3 2\nL8: add r5 2\nL9: nop\nL10: abs r3 r0\nL11: unlink 0.25",
+      "recordedBirths": 236,
+      "recordedHarvest": 61400.50390625
+    },
+    {
+      "slot": 1875,
+      "living": 158,
+      "length": 36,
+      "serial": 10189,
+      "founder": 812,
+      "depth": 1,
+      "parent": 812,
+      "bornTick": 15000,
+      "score": 0,
+      "source": "L0: bud r7\nL1: sense r5 linked_storage\nL2: nop\nL3: div r7 60\nL4: jmp L19\nL5: store r1 r4\nL6: sub r2 25\nL7: gradient r0 r5\nL8: max r3 2\nL9: sense r7 crowding\nL10: tag 60\nL11: jnz 90 L25\nL12: max r7 3\nL13: turn 120\nL14: gradient r3 r1\nL15: storage_gradient r2 r7 3\nL16: eat r4\nL17: storage_gradient r6 r1 0.75\nL18: max r4 r7\nL19: abs r0 90\nL20: bond r3 0.5\nL21: mov r0 r4\nL22: max r2 r1\nL23: mobilize r0 r3\nL24: bond r6 3\nL25: mul r4 90\nL26: max r0 0.75\nL27: scan_corpse r4 r4\nL28: listen r0 120\nL29: eat r4\nL30: mov r1 r3\nL31: mod r1 0.75\nL32: unlink 0.25\nL33: move 5\nL34: photosynthesize r1\nL35: link 90",
+      "recordedBirths": 235,
+      "recordedHarvest": 60671.4140625
+    },
+    {
+      "slot": 2115,
+      "living": 119,
+      "length": 35,
+      "serial": 2116,
+      "founder": 2116,
+      "depth": 0,
+      "parent": 0,
+      "bornTick": 0,
+      "score": 0,
+      "source": "L0: receive r2 r4 360\nL1: mod r1 3\nL2: min r1 -1\nL3: scan_corpse r7 0.75\nL4: rand r4 r0\nL5: nop\nL6: abs r6 360\nL7: photosynthesize r0\nL8: bond r5 0.75\nL9: rand r0 r2\nL10: mod r0 r6\nL11: eat r3\nL12: sense r3 linked_temperature\nL13: attack 3 90\nL14: unlink 0.75\nL15: listen r0 1\nL16: mobilize r3 25\nL17: bud r1\nL18: jgt r6 5 L7\nL19: color 0\nL20: sense r5 id\nL21: sub r0 0.1\nL22: div r4 0.5\nL23: jgt r5 r3 L18\nL24: mobilize r6 5\nL25: photosynthesize r1\nL26: scan_color r6 r7 90\nL27: sub r1 0.25\nL28: peek r7 0.75 energy\nL29: emit r6 120\nL30: receive r5 r1 10\nL31: mobilize r0 0.1\nL32: receive r5 r0 r2\nL33: max r3 0.5\nL34: store r4 0.75",
+      "recordedBirths": 241,
+      "recordedHarvest": 53526.125
+    },
+    {
+      "slot": 4078,
+      "living": 107,
+      "length": 46,
+      "serial": 4079,
+      "founder": 4079,
+      "depth": 0,
+      "parent": 0,
+      "bornTick": 0,
+      "score": 0,
+      "source": "L0: add r4 90\nL1: bud r4\nL2: shield 120\nL3: div r5 60\nL4: give 0 0.75\nL5: move 120\nL6: split r0\nL7: give 0 r5\nL8: eat r0\nL9: jz 5 L16\nL10: div r0 r2\nL11: tag r0\nL12: jeq 2 25 L15\nL13: scan_corpse r7 3\nL14: mov r4 60\nL15: jeq r0 360 L37\nL16: scan_color r5 3 120\nL17: sub r0 10\nL18: link 0.5\nL19: jz 1 L25\nL20: link r2\nL21: photosynthesize r3\nL22: scan_color r4 1 r3\nL23: split r7\nL24: bond r1 -1\nL25: bond r6 0.75\nL26: photosynthesize r3\nL27: mul r3 60\nL28: max r5 0.5\nL29: jnz r0 L4\nL30: div r5 60\nL31: contract r2\nL32: receive r1 r5 r3\nL33: move 25\nL34: listen r6 0.25\nL35: bud r7\nL36: give 0.5 0.75\nL37: jz -1 L15\nL38: store r2 360\nL39: gradient r0 r1\nL40: unlink 120\nL41: tag 2\nL42: peek r1 90 color\nL43: send r7 r2 0.5\nL44: mod r0 3\nL45: send 90 1 10",
+      "recordedBirths": 229,
+      "recordedHarvest": 74556.671875
+    },
+    {
+      "slot": 964,
+      "living": 85,
+      "length": 11,
+      "serial": 9746,
+      "founder": 6274,
+      "depth": 1,
+      "parent": 6274,
+      "bornTick": 11700,
+      "score": 0,
+      "source": "L0: eat r6\nL1: photosynthesize r5\nL2: jz -1 L2\nL3: listen r2 1\nL4: bud r2\nL5: jgt 25 120 L1\nL6: receive r5 r7 3\nL7: color 90\nL8: min r4 0.25\nL9: add r2 r4\nL10: jz 1 L6",
+      "recordedBirths": 127,
+      "recordedHarvest": 43275.48046875
+    },
+    {
+      "slot": 2319,
+      "living": 48,
+      "length": 51,
+      "serial": 10410,
+      "founder": 173,
+      "depth": 1,
+      "parent": 173,
+      "bornTick": 16680,
+      "score": 0,
+      "source": "L0: sense r3 crowding\nL1: link r0\nL2: add r4 -1\nL3: photosynthesize r2\nL4: move r7\nL5: eat r1\nL6: link r1\nL7: peek r6 0.25 storage\nL8: div r6 25\nL9: jmp L50\nL10: sense r5 energy\nL11: jnz 90 L16\nL12: scan_color r1 10 0.1\nL13: add r7 0\nL14: jz 5 L3\nL15: sense r2 rotation\nL16: storage_gradient r6 r2 90\nL17: abs r7 90\nL18: jgt 60 60 L44\nL19: scan r1 r0 0\nL20: move r1\nL21: bond r6 r2\nL22: nop\nL23: mod r0 r6\nL24: move 5\nL25: mobilize r7 0.75\nL26: bond r1 r7\nL27: mov r7 2\nL28: scan_color r7 2 r6\nL29: contract 360\nL30: abs r6 25\nL31: turn 10\nL32: bond r2 360\nL33: scan r2 5 r4\nL34: mov r3 r0\nL35: jlt r7 0.25 L0\nL36: split r2\nL37: max r7 10\nL38: abs r7 1\nL39: eat r6\nL40: link 60\nL41: tag 0.25\nL42: tag 60\nL43: jgt r6 r0 L14\nL44: eat r1\nL45: bond r2 10\nL46: rand r5 0.5\nL47: storage_gradient r4 r1 r6\nL48: rand r3 0.1\nL49: scan_color r3 25 0.1\nL50: bud r5",
+      "recordedBirths": 71,
+      "recordedHarvest": 25182.83203125
+    },
+    {
+      "slot": 898,
+      "living": 35,
+      "length": 58,
+      "serial": 9308,
+      "founder": 6921,
+      "depth": 1,
+      "parent": 6921,
+      "bornTick": 8400,
+      "score": 0,
+      "source": "L0: listen r7 2\nL1: eat r3\nL2: jlt r4 1 L50\nL3: mobilize r7 0.25\nL4: rand r7 r0\nL5: shield 90\nL6: mod r1 0.75\nL7: shield 0.1\nL8: mov r2 r0\nL9: photosynthesize r5\nL10: jeq r4 r3 L3\nL11: jeq 2 0 L27\nL12: bond r6 120\nL13: scan_color r2 5 0.75\nL14: jz 90 L48\nL15: scan r4 r4 0.75\nL16: eat r1\nL17: mod r6 r7\nL18: move 1\nL19: sense r1 ahead\nL20: receive r1 r3 360\nL21: gradient r0 r1\nL22: scan r6 3 -1\nL23: abs r6 90\nL24: jgt 3 r7 L3\nL25: receive r2 r5 r6\nL26: gradient r6 r4\nL27: unlink 3\nL28: mov r7 2\nL29: shield -1\nL30: mov r0 5\nL31: storage_gradient r7 r5 1\nL32: jz 0.75 L43\nL33: storage_gradient r2 r3 r2\nL34: eat r0\nL35: eat r7\nL36: scan r2 0.5 25\nL37: jgt 3 5 L26\nL38: eat r6\nL39: contract 0.25\nL40: tag 1\nL41: jeq 0 r7 L9\nL42: eat r0\nL43: mov r3 3\nL44: eat r0\nL45: store r5 0.1\nL46: sub r7 0.1\nL47: storage_gradient r1 r2 0.25\nL48: bud r2\nL49: sub r0 120\nL50: mobilize r1 1\nL51: split r6\nL52: photosynthesize r1\nL53: photosynthesize r3\nL54: color r2\nL55: move r2\nL56: abs r0 0\nL57: move 10",
+      "recordedBirths": 127,
+      "recordedHarvest": 41329.54296875
+    },
+    {
+      "slot": 3363,
+      "living": 31,
+      "length": 59,
+      "serial": 10587,
+      "founder": 8554,
+      "depth": 1,
+      "parent": 8554,
+      "bornTick": 18000,
+      "score": 0,
+      "source": "L0: sub r1 5\nL1: sub r5 60\nL2: storage_gradient r0 r4 120\nL3: rand r1 120\nL4: scan r6 1 5\nL5: scan_color r6 r4 3\nL6: scan_color r0 5 0.25\nL7: mobilize r0 0\nL8: gradient r3 r7\nL9: unlink 120\nL10: eat r4\nL11: contract 0.5\nL12: bond r4 0\nL13: storage_gradient r2 r3 0\nL14: turn r2\nL15: photosynthesize r3\nL16: eat r5\nL17: rand r3 -1\nL18: link r3\nL19: div r2 0.25\nL20: give 0 r1\nL21: split r7\nL22: unlink 0.1\nL23: scan_corpse r4 -1\nL24: gradient r4 r5\nL25: mobilize r1 2\nL26: rand r0 10\nL27: jnz 60 L47\nL28: sense r1 linked_storage\nL29: contract 0.1\nL30: nop\nL31: mobilize r0 r3\nL32: gradient r1 r2\nL33: scan_corpse r4 25\nL34: move r1\nL35: contract r6\nL36: scan_corpse r5 0.5\nL37: jnz 5 L16\nL38: mobilize r1 3\nL39: color 0.75\nL40: sub r4 60\nL41: rand r6 1\nL42: shield 120\nL43: bud r3\nL44: mul r4 0\nL45: jeq r5 0.5 L48\nL46: abs r1 360\nL47: jnz 360 L15\nL48: emit 5 r0\nL49: jgt 360 0.25 L35\nL50: listen r3 90\nL51: store r4 r6\nL52: receive r6 r4 120\nL53: eat r6\nL54: link 90\nL55: eat r6\nL56: nop\nL57: wait 0.25\nL58: storage_gradient r2 r5 90",
+      "recordedBirths": 53,
+      "recordedHarvest": 24034.6796875
+    }
+  ],
+  "archived": [
+    {
+      "length": 61,
+      "serial": 7237,
+      "founder": 7237,
+      "depth": 0,
+      "parent": 0,
+      "bornTick": 0,
+      "score": 470,
+      "source": "L0: rand r1 10\nL1: store r2 r7\nL2: abs r1 0\nL3: mobilize r1 0.25\nL4: split r7\nL5: mov r1 r6\nL6: gradient r0 r4\nL7: mod r3 0.75\nL8: wait r1\nL9: scan r6 120 -1\nL10: jmp L21\nL11: send 90 360 1\nL12: min r1 r7\nL13: scan_corpse r5 5\nL14: sense r5 crowding\nL15: sense r2 rotation\nL16: link 0\nL17: gradient r1 r7\nL18: gradient r6 r5\nL19: split r1\nL20: shield 3\nL21: peek r6 360 tag\nL22: send 90 r0 r7\nL23: store r2 10\nL24: turn -1\nL25: split r2\nL26: shield r6\nL27: max r2 2\nL28: scan_corpse r2 0\nL29: photosynthesize r6\nL30: mov r7 r7\nL31: jmp L25\nL32: add r0 0.5\nL33: split r1\nL34: send r0 r7 360\nL35: color r3\nL36: link r7\nL37: give 25 r5\nL38: contract 360\nL39: peek r4 r7 bonds\nL40: jeq 0.25 0 L34\nL41: jeq r3 r6 L58\nL42: bond r5 -1\nL43: jlt 1 r3 L39\nL44: split r1\nL45: peek r4 360 tag\nL46: sense r7 rotation\nL47: listen r3 3\nL48: wait r3\nL49: add r4 5\nL50: mov r5 r1\nL51: nop\nL52: give 1 0.1\nL53: move 0\nL54: tag 25\nL55: color 0.1\nL56: shield 0.5\nL57: link 3\nL58: peek r2 0.5 bearing\nL59: split r4\nL60: rand r6 10"
+    },
+    {
+      "length": 15,
+      "serial": 1961,
+      "founder": 1961,
+      "depth": 0,
+      "parent": 0,
+      "bornTick": 0,
+      "score": 0,
+      "source": "L0: bud r5\nL1: unlink 0\nL2: peek r2 r6 bonds\nL3: photosynthesize r0\nL4: move 2\nL5: sub r2 90\nL6: nop\nL7: emit r2 r3\nL8: emit 5 10\nL9: send 0.25 r0 120\nL10: attack r1 r6\nL11: eat r6\nL12: scan_color r1 -1 2\nL13: link 3\nL14: bond r4 0.25"
+    },
+    {
+      "length": 56,
+      "serial": 10125,
+      "founder": 770,
+      "depth": 1,
+      "parent": 770,
+      "bornTick": 14520,
+      "score": 0,
+      "source": "L0: jgt r2 r7 L50\nL1: scan_color r7 0.75 360\nL2: jgt r4 0.1 L19\nL3: nop\nL4: unlink r5\nL5: mod r5 60\nL6: jz 60 L45\nL7: jnz r1 L19\nL8: photosynthesize r7\nL9: min r0 0.75\nL10: peek r2 0.75 color\nL11: give 1 60\nL12: nop\nL13: store r7 0\nL14: move 0\nL15: storage_gradient r3 r5 90\nL16: split r2\nL17: move r3\nL18: add r0 120\nL19: jz r0 L55\nL20: move 10\nL21: scan r4 r1 0.1\nL22: give 0 5\nL23: listen r1 120\nL24: mul r7 1\nL25: mod r6 5\nL26: abs r2 0.25\nL27: nop\nL28: listen r2 90\nL29: receive r6 r6 360\nL30: eat r6\nL31: jeq 0.75 360 L28\nL32: scan_color r3 3 1\nL33: mod r6 3\nL34: store r6 1\nL35: jz 5 L32\nL36: mobilize r0 25\nL37: min r6 25\nL38: jz 0.25 L2\nL39: div r4 -1\nL40: photosynthesize r4\nL41: emit 10 r6\nL42: link 3\nL43: emit r1 0.75\nL44: photosynthesize r5\nL45: receive r3 r4 60\nL46: rand r4 0.25\nL47: unlink 0\nL48: give r7 5\nL49: mobilize r1 r5\nL50: unlink 1\nL51: turn r1\nL52: jgt 60 0 L8\nL53: send 0 r0 2\nL54: jz 0.25 L30\nL55: move r7"
+    },
+    {
+      "length": 58,
+      "serial": 5638,
+      "founder": 5638,
+      "depth": 0,
+      "parent": 0,
+      "bornTick": 0,
+      "score": 0,
+      "source": "L0: receive r5 r3 10\nL1: mod r3 120\nL2: color 0.5\nL3: gradient r6 r2\nL4: scan r5 r1 r1\nL5: color r6\nL6: turn 0.5\nL7: storage_gradient r3 r0 r0\nL8: unlink 0.25\nL9: add r0 2\nL10: contract 120\nL11: min r2 0\nL12: color 0\nL13: jz 120 L21\nL14: attack 2 5\nL15: eat r2\nL16: receive r1 r3 r7\nL17: add r6 5\nL18: mobilize r6 0.5\nL19: unlink 0.1\nL20: mobilize r7 360\nL21: move 120\nL22: scan_color r3 0.25 3\nL23: gradient r5 r6\nL24: div r6 r5\nL25: scan_corpse r1 r7\nL26: attack 1 3\nL27: shield 60\nL28: unlink 360\nL29: rand r4 r5\nL30: scan_color r7 r5 r3\nL31: link 1\nL32: mov r5 90\nL33: split r5\nL34: sub r4 r3\nL35: nop\nL36: div r7 r3\nL37: jmp L15\nL38: wait 0\nL39: send 0 10 5\nL40: send r6 r3 -1\nL41: give 2 r3\nL42: receive r3 r6 10\nL43: scan r6 60 1\nL44: attack 0.1 2\nL45: scan r1 0.25 r3\nL46: eat r3\nL47: listen r4 60\nL48: unlink 360\nL49: send 3 r2 2\nL50: sense r7 linked_storage\nL51: storage_gradient r5 r4 0.1\nL52: link 0\nL53: sense r6 rotation\nL54: min r0 10\nL55: gradient r4 r7\nL56: color 10\nL57: turn r3"
+    },
+    {
+      "length": 48,
+      "serial": 5612,
+      "founder": 5612,
+      "depth": 0,
+      "parent": 0,
+      "bornTick": 0,
+      "score": 0,
+      "source": "L0: emit 60 r1\nL1: abs r3 0.5\nL2: peek r6 60 bonds\nL3: sub r3 2\nL4: scan_corpse r4 2\nL5: split r4\nL6: nop\nL7: move 2\nL8: div r5 0.1\nL9: sub r0 -1\nL10: listen r3 360\nL11: abs r5 360\nL12: tag 3\nL13: scan_color r6 0.25 r6\nL14: emit 1 90\nL15: div r0 25\nL16: mov r0 0.25\nL17: gradient r4 r5\nL18: jnz 5 L42\nL19: give 90 10\nL20: jnz r2 L10\nL21: color 0.5\nL22: nop\nL23: shield 360\nL24: sense r5 linked_storage\nL25: split r5\nL26: gradient r3 r6\nL27: mobilize r5 r2\nL28: div r0 120\nL29: receive r1 r7 1\nL30: mobilize r2 r4\nL31: turn r5\nL32: receive r2 r3 1\nL33: link 0.25\nL34: scan_corpse r5 1\nL35: mov r2 0.1\nL36: give -1 r1\nL37: abs r3 360\nL38: nop\nL39: bond r2 0.1\nL40: move 10\nL41: attack 0.75 -1\nL42: peek r3 r6 bearing\nL43: attack 1 120\nL44: photosynthesize r3\nL45: eat r4\nL46: split r7\nL47: add r2 1"
+    },
+    {
+      "length": 57,
+      "serial": 3625,
+      "founder": 3625,
+      "depth": 0,
+      "parent": 0,
+      "bornTick": 0,
+      "score": 0,
+      "source": "L0: store r5 3\nL1: split r7\nL2: max r6 r5\nL3: mobilize r1 90\nL4: mul r7 0.75\nL5: link 60\nL6: sub r1 3\nL7: mod r3 1\nL8: max r3 0.25\nL9: jeq r1 120 L28\nL10: mov r7 10\nL11: nop\nL12: eat r3\nL13: move 0.75\nL14: jz r7 L42\nL15: jgt 0.1 -1 L49\nL16: nop\nL17: receive r5 r0 0.75\nL18: mul r2 r7\nL19: sense r7 ahead\nL20: unlink r2\nL21: contract r1\nL22: min r5 2\nL23: jnz r3 L45\nL24: add r4 360\nL25: div r6 r1\nL26: send 0.5 10 r0\nL27: jeq 0.75 10 L16\nL28: emit 25 0.1\nL29: bond r4 -1\nL30: unlink 120\nL31: send 90 25 0.75\nL32: mov r6 120\nL33: give 60 r7\nL34: emit 90 0.25\nL35: tag 3\nL36: rand r1 3\nL37: gradient r4 r2\nL38: scan_color r5 5 r7\nL39: store r5 0.25\nL40: eat r7\nL41: scan_corpse r1 25\nL42: sub r6 120\nL43: storage_gradient r3 r7 120\nL44: max r6 r7\nL45: wait 0.75\nL46: unlink 0\nL47: rand r3 0.1\nL48: scan_color r2 0.5 120\nL49: shield r6\nL50: link r7\nL51: eat r7\nL52: abs r7 25\nL53: move 25\nL54: shield -1\nL55: attack 360 120\nL56: color 360"
+    },
+    {
+      "length": 17,
+      "serial": 10575,
+      "founder": 3049,
+      "depth": 1,
+      "parent": 3049,
+      "bornTick": 17880,
+      "score": 560,
+      "source": "L0: move 90\nL1: max r7 0.75\nL2: div r2 r5\nL3: attack 120 2\nL4: listen r1 5\nL5: photosynthesize r5\nL6: bud r5\nL7: abs r4 r5\nL8: jlt 0.5 90 L3\nL9: mobilize r0 25\nL10: wait 0\nL11: store r2 0.5\nL12: unlink 10\nL13: color 360\nL14: contract 360\nL15: eat r0\nL16: unlink 360"
+    },
+    {
+      "length": 35,
+      "serial": 1466,
+      "founder": 1466,
+      "depth": 0,
+      "parent": 0,
+      "bornTick": 0,
+      "score": 274,
+      "source": "L0: abs r7 0\nL1: turn r3\nL2: photosynthesize r0\nL3: bond r1 60\nL4: jnz 3 L14\nL5: color r7\nL6: receive r4 r0 r7\nL7: split r1\nL8: div r1 120\nL9: scan_color r3 r7 10\nL10: photosynthesize r5\nL11: photosynthesize r0\nL12: tag 25\nL13: div r2 25\nL14: jnz -1 L27\nL15: jnz r4 L12\nL16: add r2 r3\nL17: turn 5\nL18: scan_corpse r5 25\nL19: photosynthesize r3\nL20: mod r2 60\nL21: store r2 0.25\nL22: mod r0 0\nL23: tag 1\nL24: bud r3\nL25: split r6\nL26: bud r4\nL27: split r3\nL28: eat r7\nL29: nop\nL30: scan_corpse r1 360\nL31: jz r6 L20\nL32: rand r3 r2\nL33: move 2\nL34: rand r4 0"
+    },
+    {
+      "length": 17,
+      "serial": 6669,
+      "founder": 6669,
+      "depth": 0,
+      "parent": 0,
+      "bornTick": 0,
+      "score": 0,
+      "source": "L0: sense r2 ahead\nL1: peek r4 0.25 bearing\nL2: mod r5 r2\nL3: split r5\nL4: send 0.5 25 r1\nL5: eat r1\nL6: jgt 10 -1 L8\nL7: jmp L13\nL8: color r4\nL9: scan_corpse r4 3\nL10: bond r5 25\nL11: bond r6 0\nL12: div r3 10\nL13: sense r0 right\nL14: mod r4 -1\nL15: move 120\nL16: shield 120"
+    },
+    {
+      "length": 22,
+      "serial": 10395,
+      "founder": 4880,
+      "depth": 0,
+      "parent": 4880,
+      "bornTick": 16560,
+      "score": 269,
+      "source": "L0: bud r4\nL1: mul r5 3\nL2: storage_gradient r1 r6 0.1\nL3: color 0.75\nL4: jgt 0 120 L7\nL5: peek r7 0.75 energy\nL6: turn r2\nL7: tag r7\nL8: give 5 2\nL9: eat r0\nL10: scan_corpse r3 90\nL11: mobilize r2 r4\nL12: mod r1 r0\nL13: gradient r5 r5\nL14: sub r6 10\nL15: sub r4 2\nL16: photosynthesize r2\nL17: bond r4 0.1\nL18: listen r2 0.5\nL19: abs r7 10\nL20: bond r6 0\nL21: jz 360 L16"
+    },
+    {
+      "length": 36,
+      "serial": 812,
+      "founder": 812,
+      "depth": 0,
+      "parent": 0,
+      "bornTick": 0,
+      "score": 20684,
+      "source": "L0: bud r7\nL1: min r1 360\nL2: nop\nL3: div r7 60\nL4: jmp L19\nL5: store r1 r4\nL6: sub r2 25\nL7: gradient r0 r5\nL8: max r3 2\nL9: sense r7 crowding\nL10: tag 60\nL11: jnz 90 L25\nL12: max r7 3\nL13: turn 120\nL14: gradient r3 r1\nL15: storage_gradient r2 r7 3\nL16: eat r4\nL17: storage_gradient r6 r1 0.75\nL18: max r4 r7\nL19: abs r0 90\nL20: bond r3 0.5\nL21: mov r0 r4\nL22: max r2 r1\nL23: mobilize r0 r3\nL24: bond r6 3\nL25: mul r4 90\nL26: max r0 0.75\nL27: scan_corpse r4 r4\nL28: listen r0 120\nL29: eat r4\nL30: mov r1 r3\nL31: mod r1 0.75\nL32: unlink 0.25\nL33: move 5\nL34: photosynthesize r1\nL35: link 90"
+    },
+    {
+      "length": 31,
+      "serial": 3147,
+      "founder": 3147,
+      "depth": 0,
+      "parent": 0,
+      "bornTick": 0,
+      "score": 0,
+      "source": "L0: sense r5 tag\nL1: peek r0 25 alive\nL2: eat r6\nL3: scan_corpse r6 60\nL4: jlt 90 0.1 L28\nL5: bond r6 1\nL6: add r1 60\nL7: rand r5 0.25\nL8: div r3 3\nL9: listen r2 -1\nL10: color 0\nL11: color r4\nL12: send 0.1 3 360\nL13: peek r0 -1 tag\nL14: split r2\nL15: mov r6 1\nL16: mul r3 0.5\nL17: div r1 10\nL18: give r1 360\nL19: tag 360\nL20: jlt r1 0.25 L5\nL21: mov r5 r7\nL22: move 25\nL23: jz 0.25 L17\nL24: split r5\nL25: attack 0.1 1\nL26: listen r3 5\nL27: rand r6 r0\nL28: mov r1 1\nL29: bond r1 2\nL30: unlink r4"
+    },
+    {
+      "length": 22,
+      "serial": 3424,
+      "founder": 3424,
+      "depth": 0,
+      "parent": 0,
+      "bornTick": 0,
+      "score": 0,
+      "source": "L0: storage_gradient r0 r3 r3\nL1: mov r2 r3\nL2: sense r2 age\nL3: send 0.5 r3 1\nL4: eat r6\nL5: move 1\nL6: div r3 120\nL7: mul r0 r2\nL8: shield 0\nL9: scan r7 r2 360\nL10: mobilize r3 r4\nL11: split r4\nL12: jmp L19\nL13: move r5\nL14: nop\nL15: add r1 90\nL16: jlt r2 60 L3\nL17: jlt 3 -1 L4\nL18: bond r4 120\nL19: mod r6 0.25\nL20: give 3 5\nL21: shield r4"
+    },
+    {
+      "length": 51,
+      "serial": 10410,
+      "founder": 173,
+      "depth": 1,
+      "parent": 173,
+      "bornTick": 16680,
+      "score": 1037,
+      "source": "L0: sense r3 crowding\nL1: link r0\nL2: add r4 -1\nL3: photosynthesize r2\nL4: move r7\nL5: eat r1\nL6: link r1\nL7: peek r6 0.25 storage\nL8: div r6 25\nL9: jmp L50\nL10: sense r5 energy\nL11: jnz 90 L16\nL12: scan_color r1 10 0.1\nL13: add r7 0\nL14: jz 5 L3\nL15: sense r2 rotation\nL16: storage_gradient r6 r2 90\nL17: abs r7 90\nL18: jgt 60 60 L44\nL19: scan r1 r0 0\nL20: move r1\nL21: bond r6 r2\nL22: nop\nL23: mod r0 r6\nL24: move 5\nL25: mobilize r7 0.75\nL26: bond r1 r7\nL27: mov r7 2\nL28: scan_color r7 2 r6\nL29: contract 360\nL30: abs r6 25\nL31: turn 10\nL32: bond r2 360\nL33: scan r2 5 r4\nL34: mov r3 r0\nL35: jlt r7 0.25 L0\nL36: split r2\nL37: max r7 10\nL38: abs r7 1\nL39: eat r6\nL40: link 60\nL41: tag 0.25\nL42: tag 60\nL43: jgt r6 r0 L14\nL44: eat r1\nL45: bond r2 10\nL46: rand r5 0.5\nL47: storage_gradient r4 r1 r6\nL48: rand r3 0.1\nL49: scan_color r3 25 0.1\nL50: bud r5"
+    },
+    {
+      "length": 41,
+      "serial": 8955,
+      "founder": 4412,
+      "depth": 1,
+      "parent": 4412,
+      "bornTick": 5760,
+      "score": 292,
+      "source": "L0: nop\nL1: photosynthesize r0\nL2: turn 0.1\nL3: max r1 360\nL4: scan_corpse r1 0.1\nL5: min r0 r1\nL6: eat r0\nL7: tag 10\nL8: abs r5 5\nL9: move 0.75\nL10: mobilize r6 r3\nL11: eat r5\nL12: sense r6 color\nL13: storage_gradient r3 r0 r1\nL14: sense r4 crowding\nL15: jgt 0 0.75 L3\nL16: photosynthesize r3\nL17: jz 1 L8\nL18: eat r2\nL19: receive r2 r7 r7\nL20: move 2\nL21: peek r6 r7 distance\nL22: photosynthesize r6\nL23: bud r4\nL24: mobilize r6 0\nL25: scan_corpse r1 0.25\nL26: jnz 2 L39\nL27: jz 0.5 L3\nL28: wait 90\nL29: rand r5 120\nL30: shield 1\nL31: send r7 -1 2\nL32: receive r7 r5 0\nL33: scan_corpse r4 120\nL34: jnz r1 L21\nL35: color 60\nL36: move 120\nL37: store r7 120\nL38: shield 0.25\nL39: scan_corpse r5 r7\nL40: sub r7 r0"
+    },
+    {
+      "length": 51,
+      "serial": 2091,
+      "founder": 2091,
+      "depth": 0,
+      "parent": 0,
+      "bornTick": 0,
+      "score": 0,
+      "source": "L0: jmp L20\nL1: jmp L9\nL2: mobilize r0 2\nL3: jgt 0.75 25 L39\nL4: tag 5\nL5: eat r6\nL6: mod r6 25\nL7: gradient r3 r4\nL8: give 0.1 25\nL9: unlink 1\nL10: gradient r6 r7\nL11: bond r1 0.25\nL12: scan_corpse r6 1\nL13: bud r5\nL14: add r5 10\nL15: div r6 3\nL16: div r4 90\nL17: give 1 0.1\nL18: give 0 r0\nL19: move 120\nL20: rand r7 r3\nL21: listen r2 1\nL22: jnz 90 L4\nL23: link -1\nL24: div r6 5\nL25: jmp L39\nL26: split r3\nL27: unlink 25\nL28: bud r6\nL29: move 2\nL30: jgt 0.75 0.5 L34\nL31: max r5 3\nL32: wait 60\nL33: send 5 1 2\nL34: wait 0.25\nL35: color 25\nL36: max r6 0\nL37: contract 1\nL38: scan_corpse r7 r7\nL39: add r1 25\nL40: gradient r7 r4\nL41: split r0\nL42: scan_corpse r1 120\nL43: max r0 3\nL44: listen r0 60\nL45: jz 3 L9\nL46: gradient r2 r6\nL47: scan_corpse r5 360\nL48: scan r0 r0 0\nL49: jz 0.75 L23\nL50: jnz 1 L5"
+    },
+    {
+      "length": 40,
+      "serial": 7146,
+      "founder": 7146,
+      "depth": 0,
+      "parent": 0,
+      "bornTick": 0,
+      "score": 0,
+      "source": "L0: receive r2 r4 90\nL1: scan_corpse r6 0.5\nL2: move 3\nL3: move 0.5\nL4: move 90\nL5: mobilize r2 60\nL6: receive r7 r3 r0\nL7: bud r4\nL8: move r0\nL9: receive r2 r4 25\nL10: bud r1\nL11: sense r4 linked_temperature\nL12: abs r0 3\nL13: color 2\nL14: div r2 r2\nL15: mov r7 0.25\nL16: storage_gradient r0 r1 1\nL17: scan r6 2 90\nL18: eat r3\nL19: color 5\nL20: mul r6 360\nL21: sub r3 r3\nL22: mul r1 0.5\nL23: listen r4 0.75\nL24: scan_corpse r4 0.25\nL25: jlt 2 -1 L33\nL26: emit 25 2\nL27: jz 3 L13\nL28: peek r4 r3 shield\nL29: mod r6 r3\nL30: mobilize r0 0.25\nL31: jz 10 L15\nL32: sub r0 r0\nL33: move 25\nL34: unlink 0.75\nL35: listen r5 120\nL36: unlink r3\nL37: move 90\nL38: photosynthesize r3\nL39: contract 0.75"
+    },
+    {
+      "length": 47,
+      "serial": 7398,
+      "founder": 7398,
+      "depth": 0,
+      "parent": 0,
+      "bornTick": 0,
+      "score": 0,
+      "source": "L0: max r4 90\nL1: link -1\nL2: emit 3 120\nL3: storage_gradient r7 r3 120\nL4: storage_gradient r3 r5 1\nL5: emit 2 0\nL6: mobilize r5 0.5\nL7: mov r4 0\nL8: max r2 r4\nL9: sense r0 energy\nL10: contract 2\nL11: min r7 25\nL12: color r6\nL13: jeq r6 0.5 L25\nL14: move 2\nL15: move 1\nL16: eat r2\nL17: rand r0 2\nL18: peek r7 1 temperature\nL19: storage_gradient r2 r1 5\nL20: jz 3 L43\nL21: mul r1 0.5\nL22: bond r6 r2\nL23: move 2\nL24: emit 10 0.25\nL25: bud r2\nL26: jlt 0.5 10 L16\nL27: mod r7 0.1\nL28: div r1 2\nL29: unlink r2\nL30: jeq 120 3 L11\nL31: scan_color r2 5 0.5\nL32: attack 5 r0\nL33: mov r6 r7\nL34: split r2\nL35: jlt -1 60 L23\nL36: color 5\nL37: store r6 0.25\nL38: gradient r1 r7\nL39: store r6 0\nL40: turn 10\nL41: give r4 5\nL42: emit 60 2\nL43: sub r2 3\nL44: jmp L39\nL45: sub r4 5\nL46: add r7 2"
+    },
+    {
+      "length": 34,
+      "serial": 5323,
+      "founder": 5323,
+      "depth": 0,
+      "parent": 0,
+      "bornTick": 0,
+      "score": 0,
+      "source": "L0: nop\nL1: sense r4 tag\nL2: scan_color r2 3 5\nL3: bud r4\nL4: div r7 r4\nL5: jgt 1 r5 L6\nL6: rand r7 25\nL7: jnz 0 L18\nL8: eat r5\nL9: send 120 25 0\nL10: turn r5\nL11: give r7 0.1\nL12: jz r5 L33\nL13: mobilize r0 60\nL14: link 0.75\nL15: jnz r6 L33\nL16: listen r4 r6\nL17: unlink 3\nL18: tag 2\nL19: wait r6\nL20: sense r0 rotation\nL21: abs r7 120\nL22: sense r1 energy\nL23: storage_gradient r1 r5 0.1\nL24: turn 0.25\nL25: scan_color r4 0.75 0.1\nL26: link r3\nL27: scan_corpse r5 0.5\nL28: add r1 0\nL29: gradient r1 r2\nL30: mobilize r6 0.5\nL31: listen r3 r2\nL32: gradient r1 r6\nL33: move 10"
+    },
+    {
+      "length": 59,
+      "serial": 10435,
+      "founder": 8554,
+      "depth": 1,
+      "parent": 8554,
+      "bornTick": 16860,
+      "score": 4307,
+      "source": "L0: sub r1 5\nL1: sub r5 60\nL2: storage_gradient r0 r4 120\nL3: rand r1 120\nL4: scan r6 1 5\nL5: scan_color r6 r4 3\nL6: scan_color r0 5 0.25\nL7: mobilize r0 0\nL8: gradient r3 r7\nL9: unlink 120\nL10: eat r4\nL11: contract 0.5\nL12: bond r4 0\nL13: storage_gradient r2 r3 0\nL14: turn r2\nL15: photosynthesize r3\nL16: eat r5\nL17: rand r3 -1\nL18: link r3\nL19: div r2 0.25\nL20: give 0 r1\nL21: split r7\nL22: unlink 0.1\nL23: scan_corpse r4 -1\nL24: gradient r4 r5\nL25: mobilize r1 2\nL26: rand r0 10\nL27: jnz 60 L47\nL28: sense r1 linked_storage\nL29: contract 0.1\nL30: nop\nL31: mobilize r0 r3\nL32: gradient r1 r2\nL33: scan_corpse r4 25\nL34: move r1\nL35: contract r6\nL36: scan_corpse r5 0.5\nL37: jnz 5 L16\nL38: mobilize r1 3\nL39: color 0.75\nL40: sub r4 60\nL41: rand r2 1\nL42: shield 120\nL43: bud r3\nL44: mul r4 0\nL45: jeq r5 0.5 L48\nL46: abs r1 360\nL47: jnz 360 L15\nL48: emit 5 r0\nL49: jgt 360 0.25 L35\nL50: listen r3 90\nL51: store r4 r6\nL52: receive r6 r4 120\nL53: eat r6\nL54: link 90\nL55: eat r6\nL56: rand r7 25\nL57: wait 0.25\nL58: storage_gradient r2 r5 90"
+    },
+    {
+      "length": 8,
+      "serial": 5816,
+      "founder": 5816,
+      "depth": 0,
+      "parent": 0,
+      "bornTick": 0,
+      "score": 0,
+      "source": "L0: unlink -1\nL1: bud r7\nL2: give 60 5\nL3: photosynthesize r4\nL4: mod r1 3\nL5: photosynthesize r1\nL6: jeq r4 3 L3\nL7: scan r6 120 120"
+    },
+    {
+      "length": 63,
+      "serial": 3173,
+      "founder": 3173,
+      "depth": 0,
+      "parent": 0,
+      "bornTick": 0,
+      "score": 0,
+      "source": "L0: abs r7 0\nL1: send 360 r0 0.1\nL2: split r5\nL3: jeq 360 10 L0\nL4: unlink 0\nL5: eat r3\nL6: rand r3 r1\nL7: scan_color r4 3 1\nL8: nop\nL9: div r0 60\nL10: jnz 2 L62\nL11: contract 0.75\nL12: wait 5\nL13: add r5 10\nL14: sense r6 right\nL15: mobilize r1 360\nL16: move r3\nL17: scan r2 60 r1\nL18: jz 0.25 L18\nL19: move r0\nL20: bond r5 90\nL21: tag 120\nL22: split r5\nL23: tag 0.1\nL24: abs r0 120\nL25: jlt 1 r7 L2\nL26: gradient r1 r5\nL27: mod r1 120\nL28: peek r1 r1 shield\nL29: bud r4\nL30: send 5 5 60\nL31: rand r3 r4\nL32: max r6 -1\nL33: scan r2 0 0\nL34: jmp L14\nL35: eat r2\nL36: bond r4 25\nL37: mul r4 120\nL38: eat r0\nL39: store r7 25\nL40: listen r6 r6\nL41: jgt -1 0.5 L32\nL42: shield 0.75\nL43: jlt r7 60 L57\nL44: color 60\nL45: rand r5 90\nL46: send r0 25 10\nL47: sense r7 ahead\nL48: sense r7 tag\nL49: abs r6 25\nL50: send 90 60 10\nL51: mul r4 -1\nL52: turn 120\nL53: mov r3 r4\nL54: link r0\nL55: jnz 5 L54\nL56: unlink r2\nL57: wait r5\nL58: listen r1 90\nL59: peek r4 0.25 bonds\nL60: jnz r4 L56\nL61: move 0.25\nL62: move 360"
+    },
+    {
+      "length": 64,
+      "serial": 6546,
+      "founder": 6546,
+      "depth": 0,
+      "parent": 0,
+      "bornTick": 0,
+      "score": 0,
+      "source": "L0: rand r6 25\nL1: mov r7 r5\nL2: give 0.5 1\nL3: attack 5 r6\nL4: listen r0 360\nL5: photosynthesize r7\nL6: bud r5\nL7: move 3\nL8: eat r0\nL9: peek r3 0.5 bearing\nL10: split r4\nL11: rand r2 0.5\nL12: sense r7 color\nL13: bond r4 r4\nL14: mov r1 60\nL15: scan_color r6 r4 -1\nL16: jlt r7 90 L6\nL17: max r0 r3\nL18: scan r1 360 r4\nL19: peek r1 3 bearing\nL20: storage_gradient r4 r4 5\nL21: emit r4 r7\nL22: sense r1 storage\nL23: eat r5\nL24: jmp L36\nL25: peek r5 0.5 energy\nL26: abs r2 0\nL27: max r2 r3\nL28: receive r0 r5 r1\nL29: eat r3\nL30: bond r3 0.75\nL31: sub r7 r6\nL32: mov r3 2\nL33: contract 5\nL34: store r3 r6\nL35: jgt 0.75 r0 L61\nL36: scan_color r3 5 5\nL37: scan r2 2 r1\nL38: turn r2\nL39: turn 25\nL40: shield r3\nL41: add r7 120\nL42: jlt 0.5 60 L30\nL43: mobilize r6 r0\nL44: listen r6 2\nL45: photosynthesize r0\nL46: peek r2 2 shield\nL47: link r7\nL48: mobilize r6 3\nL49: mul r1 25\nL50: div r3 r0\nL51: mod r7 25\nL52: send 0.1 0 0.5\nL53: mul r5 0.75\nL54: jgt r7 90 L37\nL55: link 2\nL56: scan r5 25 25\nL57: move 360\nL58: rand r6 2\nL59: color 2\nL60: div r2 60\nL61: bud r0\nL62: rand r2 25\nL63: split r1"
+    },
+    {
+      "length": 11,
+      "serial": 9746,
+      "founder": 6274,
+      "depth": 1,
+      "parent": 6274,
+      "bornTick": 11700,
+      "score": 1732,
+      "source": "L0: eat r6\nL1: photosynthesize r5\nL2: jz -1 L2\nL3: listen r2 1\nL4: bud r2\nL5: jgt 25 120 L1\nL6: receive r5 r7 3\nL7: color 90\nL8: min r4 0.25\nL9: add r2 r4\nL10: jz 1 L6"
+    },
+    {
+      "length": 29,
+      "serial": 1227,
+      "founder": 1227,
+      "depth": 0,
+      "parent": 0,
+      "bornTick": 0,
+      "score": 0,
+      "source": "L0: move r0\nL1: photosynthesize r3\nL2: mobilize r4 5\nL3: scan_color r7 1 360\nL4: move 360\nL5: sense r1 linked_temperature\nL6: bud r7\nL7: jlt 90 r3 L12\nL8: store r1 5\nL9: sub r6 0\nL10: jeq r3 -1 L21\nL11: mobilize r0 3\nL12: scan r3 60 r0\nL13: jeq 90 120 L4\nL14: eat r6\nL15: send 0.5 360 r4\nL16: listen r2 90\nL17: storage_gradient r6 r7 r1\nL18: jz r0 L26\nL19: move r5\nL20: store r4 r6\nL21: listen r6 60\nL22: photosynthesize r5\nL23: scan_color r5 r5 360\nL24: scan_color r0 0.25 1\nL25: sense r5 temperature\nL26: scan_color r0 25 25\nL27: listen r7 r4\nL28: photosynthesize r4"
+    },
+    {
+      "length": 35,
+      "serial": 2126,
+      "founder": 2126,
+      "depth": 0,
+      "parent": 0,
+      "bornTick": 0,
+      "score": 0,
+      "source": "L0: give 0.75 0.5\nL1: mov r2 r5\nL2: min r2 2\nL3: div r4 0.75\nL4: receive r6 r2 0.75\nL5: turn 90\nL6: bond r7 r7\nL7: jnz 5 L9\nL8: scan_color r1 1 5\nL9: contract r3\nL10: split r3\nL11: receive r3 r2 10\nL12: min r1 0.5\nL13: tag r5\nL14: bond r6 1\nL15: abs r7 3\nL16: mod r3 1\nL17: bond r5 3\nL18: move 90\nL19: eat r2\nL20: shield 1\nL21: give 90 r1\nL22: split r6\nL23: mul r6 r7\nL24: mul r0 5\nL25: storage_gradient r5 r1 60\nL26: gradient r6 r1\nL27: move 25\nL28: jlt r4 0.5 L12\nL29: jgt 5 r4 L25\nL30: scan_color r5 90 1\nL31: color 2\nL32: jgt -1 2 L22\nL33: peek r0 360 temperature\nL34: eat r3"
+    },
+    {
+      "length": 9,
+      "serial": 4629,
+      "founder": 4629,
+      "depth": 0,
+      "parent": 0,
+      "bornTick": 0,
+      "score": 0,
+      "source": "L0: div r1 r6\nL1: bud r1\nL2: give 360 r3\nL3: storage_gradient r3 r6 60\nL4: mul r7 25\nL5: storage_gradient r3 r4 r1\nL6: eat r5\nL7: move 360\nL8: abs r2 r1"
+    },
+    {
+      "length": 52,
+      "serial": 10501,
+      "founder": 5541,
+      "depth": 0,
+      "parent": 5541,
+      "bornTick": 17340,
+      "score": 92,
+      "source": "L0: jz 5 L24\nL1: wait r3\nL2: split r5\nL3: mov r3 0\nL4: move 60\nL5: add r2 r7\nL6: unlink -1\nL7: abs r5 360\nL8: split r2\nL9: eat r6\nL10: emit r6 90\nL11: scan r7 120 0\nL12: mul r6 0.1\nL13: rand r7 10\nL14: sense r3 linked_temperature\nL15: send r3 r0 3\nL16: unlink 0.25\nL17: rand r5 25\nL18: mod r7 -1\nL19: jlt 120 2 L0\nL20: bud r4\nL21: scan r6 0.1 r2\nL22: add r1 0.25\nL23: send 0.25 3 1\nL24: add r4 -1\nL25: mul r5 2\nL26: jlt 3 0 L45\nL27: bond r6 5\nL28: jlt 2 0.25 L48\nL29: photosynthesize r4\nL30: attack 0.25 2\nL31: jlt -1 0.5 L11\nL32: jnz 0.25 L21\nL33: rand r5 10\nL34: mov r1 0.5\nL35: jlt 0.5 0.1 L20\nL36: unlink 0.5\nL37: store r5 10\nL38: mov r1 0\nL39: contract 0.25\nL40: attack 2 2\nL41: move 1\nL42: mul r6 120\nL43: bond r4 90\nL44: store r7 r0\nL45: receive r5 r2 360\nL46: min r1 r7\nL47: peek r1 0 alive\nL48: rand r4 25\nL49: gradient r4 r6\nL50: gradient r6 r4\nL51: scan_color r1 25 2"
+    },
+    {
+      "length": 18,
+      "serial": 93,
+      "founder": 93,
+      "depth": 0,
+      "parent": 0,
+      "bornTick": 0,
+      "score": 0,
+      "source": "L0: mov r7 120\nL1: shield -1\nL2: nop\nL3: mod r2 120\nL4: eat r3\nL5: emit 90 r4\nL6: listen r6 60\nL7: send r0 r7 2\nL8: attack r1 0\nL9: move 10\nL10: receive r5 r4 25\nL11: split r0\nL12: mov r3 60\nL13: attack 120 120\nL14: color 120\nL15: abs r5 90\nL16: storage_gradient r3 r7 0.5\nL17: color 2"
+    },
+    {
+      "length": 58,
+      "serial": 6921,
+      "founder": 6921,
+      "depth": 0,
+      "parent": 0,
+      "bornTick": 0,
+      "score": 8716,
+      "source": "L0: listen r7 2\nL1: eat r3\nL2: jlt r4 1 L50\nL3: mobilize r7 0.25\nL4: rand r7 r0\nL5: shield 90\nL6: mod r1 0.75\nL7: shield 0.1\nL8: mov r2 r0\nL9: photosynthesize r5\nL10: jeq r4 r3 L3\nL11: jeq 2 0 L27\nL12: bond r6 120\nL13: scan_color r2 5 0.75\nL14: jz 90 L48\nL15: scan r4 r4 0.75\nL16: eat r1\nL17: mod r6 r7\nL18: move 1\nL19: sense r1 ahead\nL20: receive r1 r3 360\nL21: gradient r0 r1\nL22: scan r6 3 -1\nL23: abs r6 90\nL24: jgt 3 r7 L3\nL25: receive r2 r5 r6\nL26: gradient r6 r4\nL27: unlink 3\nL28: mov r7 2\nL29: shield -1\nL30: mov r0 5\nL31: storage_gradient r7 r5 1\nL32: jz 0.75 L43\nL33: storage_gradient r2 r3 r2\nL34: eat r0\nL35: eat r7\nL36: scan r2 0.5 25\nL37: jgt 3 5 L26\nL38: eat r6\nL39: contract 0.25\nL40: tag 1\nL41: jeq 0 r7 L9\nL42: mod r5 10\nL43: mov r3 3\nL44: eat r0\nL45: store r5 0.1\nL46: sub r7 0.1\nL47: storage_gradient r1 r2 0.25\nL48: bud r2\nL49: sub r0 120\nL50: mobilize r1 1\nL51: split r6\nL52: photosynthesize r1\nL53: photosynthesize r3\nL54: color r2\nL55: move r2\nL56: abs r0 0\nL57: move 10"
+    },
+    {
+      "length": 24,
+      "serial": 9780,
+      "founder": 1473,
+      "depth": 1,
+      "parent": 1473,
+      "bornTick": 11940,
+      "score": 0,
+      "source": "L0: photosynthesize r4\nL1: unlink 360\nL2: scan r7 25 25\nL3: jz r0 L13\nL4: split r4\nL5: move 120\nL6: listen r5 360\nL7: send r1 10 1\nL8: jz 2 L19\nL9: jeq 2 360 L5\nL10: receive r5 r3 r6\nL11: jlt -1 0.1 L18\nL12: turn 0.75\nL13: abs r2 -1\nL14: send 0.1 0.1 25\nL15: split r6\nL16: mul r3 25\nL17: scan_color r5 60 r0\nL18: sense r2 energy\nL19: peek r4 -1 storage\nL20: give 0.75 60\nL21: sub r1 120\nL22: color r5\nL23: mod r3 3"
+    },
+    {
+      "length": 43,
+      "serial": 1057,
+      "founder": 1057,
+      "depth": 0,
+      "parent": 0,
+      "bornTick": 0,
+      "score": 0,
+      "source": "L0: eat r7\nL1: move r7\nL2: mobilize r1 360\nL3: peek r0 120 kin\nL4: give 360 90\nL5: storage_gradient r2 r7 r4\nL6: mobilize r6 -1\nL7: mobilize r1 3\nL8: unlink 2\nL9: max r0 0.1\nL10: link 3\nL11: mod r3 r6\nL12: jz r0 L35\nL13: jlt r5 r2 L15\nL14: scan r3 r6 r6\nL15: scan r2 10 0.5\nL16: give 10 1\nL17: emit 360 r3\nL18: div r7 r2\nL19: listen r3 r0\nL20: give 0 90\nL21: sense r4 color\nL22: eat r0\nL23: mul r5 2\nL24: scan_corpse r4 r0\nL25: move 1\nL26: jz 0.75 L15\nL27: attack r2 r4\nL28: unlink r6\nL29: jeq 0 0.25 L30\nL30: split r2\nL31: abs r1 3\nL32: jgt 10 0.1 L14\nL33: bud r0\nL34: give r1 5\nL35: bond r6 1\nL36: jlt 90 60 L33\nL37: gradient r3 r1\nL38: min r5 25\nL39: nop\nL40: jz 60 L2\nL41: jeq 90 2 L40\nL42: sub r4 r7"
+    },
+    {
+      "length": 18,
+      "serial": 4833,
+      "founder": 4833,
+      "depth": 0,
+      "parent": 0,
+      "bornTick": 0,
+      "score": 0,
+      "source": "L0: move 5\nL1: mul r7 0.25\nL2: div r0 60\nL3: jeq 2 5 L2\nL4: max r4 1\nL5: sense r6 age\nL6: scan r1 60 0.75\nL7: bud r1\nL8: bond r6 3\nL9: min r6 r4\nL10: div r5 0.5\nL11: mobilize r0 r5\nL12: mul r5 0.25\nL13: sub r0 5\nL14: eat r4\nL15: scan_color r6 25 90\nL16: jgt r3 360 L10\nL17: jlt 60 0.5 L7"
+    },
+    {
+      "length": 25,
+      "serial": 3574,
+      "founder": 3574,
+      "depth": 0,
+      "parent": 0,
+      "bornTick": 0,
+      "score": 0,
+      "source": "L0: move 90\nL1: send 360 r4 r7\nL2: mul r0 0.75\nL3: min r7 3\nL4: peek r3 0.25 kin\nL5: sub r4 2\nL6: bud r5\nL7: min r0 10\nL8: eat r5\nL9: listen r5 0.1\nL10: div r7 -1\nL11: mul r0 0.25\nL12: split r3\nL13: link r6\nL14: mobilize r1 10\nL15: jgt 5 r3 L22\nL16: turn 5\nL17: tag r6\nL18: shield 360\nL19: peek r5 r3 alive\nL20: link 1\nL21: mov r1 2\nL22: nop\nL23: mul r2 2\nL24: turn r5"
+    },
+    {
+      "length": 13,
+      "serial": 10216,
+      "founder": 3886,
+      "depth": 1,
+      "parent": 3886,
+      "bornTick": 15180,
+      "score": 247,
+      "source": "L0: move 0.5\nL1: storage_gradient r0 r3 0.5\nL2: abs r4 r7\nL3: link 60\nL4: emit 120 60\nL5: photosynthesize r7\nL6: eat r0\nL7: bud r3\nL8: sense r5 color\nL9: unlink 120\nL10: max r0 25\nL11: min r5 r1\nL12: max r0 10"
+    },
+    {
+      "length": 34,
+      "serial": 7819,
+      "founder": 7819,
+      "depth": 0,
+      "parent": 0,
+      "bornTick": 0,
+      "score": 0,
+      "source": "L0: add r3 r7\nL1: add r6 r6\nL2: div r5 10\nL3: turn 5\nL4: jgt 5 0.1 L11\nL5: sub r6 0\nL6: unlink r6\nL7: jmp L2\nL8: turn 10\nL9: mod r3 1\nL10: sub r7 2\nL11: sense r3 temperature\nL12: listen r3 10\nL13: mod r6 r3\nL14: split r2\nL15: shield 90\nL16: photosynthesize r4\nL17: jmp L18\nL18: sense r0 generation\nL19: max r7 90\nL20: color 0.1\nL21: tag 3\nL22: mov r6 r6\nL23: shield 90\nL24: mov r2 25\nL25: jgt r3 r1 L8\nL26: eat r6\nL27: move 90\nL28: eat r0\nL29: jmp L14\nL30: min r6 90\nL31: jlt 5 0.75 L13\nL32: color 0.75\nL33: jeq 2 60 L33"
+    },
+    {
+      "length": 36,
+      "serial": 1914,
+      "founder": 1914,
+      "depth": 0,
+      "parent": 0,
+      "bornTick": 0,
+      "score": 1424,
+      "source": "L0: attack 0 0.75\nL1: jmp L19\nL2: link 360\nL3: bond r1 90\nL4: bond r0 60\nL5: link 0.75\nL6: jmp L24\nL7: jmp L13\nL8: contract 3\nL9: max r7 -1\nL10: move r3\nL11: color r0\nL12: nop\nL13: peek r5 0 temperature\nL14: peek r4 0.5 shield\nL15: gradient r4 r3\nL16: nop\nL17: mov r7 1\nL18: emit r6 120\nL19: split r0\nL20: nop\nL21: storage_gradient r2 r7 90\nL22: send r5 5 1\nL23: sense r5 crowding\nL24: photosynthesize r3\nL25: jeq 120 2 L19\nL26: gradient r3 r1\nL27: send r5 0.1 3\nL28: min r5 r1\nL29: sense r0 age\nL30: jlt r3 r0 L35\nL31: nop\nL32: mobilize r0 r2\nL33: color 90\nL34: receive r5 r7 0.25\nL35: link r3"
+    },
+    {
+      "length": 10,
+      "serial": 7421,
+      "founder": 7421,
+      "depth": 0,
+      "parent": 0,
+      "bornTick": 0,
+      "score": 4,
+      "source": "L0: div r2 -1\nL1: scan r2 r6 0\nL2: unlink r3\nL3: mul r1 r1\nL4: div r6 25\nL5: photosynthesize r0\nL6: split r3\nL7: unlink 0.1\nL8: abs r0 0.5\nL9: nop"
+    },
+    {
+      "length": 18,
+      "serial": 2267,
+      "founder": 2267,
+      "depth": 0,
+      "parent": 0,
+      "bornTick": 0,
+      "score": 50,
+      "source": "L0: bond r3 r1\nL1: bond r0 0\nL2: max r2 r7\nL3: mod r6 360\nL4: max r2 5\nL5: abs r0 3\nL6: scan r0 10 120\nL7: add r7 0.5\nL8: jz r7 L13\nL9: bud r1\nL10: attack r5 2\nL11: color 1\nL12: jeq 90 r5 L2\nL13: div r6 120\nL14: gradient r2 r2\nL15: send 10 r0 -1\nL16: photosynthesize r4\nL17: eat r0"
+    },
+    {
+      "length": 52,
+      "serial": 10436,
+      "founder": 10436,
+      "depth": 0,
+      "parent": 0,
+      "bornTick": 16860,
+      "score": 396,
+      "source": "L0: store r2 0.5\nL1: wait r0\nL2: div r0 25\nL3: mod r0 0\nL4: receive r3 r1 -1\nL5: gradient r0 r7\nL6: peek r3 r7 energy\nL7: bud r0\nL8: give 120 3\nL9: contract 0\nL10: mobilize r3 60\nL11: emit r2 r6\nL12: gradient r5 r4\nL13: scan_color r4 0.25 0.5\nL14: eat r4\nL15: div r6 90\nL16: mov r5 3\nL17: photosynthesize r5\nL18: jeq r5 r3 L6\nL19: abs r5 0.1\nL20: unlink 1\nL21: split r1\nL22: send 5 0 r4\nL23: move 0.1\nL24: jz 120 L47\nL25: mobilize r0 r0\nL26: tag 3\nL27: max r5 360\nL28: jmp L14\nL29: storage_gradient r7 r0 r3\nL30: turn -1\nL31: wait 0.75\nL32: give 90 120\nL33: mov r6 0\nL34: sense r0 sunlight\nL35: scan_corpse r0 25\nL36: max r5 r7\nL37: unlink r6\nL38: attack 25 3\nL39: bud r2\nL40: storage_gradient r5 r1 r0\nL41: mobilize r3 0.5\nL42: unlink 360\nL43: unlink 10\nL44: split r4\nL45: scan r2 3 r7\nL46: jmp L37\nL47: nop\nL48: store r2 360\nL49: jeq 90 0.1 L6\nL50: storage_gradient r0 r0 25\nL51: scan_color r0 10 r1"
+    },
+    {
+      "length": 40,
+      "serial": 3825,
+      "founder": 3825,
+      "depth": 0,
+      "parent": 0,
+      "bornTick": 0,
+      "score": 0,
+      "source": "L0: photosynthesize r6\nL1: receive r7 r6 r7\nL2: sub r5 360\nL3: attack r3 10\nL4: storage_gradient r5 r2 0.1\nL5: mov r0 360\nL6: add r4 0.25\nL7: sub r2 0.25\nL8: mul r1 r7\nL9: give 2 0\nL10: mov r1 5\nL11: rand r4 360\nL12: mov r7 25\nL13: mod r0 10\nL14: sense r0 id\nL15: split r0\nL16: wait 0.5\nL17: abs r2 0\nL18: link r1\nL19: shield 1\nL20: listen r1 -1\nL21: scan_color r1 0.25 2\nL22: listen r6 -1\nL23: scan_corpse r6 r1\nL24: div r0 5\nL25: color 3\nL26: split r2\nL27: rand r5 0.1\nL28: scan r4 r2 5\nL29: sub r6 r0\nL30: move 90\nL31: emit 0.25 r4\nL32: eat r5\nL33: give 0 10\nL34: jz 2 L33\nL35: rand r1 r7\nL36: max r4 3\nL37: add r3 3\nL38: photosynthesize r0\nL39: jlt r0 5 L24"
+    },
+    {
+      "length": 41,
+      "serial": 1558,
+      "founder": 1558,
+      "depth": 0,
+      "parent": 0,
+      "bornTick": 0,
+      "score": 1001,
+      "source": "L0: sub r5 5\nL1: unlink -1\nL2: shield r0\nL3: jz 0.75 L15\nL4: jlt r2 5 L34\nL5: scan r0 3 0.75\nL6: turn 3\nL7: mobilize r1 3\nL8: mobilize r6 25\nL9: nop\nL10: jgt 0.1 60 L23\nL11: listen r2 0.5\nL12: tag 360\nL13: turn 120\nL14: mod r4 r2\nL15: bond r1 2\nL16: min r0 25\nL17: bond r3 0.5\nL18: jeq 120 r5 L3\nL19: contract r1\nL20: jz 0.25 L5\nL21: wait 3\nL22: mul r1 0.75\nL23: eat r6\nL24: jeq 360 10 L26\nL25: eat r3\nL26: gradient r7 r4\nL27: gradient r5 r3\nL28: turn 0\nL29: max r2 10\nL30: abs r2 10\nL31: emit 10 360\nL32: listen r4 90\nL33: move 0.75\nL34: scan r2 10 -1\nL35: scan_corpse r4 1\nL36: abs r1 90\nL37: add r5 5\nL38: photosynthesize r3\nL39: split r0\nL40: unlink 60"
+    },
+    {
+      "length": 28,
+      "serial": 5001,
+      "founder": 5001,
+      "depth": 0,
+      "parent": 0,
+      "bornTick": 0,
+      "score": 0,
+      "source": "L0: mod r2 10\nL1: eat r7\nL2: send r2 120 0.25\nL3: move 2\nL4: bond r6 0.75\nL5: add r0 60\nL6: listen r6 0.1\nL7: bond r4 r0\nL8: bud r6\nL9: attack 60 2\nL10: scan_color r5 25 r1\nL11: scan_corpse r7 3\nL12: move 1\nL13: mul r5 r5\nL14: listen r1 0\nL15: shield 10\nL16: jmp L1\nL17: sub r7 90\nL18: split r4\nL19: gradient r0 r3\nL20: jgt 120 r6 L18\nL21: send 60 5 360\nL22: shield 0.1\nL23: nop\nL24: bond r5 10\nL25: jz 60 L6\nL26: mod r2 r0\nL27: sense r2 bonds"
+    },
+    {
+      "length": 37,
+      "serial": 6256,
+      "founder": 6256,
+      "depth": 0,
+      "parent": 0,
+      "bornTick": 0,
+      "score": 0,
+      "source": "L0: unlink r2\nL1: mul r6 r7\nL2: eat r0\nL3: jnz 0.25 L13\nL4: abs r4 5\nL5: split r0\nL6: add r5 25\nL7: storage_gradient r0 r7 2\nL8: link 3\nL9: div r2 3\nL10: nop\nL11: gradient r3 r4\nL12: emit 5 0.75\nL13: sub r5 10\nL14: color 0\nL15: move 3\nL16: receive r2 r1 360\nL17: div r2 0.25\nL18: send 10 10 -1\nL19: jgt 0.25 5 L29\nL20: peek r5 0 bearing\nL21: gradient r6 r5\nL22: jgt r4 10 L32\nL23: receive r4 r1 2\nL24: jeq 60 r0 L12\nL25: mul r7 10\nL26: tag 2\nL27: contract r0\nL28: move 2\nL29: send 0.5 5 -1\nL30: photosynthesize r1\nL31: photosynthesize r7\nL32: peek r1 0.1 energy\nL33: scan_color r3 r2 90\nL34: turn r1\nL35: split r6\nL36: move 90"
+    },
+    {
+      "length": 11,
+      "serial": 2481,
+      "founder": 2481,
+      "depth": 0,
+      "parent": 0,
+      "bornTick": 0,
+      "score": 119,
+      "source": "L0: photosynthesize r7\nL1: link 3\nL2: split r1\nL3: mod r3 r7\nL4: storage_gradient r1 r5 5\nL5: scan r2 0.1 0.75\nL6: scan_corpse r0 r5\nL7: jnz 0.25 L8\nL8: mov r6 0.5\nL9: min r4 0.5\nL10: jeq 0.1 1 L7"
+    },
+    {
+      "length": 12,
+      "serial": 10285,
+      "founder": 4913,
+      "depth": 1,
+      "parent": 4913,
+      "bornTick": 15720,
+      "score": 4232,
+      "source": "L0: photosynthesize r7\nL1: nop\nL2: peek r1 -1 temperature\nL3: jeq r1 0.75 L1\nL4: nop\nL5: split r3\nL6: abs r5 5\nL7: mod r3 2\nL8: add r5 2\nL9: nop\nL10: abs r3 r0\nL11: unlink 0.25"
+    },
+    {
+      "length": 35,
+      "serial": 2116,
+      "founder": 2116,
+      "depth": 0,
+      "parent": 0,
+      "bornTick": 0,
+      "score": 2349,
+      "source": "L0: receive r2 r4 360\nL1: mod r1 3\nL2: min r1 -1\nL3: scan_corpse r7 0.75\nL4: rand r4 r0\nL5: nop\nL6: abs r6 360\nL7: photosynthesize r0\nL8: bond r5 0.75\nL9: rand r0 r2\nL10: mod r0 r6\nL11: eat r3\nL12: sense r3 linked_temperature\nL13: attack 3 90\nL14: unlink 0.75\nL15: listen r0 1\nL16: mobilize r3 25\nL17: bud r1\nL18: jgt r6 5 L7\nL19: color 0\nL20: sense r5 id\nL21: sub r0 0.1\nL22: div r4 0.5\nL23: jgt r5 r3 L18\nL24: mobilize r6 5\nL25: photosynthesize r1\nL26: scan_color r6 r7 90\nL27: sub r1 0.25\nL28: peek r7 0.75 energy\nL29: emit r6 120\nL30: receive r5 r1 10\nL31: mobilize r0 0.1\nL32: receive r5 r0 r2\nL33: max r3 0.5\nL34: store r4 0.75"
+    },
+    {
+      "length": 26,
+      "serial": 1688,
+      "founder": 1688,
+      "depth": 0,
+      "parent": 0,
+      "bornTick": 0,
+      "score": 0,
+      "source": "L0: receive r0 r1 r3\nL1: eat r2\nL2: min r1 120\nL3: move 0.1\nL4: jmp L11\nL5: gradient r0 r0\nL6: peek r7 r3 shield\nL7: bond r5 r0\nL8: abs r7 0.25\nL9: max r0 r6\nL10: div r7 3\nL11: color 0.5\nL12: bud r6\nL13: rand r4 360\nL14: jz 0.75 L8\nL15: mul r1 3\nL16: turn r5\nL17: jgt 2 -1 L1\nL18: jgt 0.75 60 L8\nL19: bud r3\nL20: contract r1\nL21: jmp L20\nL22: mul r7 r3\nL23: abs r5 90\nL24: scan r5 3 r1\nL25: bud r5"
+    },
+    {
+      "length": 43,
+      "serial": 8392,
+      "founder": 8392,
+      "depth": 0,
+      "parent": 0,
+      "bornTick": 1500,
+      "score": 2143,
+      "source": "L0: contract 360\nL1: mobilize r3 0\nL2: gradient r5 r0\nL3: storage_gradient r3 r2 1\nL4: min r2 r3\nL5: abs r5 0.1\nL6: wait 0\nL7: give -1 10\nL8: move 25\nL9: sense r7 temperature\nL10: mov r4 5\nL11: jgt 0.1 0.1 L41\nL12: attack 0.25 360\nL13: link 0.1\nL14: abs r7 0.75\nL15: jlt r3 5 L28\nL16: add r1 0.5\nL17: mul r7 r6\nL18: mobilize r5 0.25\nL19: attack 0.1 0\nL20: mov r3 360\nL21: mod r0 1\nL22: color r5\nL23: nop\nL24: turn r4\nL25: split r7\nL26: photosynthesize r4\nL27: jmp L23\nL28: color -1\nL29: bud r0\nL30: jz 120 L39\nL31: unlink r6\nL32: unlink 0.5\nL33: storage_gradient r7 r1 2\nL34: peek r4 120 distance\nL35: turn 3\nL36: mobilize r4 5\nL37: gradient r5 r3\nL38: tag 120\nL39: mul r6 0.75\nL40: mobilize r5 r5\nL41: min r3 r6\nL42: send 0 0.5 2"
+    },
+    {
+      "length": 55,
+      "serial": 8347,
+      "founder": 8347,
+      "depth": 0,
+      "parent": 0,
+      "bornTick": 1200,
+      "score": 118,
+      "source": "L0: bud r6\nL1: storage_gradient r0 r5 25\nL2: tag r5\nL3: abs r7 -1\nL4: min r6 0.5\nL5: bud r0\nL6: nop\nL7: nop\nL8: photosynthesize r5\nL9: eat r3\nL10: div r0 0.5\nL11: nop\nL12: jnz r6 L2\nL13: div r2 r7\nL14: eat r6\nL15: turn 0.75\nL16: storage_gradient r6 r2 r7\nL17: move 1\nL18: min r1 360\nL19: nop\nL20: peek r3 10 kin\nL21: mov r0 0.75\nL22: jlt 5 0.25 L15\nL23: give 0.75 360\nL24: tag 10\nL25: unlink 10\nL26: max r3 0.25\nL27: emit 0.1 120\nL28: max r0 5\nL29: bond r3 r4\nL30: jlt 120 2 L37\nL31: nop\nL32: contract 0.75\nL33: gradient r5 r0\nL34: scan r3 90 90\nL35: scan_color r3 60 0\nL36: contract 5\nL37: gradient r5 r6\nL38: mod r3 360\nL39: split r7\nL40: give 90 r2\nL41: send r0 120 25\nL42: jeq r0 1 L30\nL43: jeq r0 0.5 L54\nL44: max r3 0.25\nL45: store r7 2\nL46: mov r0 0.5\nL47: storage_gradient r2 r5 r3\nL48: jz 1 L3\nL49: add r2 60\nL50: attack 3 3\nL51: contract r5\nL52: bond r4 360\nL53: add r3 -1\nL54: eat r3"
+    },
+    {
+      "length": 32,
+      "serial": 7730,
+      "founder": 7730,
+      "depth": 0,
+      "parent": 0,
+      "bornTick": 0,
+      "score": 0,
+      "source": "L0: jgt 0.75 r0 L8\nL1: shield 90\nL2: mov r3 10\nL3: mul r1 360\nL4: wait r2\nL5: mov r3 1\nL6: min r7 r0\nL7: emit 2 r0\nL8: mov r4 360\nL9: eat r5\nL10: mov r3 120\nL11: split r7\nL12: color r4\nL13: mobilize r3 60\nL14: move 1\nL15: div r7 0.25\nL16: photosynthesize r0\nL17: storage_gradient r2 r0 -1\nL18: jmp L5\nL19: abs r3 10\nL20: rand r5 r3\nL21: color 60\nL22: listen r7 0\nL23: sub r5 120\nL24: div r0 0.25\nL25: mod r1 0.75\nL26: tag 120\nL27: jgt 0.75 90 L12\nL28: split r4\nL29: color 0.1\nL30: give 0.25 90\nL31: mov r6 3"
+    },
+    {
+      "length": 43,
+      "serial": 10360,
+      "founder": 3738,
+      "depth": 1,
+      "parent": 3738,
+      "bornTick": 16260,
+      "score": 472,
+      "source": "L0: shield r3\nL1: split r3\nL2: send 2 5 0\nL3: nop\nL4: div r6 5\nL5: min r5 3\nL6: shield r1\nL7: store r5 r5\nL8: peek r1 r2 color\nL9: min r0 r5\nL10: attack 25 360\nL11: mobilize r3 360\nL12: send 0.5 3 r4\nL13: photosynthesize r3\nL14: scan_corpse r2 120\nL15: abs r0 3\nL16: peek r1 10 alive\nL17: bud r3\nL18: jlt 1 120 L5\nL19: nop\nL20: give 360 10\nL21: scan_corpse r7 r2\nL22: give 25 0.5\nL23: receive r5 r1 0.5\nL24: turn 1\nL25: storage_gradient r1 r0 0\nL26: listen r5 25\nL27: peek r1 0.5 distance\nL28: add r5 0\nL29: jnz 360 L22\nL30: peek r3 60 temperature\nL31: link r0\nL32: move 2\nL33: storage_gradient r2 r0 r0\nL34: tag 2\nL35: eat r4\nL36: bud r0\nL37: jmp L29\nL38: listen r3 r0\nL39: storage_gradient r5 r1 5\nL40: unlink r6\nL41: sub r1 0\nL42: wait 0.1"
+    },
+    {
+      "length": 30,
+      "serial": 3016,
+      "founder": 3016,
+      "depth": 0,
+      "parent": 0,
+      "bornTick": 0,
+      "score": 0,
+      "source": "L0: mobilize r3 1\nL1: listen r4 r0\nL2: abs r2 r5\nL3: eat r6\nL4: attack 0.1 360\nL5: mov r3 r2\nL6: eat r7\nL7: mov r4 3\nL8: rand r5 0.25\nL9: split r6\nL10: bud r3\nL11: add r5 0.1\nL12: link 120\nL13: attack 0.75 0.25\nL14: move 0.75\nL15: move 0\nL16: eat r7\nL17: split r2\nL18: move 360\nL19: scan_color r7 0 r3\nL20: color -1\nL21: min r3 r2\nL22: mul r4 1\nL23: sense r6 linked_storage\nL24: send 5 r2 r5\nL25: abs r7 2\nL26: nop\nL27: bond r1 0.5\nL28: scan_corpse r1 3\nL29: attack 25 2"
+    },
+    {
+      "length": 41,
+      "serial": 8124,
+      "founder": 8124,
+      "depth": 0,
+      "parent": 0,
+      "bornTick": 0,
+      "score": 1393,
+      "source": "L0: mul r3 r2\nL1: eat r5\nL2: sub r4 0.5\nL3: storage_gradient r2 r5 0.25\nL4: jlt 0.25 0.1 L16\nL5: gradient r3 r2\nL6: emit 360 0.5\nL7: add r4 0.1\nL8: tag r1\nL9: jeq r2 0.5 L33\nL10: give 10 3\nL11: shield r0\nL12: attack 0 10\nL13: link r7\nL14: turn r1\nL15: scan_color r0 360 10\nL16: photosynthesize r0\nL17: split r2\nL18: listen r3 3\nL19: tag 0.1\nL20: turn r2\nL21: jmp L13\nL22: bud r1\nL23: move 2\nL24: div r5 2\nL25: emit -1 r1\nL26: gradient r7 r4\nL27: emit 60 r4\nL28: contract 0\nL29: link 10\nL30: mobilize r7 1\nL31: receive r2 r2 r2\nL32: attack 360 r0\nL33: contract 0.75\nL34: jgt 60 0.5 L25\nL35: unlink 0.75\nL36: jz 0 L12\nL37: tag r0\nL38: attack 25 0.75\nL39: jlt 0.1 2 L39\nL40: storage_gradient r6 r6 r2"
+    },
+    {
+      "length": 46,
+      "serial": 4079,
+      "founder": 4079,
+      "depth": 0,
+      "parent": 0,
+      "bornTick": 0,
+      "score": 2145,
+      "source": "L0: add r4 90\nL1: bud r4\nL2: shield 120\nL3: div r5 60\nL4: give 0 0.75\nL5: move 120\nL6: split r0\nL7: give 0 r5\nL8: eat r0\nL9: jz 5 L16\nL10: div r0 r2\nL11: tag r0\nL12: jeq 2 25 L15\nL13: scan_corpse r7 3\nL14: mov r4 60\nL15: jeq r0 360 L37\nL16: scan_color r5 3 120\nL17: sub r0 10\nL18: link 0.5\nL19: jz 1 L25\nL20: link r2\nL21: photosynthesize r3\nL22: scan_color r4 1 r3\nL23: split r7\nL24: bond r1 -1\nL25: bond r6 0.75\nL26: photosynthesize r3\nL27: mul r3 60\nL28: max r5 0.5\nL29: jnz r0 L4\nL30: div r5 60\nL31: contract r2\nL32: receive r1 r5 r3\nL33: move 25\nL34: listen r6 0.25\nL35: bud r7\nL36: give 0.5 0.75\nL37: jz -1 L15\nL38: store r2 360\nL39: gradient r0 r1\nL40: unlink 120\nL41: tag 2\nL42: peek r1 90 color\nL43: send r7 r2 0.5\nL44: mod r0 3\nL45: send 90 1 10"
+    },
+    {
+      "length": 64,
+      "serial": 5067,
+      "founder": 5067,
+      "depth": 0,
+      "parent": 0,
+      "bornTick": 0,
+      "score": 0,
+      "source": "L0: unlink 0.5\nL1: jnz r6 L20\nL2: scan_corpse r1 3\nL3: photosynthesize r6\nL4: rand r5 10\nL5: move r4\nL6: eat r1\nL7: receive r4 r2 3\nL8: jnz 0.75 L42\nL9: jz r6 L58\nL10: sense r1 linked_temperature\nL11: bond r7 0.75\nL12: link 0.5\nL13: jeq r4 3 L48\nL14: mul r5 360\nL15: bond r7 120\nL16: jmp L21\nL17: mov r4 1\nL18: abs r1 -1\nL19: shield 2\nL20: wait 3\nL21: abs r1 25\nL22: color 360\nL23: div r5 -1\nL24: attack 0.25 0.1\nL25: scan r4 10 3\nL26: storage_gradient r4 r5 0.25\nL27: contract 5\nL28: storage_gradient r7 r6 0.75\nL29: div r2 r1\nL30: div r6 360\nL31: contract 2\nL32: jmp L46\nL33: peek r4 r1 energy\nL34: jmp L40\nL35: jz 0.75 L32\nL36: emit 0.25 0.75\nL37: listen r0 120\nL38: split r0\nL39: storage_gradient r3 r0 25\nL40: sense r0 temperature\nL41: sub r3 360\nL42: div r0 360\nL43: jlt 5 r0 L27\nL44: split r1\nL45: jeq 2 -1 L29\nL46: peek r5 r5 energy\nL47: jeq 25 r3 L32\nL48: split r1\nL49: color r4\nL50: jz 60 L50\nL51: eat r6\nL52: max r0 0\nL53: gradient r7 r3\nL54: mov r3 5\nL55: mov r0 0.75\nL56: mov r2 3\nL57: scan_corpse r3 120\nL58: color 0\nL59: nop\nL60: attack -1 r1\nL61: sense r4 storage\nL62: move 360\nL63: mod r4 360"
+    },
+    {
+      "length": 63,
+      "serial": 5147,
+      "founder": 5147,
+      "depth": 0,
+      "parent": 0,
+      "bornTick": 0,
+      "score": 0,
+      "source": "L0: move 60\nL1: eat r7\nL2: link 0.1\nL3: min r4 90\nL4: emit 0.75 r4\nL5: sense r0 tag\nL6: bud r4\nL7: mod r4 -1\nL8: sub r5 3\nL9: jeq 0.75 -1 L27\nL10: sub r7 0.5\nL11: jz r2 L0\nL12: scan r3 r6 r5\nL13: rand r6 r7\nL14: receive r5 r5 0.75\nL15: jz r3 L26\nL16: move r0\nL17: jgt 0 10 L10\nL18: bud r4\nL19: peek r6 25 bearing\nL20: sub r7 2\nL21: scan r1 r2 r7\nL22: color r2\nL23: scan_color r5 120 -1\nL24: bud r5\nL25: emit 90 r6\nL26: link r5\nL27: move 0.1\nL28: emit 120 10\nL29: sub r7 r7\nL30: contract 90\nL31: jgt r3 25 L23\nL32: send 25 10 5\nL33: add r0 0.25\nL34: unlink 10\nL35: scan_corpse r2 90\nL36: mov r0 -1\nL37: jgt 360 -1 L4\nL38: attack r1 0.75\nL39: min r6 r7\nL40: split r0\nL41: give r3 r6\nL42: mov r4 60\nL43: color 0.25\nL44: div r1 0.25\nL45: color 0.75\nL46: eat r5\nL47: link 0.25\nL48: color -1\nL49: nop\nL50: move 0.5\nL51: jeq -1 0.25 L4\nL52: storage_gradient r5 r7 r1\nL53: unlink r0\nL54: color 0\nL55: abs r7 r6\nL56: tag r5\nL57: add r1 5\nL58: eat r7\nL59: turn 10\nL60: jlt 120 2 L46\nL61: receive r6 r1 1\nL62: peek r4 0 shield"
+    },
+    {
+      "length": 17,
+      "serial": 9275,
+      "founder": 4104,
+      "depth": 1,
+      "parent": 4104,
+      "bornTick": 8160,
+      "score": 0,
+      "source": "L0: storage_gradient r7 r5 0.1\nL1: scan_color r2 10 r5\nL2: color 2\nL3: div r1 10\nL4: mobilize r0 120\nL5: store r4 3\nL6: photosynthesize r7\nL7: rand r4 r3\nL8: jz 1 L8\nL9: receive r2 r3 0.5\nL10: jz 0.75 L8\nL11: sub r5 r5\nL12: unlink 0\nL13: mod r3 60\nL14: split r4\nL15: scan r3 10 10\nL16: unlink 5"
+    },
+    {
+      "length": 45,
+      "serial": 7372,
+      "founder": 7372,
+      "depth": 0,
+      "parent": 0,
+      "bornTick": 0,
+      "score": 0,
+      "source": "L0: listen r5 10\nL1: abs r2 3\nL2: tag 0.75\nL3: link 1\nL4: receive r4 r0 10\nL5: gradient r1 r4\nL6: scan_color r7 90 2\nL7: abs r7 -1\nL8: sub r2 2\nL9: mod r0 0.1\nL10: mul r1 0.5\nL11: gradient r3 r1\nL12: rand r7 r0\nL13: unlink r0\nL14: jnz r1 L34\nL15: jeq 60 90 L27\nL16: receive r3 r6 25\nL17: jlt 25 r2 L10\nL18: jeq 0.5 -1 L29\nL19: wait 0\nL20: add r0 0.1\nL21: eat r0\nL22: turn r1\nL23: move 25\nL24: mov r2 r1\nL25: move 360\nL26: gradient r5 r2\nL27: attack 2 r3\nL28: scan_color r6 r0 2\nL29: shield 3\nL30: tag r3\nL31: scan r4 r7 360\nL32: move 0.1\nL33: jgt 3 360 L28\nL34: sense r7 linked_temperature\nL35: eat r7\nL36: mov r0 0\nL37: peek r0 1 temperature\nL38: mobilize r2 60\nL39: move 120\nL40: split r1\nL41: peek r7 r1 color\nL42: mod r2 360\nL43: attack 0.25 r0\nL44: bud r4"
+    },
+    {
+      "length": 48,
+      "serial": 4148,
+      "founder": 4148,
+      "depth": 0,
+      "parent": 0,
+      "bornTick": 0,
+      "score": 0,
+      "source": "L0: eat r7\nL1: min r6 60\nL2: peek r2 0.1 tag\nL3: photosynthesize r0\nL4: jlt 3 10 L18\nL5: jz 2 L36\nL6: jnz r5 L13\nL7: scan r6 -1 r4\nL8: bud r3\nL9: link -1\nL10: storage_gradient r0 r6 60\nL11: sense r3 color\nL12: scan r1 r7 r7\nL13: scan_color r7 0.75 120\nL14: listen r1 r7\nL15: mul r5 0.1\nL16: jnz 90 L19\nL17: sub r2 0.25\nL18: scan r3 60 5\nL19: emit 1 r4\nL20: mov r1 25\nL21: turn 0.75\nL22: jeq 0.1 1 L20\nL23: sub r7 0.25\nL24: eat r7\nL25: jeq 90 0.5 L41\nL26: min r2 60\nL27: nop\nL28: bud r1\nL29: jlt 1 r2 L0\nL30: sense r3 temperature\nL31: max r6 r3\nL32: give r6 -1\nL33: mod r4 r0\nL34: eat r4\nL35: move 0.75\nL36: split r3\nL37: color 0\nL38: min r3 90\nL39: wait 0.5\nL40: color 0.1\nL41: bud r7\nL42: max r1 r2\nL43: shield 120\nL44: max r5 2\nL45: eat r2\nL46: shield r2\nL47: bond r5 r6"
+    }
+  ]
+}

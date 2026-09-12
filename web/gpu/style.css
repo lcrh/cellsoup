@@ -631,3 +631,59 @@ dialog textarea {
   font-size: 11px;
   color: #9eb6ac;
 }
+
+.sunny {
+  background: #d3d993;
+}
+.cloudy {
+  background: #65758b;
+}
+.corpse-key {
+  background: #bb8950;
+}
+.activity-key {
+  font-size: 10px;
+  margin: 0 0 9px;
+  color: #8ca7a3;
+}
+.enzyme-meter {
+  background: #172b40;
+}
+.enzyme-meter div {
+  float: none;
+  background: #d3d993;
+}
+.selected-stats {
+  row-gap: 14px;
+}
+#settings-fields details > label {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  font-size: 11px;
+  color: #adc3bd;
+  margin: 12px 0;
+}
+.view-controls {
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.toolbar #find-moving {
+  font-size: 11px;
+}
+@media (max-width: 760px) {
+  .toolbar #find {
+    grid-column: 1 / 3;
+  }
+  .toolbar #find-moving {
+    grid-column: 3;
+  }
+  .toolbar #fit {
+    grid-column: 1 / 4;
+  }
+  .laboratory {
+    min-height: 620px;
+    height: 82vh;
+  }
+}

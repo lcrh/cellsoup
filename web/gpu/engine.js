@@ -6,11 +6,9 @@ export const CELL_FLOATS = 52,
   ENERGY_SCALE = 4096;
 const stages = [
   "clear",
-  "weather",
   "field",
   "prepare",
   "vm",
-  "foodDebit",
   "giftPlan",
   "giftApply",
   "theftPlan",
@@ -28,7 +26,7 @@ export const defaults = {
   capacity: 131072,
   genomeCapacity: 32768,
   side: 256,
-  sources: 32,
+  sources: 1,
   initial: 32768,
   seed: 42,
   budget: 24,
@@ -36,33 +34,52 @@ export const defaults = {
   rate: 32,
   share: 0.5,
   mutation: 0.8,
-  foodRate: 1,
   seedEnergy: 24,
+  seedStorage: 24,
   upkeep: 0.5,
+  ambientTemperature: 20,
+  sunlightHeating: 1,
+  activityHeating: 0.12,
+  cooling: 0.2,
+  thermalExchange: 0.12,
+  crowdInsulation: 1,
+  safeTemperature: 28,
+  heatDamage: 0.5,
+  energyDecay: 0.05,
   divisionCost: 12,
-  uptakeRate: 4,
-  specialization: 2,
+  minimumBirthEnergy: 12,
   exchange: 0.12,
-  enzymeSpeed: 0.2,
   shieldUpkeep: 0.72,
-  cpuCost: 0.0005,
-  moveCost: 0.04,
-  turnCost: 0.001,
+  cpuCost: 0.00005,
+  moveCost: 0.004,
+  turnCost: 0.0001,
   linkCost: 0.5,
   contractCost: 0.08,
-  stealCost: 0.08,
+  attackCost: 0.08,
+  attackDamageCost: 0.2,
   emitCost: 0.01,
   sendCost: 0.01,
   jitter: 12,
-  foodMemory: 20,
-  foodStrength: 4,
-  corpseRecycle: 1,
   archiveAge: 60,
-  archiveFood: 120,
+  archiveHarvest: 120,
   archiveOffspring: 8,
   archiveEnabled: 1,
+  solarRate: 4,
+  sunContrast: 2,
+  cloudCover: 0.5,
+  cloudOpacity: 0.95,
+  cloudScale: 1200,
+  cloudSpeed: 12,
+  cloudMorph: 180,
+  solarEnabled: 1,
+  corpseEnergy: 8,
+  corpseLifetime: 900,
+  eatCost: 0.04,
+  storageCapacity: 400,
 };
 export async function createLifeEngine(device, options = {}) {
+  for (const key of Object.keys(options))
+    if (!(key in defaults)) throw Error(`Unknown setting ${key}`);
   const cfg = { ...defaults, ...options };
   for (const [k, v] of Object.entries(cfg))
     if (!Number.isFinite(v) || !Number.isFinite(Math.fround(v)) || v < 0)
@@ -90,8 +107,30 @@ export async function createLifeEngine(device, options = {}) {
     cfg.seed > 4294967295 ||
     cfg.floor > cfg.capacity ||
     cfg.rate > cfg.capacity ||
-    cfg.specialization <= 0 ||
-    cfg.uptakeRate > 60 ||
+    cfg.cloudCover > 1 ||
+    cfg.cloudOpacity > 1 ||
+    cfg.cloudScale < 64 ||
+    cfg.cloudMorph < 1 ||
+    cfg.corpseLifetime < 1 ||
+    cfg.thermalExchange > 0.25 ||
+    cfg.ambientTemperature > cfg.safeTemperature ||
+    cfg.safeTemperature > 1000 ||
+    cfg.sunlightHeating > 100 ||
+    cfg.activityHeating > 100 ||
+    cfg.cooling > 10 ||
+    cfg.crowdInsulation > 100 ||
+    cfg.heatDamage > 100 ||
+    cfg.solarRate > 100 ||
+    cfg.sunContrast < 1 ||
+    cfg.sunContrast > 8 ||
+    cfg.corpseEnergy > 200 ||
+    cfg.solarEnabled > 1 ||
+    cfg.seedEnergy > 200 ||
+    cfg.minimumBirthEnergy < 1 / ENERGY_SCALE ||
+    cfg.divisionCost + 2 * cfg.minimumBirthEnergy > 200 ||
+    cfg.storageCapacity > 1000 ||
+    cfg.seedStorage > cfg.storageCapacity ||
+    cfg.energyDecay > 1 ||
     cfg.budget > 128 ||
     cfg.exchange > 0.25 ||
     cfg.mutation > 1 ||
@@ -116,12 +155,13 @@ export async function createLifeEngine(device, options = {}) {
     genomes = storage(g * GENOME_BYTES),
     archive = storage(128 * GENOME_BYTES),
     food = storage(t * 16 + cfg.sources * 32),
-    intents = storage(n * 128);
+    intents = storage(n * 128),
+    activity = storage(n * 32);
   const uniform = device.createBuffer({
-    size: 128,
+    size: 224,
     usage: GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST,
   });
-  const settings = new ArrayBuffer(128),
+  const settings = new ArrayBuffer(224),
     u = new Uint32Array(settings),
     f = new Float32Array(settings);
   u.set([cfg.seed, cfg.budget, cfg.initial, cfg.floor]);
@@ -130,31 +170,55 @@ export async function createLifeEngine(device, options = {}) {
       cfg.rate,
       cfg.share,
       cfg.mutation,
-      cfg.foodRate,
+      0,
       cfg.seedEnergy,
       cfg.upkeep,
       cfg.divisionCost,
-      cfg.uptakeRate,
-      cfg.specialization,
+      cfg.minimumBirthEnergy,
+      0,
       cfg.exchange,
-      cfg.enzymeSpeed,
+      0,
       cfg.shieldUpkeep,
       cfg.cpuCost,
       cfg.moveCost,
       cfg.turnCost,
       cfg.linkCost,
       cfg.contractCost,
-      cfg.stealCost,
+      cfg.attackCost,
       cfg.emitCost,
       cfg.sendCost,
       cfg.jitter,
-      cfg.foodMemory,
-      cfg.foodStrength,
-      cfg.corpseRecycle,
+      0,
+      0,
+      0,
       cfg.archiveAge,
-      cfg.archiveFood,
+      cfg.archiveHarvest,
       cfg.archiveOffspring,
       cfg.archiveEnabled,
+      cfg.solarRate,
+      cfg.cloudCover,
+      cfg.cloudOpacity,
+      cfg.cloudScale,
+      cfg.cloudSpeed,
+      cfg.cloudMorph,
+      cfg.solarEnabled,
+      cfg.corpseEnergy,
+      cfg.corpseLifetime,
+      cfg.eatCost,
+      cfg.energyDecay,
+      cfg.seedStorage,
+      cfg.storageCapacity,
+      cfg.attackDamageCost,
+      cfg.sunContrast,
+      0,
+      cfg.ambientTemperature,
+      cfg.sunlightHeating,
+      cfg.activityHeating,
+      cfg.cooling,
+      cfg.thermalExchange,
+      cfg.crowdInsulation,
+      cfg.safeTemperature,
+      cfg.heatDamage,
     ],
     4,
   );
@@ -179,7 +243,7 @@ export async function createLifeEngine(device, options = {}) {
         .join("\n"),
     );
   const layout = device.createBindGroupLayout({
-    entries: Array.from({ length: 8 }, (_, binding) => ({
+    entries: Array.from({ length: 9 }, (_, binding) => ({
       binding,
       visibility: GPUShaderStage.COMPUTE,
       buffer: {
@@ -218,6 +282,7 @@ export async function createLifeEngine(device, options = {}) {
         food,
         intents,
         uniform,
+        activity,
       ].map((buffer, binding) => ({ binding, resource: { buffer } })),
     }),
   );
@@ -255,7 +320,7 @@ export async function createLifeEngine(device, options = {}) {
   return {
     cfg,
     fingerprint,
-    buffers: { state, scratch, genomes, archive, food, intents },
+    buffers: { state, scratch, genomes, archive, food, intents, activity },
     get tick() {
       return tick;
     },
@@ -314,11 +379,28 @@ export async function createLifeEngine(device, options = {}) {
         ),
       };
     },
+    setImmigration({ rate = cfg.rate, floor = cfg.floor } = {}) {
+      for (const [name, value] of Object.entries({ rate, floor }))
+        if (!Number.isInteger(value) || value < 0 || value > cfg.capacity)
+          throw Error(`Invalid ${name}`);
+      cfg.rate = rate;
+      cfg.floor = floor;
+      u[3] = floor;
+      f[4] = rate;
+      device.queue.writeBuffer(uniform, 0, settings);
+    },
     async counters() {
       const c = new Uint32Array(await read(scratch, counterOffset, 128));
       return {
         tick: c[0],
         living: c[1],
+        corpses: c[13],
+        kills: c[22],
+        attacks: c[14],
+        eaten: (c[15] + c[23] * 4294967296) / ENERGY_SCALE,
+        moves: c[17],
+        photosynthesis: (c[18] + c[19] * 4294967296) / ENERGY_SCALE,
+        attackDamage: (c[20] + c[21] * 4294967296) / ENERGY_SCALE,
         free: c[2],
         birthAttempts: c[3],
         archive: c[5],
@@ -352,7 +434,7 @@ export async function createLifeEngine(device, options = {}) {
     async archived() {
       return read(archive);
     },
-    async fixture({ programs, cells: seeds, foodValue = [0, 0] }) {
+    async fixture({ programs, cells: seeds, sunlight = 0 }) {
       if (tick !== 0 || cfg.initial !== 0)
         throw Error("Fixtures require an empty engine before stepping");
       if (programs.length > g) throw Error("Too many programs");
@@ -403,24 +485,35 @@ export async function createLifeEngine(device, options = {}) {
         );
         if (c.registers) cf.set(c.registers, k + 8);
         cu.set([slot + 1, genome, 0, c.sleep ?? 0], k + 24);
-        cu.set([c.age ?? 0, c.generation ?? 0, 0, 1], k + 28);
+        cu.set([c.age ?? 0, c.generation ?? 0, 0, c.corpse ? 2 : 1], k + 28);
         cu.set(c.links ?? [0, 0, 0, 0], k + 32);
-        cf.set([c.rest ?? 1, c.enzyme ?? 0.5, c.a ?? 0, c.b ?? 0], k + 36);
+        cf.set(
+          [
+            c.rest ?? 1,
+            sunlight,
+            Math.round(
+              (c.corpse ? (c.energy ?? 70) : (c.storage ?? 0)) * ENERGY_SCALE,
+            ),
+            c.temperature ?? cfg.ambientTemperature,
+          ],
+          k + 36,
+        );
         cf.set(c.anchors ?? [0, 0, 0, 0], k + 44);
-        cf.set([c.color ?? 0, c.enzyme ?? 0.5, 0, 0], k + 48);
-        refs[genome * 4]++;
+        cf.set([c.color ?? 0, 0, 0, 0], k + 48);
+        if (!c.corpse) refs[genome * 4]++;
       });
       device.queue.writeBuffer(state[parity], 0, data);
       device.queue.writeBuffer(genomes, 0, codeBuffer);
       device.queue.writeBuffer(scratch, geneOffset, refs);
       const counters = new Uint32Array(32);
-      counters[1] = seeds.length;
-      counters[8] = seeds.length;
+      counters[1] = seeds.filter((c) => !c.corpse).length;
+      counters[13] = seeds.filter((c) => c.corpse).length;
+      counters[8] = seeds.filter((c) => !c.corpse).length;
       counters[11] = n + 1;
       counters[12] = programs.length + 1;
       device.queue.writeBuffer(scratch, counterOffset, counters);
       const nutrients = new Float32Array(t * 4);
-      for (let i = 0; i < t * 2; i++) nutrients.set(foodValue, i * 2);
+      for (let i = 0; i < t * 2; i++) nutrients.set([sunlight, 0], i * 2);
       device.queue.writeBuffer(food, 0, nutrients);
     },
     destroy() {
@@ -432,6 +525,7 @@ export async function createLifeEngine(device, options = {}) {
         food,
         intents,
         uniform,
+        activity,
       ])
         b.destroy();
     },

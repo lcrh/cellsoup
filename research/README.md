@@ -1,6 +1,8 @@
 # Evolution and scaling laboratory
 
-This is ongoing work toward larger, faster, visibly interesting autonomous evolution. The production simulator remains v0.5. A full experimental GPU lifecycle now exists in `web/gpu/`; see [the model, settlement rules, tests and autonomous results](../docs/gpu-model.md). It is not yet connected to the interactive page. The measurements below diagnose its limitations; they do **not** establish that multicellularity has evolved or that the complete simulation now supports a million cells.
+This is ongoing work toward larger, faster, visibly interesting autonomous evolution. The interactive WebGPU model is available at `/gpu.html`; see the [current sunlight, corpse and temperature model](../docs/gpu-model.md). The older nutrient and classic-engine experiments below retain their original provenance. They do **not** establish evolved cooperation or million-cell full-lifecycle performance.
+
+The current GPU checks run with `npm run gpu:life-check`. `node research/sunlight-field-check.mjs` checks rare bright peaks across three seeds. `npm run gpu:life-run -- --capacity=8192 --seconds=180 --sample=30` records a small autonomous trial. Add `--close-at=300 --seconds=900` for a ten-minute survival interval without immigrants after five minutes of establishment. `--minimum-birth-energy`, `--cpu-cost`, `--move-cost`, and `--turn-cost` support matched cost experiments. These use Dawn and require access to the local GPU. Historical run configurations and shader fingerprints distinguish model versions.
 
 ## Reproduce
 

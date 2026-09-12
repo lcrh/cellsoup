@@ -14,15 +14,28 @@ const allowed = [
   "sample",
   "seed",
   "out",
-  "sources",
-  "food-strength",
   "upkeep",
+  "heat-damage",
   "cpu-cost",
+  "move-cost",
+  "turn-cost",
   "initial",
+  "floor",
+  "close-at",
+  "minimum-birth-energy",
   "exchange",
-  "specialization",
   "rate",
   "seed-energy",
+  "seed-storage",
+  "solar-rate",
+  "sun-contrast",
+  "cloud-cover",
+  "cloud-opacity",
+  "cloud-speed",
+  "cloud-scale",
+  "cloud-morph",
+  "energy-decay",
+  "corpse-lifetime",
 ];
 for (const key of Object.keys(args))
   if (!allowed.includes(key)) throw Error("Unknown " + key);
@@ -55,20 +68,39 @@ const options = {
   genomeCapacity: Math.max(128, Math.floor(capacity / 4)),
   initial: Number(args.initial ?? Math.floor(capacity / 4)),
   side: Math.ceil(Math.sqrt(capacity / 2)),
-  sources: Number(args.sources ?? Math.max(1, Math.ceil(capacity / 4096))),
+  sources: 1,
   seed,
   rate: Number(args.rate ?? Math.max(1, Math.floor(capacity / 4096))),
-  floor: Math.floor(capacity / 64),
+  floor: Number(args.floor ?? Math.floor(capacity / 64)),
 };
 for (const [flag, key] of [
+  ["minimum-birth-energy", "minimumBirthEnergy"],
   ["seed-energy", "seedEnergy"],
-  ["food-strength", "foodStrength"],
+  ["seed-storage", "seedStorage"],
+  ["solar-rate", "solarRate"],
+  ["sun-contrast", "sunContrast"],
+  ["cloud-cover", "cloudCover"],
+  ["cloud-opacity", "cloudOpacity"],
+  ["cloud-speed", "cloudSpeed"],
+  ["cloud-scale", "cloudScale"],
+  ["cloud-morph", "cloudMorph"],
+  ["energy-decay", "energyDecay"],
+  ["corpse-lifetime", "corpseLifetime"],
   ["upkeep", "upkeep"],
+  ["heat-damage", "heatDamage"],
   ["cpu-cost", "cpuCost"],
+  ["move-cost", "moveCost"],
+  ["turn-cost", "turnCost"],
   ["exchange", "exchange"],
-  ["specialization", "specialization"],
 ])
   if (flag in args) options[key] = Number(args[flag]);
+const closeAt =
+  args["close-at"] === undefined ? null : Number(args["close-at"]);
+if (
+  closeAt !== null &&
+  (!Number.isInteger(closeAt) || closeAt < 0 || closeAt > seconds)
+)
+  throw Error("Invalid close-at");
 const engine = await createLifeEngine(device, options),
   records = [],
   out = args.out ?? `research/runs/gpu-${seed}`;
@@ -78,8 +110,8 @@ function analyze(buffer) {
     u = new Uint32Array(buffer),
     parent = new Uint32Array(capacity),
     size = new Uint32Array(capacity),
-    specialA = new Uint32Array(capacity),
-    specialB = new Uint32Array(capacity);
+    speedX = new Float64Array(capacity),
+    speedY = new Float64Array(capacity);
   for (let i = 0; i < capacity; i++) parent[i] = i;
   const root = (i) => {
     while (parent[i] !== i) {
@@ -89,12 +121,13 @@ function analyze(buffer) {
     return i;
   };
   for (let i = 0; i < capacity; i++)
-    if (u[i * 52 + 31])
+    if (u[i * 52 + 31] === 1)
       for (let k = 32; k < 36; k++) {
         const link = u[i * 52 + k];
         if (link) {
           const j = link - 1;
-          if (j >= capacity || !u[j * 52 + 31]) throw Error("Dangling bond");
+          if (j >= capacity || u[j * 52 + 31] !== 1)
+            throw Error("Dangling bond");
           if (![...u.subarray(j * 52 + 32, j * 52 + 36)].includes(i + 1))
             throw Error("Asymmetric bond");
           parent[root(i)] = root(j);
@@ -103,12 +136,15 @@ function analyze(buffer) {
   let living = 0,
     energy = 0,
     reserves = 0,
+    temperature = 0,
+    maxTemperature = 0,
+    overheated = 0,
     mature = 0,
     generation = 0,
     age = 0;
   const lineages = new Map();
   for (let i = 0; i < capacity; i++)
-    if (u[i * 52 + 31]) {
+    if (u[i * 52 + 31] === 1) {
       living++;
       const k = i * 52;
       for (let q = 0; q < 52; q++)
@@ -126,10 +162,13 @@ function analyze(buffer) {
         throw Error("Invalid energy/reserve");
       const r = root(i);
       size[r]++;
-      specialA[r] += f[k + 37] > 0.8;
-      specialB[r] += f[k + 37] < 0.2;
+      speedX[r] += f[k + 2];
+      speedY[r] += f[k + 3];
       energy += f[k + 4] / 4096;
-      reserves += f[k + 38] + f[k + 39];
+      reserves += f[k + 38] / 4096;
+      temperature += f[k + 39];
+      maxTemperature = Math.max(maxTemperature, f[k + 39]);
+      overheated += f[k + 39] > engine.cfg.safeTemperature;
       mature += u[k + 28] >= 3600;
       age += u[k + 28] / 60;
       generation = Math.max(generation, u[k + 29]);
@@ -138,16 +177,18 @@ function analyze(buffer) {
   let bodies = 0,
     largestBody = 0,
     linkedCells = 0,
-    mixedBodies = 0,
-    mixedCells = 0;
+    movingBodies = 0,
+    movingBodyCells = 0,
+    largestMovingBody = 0;
   for (let i = 0; i < capacity; i++)
     if (size[i]) {
       bodies++;
       largestBody = Math.max(largestBody, size[i]);
       if (size[i] > 1) linkedCells += size[i];
-      if (size[i] >= 4 && specialA[i] && specialB[i]) {
-        mixedBodies++;
-        mixedCells += size[i];
+      if (size[i] >= 4 && Math.hypot(speedX[i], speedY[i]) / size[i] > 2) {
+        movingBodies++;
+        movingBodyCells += size[i];
+        largestMovingBody = Math.max(largestMovingBody, size[i]);
       }
     }
   return {
@@ -155,19 +196,35 @@ function analyze(buffer) {
     energy,
     reserves,
     mature,
+    meanTemperature: living ? temperature / living : 0,
+    maxTemperature,
+    overheated,
     meanAge: living ? age / living : 0,
     livingMaxGeneration: generation,
     bodies,
     largestBody,
     linkedCells,
-    mixedBodies,
-    mixedCells,
+    movingBodies,
+    movingBodyCells,
+    largestMovingBody,
     variants: lineages.size,
     leaders: [...lineages.entries()].sort((a, b) => b[1] - a[1]).slice(0, 12),
   };
 }
 let computeMs = 0;
+const initialConfig = { ...engine.cfg };
+let closure = null;
 for (let second = 0; second <= seconds; second++) {
+  if (second === closeAt) {
+    engine.setImmigration({ rate: 0, floor: 0 });
+    const c = await engine.counters();
+    closure = {
+      second,
+      arrivals: c.randomArrivals + c.sampledArrivals,
+      births: c.births,
+      living: c.living,
+    };
+  }
   if (second % sample === 0 || second === seconds) {
     const counters = await engine.counters(),
       analysis = analyze(await engine.state());
@@ -183,6 +240,11 @@ for (let second = 0; second <= seconds; second++) {
       throw Error("Population ledger mismatch");
     const record = { seconds: second, ...counters, ...analysis, computeMs };
     delete record.raw;
+    if (
+      closure &&
+      counters.randomArrivals + counters.sampledArrivals !== closure.arrivals
+    )
+      throw Error("Immigration continued after closure");
     records.push(record);
     console.log(JSON.stringify(record));
   }
@@ -197,19 +259,17 @@ const genes = await engine.genes();
 const finalState = new Uint32Array(await engine.state()),
   counts = new Uint32Array(options.genomeCapacity);
 for (let i = 0; i < capacity; i++)
-  if (finalState[i * 52 + 31]) counts[finalState[i * 52 + 25]]++;
+  if (finalState[i * 52 + 31] === 1) counts[finalState[i * 52 + 25]]++;
 for (let g = 0; g < counts.length; g++)
   if (counts[g] !== genes.stats[g * 4])
     throw Error(`Genome reference count mismatch at ${g}`);
-const leaders = records
-  .at(-1)
-  .leaders.map(([slot, living]) => ({
-    slot,
-    living,
-    ...describeGenome(genes.data, slot),
-    recordedBirths: genes.stats[slot * 4 + 1],
-    recordedHarvest: genes.stats[slot * 4 + 2] / 256,
-  }));
+const leaders = records.at(-1).leaders.map(([slot, living]) => ({
+  slot,
+  living,
+  ...describeGenome(genes.data, slot),
+  recordedBirths: genes.stats[slot * 4 + 1],
+  recordedHarvest: genes.stats[slot * 4 + 2] / 256,
+}));
 const archive = await engine.archived(),
   archived = Array.from({ length: 128 }, (_, i) =>
     describeGenome(archive, i),
@@ -218,7 +278,9 @@ await writeFile(
   `${out}/run.json`,
   JSON.stringify(
     {
-      config: engine.cfg,
+      config: initialConfig,
+      finalConfig: engine.cfg,
+      closure,
       kernel: engine.fingerprint,
       records,
       leaders,

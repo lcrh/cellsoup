@@ -1,9 +1,9 @@
 {
   "name": "cellsoup",
-  "version": "0.6.0",
+  "version": "0.7.0",
   "private": true,
   "type": "module",
-  "description": "Programmable cellular life: bounded assembly genomes, energy ecology and spring physics in WebAssembly.",
+  "description": "Programmable cellular life with assembly genomes, sunlight, scavenging and thermal spring physics in WebGPU and WebAssembly.",
   "scripts": {
     "build": "node scripts/build.mjs",
     "dev": "node scripts/serve.mjs",

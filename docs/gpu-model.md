@@ -1,104 +1,59 @@
-# Experimental GPU lifecycle and ecology
+# GPU sunlight ecology
 
-Status: implemented and running headlessly; **not yet integrated into the interactive page**. This is ongoing work toward the active evolution goal. The classic simulator and its defaults are still available unchanged. The earlier million-cell benchmark is a smaller kernel workload and is not a throughput claim for this complete model.
+The interactive `/gpu.html` prototype runs assembly, physics, evolution and rendering on WebGPU. Founders are random programs; division copies genomes exactly, while archived reintroductions have their own mutation control. Programs have eight registers and up to 64 instructions. Division requires its configured cost plus twice the minimum offspring energy, and conserves the remaining usable energy and stores. It keeps a positive energy reserve for each daughter. The default minimum is 12 energy per daughter, so division requires 36 energy including the 12-energy division cost. Cells have up to four reciprocal spring links.
 
-The browser-compatible modules are `web/gpu/engine.js`, `web/gpu/shader.js` and `web/gpu/language.js`. They use standard WebGPU without Node dependencies. The headless runner provides a Dawn/Metal device using the `webgpu` development dependency. Initial populations are independent random assembly programs. There are no designed founding organisms in the autonomous runs.
+## Energy and storage
 
-## Reproduction and resource economy
+Usable energy is cell-local and pays upkeep, proportional decay and actions. Reaching zero kills the cell even if storage remains. Storage is stable and diffuses conservatively across reciprocal links. `store result amount` converts usable energy into storage; `mobilize result amount` converts it back. Both return the actual amount converted. Voluntary spending retains a tiny positive energy reserve. Explicit fractional energy gifts remain available.
 
-Cells have eight numeric registers, a bounded PC and sleep counter, four signal/mail channels, four reciprocal spring attachments, energy, two nutrient reserves and an enzyme allocation. The grammar preserves the existing forty operations and adds `enzyme target`. GPU programs currently have 8–64 random instructions (up to 64 when assembled); this differs from the classic engine's 256-instruction ceiling. New sensory names are `nutrient_a`, `nutrient_b`, `enzyme`, `reserve_a` and `reserve_b`.
+Sunlight and energy expenditure heat cells. Cells cool toward ambient temperature, with nearby living cells reducing their cooling rate. Linked cells exchange temperature using the previous tick's values, so exposed cells can conduct heat away from a crowded body. There is no direct crowding energy penalty. Above the configurable safe temperature, heat stress drains usable energy and can kill. Conversion between usable energy and reserves does not itself generate heat. The inspector and temperature view show cell temperature; `sense result temperature`, `sense result linked_temperature` (neighbor mean, zero if none), and `peek result target temperature` expose it to programs. `sense result crowding` reads the local, distance-weighted living-neighbor density.
 
-Each nutrient is absorbed at `uptakeRate × allocation^exponent`, using the complementary allocation for the other nutrient. The default exponent is 2. Generalists process both at reduced rates; opposite specialists process one efficiently and can exchange reserves through bonds. Allocation moves gradually toward the program's target (default 0.2 per second). Pairs of complementary nutrients convert to the same total amount of stored energy: consuming one unit of each yields two energy. No metabolic energy bonus is created by conversion or by having bonds.
+Sunlight varies under slowly drifting, morphing cloud shadows, with broad penumbrae and rare bright peaks. Peak photosynthesis defaults to 4 energy per second; Bright peak rarity controls how strongly illumination concentrates into those peaks. There are no environmental food drops and no automatic absorption. `photosynthesize result` harvests local sunlight, subject to a per-cell, per-tick limit shared across repeated calls. `gradient bearing strength` senses sunlight in coordinates relative to the cell's heading.
 
-Reserve sharing reads the previous tick's state and transfers a configurable fraction of each bond's reserve difference. With at most four neighbors and exchange at most 0.25, reserves remain nonnegative. Reciprocal edges make this transport conservative apart from floating-point rounding. The default exchange is 0.12 per tick. Unlike the classic engine, these exchanged stores are nutrients; automatic scalar-energy diffusion is not duplicated on top. Explicit fractional energy gifts remain available.
+`attack target amount` spends energy to reduce a nearby living target's usable energy. It does not credit the attacker. On death, body material plus stored energy becomes an edible corpse. Corpses decay over 15 simulated minutes by default (configurable), with fractional decay preserved for small remains, and occupy population slots until consumed or decayed. `eat result` chooses a random corpse within 18 units and consumes remains into usable energy, without requiring a scan or target register; competing eaters cannot consume more than the corpse contains.
 
-Food comes from multiple correlated wandering sources. Each source deposits both nutrient types in nearby, displaced patches. The OU offset uses its own hash-derived randomness, independent of VM execution. Diffusion and decay occur every four ticks. Weather deposits occur every half second. Fields are capped at 80 units per nutrient per tile; additions beyond this cap are explicitly discarded. Saturating deposit accumulation prevents integer wraparound when a dense group dies or overlapping sources hit the same tile.
+## Sensing
 
-The initial experiment uses 24 energy per random arrival, 0.5 energy/second baseline upkeep, and 12 energy per division. A division additionally needs 40 remaining energy, leaving viable daughters. This makes a founder acquire nutrients before its first split. A separate 70-energy experiment tests whether that requirement prevents immediate developmental specialization. The higher endowment has not been chosen as the final default.
+- `sense result energy` and `sense result storage` read the cell's own pools.
+- `sense result linked_storage` reads the sum of connected neighbors' stores.
+- `sense result sunlight` reads local illumination.
+- `scan_corpse result cone` finds a nearby corpse within a relative viewing cone.
+- `peek result target storage` reads stored energy in living targets or edible energy in corpses; the `alive` field distinguishes them.
+- `storage_gradient bearing strength kind` senses nearby stored energy: 0 selects living cells, 1 corpses, and -1 both.
 
-Both division operations copy the program without mutation. The split result remains 0 for the parent, 1 for the child and −1 on failure. The daughter inherits registers, phenotype and the continuation, starts with fresh signals/inboxes and age, and receives a bounded heading perturbation. `bud` creates a reciprocal bond; `split` leaves the daughter detached. Children do not execute in the birth tick.
+The in-page instruction reference documents all 46 operations, including relative motion, color sensing and linked communication. This GPU grammar differs from the classic engine and the historical enzyme model.
 
-## Parallel settlement rules
+## Observation and limits
 
-The GPU model deliberately uses synchronous phases. It does not claim identical trajectories to the serial C engine.
+Click a living cell to inspect its genome, energy and storage. Find colony selects a connected body. Moving colony selects a body of at least four cells whose mean velocity exceeds 2 world units per second; this does not establish purposeful movement. Brown dots are corpses, cyan tails indicate recent thrust, and red traces indicate successful attacks, and gold rings mark successful eating.
 
-| Stage                            | Reads                                           | Writes / ownership                                                          |
-| -------------------------------- | ----------------------------------------------- | --------------------------------------------------------------------------- |
-| Clear, weather, field            | Prior field and source state                    | Empty demand tables; per-source weather; per-tile new field                 |
-| Prepare                          | Frozen cells and reciprocal bonds               | Free-slot list, spatial hash, per-tile uptake demand                        |
-| Metabolism / VM                  | Frozen cells, new food, completed demand totals | Each cell's working state and private action intents                        |
-| Food debit                       | Completed uptake demands                        | One owner per food tile                                                     |
-| Gift plan / apply                | Post-VM energies and gift requests              | Recipient demand totals; accepted outgoing gifts and incoming credits       |
-| Theft plan / apply               | Post-gift energies and theft requests           | Victim demand totals; accepted victim debits and thief credits              |
-| Lifecycle / physics              | Settled ledgers and frozen physical state       | Each existing cell, plus uniquely reserved dead slots for daughters         |
-| Link proposals / acceptance      | Completed lifecycle state                       | At most one winning proposed edge per endpoint                              |
-| Mail / pruning                   | Stable intents and link state                   | Per-recipient mail; candidate links, then a separate link commit            |
-| Genome scan / archive / arrivals | Completed population and genome counters        | Free genome list, selected immutable archive copies, unique immigrant slots |
+The browser starts with 8,192 random founders in 32,768 slots. Capacity can be raised to 262,144 slots, including corpses; density and hardware strongly affect speed. Settings apply when restarting the soup. The thermal pilot exposed a survival bottleneck after the sunlight change; cost and division-threshold assays are recorded separately below. Predation and sustained multicellular movement still need ecological tuning; evolved cooperation has not been established.
 
-Energy is represented in exact integer quanta of 1/4096, stored in float32 within its exact integer range. Costs round to that quantum; consequently the nominal 0.5/second upkeep is approximately 0.498/second. Voluntary spending retains one quantum; mandatory upkeep and predation can still kill a cell.
+Validation includes actual GPU checks for bounded photosynthesis, storage conversion and sharing, starvation despite reserves, paid attacks, finite contested corpse consumption, corpse sensing/decay, cloud continuity, and propulsion through springs. Older throughput measurements and enzyme experiments are preserved in [the historical model](gpu-model-nutrients.md); they are not benchmarks for this sunlight version.
 
-Gift and theft demands use two 32-bit integer words with an explicit carry. This avoids overflow when thousands of donors select one recipient. Rationed transfers round down conservatively. Accepted gifts debit and credit exactly the same integer amount. Theft credits 75% after integer rounding, dissipating the remainder. All stages read immutable ledgers from the preceding stage, so a shared victim cannot be spent repeatedly and a full recipient cannot overflow. Unaccepted gifts remain with their donor.
+## Thermal pilot
 
-Multiple requests in one VM slice are represented by bounded intents: the last gift, theft, link request and message per channel win. Earlier affordable instruction/action fees remain paid. Division ends the slice. This is an intentional semantic difference from sequential immediate transfers. Gifts settle before theft; newly received gifts can therefore be attacked in that tick.
+A 180-second autonomous pilot with 2,048 independently random founders in 8,192 slots consumed about 88,704 energy from corpses and produced 930 divisions. At the last sample it had 130 living cells, 171 corpses and one overheated cell. The population remained near its replenishment floor, so this is evidence that scavenging is reachable, not evidence of a self-sustaining diverse ecosystem. Sustained predation and multicellular movement remain open ecological work. [Configuration, shader fingerprint and samples](../research/runs/thermal-pilot-42/run.json) · [Surviving programs](../research/runs/thermal-pilot-42/leaders.md).
 
-A link attempt pays its fee when queued against an in-range cell. Contention may prevent the eventual edge from being accepted. Each endpoint accepts at most one proposal per tick, with matching claims on both endpoints. Pruning removes asymmetry and overly stretched edges in a separate commit phase. Spring forces read frozen endpoints, including rotating anchors, so a turn affects neighboring forces on the following tick. Equal-and-opposite endpoint forces, soft repulsion, damping and bounded integration remain in the physical model.
+## Survival and immigration checks
 
-Neighbor references exposed to programs are **ephemeral slot handles** (1…capacity), not permanent identities. Fractional handles are rejected. A dead slot may later refer to another cell. Separate integer incarnation IDs and parent identities remain in the state for observation and lineage tracking. This differs from the classic public-ID semantics and is explained in the browser assembly reference. Linked messages arrive after the receiver's VM slice and can be consumed next tick; collisions choose the lowest sender slot. Zero payloads retain a nonzero sender handle.
+The headless runner accepts `--close-at=300` to stop both steady immigration and low-population replenishment after five simulated minutes. Output records the closure time, arrival total, starting configuration and final configuration. A population surviving beyond closure can no longer be explained by continued newcomers, although corpses from the initial population can still feed survivors. Continuing reproduction across cloud cycles, energy sources and lineage diversity all matter when interpreting these trials.
 
-## Selection and population scale
+Scheduled newcomers reserve available slots before divisions on their arrival tick. This prevents rapidly dividing residents from taking all newly free slots. It does not evict living cells or corpses when capacity is completely occupied.
 
-The default archive gate requires 60 seconds of lineage age, at least eight offspring and 120 absorbed nutrient energy. Candidates compete in 128 hashed founder niches using living family size, offspring and harvested energy; retained scores decay. No points are awarded for bonds, specialized cells or communication. The archive does not by itself establish that any of those traits are adaptive.
+## Affordable movement assay
 
-Steady arrivals and below-threshold replenishment are configurable. Arrivals select archived programs with probability 0.5 when available; otherwise they receive new random programs. Archived arrivals mutate with probability 0.8. Each current mutation makes an actual operand or opcode change. Insertion/deletion mutations from the classic model have not yet been ported. All mutation remains in this resampling channel, not division.
+Keeping peak photosynthesis at 4, the new defaults lower movement cost from 0.04 to 0.004 per full command, turn cost from 0.001 to 0.0001 per degree, instruction cost from 0.0005 to 0.00005, and minimum offspring energy from 20 to 12. The maximum instruction budget remains 24. These costs let movement and computation compete under moderate light while preserving rapid usable-energy decay.
 
-The current implementation supports up to 262,144 cell slots and 65,536 resident genomes. There are no per-bin occupancy caps or silently discarded neighbors. Extremely dense clusters can still require quadratic local searches. Higher-capacity support and dense-cluster throughput need further work. Genomes and arrays remain on the GPU between ticks; snapshots and genome export are explicit readbacks.
+Each trial starts with 8,192 random founders in 32,768 slots. Steady arrivals and replenishment stop at 300 seconds; the trial continues to 900 seconds.
 
-## Verification so far
+| Configuration / seed | Living at closure | Living 10 min later | Births after closure | Moving bodies at end |
+| --- | ---: | ---: | ---: | ---: |
+| thermal-control-42 | 520 | 0 | 138 | 0 |
+| affordable-motion-42 | 3,318 | 10,516 | 24,135 | 1,054 |
+| affordable-motion-97 | 1,277 | 8,078 | 17,509 | 511 |
+| affordable-motion-321 | 9,326 | 6,204 | 11,567 | 12 |
 
-`npm run gpu:life-check` runs seventeen actual-GPU tests:
+All three lower-cost trials retained reproducing populations without further newcomers. Most subsequent harvested energy came from sunlight. Moving bodies are connected groups of at least four cells with mean velocity above 2 units/sec, not proof of coordinated navigation or cooperation. The dominant lineage in seed 42 was an unmutated random founder; selection favored its moving, budding, photosynthetic program. Predation remained sparse. These short trials establish a useful ecological improvement, not open-ended evolution.
 
-- Fractional gifts, donor reserves, full recipients and conservative rationing.
-- 18,000 donors generating demand above 32-bit capacity, without overflowing recipient capacity or losing transferred energy.
-- Contested theft, a lethal single attack, and consistent population/genome reference counts.
-- Division energy accounting, unique slot reservation, capacity rejection, fork results and delayed newborn execution.
-- Reciprocal links under contention, unlinking, delayed zero-valued messages and a three-cell weighted ReLU relay.
-- Unaffordable movement/shield behavior, finite food competition, gradual enzyme expression and the metabolic benefit of linked complementary specialists.
-- Qualified archival and actual mutation on resampling while divisions remain unmutated.
-
-The original simulator tests plus GPU grammar/round-trip/capacity tests plus periodic-world observer tests total 69 and pass. The grammar extension is opt-in; classic assembly still rejects the new instructions and sensors. `npm run build` still produces the unchanged C/WASM engine plus the new static modules.
-
-The headless runner checks finite cell state, bounded stores, reciprocal living links, population accounting and final per-genome reference counts. It saves configuration, shader fingerprint (newer runs), sampled ecology, leading programs and archived programs. It does not yet record dynamic GPU instruction traces or persistent organism identities.
-
-## Observed autonomous runs
-
-All runs below started from 32,768 independently random programs in 131,072 slots, with 32 food sources and 32 steady arrivals per second. These are ten simulated minutes on an Apple M4 Pro with 20 GPU cores, Node 24.4.1 and Dawn 0.6.0/Metal. Compute timing includes command encoding, submission and completion, but excludes periodic CPU inspection. Raw records and programs are in `research/results/gpu-life/`.
-
-| Seed / starting energy   | Final cells | Cells older than a minute | Divisions | Resampling mutations | Largest final body | Compute wall time |
-| ------------------------ | ----------: | ------------------------: | --------: | -------------------: | -----------------: | ----------------: |
-| 42 / 24, optimized draft |      41,617 |                    33,388 |    77,950 |                6,846 |                 29 |            60.3 s |
-| 97 / 24, earlier draft   |      41,297 |                    33,403 |    77,664 |                6,821 |                 35 |            62.5 s |
-| 42 / 70                  |      42,165 |                    32,999 |   101,944 |                6,945 |                 31 |            63.2 s |
-
-An upper-capacity test started 65,536 random founders in 262,144 slots. After two simulated minutes, 38,411 cells remained, 28,382 divisions had occurred, and both population and genome-reference ledgers matched the actual state. It took 21.5 seconds of compute (about 5.6× real time). This validates capacity and short-run operation, not a sustained 262,144-live-cell workload.
-
-The 70-energy run reached a 50-cell connected body at an intermediate sample and ended with three bodies containing both strongly A- and B-specialized cells, totaling 32 cells. The final low-energy runs had none. This is a hypothesis-generating result, not a controlled proof of evolved cooperation: the initial and immigrant energy budgets also changed, and GPU atomic ordering produces nonidentical trajectories. A mixed body may contain unrelated lineages or simply transient specialization. Actual group lifetimes, establishment from a genome, and dependence on nutrient exchange still need assays.
-
-The dominant 70-energy genotype had 291 living members, 1,104 recorded births, 57,024.5 harvested nutrient energy and mutation depth one. Static inspection shows a color-filtered neighbor scan followed by forward motion, detached division and targeted theft. Its initial constant jump bypasses `bud`, so the presence of a budding instruction does not make this a multicellular strategy. No reached turn operation steers it with the computed gradient. This interpretation must be checked with execution traces; it is not a claim of coordinated hunting.
-
-## Browser observation
-
-`/gpu.html` exposes the complete engine with direct GPU rendering. The classic laboratory links to it and remains available as a fallback. The default UI configuration matches the 24-energy experiments above. Capacity choices are 32,768, 131,072 and 262,144; the UI distinguishes living population from capacity. Cost, immigration, resampling, food, exchange and motion settings apply on reset.
-
-Max performs 24 complete simulation ticks between drawings. Normal 1×/8× playback accumulates fixed ticks; neither mode changes the numerical time step. GPU submissions are awaited to bound the queue. The field, cell discs, heading marks and reciprocal links are drawn directly from engine storage buffers. CPU snapshots are taken for inspection, not physics or every-frame rendering. Selected genomes use a bounded single-genome readback.
-
-Find colony searches reciprocal connected components and frames the largest body. Following checks incarnation identity, rather than silently following a reused slot, and can continue through surviving observed members when the selected cell dies. Clicking picks a cell through the periodic boundary. The inspector reports age, energy, nutrient reserves, enzyme allocation, current instruction, ancestry and disassembled source. Save genome exports source and model/configuration metadata; it is not a complete habitat checkpoint or a deterministic replay.
-
-Browser verification on the M4 Pro default run showed about 8× real time with direct rendering. At around 3.5 simulated minutes, Find colony displayed a 35-cell body; that observed body later fragmented to four members while the original selected cell survived beyond nine simulated minutes. Its program repeatedly reaches a connected division through conditional/constant jumps; an inspection alone does not prove useful signaling or cooperation. Pause, single stepping, color modes, resetting capacities and responsive layout are checked in the actual browser.
-
-## Research directions
-
-The implementation now provides a working large-population browser ecology and headless assays. Further work can investigate stronger higher-level behavior without claiming it already exists:
-
-- Export complete replayable specimens and add execution tracing, nutrient-specific gradients and insertion/deletion mutation.
-- Run longer replicated experiments and controlled bond/resource-sharing/message ablations. Distinguish functional multicellularity, spatially mixed communities and incidental connections.
-- Profile dense evolved workloads and higher live populations. Preserve conservation and causal semantics while improving throughput. The earlier million-cell partial-kernel result is not a substitute for full-lifecycle measurements.
+[Compact results](../research/results/thermal-survival.json). Full configurations, shader fingerprints, trajectories and surviving programs are in `research/runs/thermal-control-42/` and `research/runs/affordable-motion-{42,97,321}/`. The seed-42 affordable trial preceded the newcomer reservation fix; no sampled state was at capacity, and the other two trials include the fix.

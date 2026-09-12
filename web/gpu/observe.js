@@ -10,7 +10,7 @@ export function snapshot(buffer, world) {
   };
 }
 export function bodyAt(s, slot) {
-  if (slot < 0 || slot >= s.count || !s.u[slot * stride + 31]) return [];
+  if (slot < 0 || slot >= s.count || s.u[slot * stride + 31] !== 1) return [];
   const seen = new Set([slot]),
     queue = [slot];
   for (let j = 0; j < queue.length; j++) {
@@ -21,7 +21,7 @@ export function bodyAt(s, slot) {
         other >= 0 &&
         other < s.count &&
         !seen.has(other) &&
-        s.u[other * stride + 31]
+        s.u[other * stride + 31] === 1
       ) {
         // Verify reciprocal edges: snapshots must not invent connections.
         let reciprocal = false;
@@ -40,7 +40,7 @@ export function largestBody(s) {
   const visited = new Uint8Array(s.count);
   let largest = [];
   for (let i = 0; i < s.count; i++)
-    if (!visited[i] && s.u[i * stride + 31]) {
+    if (!visited[i] && s.u[i * stride + 31] === 1) {
       const body = bodyAt(s, i);
       for (const slot of body) visited[slot] = 1;
       if (body.length > largest.length) largest = body;
@@ -51,7 +51,7 @@ export function nearest(s, x, y, radius) {
   let best = -1,
     distance = radius ** 2;
   for (let i = 0; i < s.count; i++)
-    if (s.u[i * stride + 31]) {
+    if (s.u[i * stride + 31] === 1) {
       const d =
         wrapDelta(s.f[i * stride] - x, s.world) ** 2 +
         wrapDelta(s.f[i * stride + 1] - y, s.world) ** 2;
@@ -85,4 +85,26 @@ export function bodyBounds(s, body) {
     width: maxX - minX + 40,
     height: maxY - minY + 40,
   };
+}
+
+export function bodyMotion(s, body) {
+  let x = 0,
+    y = 0;
+  for (const slot of body) {
+    x += s.f[slot * stride + 2];
+    y += s.f[slot * stride + 3];
+  }
+  return body.length ? Math.hypot(x, y) / body.length : 0;
+}
+export function movingBody(s) {
+  const visited = new Uint8Array(s.count);
+  let best = [];
+  for (let i = 0; i < s.count; i++)
+    if (!visited[i] && s.u[i * stride + 31] === 1) {
+      const b = bodyAt(s, i);
+      for (const slot of b) visited[slot] = 1;
+      if (b.length >= 4 && b.length > best.length && bodyMotion(s, b) > 2)
+        best = b;
+    }
+  return best;
 }
