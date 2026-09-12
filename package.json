@@ -14,7 +14,9 @@
     "headless": "node scripts/headless.mjs",
     "research:check": "node research/native-check.mjs",
     "gpu:check": "node research/gpu-check.mjs",
-    "gpu:bench": "node research/gpu-bench.mjs"
+    "gpu:bench": "node research/gpu-bench.mjs",
+    "gpu:life-check": "node research/gpu-life-check.mjs",
+    "gpu:life-run": "node research/gpu-life-run.mjs"
   },
   "engines": {
     "node": ">=20"

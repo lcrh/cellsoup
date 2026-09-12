@@ -141,8 +141,13 @@ export const FIELDS = [
   "bonds",
   "color",
 ];
-const opcode = new Map(OPS.map((o, i) => [o[0], i]));
-export function assemble(source) {
+export function assemble(
+  source,
+  schema = OPS,
+  sensors = SENSORS,
+  fields = FIELDS,
+) {
+  const opcode = new Map(schema.map((o, i) => [o[0], i]));
   const labels = new Map(),
     instructions = [];
   for (const [i, raw] of source.split("\n").entries()) {
@@ -170,9 +175,9 @@ export function assemble(source) {
     const op = opcode.get(parts[0]);
     if (op === undefined)
       throw new Error(`Line ${line}: unknown instruction “${parts[0]}”.`);
-    const types = OPS[op][1].split(" ").filter(Boolean);
+    const types = schema[op][1].split(" ").filter(Boolean);
     if (parts.length !== types.length + 1)
-      throw new Error(`Line ${line}: use ${parts[0]} ${OPS[op][1]}.`);
+      throw new Error(`Line ${line}: use ${parts[0]} ${schema[op][1]}.`);
     view.setInt32(i * 16, op, true);
     types.forEach((type, j) => {
       const token = parts[j + 1];
@@ -182,7 +187,7 @@ export function assemble(source) {
         if (value === undefined || value >= instructions.length)
           throw new Error(`Line ${line}: unknown or empty label “${token}”.`);
       } else if (type === "s" || type === "p") {
-        value = (type === "s" ? SENSORS : FIELDS).indexOf(token);
+        value = (type === "s" ? sensors : fields).indexOf(token);
         if (value < 0)
           throw new Error(
             `Line ${line}: invalid ${type === "s" ? "sensor" : "field"} “${token}”.`,
@@ -215,12 +220,17 @@ function formatFloat(value) {
   }
   return String(value);
 }
-export function disassemble(buffer) {
+export function disassemble(
+  buffer,
+  operations = OPS,
+  sensors = SENSORS,
+  fields = FIELDS,
+) {
   const view = new DataView(buffer),
     rows = [];
   for (let i = 0; i < buffer.byteLength / 16; i++) {
     const op = view.getInt32(i * 16, true),
-      schema = OPS[op];
+      schema = operations[op];
     if (!schema) {
       rows.push(`L${i}: nop`);
       continue;
@@ -232,8 +242,8 @@ export function disassemble(buffer) {
         const v = view.getFloat32(i * 16 + 4 + j * 4, true);
         if (type === "l")
           return `L${((Math.trunc(v) % (buffer.byteLength / 16)) + buffer.byteLength / 16) % (buffer.byteLength / 16)}`;
-        if (type === "s") return SENSORS[Math.trunc(v)] ?? "energy";
-        if (type === "p") return FIELDS[Math.trunc(v)] ?? "energy";
+        if (type === "s") return sensors[Math.trunc(v)] ?? "energy";
+        if (type === "p") return fields[Math.trunc(v)] ?? "energy";
         return v <= -1000000
           ? `r${Math.trunc(-v - 1000000) & 7}`
           : formatFloat(v);

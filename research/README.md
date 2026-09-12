@@ -1,6 +1,6 @@
 # Evolution and scaling laboratory
 
-This is ongoing work toward larger, faster, visibly interesting autonomous evolution. The production simulator remains v0.5. The measurements below diagnose its limitations; they do **not** establish that multicellularity has evolved or that the complete simulation now supports a million cells.
+This is ongoing work toward larger, faster, visibly interesting autonomous evolution. The production simulator remains v0.5. A full experimental GPU lifecycle now exists in `web/gpu/`; see [the model, settlement rules, tests and autonomous results](../docs/gpu-model.md). It is not yet connected to the interactive page. The measurements below diagnose its limitations; they do **not** establish that multicellularity has evolved or that the complete simulation now supports a million cells.
 
 ## Reproduce
 
@@ -74,7 +74,7 @@ The Dawn instance must be retained for the entire asynchronous run. An initial e
 
 ## Next experiments and completion gates
 
-1. Build the complete GPU lifecycle around staged intents and explicit conflict resolution. Validate food, theft, gifts, division, deaths and bond sharing with energy-accounting tests. Add controlled CPU/GPU differential cases before scaling those stages. Avoid all-pairs work and per-tick CPU readbacks.
+1. Extend validation and profiling of the implemented GPU lifecycle around staged intents and explicit conflict resolution. Validate food, theft, gifts, division, deaths and bond sharing with energy-accounting tests. Add controlled CPU/GPU differential cases before scaling those stages. Avoid all-pairs work and per-tick CPU readbacks.
 2. Scale world area, resources and genome capacity with population rather than cramming more cells into the old arena. Measure dense colonies as well as uniform workloads, track overflow/capacity failures, and measure biological generations per wall-clock second.
 3. Test selection for sustained descendants and independent establishment in fresh environments. Compare with the old archive rule, and retain random founding programs and a substantial stream of novel genomes. The main mutation channel should remain resampling unless evidence motivates a change.
 4. Give connected cells a physical/ecological reason to depend on one another. A candidate is two complementary resources with costly, gradual specialization and transport across bonds. Test whether specialization and division of labor arise from the trade-off; do not simply award fitness points for having bonds.

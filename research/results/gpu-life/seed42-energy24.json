@@ -1,0 +1,1946 @@
+{
+  "config": {
+    "capacity": 131072,
+    "genomeCapacity": 32768,
+    "side": 256,
+    "sources": 32,
+    "initial": 32768,
+    "seed": 42,
+    "budget": 24,
+    "floor": 2048,
+    "rate": 32,
+    "share": 0.5,
+    "mutation": 0.8,
+    "foodRate": 1,
+    "seedEnergy": 24,
+    "upkeep": 0.5,
+    "divisionCost": 12,
+    "uptakeRate": 4,
+    "specialization": 2,
+    "exchange": 0.12,
+    "enzymeSpeed": 0.2,
+    "shieldUpkeep": 0.72,
+    "cpuCost": 0.0005,
+    "moveCost": 0.04,
+    "turnCost": 0.001,
+    "linkCost": 0.5,
+    "contractCost": 0.08,
+    "stealCost": 0.08,
+    "emitCost": 0.01,
+    "sendCost": 0.01,
+    "jitter": 12,
+    "foodMemory": 20,
+    "foodStrength": 4,
+    "corpseRecycle": 1,
+    "archiveAge": 60,
+    "archiveFood": 120,
+    "archiveOffspring": 8,
+    "archiveEnabled": 1
+  },
+  "kernel": "473e5a5bf8ebab9368a7b09a81ae5c38fa531b37ddc395bd3c7406a5b0f88aa1",
+  "records": [
+    {
+      "seconds": 0,
+      "tick": 0,
+      "living": 32768,
+      "free": 0,
+      "birthAttempts": 0,
+      "archive": 0,
+      "births": 0,
+      "deaths": 0,
+      "randomArrivals": 32768,
+      "sampledArrivals": 0,
+      "mutations": 0,
+      "energy": 786432,
+      "reserves": 0,
+      "mature": 0,
+      "meanAge": 0,
+      "livingMaxGeneration": 0,
+      "bodies": 32768,
+      "largestBody": 1,
+      "linkedCells": 0,
+      "mixedBodies": 0,
+      "mixedCells": 0,
+      "variants": 32768,
+      "leaders": [
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          1
+        ],
+        [
+          3,
+          1
+        ],
+        [
+          4,
+          1
+        ],
+        [
+          5,
+          1
+        ],
+        [
+          6,
+          1
+        ],
+        [
+          7,
+          1
+        ],
+        [
+          8,
+          1
+        ],
+        [
+          9,
+          1
+        ],
+        [
+          10,
+          1
+        ],
+        [
+          11,
+          1
+        ]
+      ],
+      "computeMs": 0
+    },
+    {
+      "seconds": 120,
+      "tick": 7200,
+      "living": 24187,
+      "free": 106925,
+      "birthAttempts": 8,
+      "archive": 104,
+      "births": 13545,
+      "deaths": 25966,
+      "randomArrivals": 35745,
+      "sampledArrivals": 863,
+      "mutations": 694,
+      "energy": 928273.7668457031,
+      "reserves": 110513.26395323224,
+      "mature": 12746,
+      "meanAge": 69.82175617756107,
+      "livingMaxGeneration": 7,
+      "bodies": 17869,
+      "largestBody": 16,
+      "linkedCells": 8344,
+      "mixedBodies": 0,
+      "mixedCells": 0,
+      "variants": 11288,
+      "leaders": [
+        [
+          27339,
+          19
+        ],
+        [
+          28654,
+          18
+        ],
+        [
+          12550,
+          16
+        ],
+        [
+          3763,
+          16
+        ],
+        [
+          18920,
+          16
+        ],
+        [
+          8596,
+          16
+        ],
+        [
+          1657,
+          16
+        ],
+        [
+          18198,
+          16
+        ],
+        [
+          773,
+          16
+        ],
+        [
+          16821,
+          16
+        ],
+        [
+          437,
+          16
+        ],
+        [
+          11865,
+          16
+        ]
+      ],
+      "computeMs": 10831.515295999996
+    },
+    {
+      "seconds": 240,
+      "tick": 14400,
+      "living": 33179,
+      "free": 97925,
+      "birthAttempts": 0,
+      "archive": 128,
+      "births": 32189,
+      "deaths": 39458,
+      "randomArrivals": 37609,
+      "sampledArrivals": 2839,
+      "mutations": 2256,
+      "energy": 1147694.0285644531,
+      "reserves": 198441.27583202563,
+      "mature": 25479,
+      "meanAge": 129.3935616906288,
+      "livingMaxGeneration": 10,
+      "bodies": 23490,
+      "largestBody": 34,
+      "linkedCells": 12184,
+      "mixedBodies": 0,
+      "mixedCells": 0,
+      "variants": 11510,
+      "leaders": [
+        [
+          18838,
+          45
+        ],
+        [
+          20972,
+          39
+        ],
+        [
+          30715,
+          36
+        ],
+        [
+          8082,
+          34
+        ],
+        [
+          26940,
+          34
+        ],
+        [
+          20752,
+          33
+        ],
+        [
+          29265,
+          32
+        ],
+        [
+          21100,
+          30
+        ],
+        [
+          28949,
+          30
+        ],
+        [
+          14735,
+          30
+        ],
+        [
+          15279,
+          29
+        ],
+        [
+          15059,
+          27
+        ]
+      ],
+      "computeMs": 22837.82662700002
+    },
+    {
+      "seconds": 360,
+      "tick": 21600,
+      "living": 36397,
+      "free": 94708,
+      "birthAttempts": 1,
+      "archive": 128,
+      "births": 47340,
+      "deaths": 55231,
+      "randomArrivals": 39511,
+      "sampledArrivals": 4777,
+      "mutations": 3753,
+      "energy": 1191028.7512207031,
+      "reserves": 275807.4377629295,
+      "mature": 28915,
+      "meanAge": 175.76439312764083,
+      "livingMaxGeneration": 13,
+      "bodies": 25922,
+      "largestBody": 55,
+      "linkedCells": 13655,
+      "mixedBodies": 2,
+      "mixedCells": 15,
+      "variants": 11642,
+      "leaders": [
+        [
+          8082,
+          59
+        ],
+        [
+          15279,
+          55
+        ],
+        [
+          18838,
+          47
+        ],
+        [
+          3763,
+          43
+        ],
+        [
+          14735,
+          42
+        ],
+        [
+          465,
+          42
+        ],
+        [
+          114,
+          41
+        ],
+        [
+          30810,
+          38
+        ],
+        [
+          11346,
+          34
+        ],
+        [
+          21209,
+          34
+        ],
+        [
+          11687,
+          33
+        ],
+        [
+          12913,
+          33
+        ]
+      ],
+      "computeMs": 35558.24487599997
+    },
+    {
+      "seconds": 480,
+      "tick": 28800,
+      "living": 39369,
+      "free": 91730,
+      "birthAttempts": 0,
+      "archive": 128,
+      "births": 62677,
+      "deaths": 71436,
+      "randomArrivals": 41410,
+      "sampledArrivals": 6718,
+      "mutations": 5303,
+      "energy": 1235459.7192382812,
+      "reserves": 345555.1064854711,
+      "mature": 32130,
+      "meanAge": 207.7717794034227,
+      "livingMaxGeneration": 13,
+      "bodies": 28114,
+      "largestBody": 48,
+      "linkedCells": 15147,
+      "mixedBodies": 1,
+      "mixedCells": 10,
+      "variants": 11870,
+      "leaders": [
+        [
+          14735,
+          100
+        ],
+        [
+          465,
+          58
+        ],
+        [
+          8082,
+          47
+        ],
+        [
+          12550,
+          46
+        ],
+        [
+          15837,
+          40
+        ],
+        [
+          21209,
+          40
+        ],
+        [
+          2788,
+          40
+        ],
+        [
+          27707,
+          38
+        ],
+        [
+          3790,
+          38
+        ],
+        [
+          30184,
+          38
+        ],
+        [
+          15639,
+          37
+        ],
+        [
+          8753,
+          37
+        ]
+      ],
+      "computeMs": 48107.28436999994
+    },
+    {
+      "seconds": 600,
+      "tick": 36000,
+      "living": 41617,
+      "free": 89488,
+      "birthAttempts": 4,
+      "archive": 128,
+      "births": 77950,
+      "deaths": 88301,
+      "randomArrivals": 43304,
+      "sampledArrivals": 8664,
+      "mutations": 6846,
+      "energy": 1249433.4777832031,
+      "reserves": 390977.9990806265,
+      "mature": 33388,
+      "meanAge": 230.12623447148582,
+      "livingMaxGeneration": 18,
+      "bodies": 29635,
+      "largestBody": 29,
+      "linkedCells": 16562,
+      "mixedBodies": 0,
+      "mixedCells": 0,
+      "variants": 12187,
+      "leaders": [
+        [
+          14735,
+          91
+        ],
+        [
+          3294,
+          54
+        ],
+        [
+          10030,
+          54
+        ],
+        [
+          12550,
+          52
+        ],
+        [
+          8753,
+          51
+        ],
+        [
+          13540,
+          49
+        ],
+        [
+          31088,
+          49
+        ],
+        [
+          15279,
+          46
+        ],
+        [
+          1657,
+          44
+        ],
+        [
+          3763,
+          41
+        ],
+        [
+          24897,
+          40
+        ],
+        [
+          8082,
+          39
+        ]
+      ],
+      "computeMs": 60306.31599399997
+    }
+  ],
+  "leaders": [
+    {
+      "slot": 14735,
+      "living": 91,
+      "length": 32,
+      "serial": 14736,
+      "founder": 14736,
+      "depth": 0,
+      "parent": 0,
+      "bornTick": 0,
+      "score": 0,
+      "source": "L0: mod r5 2\nL1: send 0 90 90\nL2: nop\nL3: turn 0.1\nL4: min r6 120\nL5: color r4\nL6: gradient r5 r0\nL7: wait 90\nL8: mod r1 25\nL9: bud r2\nL10: color 1\nL11: emit 90 0\nL12: give -1 0\nL13: give 0.75 25\nL14: enzyme 0.5\nL15: scan_color r7 120 0.1\nL16: unlink r0\nL17: give r4 10\nL18: move 120\nL19: jeq r6 r1 L31\nL20: listen r5 0\nL21: min r5 120\nL22: sense r3 generation\nL23: listen r5 5\nL24: gradient r6 r7\nL25: bond r6 r0\nL26: listen r7 2\nL27: add r2 120\nL28: receive r0 r1 25\nL29: mov r3 r6\nL30: scan r0 r6 5\nL31: gradient r4 r7",
+      "recordedBirths": 119,
+      "recordedHarvest": 18679.515625
+    },
+    {
+      "slot": 3294,
+      "living": 54,
+      "length": 50,
+      "serial": 3295,
+      "founder": 3295,
+      "depth": 0,
+      "parent": 0,
+      "bornTick": 0,
+      "score": 0,
+      "source": "L0: send 90 10 25\nL1: tag r6\nL2: jmp L23\nL3: mod r2 0.75\nL4: send 60 0 r2\nL5: send 1 10 r5\nL6: jgt r7 r0 L6\nL7: steal 5 10\nL8: mov r2 r5\nL9: emit r1 r3\nL10: bud r6\nL11: give r4 90\nL12: receive r2 r5 10\nL13: send r7 0.75 90\nL14: nop\nL15: add r6 1\nL16: wait 360\nL17: split r5\nL18: gradient r5 r0\nL19: tag r4\nL20: move r3\nL21: sub r7 r0\nL22: move 60\nL23: scan r4 0.75 1\nL24: add r7 2\nL25: color 0.1\nL26: receive r0 r3 2\nL27: wait 0.1\nL28: jlt 0 60 L11\nL29: link 3\nL30: gradient r3 r0\nL31: receive r7 r5 r1\nL32: steal 90 0\nL33: div r1 r4\nL34: gradient r1 r2\nL35: nop\nL36: receive r0 r5 60\nL37: mul r6 2\nL38: shield r2\nL39: add r6 5\nL40: steal r3 -1\nL41: color 120\nL42: abs r6 5\nL43: jmp L48\nL44: abs r2 25\nL45: add r3 5\nL46: rand r0 0.25\nL47: jgt r5 60 L47\nL48: listen r0 0.25\nL49: enzyme 60",
+      "recordedBirths": 114,
+      "recordedHarvest": 7625.3046875
+    },
+    {
+      "slot": 10030,
+      "living": 54,
+      "length": 29,
+      "serial": 32901,
+      "founder": 32901,
+      "depth": 0,
+      "parent": 0,
+      "bornTick": 300,
+      "score": 0,
+      "source": "L0: move 60\nL1: add r1 -1\nL2: jmp L14\nL3: abs r1 10\nL4: unlink r4\nL5: shield r5\nL6: link 60\nL7: receive r7 r6 10\nL8: rand r3 0.5\nL9: scan_color r3 2 60\nL10: sub r3 2\nL11: listen r7 0.5\nL12: jeq 3 r4 L19\nL13: contract 0.25\nL14: listen r6 25\nL15: steal r3 10\nL16: give 120 0.25\nL17: bond r2 120\nL18: mod r1 1\nL19: shield -1\nL20: mod r4 25\nL21: bud r1\nL22: wait 60\nL23: receive r1 r5 5\nL24: emit 1 r1\nL25: div r0 r4\nL26: wait 90\nL27: jnz r2 L25\nL28: receive r5 r3 0.5",
+      "recordedBirths": 60,
+      "recordedHarvest": 8887.3359375
+    },
+    {
+      "slot": 12550,
+      "living": 52,
+      "length": 15,
+      "serial": 12551,
+      "founder": 12551,
+      "depth": 0,
+      "parent": 0,
+      "bornTick": 0,
+      "score": 0,
+      "source": "L0: div r2 0.75\nL1: mod r5 25\nL2: move r0\nL3: receive r6 r0 r7\nL4: receive r4 r1 0.75\nL5: sub r5 120\nL6: rand r2 0\nL7: move 3\nL8: wait 60\nL9: rand r2 25\nL10: jeq r0 0.25 L14\nL11: nop\nL12: split r7\nL13: jlt 5 0 L11\nL14: move r3",
+      "recordedBirths": 66,
+      "recordedHarvest": 9805.16796875
+    },
+    {
+      "slot": 8753,
+      "living": 51,
+      "length": 52,
+      "serial": 8754,
+      "founder": 8754,
+      "depth": 0,
+      "parent": 0,
+      "bornTick": 0,
+      "score": 0,
+      "source": "L0: jnz r1 L49\nL1: turn 0.25\nL2: jeq 60 60 L33\nL3: emit r6 60\nL4: bud r0\nL5: split r6\nL6: nop\nL7: bud r3\nL8: link 360\nL9: jgt 60 90 L47\nL10: mul r0 r6\nL11: link 5\nL12: bond r2 3\nL13: wait 120\nL14: jnz 0.1 L45\nL15: move r3\nL16: mod r0 360\nL17: sense r4 tag\nL18: sense r0 reserve_a\nL19: jnz 0.1 L48\nL20: jmp L6\nL21: jlt -1 0.5 L6\nL22: jgt r2 0.5 L42\nL23: rand r3 r2\nL24: scan_color r2 0 r2\nL25: jmp L8\nL26: listen r2 10\nL27: steal 0.25 r3\nL28: color 0.75\nL29: gradient r3 r6\nL30: jlt 2 0.1 L49\nL31: jeq r3 360 L22\nL32: give 0.75 60\nL33: contract 2\nL34: jgt r6 0.75 L40\nL35: add r1 0.1\nL36: add r7 r5\nL37: turn r4\nL38: give 25 r2\nL39: gradient r4 r6\nL40: wait 10\nL41: contract 90\nL42: peek r0 10 tag\nL43: give 60 r2\nL44: scan_color r2 -1 r4\nL45: mov r3 0\nL46: scan_color r3 5 0.75\nL47: send 90 r2 0.5\nL48: jmp L20\nL49: wait r4\nL50: div r4 r7\nL51: send 25 r5 3",
+      "recordedBirths": 69,
+      "recordedHarvest": 9356.5703125
+    },
+    {
+      "slot": 13540,
+      "living": 49,
+      "length": 38,
+      "serial": 13541,
+      "founder": 13541,
+      "depth": 0,
+      "parent": 0,
+      "bornTick": 0,
+      "score": 0,
+      "source": "L0: gradient r4 r3\nL1: tag 0.1\nL2: div r0 90\nL3: mod r0 0.25\nL4: wait 1\nL5: gradient r4 r0\nL6: jz 0.5 L37\nL7: unlink 60\nL8: max r1 3\nL9: min r4 r4\nL10: sense r4 nutrient_b\nL11: jlt 0 r3 L6\nL12: sub r7 0.75\nL13: unlink 0.75\nL14: send 60 3 r2\nL15: scan r2 0.25 r7\nL16: unlink 5\nL17: color 10\nL18: bud r1\nL19: mul r0 r5\nL20: min r0 0\nL21: jeq 0.25 10 L5\nL22: move 0.5\nL23: wait 90\nL24: nop\nL25: split r3\nL26: peek r0 90 distance\nL27: jlt 90 r5 L9\nL28: abs r7 3\nL29: move 10\nL30: color 25\nL31: bud r7\nL32: jmp L17\nL33: nop\nL34: shield 0.75\nL35: jmp L22\nL36: min r1 r5\nL37: scan r4 r3 r6",
+      "recordedBirths": 66,
+      "recordedHarvest": 8797.28515625
+    },
+    {
+      "slot": 31088,
+      "living": 49,
+      "length": 33,
+      "serial": 31089,
+      "founder": 31089,
+      "depth": 0,
+      "parent": 0,
+      "bornTick": 0,
+      "score": 0,
+      "source": "L0: link -1\nL1: jgt 60 0.1 L3\nL2: abs r1 0.25\nL3: give 1 -1\nL4: bond r2 r0\nL5: give 3 2\nL6: jz r4 L10\nL7: listen r1 360\nL8: max r4 25\nL9: color 10\nL10: jmp L13\nL11: unlink 0.75\nL12: shield 0.1\nL13: split r0\nL14: add r7 120\nL15: wait 25\nL16: give 2 0\nL17: bud r7\nL18: jnz 2 L14\nL19: rand r0 2\nL20: mod r0 3\nL21: emit 5 0.1\nL22: abs r3 0.25\nL23: unlink 0.25\nL24: scan_color r0 0.75 2\nL25: add r3 3\nL26: mod r1 r7\nL27: jz r1 L3\nL28: steal 60 r6\nL29: tag 120\nL30: scan_color r7 r6 120\nL31: listen r1 r3\nL32: listen r5 360",
+      "recordedBirths": 64,
+      "recordedHarvest": 8482.26953125
+    },
+    {
+      "slot": 15279,
+      "living": 46,
+      "length": 25,
+      "serial": 15280,
+      "founder": 15280,
+      "depth": 0,
+      "parent": 0,
+      "bornTick": 0,
+      "score": 0,
+      "source": "L0: give 120 r7\nL1: sense r0 enzyme\nL2: move 3\nL3: link r2\nL4: max r3 0.25\nL5: bud r5\nL6: wait 90\nL7: wait 3\nL8: wait 10\nL9: rand r6 1\nL10: div r6 3\nL11: jgt 360 r4 L1\nL12: min r1 25\nL13: gradient r2 r6\nL14: emit 0.75 0.5\nL15: mod r3 360\nL16: listen r4 0.75\nL17: scan_color r6 r3 10\nL18: emit 60 3\nL19: listen r7 -1\nL20: max r3 r5\nL21: move 0.1\nL22: scan r6 -1 60\nL23: turn 0.25\nL24: mod r4 r1",
+      "recordedBirths": 88,
+      "recordedHarvest": 10800.98828125
+    },
+    {
+      "slot": 1657,
+      "living": 44,
+      "length": 27,
+      "serial": 1658,
+      "founder": 1658,
+      "depth": 0,
+      "parent": 0,
+      "bornTick": 0,
+      "score": 0,
+      "source": "L0: tag 0.5\nL1: peek r0 3 shield\nL2: contract 2\nL3: shield r6\nL4: bud r6\nL5: sense r1 tag\nL6: bud r3\nL7: sense r3 right\nL8: give 0.25 r7\nL9: receive r1 r5 2\nL10: jmp L4\nL11: link r3\nL12: gradient r2 r2\nL13: sense r7 nutrient_a\nL14: abs r3 1\nL15: abs r4 r0\nL16: jgt r6 90 L2\nL17: mod r6 60\nL18: jeq 0.5 r3 L13\nL19: tag 25\nL20: mov r4 2\nL21: link r7\nL22: bond r0 10\nL23: jeq 10 -1 L4\nL24: mod r0 60\nL25: wait -1\nL26: mul r7 0.1",
+      "recordedBirths": 51,
+      "recordedHarvest": 9032.54296875
+    },
+    {
+      "slot": 3763,
+      "living": 41,
+      "length": 51,
+      "serial": 3764,
+      "founder": 3764,
+      "depth": 0,
+      "parent": 0,
+      "bornTick": 0,
+      "score": 0,
+      "source": "L0: contract r7\nL1: link 0.25\nL2: add r7 2\nL3: send 90 0.1 0\nL4: bud r1\nL5: wait r4\nL6: jz 0.5 L49\nL7: min r1 -1\nL8: send 0 0.25 0\nL9: jlt 60 r0 L50\nL10: jeq 25 25 L25\nL11: give 5 r5\nL12: min r5 120\nL13: wait 10\nL14: turn 0.1\nL15: unlink 2\nL16: enzyme r1\nL17: add r3 0.25\nL18: give 90 0.1\nL19: jnz 5 L45\nL20: steal 120 360\nL21: steal 0.5 60\nL22: tag 10\nL23: jmp L22\nL24: jmp L26\nL25: wait 120\nL26: nop\nL27: wait 10\nL28: turn r0\nL29: color r4\nL30: mul r7 5\nL31: div r6 1\nL32: link 5\nL33: give 0 r4\nL34: jnz 5 L4\nL35: sense r5 reserve_a\nL36: unlink 2\nL37: link 90\nL38: mod r0 -1\nL39: emit 25 r3\nL40: turn 0.75\nL41: jnz 5 L36\nL42: tag r2\nL43: give 2 60\nL44: turn r0\nL45: mod r3 25\nL46: shield -1\nL47: mov r3 r3\nL48: emit 0 10\nL49: jgt 0.25 5 L17\nL50: tag 1",
+      "recordedBirths": 79,
+      "recordedHarvest": 9074.48046875
+    },
+    {
+      "slot": 24897,
+      "living": 40,
+      "length": 33,
+      "serial": 24898,
+      "founder": 24898,
+      "depth": 0,
+      "parent": 0,
+      "bornTick": 0,
+      "score": 0,
+      "source": "L0: scan_color r1 r2 0\nL1: give 3 2\nL2: min r4 120\nL3: mul r1 360\nL4: bud r5\nL5: wait 120\nL6: jnz 2 L28\nL7: split r2\nL8: jz 0.25 L1\nL9: jgt 0.75 0.75 L25\nL10: steal 120 5\nL11: jgt 25 -1 L8\nL12: shield 120\nL13: emit r4 3\nL14: max r6 0\nL15: jlt 0.5 5 L8\nL16: jmp L10\nL17: enzyme 0\nL18: contract 25\nL19: turn 0.1\nL20: bond r7 r3\nL21: enzyme 0.1\nL22: shield 0\nL23: max r6 0.75\nL24: bud r3\nL25: jlt r0 25 L24\nL26: jgt 90 60 L6\nL27: wait 1\nL28: jz 1 L23\nL29: send r5 0 120\nL30: send 3 r5 0.1\nL31: steal 0 0\nL32: link 60",
+      "recordedBirths": 52,
+      "recordedHarvest": 6633.04296875
+    },
+    {
+      "slot": 8082,
+      "living": 39,
+      "length": 48,
+      "serial": 8083,
+      "founder": 8083,
+      "depth": 0,
+      "parent": 0,
+      "bornTick": 0,
+      "score": 0,
+      "source": "L0: sub r4 0.5\nL1: wait 120\nL2: receive r6 r7 0.25\nL3: bond r4 r5\nL4: move -1\nL5: scan_color r7 r3 0.1\nL6: jnz 1 L46\nL7: move 5\nL8: jz r4 L47\nL9: div r2 3\nL10: sub r7 0.1\nL11: split r3\nL12: sub r1 0.25\nL13: bud r0\nL14: max r1 120\nL15: scan r0 25 120\nL16: jgt 2 0.1 L9\nL17: add r6 120\nL18: sub r4 60\nL19: jnz 60 L41\nL20: mov r1 2\nL21: jmp L41\nL22: jmp L47\nL23: jnz 2 L16\nL24: div r1 0.1\nL25: unlink 0.1\nL26: jlt 3 1 L21\nL27: bud r4\nL28: enzyme 10\nL29: give 0.1 5\nL30: tag 0.25\nL31: abs r7 1\nL32: move 5\nL33: give r3 r6\nL34: receive r3 r1 60\nL35: jz -1 L4\nL36: send 5 r3 120\nL37: split r3\nL38: shield 10\nL39: sense r7 right\nL40: color r7\nL41: max r0 r4\nL42: emit 60 1\nL43: jgt r4 120 L28\nL44: link 120\nL45: peek r5 0 energy\nL46: mod r0 r3\nL47: split r6",
+      "recordedBirths": 72,
+      "recordedHarvest": 12420.84765625
+    }
+  ],
+  "archived": [
+    {
+      "length": 31,
+      "serial": 4874,
+      "founder": 4874,
+      "depth": 0,
+      "parent": 0,
+      "bornTick": 0,
+      "score": 522,
+      "source": "L0: div r1 0.5\nL1: gradient r5 r6\nL2: contract 120\nL3: rand r1 0.25\nL4: jgt 60 0.1 L19\nL5: link 90\nL6: contract r3\nL7: gradient r7 r0\nL8: mov r0 0.75\nL9: scan_color r7 120 0.25\nL10: give 10 r3\nL11: jlt r4 0.1 L25\nL12: bud r3\nL13: turn 3\nL14: jmp L11\nL15: bond r3 0.75\nL16: rand r5 120\nL17: mul r4 0\nL18: wait r7\nL19: link 0.5\nL20: jz 120 L15\nL21: wait r0\nL22: bud r1\nL23: nop\nL24: jmp L16\nL25: move -1\nL26: emit 90 90\nL27: turn 25\nL28: bond r3 0.75\nL29: listen r4 90\nL30: wait 0"
+    },
+    {
+      "length": 17,
+      "serial": 27297,
+      "founder": 27297,
+      "depth": 0,
+      "parent": 0,
+      "bornTick": 0,
+      "score": 706,
+      "source": "L0: mov r6 60\nL1: mod r1 10\nL2: wait r2\nL3: split r7\nL4: color 360\nL5: scan r5 360 1\nL6: color 0\nL7: steal -1 r1\nL8: bud r6\nL9: wait 120\nL10: gradient r7 r2\nL11: jnz -1 L16\nL12: rand r6 0.25\nL13: bond r4 60\nL14: jmp L10\nL15: contract 3\nL16: move r7"
+    },
+    {
+      "length": 55,
+      "serial": 36340,
+      "founder": 1392,
+      "depth": 1,
+      "parent": 1392,
+      "bornTick": 6720,
+      "score": 389,
+      "source": "L0: jgt r1 0.1 L17\nL1: turn r6\nL2: jmp L40\nL3: mov r6 120\nL4: color r3\nL5: move 1\nL6: div r5 0.1\nL7: bud r7\nL8: gradient r7 r7\nL9: color r5\nL10: bond r0 2\nL11: give 0.75 10\nL12: scan_color r5 60 r7\nL13: div r6 120\nL14: mov r3 r6\nL15: div r3 0.1\nL16: wait 2\nL17: bud r1\nL18: jnz 0.75 L9\nL19: give 0.75 120\nL20: jz 3 L32\nL21: mul r7 r0\nL22: listen r7 2\nL23: sub r5 0.75\nL24: wait 1\nL25: gradient r4 r6\nL26: give 1 60\nL27: listen r6 r4\nL28: jnz 0.25 L28\nL29: jlt r1 10 L19\nL30: listen r7 r7\nL31: mov r5 r4\nL32: split r2\nL33: sub r7 3\nL34: wait 1\nL35: steal -1 0.75\nL36: div r5 10\nL37: div r4 0\nL38: rand r6 25\nL39: color r7\nL40: scan_color r6 60 0.75\nL41: sub r3 120\nL42: rand r7 r0\nL43: min r4 0.5\nL44: sub r2 360\nL45: link r2\nL46: bud r6\nL47: div r2 0.25\nL48: rand r7 5\nL49: bond r5 360\nL50: jz 0 L8\nL51: jeq 1 -1 L5\nL52: max r5 360\nL53: sub r4 r6\nL54: mov r4 5"
+    },
+    {
+      "length": 27,
+      "serial": 1658,
+      "founder": 1658,
+      "depth": 0,
+      "parent": 0,
+      "bornTick": 0,
+      "score": 959,
+      "source": "L0: tag 0.5\nL1: peek r0 3 shield\nL2: contract 2\nL3: shield r6\nL4: bud r6\nL5: sense r1 tag\nL6: bud r3\nL7: sense r3 right\nL8: give 0.25 r7\nL9: receive r1 r5 2\nL10: jmp L4\nL11: link r3\nL12: gradient r2 r2\nL13: sense r7 nutrient_a\nL14: abs r3 1\nL15: abs r4 r0\nL16: jgt r6 90 L2\nL17: mod r6 60\nL18: jeq 0.5 r3 L13\nL19: tag 25\nL20: mov r4 2\nL21: link r7\nL22: bond r0 10\nL23: jeq 10 -1 L4\nL24: mod r0 60\nL25: wait -1\nL26: mul r7 0.1"
+    },
+    {
+      "length": 27,
+      "serial": 22374,
+      "founder": 22374,
+      "depth": 0,
+      "parent": 0,
+      "bornTick": 0,
+      "score": 449,
+      "source": "L0: listen r3 0.1\nL1: split r5\nL2: bud r2\nL3: jnz r5 L0\nL4: bud r1\nL5: abs r7 5\nL6: max r3 10\nL7: div r2 90\nL8: shield 0\nL9: send 0.1 0.5 3\nL10: listen r6 5\nL11: receive r0 r0 r6\nL12: give r0 r1\nL13: abs r2 90\nL14: listen r0 0.5\nL15: min r4 0.75\nL16: div r7 0.5\nL17: jeq 2 r5 L15\nL18: mod r5 0.25\nL19: div r0 0.75\nL20: bud r0\nL21: min r2 0.75\nL22: max r7 360\nL23: sense r6 reserve_b\nL24: turn 10\nL25: bud r6\nL26: emit 0 0.5"
+    },
+    {
+      "length": 22,
+      "serial": 18839,
+      "founder": 18839,
+      "depth": 0,
+      "parent": 0,
+      "bornTick": 0,
+      "score": 814,
+      "source": "L0: send 0.25 2 0.75\nL1: jlt 3 3 L4\nL2: jmp L5\nL3: shield 0.75\nL4: jgt 360 r1 L8\nL5: min r3 r2\nL6: min r7 r2\nL7: turn 0.5\nL8: abs r0 r3\nL9: mod r3 0.75\nL10: peek r5 5 color\nL11: peek r6 r1 energy\nL12: split r5\nL13: wait 120\nL14: jeq r7 0 L21\nL15: wait 5\nL16: give 0.1 r0\nL17: jeq 0.25 r5 L5\nL18: gradient r3 r1\nL19: receive r7 r2 90\nL20: scan r7 0 90\nL21: min r0 0.5"
+    },
+    {
+      "length": 8,
+      "serial": 18379,
+      "founder": 18379,
+      "depth": 0,
+      "parent": 0,
+      "bornTick": 0,
+      "score": 296,
+      "source": "L0: scan_color r0 0.75 120\nL1: wait 3\nL2: gradient r4 r4\nL3: split r2\nL4: scan_color r0 60 0\nL5: peek r4 25 color\nL6: jnz 2 L0\nL7: scan r1 90 120"
+    },
+    {
+      "length": 48,
+      "serial": 8083,
+      "founder": 8083,
+      "depth": 0,
+      "parent": 0,
+      "bornTick": 0,
+      "score": 945,
+      "source": "L0: sub r4 0.5\nL1: wait 120\nL2: receive r6 r7 0.25\nL3: bond r4 r5\nL4: move -1\nL5: scan_color r7 r3 0.1\nL6: jnz 1 L46\nL7: move 5\nL8: jz r4 L47\nL9: div r2 3\nL10: sub r7 0.1\nL11: split r3\nL12: sub r1 0.25\nL13: bud r0\nL14: max r1 120\nL15: scan r0 25 120\nL16: jgt 2 0.1 L9\nL17: add r6 120\nL18: sub r4 60\nL19: jnz 60 L41\nL20: mov r1 2\nL21: jmp L41\nL22: jmp L47\nL23: jnz 2 L16\nL24: div r1 0.1\nL25: unlink 0.1\nL26: jlt 3 1 L21\nL27: bud r4\nL28: enzyme 10\nL29: give 0.1 5\nL30: tag 0.25\nL31: abs r7 1\nL32: move 5\nL33: give r3 r6\nL34: receive r3 r1 60\nL35: jz -1 L4\nL36: send 5 r3 120\nL37: split r3\nL38: shield 10\nL39: sense r7 right\nL40: color r7\nL41: max r0 r4\nL42: emit 60 1\nL43: jgt r4 120 L28\nL44: link 120\nL45: peek r5 0 energy\nL46: mod r0 r3\nL47: split r6"
+    },
+    {
+      "length": 44,
+      "serial": 12636,
+      "founder": 12636,
+      "depth": 0,
+      "parent": 0,
+      "bornTick": 0,
+      "score": 491,
+      "source": "L0: jmp L12\nL1: listen r7 0.25\nL2: move -1\nL3: sub r6 1\nL4: min r7 5\nL5: emit r5 -1\nL6: jnz 0.75 L0\nL7: peek r1 120 tag\nL8: shield r5\nL9: rand r7 25\nL10: shield 25\nL11: mov r1 10\nL12: rand r3 r0\nL13: mod r3 0.75\nL14: sub r4 r5\nL15: rand r5 60\nL16: mod r3 r5\nL17: jeq 0.75 r3 L1\nL18: div r2 r3\nL19: color 0\nL20: shield r4\nL21: move 0.5\nL22: mov r6 r6\nL23: scan r6 3 r0\nL24: sub r7 r6\nL25: jgt 0.75 0.25 L30\nL26: receive r6 r3 r1\nL27: nop\nL28: sense r2 rotation\nL29: color 0.5\nL30: peek r6 -1 bearing\nL31: jz 90 L15\nL32: bond r2 360\nL33: mod r1 0.75\nL34: emit 5 360\nL35: contract 2\nL36: split r3\nL37: mov r5 25\nL38: link r7\nL39: rand r5 1\nL40: wait 360\nL41: bond r3 60\nL42: jeq 0 0 L19\nL43: jlt 1 120 L16"
+    },
+    {
+      "length": 26,
+      "serial": 36824,
+      "founder": 3181,
+      "depth": 1,
+      "parent": 3181,
+      "bornTick": 7620,
+      "score": 541,
+      "source": "L0: bond r7 120\nL1: scan r1 60 -1\nL2: bud r2\nL3: mod r0 90\nL4: bond r1 360\nL5: nop\nL6: send 360 3 r3\nL7: color r1\nL8: send r6 25 r1\nL9: max r6 r0\nL10: mov r6 r4\nL11: sub r5 r0\nL12: div r0 120\nL13: nop\nL14: split r3\nL15: peek r6 -1 shield\nL16: min r7 r5\nL17: mod r4 r1\nL18: jz 10 L21\nL19: max r6 3\nL20: wait 60\nL21: mul r3 1\nL22: mod r2 0.5\nL23: color r1\nL24: rand r4 0\nL25: listen r4 2"
+    },
+    {
+      "length": 55,
+      "serial": 26585,
+      "founder": 26585,
+      "depth": 0,
+      "parent": 0,
+      "bornTick": 0,
+      "score": 500,
+      "source": "L0: gradient r3 r1\nL1: max r0 r5\nL2: send r5 r6 90\nL3: div r4 2\nL4: tag -1\nL5: mov r3 25\nL6: jlt 120 0.25 L24\nL7: abs r0 r6\nL8: add r5 120\nL9: contract 5\nL10: jz r6 L19\nL11: send 60 360 r2\nL12: gradient r5 r4\nL13: scan_color r1 r0 25\nL14: bond r0 0\nL15: color 0.25\nL16: jz 10 L49\nL17: bud r5\nL18: mod r6 0.5\nL19: send 360 r7 r5\nL20: jnz 360 L48\nL21: shield r7\nL22: give 1 0.5\nL23: mul r5 2\nL24: mod r5 5\nL25: div r4 0.1\nL26: bond r4 25\nL27: give -1 -1\nL28: move r1\nL29: jeq r6 r0 L8\nL30: contract 3\nL31: unlink 5\nL32: give r5 3\nL33: steal 60 0.75\nL34: listen r2 10\nL35: mov r6 120\nL36: split r2\nL37: rand r7 25\nL38: nop\nL39: mod r0 r2\nL40: unlink 0.1\nL41: scan_color r7 r7 0.5\nL42: min r1 0.5\nL43: div r6 r0\nL44: max r5 0.5\nL45: abs r5 0.75\nL46: unlink 0.5\nL47: mov r1 r1\nL48: wait 360\nL49: peek r2 90 color\nL50: jmp L14\nL51: max r6 r5\nL52: turn r2\nL53: receive r5 r4 25\nL54: min r1 3"
+    },
+    {
+      "length": 51,
+      "serial": 3764,
+      "founder": 3764,
+      "depth": 0,
+      "parent": 0,
+      "bornTick": 0,
+      "score": 934,
+      "source": "L0: contract r7\nL1: link 0.25\nL2: add r7 2\nL3: send 90 0.1 0\nL4: bud r1\nL5: wait r4\nL6: jz 0.5 L49\nL7: min r1 -1\nL8: send 0 0.25 0\nL9: jlt 60 r0 L50\nL10: jeq 25 25 L25\nL11: give 5 r5\nL12: min r5 120\nL13: wait 10\nL14: turn 0.1\nL15: unlink 2\nL16: enzyme r1\nL17: add r3 0.25\nL18: give 90 0.1\nL19: jnz 5 L45\nL20: steal 120 360\nL21: steal 0.5 60\nL22: tag 10\nL23: jmp L22\nL24: jmp L26\nL25: wait 120\nL26: nop\nL27: wait 10\nL28: turn r0\nL29: color r4\nL30: mul r7 5\nL31: div r6 1\nL32: link 5\nL33: give 0 r4\nL34: jnz 5 L4\nL35: sense r5 reserve_a\nL36: unlink 2\nL37: link 90\nL38: mod r0 -1\nL39: emit 25 r3\nL40: turn 0.75\nL41: jnz 5 L36\nL42: tag r2\nL43: give 2 60\nL44: turn r0\nL45: mod r3 25\nL46: shield -1\nL47: mov r3 r3\nL48: emit 0 10\nL49: jgt 0.25 5 L17\nL50: tag 1"
+    },
+    {
+      "length": 22,
+      "serial": 16817,
+      "founder": 16817,
+      "depth": 0,
+      "parent": 0,
+      "bornTick": 0,
+      "score": 718,
+      "source": "L0: send 0 25 r3\nL1: tag r5\nL2: listen r7 3\nL3: send 0.1 r6 r3\nL4: add r0 0.25\nL5: wait 120\nL6: link 0.5\nL7: split r6\nL8: link 2\nL9: gradient r6 r7\nL10: emit r6 5\nL11: jgt 60 10 L1\nL12: add r6 0.25\nL13: peek r0 -1 distance\nL14: move 25\nL15: abs r1 0.1\nL16: nop\nL17: enzyme 5\nL18: link 60\nL19: rand r2 0.75\nL20: min r6 r5\nL21: listen r3 60"
+    },
+    {
+      "length": 61,
+      "serial": 24843,
+      "founder": 24843,
+      "depth": 0,
+      "parent": 0,
+      "bornTick": 0,
+      "score": 689,
+      "source": "L0: jlt 120 r1 L29\nL1: abs r4 360\nL2: jnz 60 L41\nL3: steal r4 3\nL4: gradient r7 r1\nL5: move 0.1\nL6: jz 90 L39\nL7: peek r4 r3 color\nL8: jeq r0 120 L6\nL9: max r5 2\nL10: jeq r7 360 L11\nL11: abs r5 r6\nL12: sub r7 0.5\nL13: color r2\nL14: min r2 -1\nL15: mov r4 10\nL16: emit 0.75 60\nL17: send r0 25 r1\nL18: sense r0 nutrient_a\nL19: shield 10\nL20: contract 0\nL21: emit r3 3\nL22: mod r3 120\nL23: mul r5 60\nL24: scan_color r6 5 -1\nL25: abs r4 r6\nL26: nop\nL27: bond r3 r4\nL28: receive r3 r5 60\nL29: steal 90 0.1\nL30: steal 25 -1\nL31: scan_color r5 r1 0.5\nL32: mov r6 r5\nL33: add r3 0.25\nL34: unlink -1\nL35: shield r4\nL36: emit r0 r7\nL37: jeq 5 0.5 L36\nL38: contract 5\nL39: wait 1\nL40: jeq r4 r3 L44\nL41: split r2\nL42: rand r6 -1\nL43: peek r1 r5 bearing\nL44: listen r4 2\nL45: min r2 120\nL46: send 25 120 2\nL47: send r6 5 10\nL48: scan_color r3 25 90\nL49: steal 0.25 r0\nL50: emit 3 360\nL51: turn 0.75\nL52: move 0.5\nL53: unlink 5\nL54: abs r6 0.5\nL55: nop\nL56: wait 120\nL57: max r7 2\nL58: mul r4 120\nL59: sub r1 0.5\nL60: turn 0.75"
+    },
+    {
+      "length": 15,
+      "serial": 12551,
+      "founder": 12551,
+      "depth": 0,
+      "parent": 0,
+      "bornTick": 0,
+      "score": 1096,
+      "source": "L0: div r2 0.75\nL1: mod r5 25\nL2: move r0\nL3: receive r6 r0 r7\nL4: receive r4 r1 0.75\nL5: sub r5 120\nL6: rand r2 0\nL7: move 3\nL8: wait 60\nL9: rand r2 25\nL10: jeq r0 0.25 L14\nL11: nop\nL12: split r7\nL13: jlt 5 0 L11\nL14: move r3"
+    },
+    {
+      "length": 52,
+      "serial": 23585,
+      "founder": 23585,
+      "depth": 0,
+      "parent": 0,
+      "bornTick": 0,
+      "score": 682,
+      "source": "L0: mul r1 r3\nL1: move r0\nL2: color r5\nL3: wait 10\nL4: abs r4 0.75\nL5: add r2 3\nL6: max r0 10\nL7: add r5 r1\nL8: give 1 10\nL9: contract 25\nL10: jlt 0.5 25 L20\nL11: contract r7\nL12: contract 3\nL13: steal 60 0.25\nL14: tag r1\nL15: link 90\nL16: jeq r4 360 L27\nL17: split r6\nL18: abs r5 -1\nL19: sense r6 enzyme\nL20: wait 0\nL21: wait 120\nL22: unlink r7\nL23: give 0 0.1\nL24: min r1 10\nL25: link 120\nL26: sense r3 energy\nL27: scan r7 60 120\nL28: unlink 2\nL29: scan_color r4 r6 120\nL30: max r1 60\nL31: max r3 120\nL32: mod r2 r6\nL33: mod r2 r4\nL34: wait r1\nL35: abs r0 0.5\nL36: jeq 0.25 360 L16\nL37: emit r0 10\nL38: move 90\nL39: give 2 2\nL40: listen r1 r3\nL41: unlink r7\nL42: unlink r2\nL43: sense r5 food\nL44: emit 60 r2\nL45: gradient r4 r3\nL46: bud r5\nL47: mod r6 25\nL48: color 25\nL49: add r5 10\nL50: contract 3\nL51: sense r1 bonds"
+    },
+    {
+      "length": 44,
+      "serial": 30185,
+      "founder": 30185,
+      "depth": 0,
+      "parent": 0,
+      "bornTick": 0,
+      "score": 658,
+      "source": "L0: rand r4 60\nL1: sense r2 age\nL2: jz 2 L33\nL3: move 0.5\nL4: div r7 r6\nL5: nop\nL6: jmp L10\nL7: bud r2\nL8: steal 0.5 0.75\nL9: bond r5 90\nL10: wait 10\nL11: jnz 5 L34\nL12: jmp L27\nL13: sense r4 generation\nL14: gradient r6 r1\nL15: split r2\nL16: split r6\nL17: mul r3 r0\nL18: add r6 0.1\nL19: enzyme r0\nL20: link 25\nL21: shield 25\nL22: shield 10\nL23: mod r0 10\nL24: jmp L26\nL25: add r6 0.75\nL26: steal r3 r4\nL27: receive r4 r2 25\nL28: scan_color r5 0.25 r2\nL29: sense r4 left\nL30: mul r6 90\nL31: mod r2 3\nL32: give 2 5\nL33: scan r1 90 r0\nL34: bond r2 1\nL35: sense r1 ahead\nL36: sub r2 0.5\nL37: min r3 120\nL38: move r3\nL39: bud r5\nL40: color 3\nL41: steal r0 90\nL42: mul r3 0.5\nL43: jgt 3 r7 L3"
+    },
+    {
+      "length": 56,
+      "serial": 6405,
+      "founder": 6405,
+      "depth": 0,
+      "parent": 0,
+      "bornTick": 0,
+      "score": 513,
+      "source": "L0: split r7\nL1: gradient r7 r0\nL2: jlt 90 -1 L8\nL3: jeq 360 360 L48\nL4: color 5\nL5: send 120 90 r6\nL6: max r7 -1\nL7: move 2\nL8: enzyme 10\nL9: mov r2 25\nL10: nop\nL11: sub r5 0.1\nL12: move 2\nL13: wait 1\nL14: tag r3\nL15: give 120 5\nL16: contract 0.25\nL17: add r7 r0\nL18: rand r4 r3\nL19: min r6 2\nL20: bond r7 1\nL21: rand r7 0.75\nL22: tag 3\nL23: split r2\nL24: max r0 5\nL25: link 360\nL26: split r0\nL27: jmp L53\nL28: add r5 120\nL29: enzyme r5\nL30: jz r7 L14\nL31: scan_color r4 0.75 10\nL32: scan r1 r4 0.1\nL33: mov r5 0.75\nL34: receive r5 r3 3\nL35: jz 3 L40\nL36: sub r1 1\nL37: max r1 0.1\nL38: listen r7 0\nL39: unlink 360\nL40: turn r7\nL41: scan r2 360 90\nL42: div r5 0\nL43: nop\nL44: scan r5 0.25 10\nL45: abs r3 r3\nL46: steal -1 0\nL47: mod r3 0\nL48: jz r1 L19\nL49: unlink -1\nL50: abs r5 r3\nL51: tag 0.75\nL52: mod r2 r0\nL53: link 0.25\nL54: send 0.5 360 0\nL55: wait -1"
+    },
+    {
+      "length": 53,
+      "serial": 29236,
+      "founder": 29236,
+      "depth": 0,
+      "parent": 0,
+      "bornTick": 0,
+      "score": 512,
+      "source": "L0: wait 360\nL1: jgt 0.5 2 L48\nL2: jgt 2 0.1 L21\nL3: tag 1\nL4: listen r0 10\nL5: jgt 5 0.25 L9\nL6: peek r0 0.25 color\nL7: scan_color r0 2 r7\nL8: steal 90 0\nL9: shield 360\nL10: jlt r7 25 L37\nL11: rand r1 0\nL12: listen r7 360\nL13: tag 0\nL14: jnz 0.5 L50\nL15: receive r4 r1 5\nL16: turn 90\nL17: gradient r5 r1\nL18: turn 3\nL19: peek r5 0.5 tag\nL20: tag r7\nL21: link 5\nL22: jnz 10 L33\nL23: abs r2 10\nL24: peek r7 360 color\nL25: tag -1\nL26: jz 1 L46\nL27: scan r6 -1 90\nL28: mod r6 0.5\nL29: gradient r5 r7\nL30: turn r2\nL31: wait 0.1\nL32: div r3 0.5\nL33: sub r5 0.75\nL34: mov r0 0.1\nL35: bud r2\nL36: jz 2 L28\nL37: move r7\nL38: mod r4 0.25\nL39: link 10\nL40: sub r5 -1\nL41: jgt 0 0.25 L4\nL42: tag 0.75\nL43: min r1 10\nL44: jz 0.75 L36\nL45: listen r7 0\nL46: div r5 3\nL47: listen r5 r0\nL48: move 3\nL49: mod r3 r3\nL50: jeq -1 r1 L9\nL51: send 5 0.5 r5\nL52: link 1"
+    },
+    {
+      "length": 40,
+      "serial": 30248,
+      "founder": 30248,
+      "depth": 0,
+      "parent": 0,
+      "bornTick": 0,
+      "score": 481,
+      "source": "L0: peek r7 2 distance\nL1: gradient r7 r4\nL2: jgt 25 90 L1\nL3: sub r1 0.25\nL4: max r6 90\nL5: turn 2\nL6: sub r1 25\nL7: mod r5 0.25\nL8: send 360 360 r2\nL9: move 0\nL10: bond r1 -1\nL11: scan r4 120 r0\nL12: send -1 25 0\nL13: contract 1\nL14: nop\nL15: receive r5 r4 r4\nL16: add r0 0.5\nL17: link 3\nL18: give -1 0.25\nL19: give -1 10\nL20: give 2 r5\nL21: receive r5 r6 0.5\nL22: wait 1\nL23: sense r3 ahead\nL24: give 90 0.25\nL25: split r2\nL26: mov r0 0.75\nL27: sub r0 r7\nL28: steal r1 360\nL29: unlink 0\nL30: split r5\nL31: bud r2\nL32: sub r7 5\nL33: tag 5\nL34: nop\nL35: scan r7 0.1 r5\nL36: jmp L19\nL37: wait 0.25\nL38: sub r1 r2\nL39: listen r2 0.75"
+    },
+    {
+      "length": 25,
+      "serial": 30231,
+      "founder": 30231,
+      "depth": 0,
+      "parent": 0,
+      "bornTick": 0,
+      "score": 551,
+      "source": "L0: nop\nL1: link 0.1\nL2: jeq 0.5 360 L1\nL3: sub r3 r5\nL4: sub r3 3\nL5: jnz 2 L10\nL6: add r6 1\nL7: jmp L11\nL8: abs r5 r2\nL9: send 1 -1 r7\nL10: jgt 0.5 0 L14\nL11: emit r6 r0\nL12: emit r7 r2\nL13: mov r4 25\nL14: split r1\nL15: receive r6 r6 5\nL16: sense r3 nutrient_a\nL17: jgt 0 r5 L7\nL18: wait 360\nL19: peek r4 r0 bearing\nL20: nop\nL21: jz -1 L0\nL22: max r7 3\nL23: min r6 0.1\nL24: unlink 5"
+    },
+    {
+      "length": 56,
+      "serial": 438,
+      "founder": 438,
+      "depth": 0,
+      "parent": 0,
+      "bornTick": 0,
+      "score": 622,
+      "source": "L0: jlt 3 60 L3\nL1: bud r4\nL2: abs r5 60\nL3: enzyme 0.5\nL4: shield r1\nL5: turn 5\nL6: jlt 0 r6 L42\nL7: div r5 0.5\nL8: rand r4 r2\nL9: peek r7 r0 distance\nL10: jnz r1 L50\nL11: sense r5 nutrient_a\nL12: emit r2 3\nL13: color -1\nL14: turn 25\nL15: peek r6 1 color\nL16: min r4 3\nL17: steal r7 90\nL18: receive r2 r7 r7\nL19: nop\nL20: wait 90\nL21: mod r3 0.5\nL22: jgt 360 1 L25\nL23: max r2 0.5\nL24: jeq 120 60 L51\nL25: jgt r2 r6 L38\nL26: turn 5\nL27: abs r0 0.5\nL28: give 0 r5\nL29: color 5\nL30: split r2\nL31: rand r3 90\nL32: wait 10\nL33: jmp L17\nL34: abs r3 r5\nL35: scan r5 r3 r3\nL36: max r3 r4\nL37: mov r7 0.1\nL38: mul r4 90\nL39: bud r2\nL40: jgt r7 r6 L2\nL41: wait 120\nL42: split r2\nL43: mod r5 r3\nL44: peek r2 1 bearing\nL45: mul r1 r6\nL46: move r0\nL47: tag 1\nL48: unlink 1\nL49: abs r0 60\nL50: move 0\nL51: link 0.1\nL52: sense r0 tag\nL53: max r5 90\nL54: turn r3\nL55: move -1"
+    },
+    {
+      "length": 15,
+      "serial": 37680,
+      "founder": 11193,
+      "depth": 1,
+      "parent": 11193,
+      "bornTick": 9240,
+      "score": 823,
+      "source": "L0: give 2 25\nL1: add r1 r5\nL2: scan r5 -1 r4\nL3: scan_color r1 1 0.75\nL4: rand r2 60\nL5: tag -1\nL6: wait 120\nL7: listen r3 3\nL8: unlink 25\nL9: scan_color r3 120 -1\nL10: receive r1 r0 0.75\nL11: mov r4 3\nL12: link 0.1\nL13: steal 0.5 10\nL14: split r4"
+    },
+    {
+      "length": 38,
+      "serial": 37590,
+      "founder": 30765,
+      "depth": 1,
+      "parent": 30765,
+      "bornTick": 9060,
+      "score": 598,
+      "source": "L0: steal 90 -1\nL1: give r2 3\nL2: jmp L10\nL3: jz r6 L31\nL4: scan_color r4 0.5 120\nL5: unlink 360\nL6: rand r7 -1\nL7: bud r5\nL8: abs r3 r5\nL9: mul r7 0.25\nL10: listen r6 120\nL11: bud r2\nL12: emit 0.1 90\nL13: give 3 r5\nL14: wait 60\nL15: jnz 2 L8\nL16: peek r6 90 color\nL17: jmp L8\nL18: min r5 0.5\nL19: enzyme 10\nL20: jeq 0 r7 L19\nL21: scan r0 0.75 25\nL22: move 5\nL23: contract 90\nL24: receive r2 r5 r2\nL25: split r1\nL26: min r7 r7\nL27: sense r5 right\nL28: add r4 0\nL29: scan_color r0 r2 r4\nL30: unlink 1\nL31: listen r3 10\nL32: scan_color r3 r3 r7\nL33: jz 0 L30\nL34: sub r6 r5\nL35: listen r1 0.5\nL36: max r2 0.1\nL37: mov r1 r2"
+    },
+    {
+      "length": 12,
+      "serial": 33034,
+      "founder": 33034,
+      "depth": 0,
+      "parent": 0,
+      "bornTick": 540,
+      "score": 536,
+      "source": "L0: jz r1 L1\nL1: rand r4 60\nL2: jlt 1 1 L3\nL3: mod r2 3\nL4: scan_color r0 0 120\nL5: unlink -1\nL6: split r1\nL7: unlink 25\nL8: jnz r2 L11\nL9: sense r2 age\nL10: contract r0\nL11: bud r4"
+    },
+    {
+      "length": 25,
+      "serial": 40147,
+      "founder": 29162,
+      "depth": 1,
+      "parent": 29162,
+      "bornTick": 13860,
+      "score": 635,
+      "source": "L0: split r5\nL1: unlink 120\nL2: wait 0.5\nL3: rand r5 60\nL4: emit 60 3\nL5: add r1 90\nL6: jlt r5 0 L5\nL7: link 0.5\nL8: jnz r0 L4\nL9: emit 0.25 0.1\nL10: link 120\nL11: jgt 5 1 L19\nL12: scan_color r3 r3 r7\nL13: shield 10\nL14: nop\nL15: turn 1\nL16: add r4 360\nL17: unlink 10\nL18: contract 90\nL19: wait 90\nL20: link 120\nL21: scan r4 25 60\nL22: mov r5 r1\nL23: peek r5 r1 shield\nL24: mul r1 0.75"
+    },
+    {
+      "length": 32,
+      "serial": 14736,
+      "founder": 14736,
+      "depth": 0,
+      "parent": 0,
+      "bornTick": 0,
+      "score": 1779,
+      "source": "L0: mod r5 2\nL1: send 0 90 90\nL2: nop\nL3: turn 0.1\nL4: min r6 120\nL5: color r4\nL6: gradient r5 r0\nL7: wait 90\nL8: mod r1 25\nL9: bud r2\nL10: color 1\nL11: emit 90 0\nL12: give -1 0\nL13: give 0.75 25\nL14: enzyme 0.5\nL15: scan_color r7 120 0.1\nL16: unlink r0\nL17: give r4 10\nL18: move 120\nL19: jeq r6 r1 L31\nL20: listen r5 0\nL21: min r5 120\nL22: sense r3 generation\nL23: listen r5 5\nL24: gradient r6 r7\nL25: bond r6 r0\nL26: listen r7 2\nL27: add r2 120\nL28: receive r0 r1 25\nL29: mov r3 r6\nL30: scan r0 r6 5\nL31: gradient r4 r7"
+    },
+    {
+      "length": 33,
+      "serial": 24898,
+      "founder": 24898,
+      "depth": 0,
+      "parent": 0,
+      "bornTick": 0,
+      "score": 896,
+      "source": "L0: scan_color r1 r2 0\nL1: give 3 2\nL2: min r4 120\nL3: mul r1 360\nL4: bud r5\nL5: wait 120\nL6: jnz 2 L28\nL7: split r2\nL8: jz 0.25 L1\nL9: jgt 0.75 0.75 L25\nL10: steal 120 5\nL11: jgt 25 -1 L8\nL12: shield 120\nL13: emit r4 3\nL14: max r6 0\nL15: jlt 0.5 5 L8\nL16: jmp L10\nL17: enzyme 0\nL18: contract 25\nL19: turn 0.1\nL20: bond r7 r3\nL21: enzyme 0.1\nL22: shield 0\nL23: max r6 0.75\nL24: bud r3\nL25: jlt r0 25 L24\nL26: jgt 90 60 L6\nL27: wait 1\nL28: jz 1 L23\nL29: send r5 0 120\nL30: send 3 r5 0.1\nL31: steal 0 0\nL32: link 60"
+    },
+    {
+      "length": 45,
+      "serial": 6562,
+      "founder": 6562,
+      "depth": 0,
+      "parent": 0,
+      "bornTick": 0,
+      "score": 560,
+      "source": "L0: contract 360\nL1: sense r3 generation\nL2: bud r4\nL3: jz -1 L22\nL4: add r4 2\nL5: abs r1 90\nL6: min r7 r0\nL7: div r4 25\nL8: emit 0.25 60\nL9: bud r3\nL10: wait 120\nL11: mul r4 r5\nL12: jmp L40\nL13: jmp L15\nL14: sub r1 r2\nL15: steal r1 360\nL16: sense r3 nutrient_a\nL17: jlt r3 r3 L42\nL18: sub r5 0.75\nL19: mod r7 0.1\nL20: bond r6 0.25\nL21: wait 0.25\nL22: send r1 0.1 10\nL23: turn r7\nL24: jgt -1 r6 L41\nL25: link r1\nL26: bond r6 25\nL27: jgt 60 0.25 L36\nL28: max r2 r7\nL29: contract 25\nL30: unlink 0.1\nL31: mov r4 r2\nL32: emit 2 0.1\nL33: tag 5\nL34: gradient r2 r0\nL35: jeq 360 r0 L14\nL36: sub r0 0.75\nL37: steal 60 2\nL38: unlink r2\nL39: jlt r4 r1 L28\nL40: max r7 0.75\nL41: listen r7 90\nL42: gradient r4 r7\nL43: nop\nL44: wait 0.75"
+    },
+    {
+      "length": 29,
+      "serial": 32901,
+      "founder": 32901,
+      "depth": 0,
+      "parent": 0,
+      "bornTick": 300,
+      "score": 1122,
+      "source": "L0: move 60\nL1: add r1 -1\nL2: jmp L14\nL3: abs r1 10\nL4: unlink r4\nL5: shield r5\nL6: link 60\nL7: receive r7 r6 10\nL8: rand r3 0.5\nL9: scan_color r3 2 60\nL10: sub r3 2\nL11: listen r7 0.5\nL12: jeq 3 r4 L19\nL13: contract 0.25\nL14: listen r6 25\nL15: steal r3 10\nL16: give 120 0.25\nL17: bond r2 120\nL18: mod r1 1\nL19: shield -1\nL20: mod r4 25\nL21: bud r1\nL22: wait 60\nL23: receive r1 r5 5\nL24: emit 1 r1\nL25: div r0 r4\nL26: wait 90\nL27: jnz r2 L25\nL28: receive r5 r3 0.5"
+    },
+    {
+      "length": 11,
+      "serial": 36437,
+      "founder": 19408,
+      "depth": 0,
+      "parent": 19408,
+      "bornTick": 6900,
+      "score": 687,
+      "source": "L0: bud r1\nL1: min r6 2\nL2: jmp L4\nL3: add r3 0\nL4: sense r5 reserve_a\nL5: mul r2 r6\nL6: peek r3 5 color\nL7: wait 0.5\nL8: turn 0.75\nL9: emit 2 2\nL10: wait 25"
+    },
+    {
+      "length": 64,
+      "serial": 18113,
+      "founder": 18113,
+      "depth": 0,
+      "parent": 0,
+      "bornTick": 0,
+      "score": 535,
+      "source": "L0: send 60 r5 1\nL1: sense r7 generation\nL2: abs r6 -1\nL3: steal r4 90\nL4: jgt 25 25 L14\nL5: jlt 0.5 0.75 L27\nL6: sub r4 10\nL7: steal 3 r5\nL8: jlt r6 r6 L29\nL9: scan r5 1 r2\nL10: sense r7 energy\nL11: jeq 0 5 L17\nL12: scan r3 360 r5\nL13: bond r5 360\nL14: color 0\nL15: max r6 r5\nL16: emit 360 0.25\nL17: give 0.1 1\nL18: steal -1 10\nL19: jlt 0.5 60 L25\nL20: link 60\nL21: receive r2 r6 0\nL22: mod r5 25\nL23: mov r0 0.5\nL24: jz r2 L26\nL25: turn 0.1\nL26: tag 10\nL27: unlink 10\nL28: send 0.5 r7 360\nL29: mod r5 r5\nL30: tag r7\nL31: color r7\nL32: nop\nL33: sense r4 ahead\nL34: give 0.5 2\nL35: jeq 120 0.1 L58\nL36: split r2\nL37: scan_color r6 r6 0.1\nL38: nop\nL39: give 0 90\nL40: wait 5\nL41: sub r0 25\nL42: jz r7 L34\nL43: jz 0.5 L16\nL44: sense r6 food\nL45: listen r6 0.1\nL46: unlink 3\nL47: nop\nL48: div r6 25\nL49: split r3\nL50: jnz r3 L6\nL51: emit 3 60\nL52: steal 3 0.75\nL53: rand r2 r3\nL54: unlink 5\nL55: tag r2\nL56: jmp L1\nL57: send 1 60 360\nL58: sub r5 0.25\nL59: link 0.5\nL60: jnz 120 L41\nL61: bond r1 r4\nL62: wait 90\nL63: color 25"
+    },
+    {
+      "length": 16,
+      "serial": 28251,
+      "founder": 28251,
+      "depth": 0,
+      "parent": 0,
+      "bornTick": 0,
+      "score": 702,
+      "source": "L0: bud r0\nL1: min r6 r6\nL2: mul r0 r6\nL3: sense r1 nutrient_a\nL4: wait 360\nL5: mod r7 90\nL6: gradient r4 r2\nL7: rand r7 60\nL8: tag -1\nL9: emit r6 0.1\nL10: mod r1 -1\nL11: rand r1 0.5\nL12: nop\nL13: give 120 -1\nL14: bond r4 r0\nL15: split r5"
+    },
+    {
+      "length": 23,
+      "serial": 4481,
+      "founder": 4481,
+      "depth": 0,
+      "parent": 0,
+      "bornTick": 0,
+      "score": 492,
+      "source": "L0: mul r6 2\nL1: jeq 60 1 L10\nL2: max r7 0.1\nL3: jgt r3 5 L4\nL4: wait r5\nL5: jeq 1 r7 L20\nL6: mul r1 0.5\nL7: mul r1 2\nL8: split r0\nL9: abs r4 r0\nL10: jgt 10 r6 L17\nL11: shield 90\nL12: peek r1 0 distance\nL13: split r7\nL14: shield r3\nL15: jnz r0 L4\nL16: add r0 25\nL17: sense r6 nutrient_b\nL18: max r5 10\nL19: scan_color r5 r4 0\nL20: jeq -1 0.25 L0\nL21: max r5 120\nL22: split r3"
+    },
+    {
+      "length": 15,
+      "serial": 13045,
+      "founder": 13045,
+      "depth": 0,
+      "parent": 0,
+      "bornTick": 0,
+      "score": 389,
+      "source": "L0: bud r2\nL1: peek r4 r1 energy\nL2: contract r7\nL3: jz 5 L14\nL4: sub r3 0.5\nL5: emit r0 360\nL6: bud r1\nL7: jlt 0.25 120 L6\nL8: abs r4 60\nL9: min r7 90\nL10: mul r7 0.25\nL11: min r2 r3\nL12: mod r6 0.5\nL13: emit 120 1\nL14: sense r5 tag"
+    },
+    {
+      "length": 63,
+      "serial": 23385,
+      "founder": 23385,
+      "depth": 0,
+      "parent": 0,
+      "bornTick": 0,
+      "score": 818,
+      "source": "L0: listen r2 1\nL1: wait 0.75\nL2: wait 90\nL3: wait 2\nL4: nop\nL5: tag 0.25\nL6: add r6 2\nL7: wait 0.5\nL8: jlt 120 r5 L13\nL9: bond r4 r7\nL10: scan_color r6 5 120\nL11: unlink r2\nL12: listen r0 r0\nL13: turn 0.5\nL14: add r1 r3\nL15: color 0.1\nL16: unlink 360\nL17: jlt 1 r1 L7\nL18: abs r6 0.75\nL19: abs r5 r5\nL20: scan_color r1 60 3\nL21: steal r1 360\nL22: color 0.75\nL23: jeq 0 10 L2\nL24: color 10\nL25: mov r7 r7\nL26: wait r6\nL27: scan_color r7 r2 0.25\nL28: jnz 2 L53\nL29: color 60\nL30: bud r2\nL31: jgt 90 120 L36\nL32: rand r4 1\nL33: give 0.25 90\nL34: link 5\nL35: give 0 -1\nL36: mov r7 60\nL37: scan r3 3 r2\nL38: turn 1\nL39: mod r0 90\nL40: max r0 0\nL41: receive r6 r5 1\nL42: mov r1 5\nL43: jmp L25\nL44: jgt -1 r5 L8\nL45: send r0 r1 0.25\nL46: jlt 0 3 L29\nL47: jz 0.1 L27\nL48: jz 120 L48\nL49: enzyme 360\nL50: mod r7 -1\nL51: gradient r7 r1\nL52: max r5 0.75\nL53: unlink 3\nL54: sub r0 1\nL55: move 0.75\nL56: color -1\nL57: split r5\nL58: give r6 360\nL59: mod r2 r6\nL60: mod r3 r0\nL61: sub r1 0\nL62: abs r0 60"
+    },
+    {
+      "length": 18,
+      "serial": 25242,
+      "founder": 25242,
+      "depth": 0,
+      "parent": 0,
+      "bornTick": 0,
+      "score": 666,
+      "source": "L0: jz 0.5 L15\nL1: split r2\nL2: send 0.5 0.5 360\nL3: send 120 r1 0.75\nL4: mod r0 r6\nL5: gradient r5 r1\nL6: split r7\nL7: split r7\nL8: sub r6 r1\nL9: color 3\nL10: jnz 60 L4\nL11: jz 5 L16\nL12: jlt 360 r0 L1\nL13: give 360 -1\nL14: add r0 3\nL15: listen r1 0.5\nL16: jlt 25 0.25 L10\nL17: listen r5 0"
+    },
+    {
+      "length": 23,
+      "serial": 3850,
+      "founder": 3850,
+      "depth": 0,
+      "parent": 0,
+      "bornTick": 0,
+      "score": 501,
+      "source": "L0: mul r6 0\nL1: mul r4 25\nL2: mod r2 r2\nL3: color 120\nL4: scan r1 10 0.25\nL5: bud r6\nL6: min r6 0.5\nL7: add r4 120\nL8: scan_color r6 r4 360\nL9: tag 0.25\nL10: sub r2 r7\nL11: mov r2 0\nL12: color 120\nL13: give 0.75 25\nL14: scan_color r3 1 90\nL15: mov r0 r6\nL16: link r4\nL17: abs r3 r7\nL18: min r3 r1\nL19: wait 360\nL20: nop\nL21: mod r3 60\nL22: turn 0.25"
+    },
+    {
+      "length": 44,
+      "serial": 4628,
+      "founder": 4628,
+      "depth": 0,
+      "parent": 0,
+      "bornTick": 0,
+      "score": 525,
+      "source": "L0: unlink r1\nL1: div r3 r1\nL2: scan_color r0 3 360\nL3: jnz r6 L22\nL4: min r0 10\nL5: div r0 r5\nL6: jeq r1 r7 L41\nL7: turn 2\nL8: bond r5 10\nL9: sense r2 tag\nL10: tag 1\nL11: color r1\nL12: sub r2 10\nL13: jlt 5 2 L19\nL14: sense r0 id\nL15: bud r7\nL16: receive r0 r6 360\nL17: div r1 r3\nL18: give r3 r3\nL19: mul r3 0.5\nL20: shield 0\nL21: add r7 r5\nL22: receive r3 r6 1\nL23: split r2\nL24: turn 360\nL25: turn 60\nL26: scan_color r0 5 r6\nL27: send 0.5 360 r6\nL28: turn 0.25\nL29: jgt 0.25 0.5 L40\nL30: jeq 360 0.25 L6\nL31: jmp L33\nL32: mov r1 0\nL33: color r6\nL34: listen r5 0.25\nL35: bud r2\nL36: jmp L31\nL37: receive r6 r6 r7\nL38: turn r6\nL39: nop\nL40: turn 0\nL41: mov r2 5\nL42: bud r7\nL43: min r0 r1"
+    },
+    {
+      "length": 46,
+      "serial": 23955,
+      "founder": 23955,
+      "depth": 0,
+      "parent": 0,
+      "bornTick": 0,
+      "score": 519,
+      "source": "L0: add r6 5\nL1: move 90\nL2: link r6\nL3: scan_color r6 0.5 10\nL4: color 0.5\nL5: peek r6 0.25 bearing\nL6: gradient r2 r5\nL7: min r3 1\nL8: add r1 3\nL9: steal 90 25\nL10: move r6\nL11: mul r4 1\nL12: turn 60\nL13: contract 10\nL14: jeq r2 1 L24\nL15: bud r1\nL16: move r5\nL17: contract 0.75\nL18: rand r3 3\nL19: nop\nL20: link 0.25\nL21: jmp L26\nL22: tag r6\nL23: min r0 60\nL24: jlt 3 r0 L18\nL25: max r2 360\nL26: abs r7 0\nL27: split r5\nL28: color -1\nL29: jnz 3 L27\nL30: jz r3 L14\nL31: unlink 360\nL32: add r4 r0\nL33: sub r4 0.5\nL34: jz 0.25 L13\nL35: turn 90\nL36: bud r0\nL37: rand r6 1\nL38: bud r3\nL39: turn 360\nL40: rand r3 r0\nL41: mod r4 1\nL42: wait r5\nL43: gradient r1 r0\nL44: emit 90 0\nL45: jmp L12"
+    },
+    {
+      "length": 11,
+      "serial": 11436,
+      "founder": 11436,
+      "depth": 0,
+      "parent": 0,
+      "bornTick": 0,
+      "score": 542,
+      "source": "L0: bud r3\nL1: wait 5\nL2: mod r2 r1\nL3: peek r4 3 distance\nL4: abs r6 r2\nL5: div r6 25\nL6: rand r1 3\nL7: split r7\nL8: gradient r0 r5\nL9: mod r1 90\nL10: sub r3 120"
+    },
+    {
+      "length": 26,
+      "serial": 15267,
+      "founder": 15267,
+      "depth": 0,
+      "parent": 0,
+      "bornTick": 0,
+      "score": 504,
+      "source": "L0: sense r5 age\nL1: move 5\nL2: min r5 0.1\nL3: mod r4 r6\nL4: mov r7 60\nL5: send r1 0 10\nL6: max r4 120\nL7: scan r1 25 r1\nL8: listen r6 0.1\nL9: mul r6 0.1\nL10: split r2\nL11: jmp L10\nL12: jeq 0.75 1 L20\nL13: mul r7 360\nL14: add r6 10\nL15: contract 10\nL16: jlt 3 r1 L21\nL17: jeq r6 10 L9\nL18: sub r6 5\nL19: mod r5 0\nL20: enzyme 360\nL21: shield r1\nL22: add r0 1\nL23: div r6 2\nL24: mov r4 0.75\nL25: gradient r6 r1"
+    },
+    {
+      "length": 28,
+      "serial": 29498,
+      "founder": 29498,
+      "depth": 0,
+      "parent": 0,
+      "bornTick": 0,
+      "score": 436,
+      "source": "L0: move 0.5\nL1: add r2 r7\nL2: jz 0.1 L25\nL3: scan r1 r6 10\nL4: mod r0 r5\nL5: link 90\nL6: move 90\nL7: contract 0.1\nL8: jgt 5 r6 L19\nL9: split r2\nL10: sub r5 r0\nL11: jmp L9\nL12: jmp L13\nL13: jmp L10\nL14: scan_color r4 -1 r2\nL15: emit r3 2\nL16: wait 360\nL17: jgt r2 r0 L11\nL18: jz 1 L27\nL19: listen r7 0.75\nL20: rand r3 1\nL21: scan r6 r6 0.25\nL22: receive r5 r4 360\nL23: bud r5\nL24: split r2\nL25: emit 0.25 2\nL26: receive r0 r5 2\nL27: wait 90"
+    },
+    {
+      "length": 24,
+      "serial": 20482,
+      "founder": 20482,
+      "depth": 0,
+      "parent": 0,
+      "bornTick": 0,
+      "score": 531,
+      "source": "L0: link 1\nL1: mul r6 120\nL2: scan_color r3 r0 0.25\nL3: max r4 0\nL4: peek r5 0.5 kin\nL5: move r7\nL6: jeq 2 r7 L18\nL7: div r6 360\nL8: give 120 r6\nL9: gradient r4 r6\nL10: jz r6 L13\nL11: jeq 0.25 90 L5\nL12: bud r3\nL13: bud r5\nL14: wait 120\nL15: color 0\nL16: tag r3\nL17: sense r4 energy\nL18: jlt 5 120 L19\nL19: jnz 1 L12\nL20: add r5 r4\nL21: max r5 10\nL22: jnz 0.5 L11\nL23: jeq r7 10 L5"
+    },
+    {
+      "length": 11,
+      "serial": 2356,
+      "founder": 2356,
+      "depth": 0,
+      "parent": 0,
+      "bornTick": 0,
+      "score": 610,
+      "source": "L0: jgt 2 r0 L3\nL1: emit 0.1 -1\nL2: mod r3 r3\nL3: min r0 0.1\nL4: jeq 0.5 25 L5\nL5: move 90\nL6: sub r7 0\nL7: wait 60\nL8: bud r7\nL9: jlt -1 r0 L1\nL10: gradient r7 r2"
+    },
+    {
+      "length": 49,
+      "serial": 30811,
+      "founder": 30811,
+      "depth": 0,
+      "parent": 0,
+      "bornTick": 0,
+      "score": 666,
+      "source": "L0: scan_color r1 2 90\nL1: emit 0.75 0\nL2: div r4 3\nL3: rand r2 r5\nL4: move 0.1\nL5: split r5\nL6: receive r5 r1 r2\nL7: abs r4 120\nL8: color r3\nL9: wait 360\nL10: gradient r1 r5\nL11: jgt 25 r4 L1\nL12: jmp L3\nL13: jmp L23\nL14: enzyme 25\nL15: jz 2 L43\nL16: peek r7 r6 bonds\nL17: jlt 10 90 L38\nL18: listen r0 2\nL19: wait r0\nL20: scan r4 3 10\nL21: add r6 1\nL22: min r7 r1\nL23: unlink 5\nL24: emit 1 5\nL25: color r4\nL26: move 0\nL27: jz 1 L7\nL28: send r3 0.1 1\nL29: scan_color r5 r5 60\nL30: jeq 1 0.1 L25\nL31: split r7\nL32: listen r4 25\nL33: gradient r6 r1\nL34: contract r3\nL35: peek r4 r1 distance\nL36: peek r0 60 bearing\nL37: jlt r3 90 L44\nL38: gradient r7 r2\nL39: move r3\nL40: split r4\nL41: color r1\nL42: give 10 r3\nL43: steal 90 r4\nL44: jnz r0 L9\nL45: link 0.5\nL46: peek r4 0.1 bonds\nL47: max r4 1\nL48: add r7 0"
+    },
+    {
+      "length": 51,
+      "serial": 32764,
+      "founder": 32764,
+      "depth": 0,
+      "parent": 0,
+      "bornTick": 0,
+      "score": 469,
+      "source": "L0: jeq 5 60 L12\nL1: emit 5 3\nL2: peek r5 120 shield\nL3: rand r0 r7\nL4: bud r3\nL5: jz 90 L31\nL6: sub r4 60\nL7: wait 60\nL8: jz 10 L4\nL9: listen r1 r7\nL10: tag r7\nL11: bud r2\nL12: emit 360 120\nL13: sub r3 -1\nL14: scan_color r4 0.25 r0\nL15: send 0.25 120 3\nL16: jnz 360 L25\nL17: min r7 60\nL18: scan r6 0.5 2\nL19: abs r6 0.75\nL20: shield r4\nL21: mod r5 0\nL22: max r7 5\nL23: min r3 2\nL24: mul r0 2\nL25: jz 10 L31\nL26: mov r4 90\nL27: emit 0.1 5\nL28: scan r2 360 60\nL29: send 0.5 10 r4\nL30: add r2 2\nL31: jmp L43\nL32: jgt -1 120 L47\nL33: jlt 5 120 L36\nL34: color 10\nL35: tag 1\nL36: mod r5 1\nL37: mul r3 -1\nL38: give 5 25\nL39: tag -1\nL40: rand r1 r7\nL41: jeq 120 10 L5\nL42: add r0 2\nL43: peek r6 r5 tag\nL44: unlink 0.5\nL45: receive r1 r1 25\nL46: unlink r6\nL47: split r7\nL48: split r4\nL49: color r6\nL50: scan r2 90 r4"
+    },
+    {
+      "length": 33,
+      "serial": 24565,
+      "founder": 24565,
+      "depth": 0,
+      "parent": 0,
+      "bornTick": 0,
+      "score": 634,
+      "source": "L0: give 0.25 0.25\nL1: mod r0 0.5\nL2: turn r6\nL3: unlink 360\nL4: jeq 0.25 90 L18\nL5: steal r6 r4\nL6: sub r2 0.1\nL7: color r1\nL8: div r7 2\nL9: split r3\nL10: sense r7 left\nL11: split r7\nL12: wait 0.25\nL13: move r4\nL14: wait 120\nL15: rand r1 25\nL16: color -1\nL17: scan_color r4 0 10\nL18: bond r7 1\nL19: add r1 360\nL20: steal r2 0\nL21: tag 120\nL22: mul r2 0.1\nL23: div r2 120\nL24: jmp L27\nL25: bond r6 0.1\nL26: give r7 0.1\nL27: jlt 10 2 L18\nL28: sub r6 90\nL29: jeq 1 r5 L26\nL30: sense r6 reserve_b\nL31: min r4 2\nL32: mul r1 25"
+    },
+    {
+      "length": 61,
+      "serial": 5628,
+      "founder": 5628,
+      "depth": 0,
+      "parent": 0,
+      "bornTick": 0,
+      "score": 566,
+      "source": "L0: listen r4 90\nL1: mod r5 10\nL2: jmp L30\nL3: tag 10\nL4: jlt 0.25 90 L47\nL5: rand r3 r5\nL6: nop\nL7: give 0.25 0.75\nL8: enzyme 5\nL9: mod r1 1\nL10: mov r7 25\nL11: mod r6 2\nL12: listen r0 r5\nL13: gradient r2 r6\nL14: give 0.5 10\nL15: rand r6 r2\nL16: min r4 -1\nL17: jz 5 L4\nL18: div r4 60\nL19: div r3 90\nL20: turn 3\nL21: div r7 0.1\nL22: mov r6 0.1\nL23: wait 5\nL24: mod r3 0.1\nL25: max r2 60\nL26: sense r5 ahead\nL27: jgt r7 0.25 L48\nL28: bud r5\nL29: max r2 -1\nL30: jlt 0.1 1 L39\nL31: sub r4 r3\nL32: receive r7 r7 2\nL33: wait 120\nL34: color r5\nL35: nop\nL36: move r7\nL37: max r7 r4\nL38: sub r2 1\nL39: rand r3 25\nL40: give 2 r4\nL41: div r0 r1\nL42: jz 0.1 L33\nL43: jz 0.25 L5\nL44: link r0\nL45: jmp L22\nL46: shield 25\nL47: move 360\nL48: color 25\nL49: gradient r7 r1\nL50: div r4 2\nL51: tag 10\nL52: sense r6 rotation\nL53: scan r1 0.5 5\nL54: emit 90 0.25\nL55: move r4\nL56: mov r4 r4\nL57: jz r6 L47\nL58: send 90 0.75 2\nL59: turn 360\nL60: sub r0 10"
+    },
+    {
+      "length": 45,
+      "serial": 115,
+      "founder": 115,
+      "depth": 0,
+      "parent": 0,
+      "bornTick": 0,
+      "score": 758,
+      "source": "L0: contract 1\nL1: emit 0.75 r0\nL2: jlt 360 2 L21\nL3: split r6\nL4: jgt 0.25 5 L34\nL5: wait 90\nL6: jlt r1 r6 L39\nL7: emit r7 -1\nL8: bond r2 360\nL9: listen r0 10\nL10: nop\nL11: steal 60 120\nL12: bud r7\nL13: link 0.75\nL14: jgt 60 1 L32\nL15: turn 0.5\nL16: jnz -1 L15\nL17: steal 0.5 1\nL18: unlink 360\nL19: link 90\nL20: scan r0 -1 r0\nL21: scan r5 r7 5\nL22: emit 0.25 r4\nL23: mov r1 0.75\nL24: jlt 25 120 L39\nL25: jmp L10\nL26: rand r0 360\nL27: min r6 0.5\nL28: receive r2 r1 5\nL29: link 0.5\nL30: jlt 0.5 r2 L32\nL31: min r6 r6\nL32: jlt 1 r4 L42\nL33: receive r2 r2 0.5\nL34: scan r5 r6 360\nL35: jlt -1 -1 L20\nL36: min r2 90\nL37: give r2 10\nL38: tag 3\nL39: bud r6\nL40: nop\nL41: wait 10\nL42: rand r2 r3\nL43: split r1\nL44: move 1"
+    },
+    {
+      "length": 53,
+      "serial": 15640,
+      "founder": 15640,
+      "depth": 0,
+      "parent": 0,
+      "bornTick": 0,
+      "score": 787,
+      "source": "L0: mod r4 360\nL1: abs r4 r3\nL2: give 0.25 3\nL3: sub r0 1\nL4: jgt 2 0.25 L33\nL5: jeq 2 10 L9\nL6: split r5\nL7: scan r2 r3 120\nL8: jz 10 L40\nL9: tag 5\nL10: color 0.5\nL11: jeq -1 r2 L18\nL12: min r2 0.1\nL13: steal 25 -1\nL14: max r2 0.1\nL15: peek r4 2 tag\nL16: mul r6 2\nL17: tag 60\nL18: peek r7 90 color\nL19: tag 0.75\nL20: jgt 5 360 L40\nL21: scan r7 1 90\nL22: receive r3 r4 0\nL23: div r6 r3\nL24: send r6 0.75 3\nL25: peek r4 r6 distance\nL26: jz r2 L45\nL27: emit -1 0\nL28: gradient r6 r0\nL29: mod r7 r3\nL30: mov r2 3\nL31: add r2 r5\nL32: scan r7 r4 r1\nL33: split r7\nL34: mov r6 1\nL35: listen r6 0.75\nL36: abs r3 r4\nL37: scan r0 -1 r1\nL38: max r5 120\nL39: steal r3 0.75\nL40: sense r7 nutrient_a\nL41: listen r2 r0\nL42: peek r7 r4 color\nL43: scan_color r1 90 -1\nL44: listen r2 5\nL45: listen r1 3\nL46: mod r6 3\nL47: wait 360\nL48: listen r3 2\nL49: jnz 60 L52\nL50: mul r0 0.75\nL51: split r0\nL52: jmp L3"
+    },
+    {
+      "length": 53,
+      "serial": 4375,
+      "founder": 4375,
+      "depth": 0,
+      "parent": 0,
+      "bornTick": 0,
+      "score": 558,
+      "source": "L0: scan_color r6 0.25 -1\nL1: give 120 0\nL2: scan r0 0.25 10\nL3: listen r7 5\nL4: abs r7 0.75\nL5: turn 1\nL6: color 0\nL7: steal 0 0.25\nL8: receive r4 r4 r0\nL9: wait 120\nL10: steal 60 r7\nL11: turn 10\nL12: add r5 60\nL13: jmp L20\nL14: bond r7 r5\nL15: split r3\nL16: bond r0 5\nL17: tag 0.75\nL18: gradient r2 r6\nL19: shield 0.75\nL20: div r1 120\nL21: gradient r1 r4\nL22: jeq 3 0.75 L9\nL23: peek r2 -1 distance\nL24: bud r1\nL25: bond r3 0\nL26: move 2\nL27: enzyme r2\nL28: jz 1 L49\nL29: bond r0 360\nL30: min r1 0.25\nL31: emit 1 -1\nL32: receive r6 r3 10\nL33: min r5 0.1\nL34: steal 25 90\nL35: link 1\nL36: bud r2\nL37: jnz r0 L50\nL38: contract 5\nL39: bud r4\nL40: gradient r7 r7\nL41: send 0 r6 r0\nL42: bud r0\nL43: sub r3 r7\nL44: enzyme 0.5\nL45: listen r1 -1\nL46: give 2 0.1\nL47: mov r4 90\nL48: div r0 60\nL49: abs r1 r6\nL50: abs r7 120\nL51: mul r6 10\nL52: mul r0 0.25"
+    },
+    {
+      "length": 58,
+      "serial": 24866,
+      "founder": 24866,
+      "depth": 0,
+      "parent": 0,
+      "bornTick": 0,
+      "score": 449,
+      "source": "L0: bud r6\nL1: scan r5 0.1 r1\nL2: link 5\nL3: listen r3 r7\nL4: add r4 r4\nL5: wait 0\nL6: bud r5\nL7: nop\nL8: send 60 5 0\nL9: jmp L36\nL10: listen r1 r4\nL11: sense r3 bonds\nL12: abs r2 0.1\nL13: add r1 1\nL14: split r1\nL15: scan r3 3 90\nL16: jnz 90 L10\nL17: color r2\nL18: steal 120 r7\nL19: send 90 r6 2\nL20: rand r3 r1\nL21: add r1 0\nL22: steal r7 360\nL23: jnz 3 L27\nL24: color 0.5\nL25: jmp L17\nL26: color r2\nL27: wait 5\nL28: jz r1 L55\nL29: listen r7 r1\nL30: split r3\nL31: enzyme r2\nL32: sub r1 1\nL33: div r0 0.75\nL34: scan_color r7 360 0.25\nL35: rand r2 2\nL36: emit 120 10\nL37: tag 25\nL38: steal -1 r7\nL39: gradient r7 r3\nL40: turn 2\nL41: send 0.75 360 r5\nL42: nop\nL43: steal -1 0\nL44: unlink 120\nL45: jmp L25\nL46: rand r6 1\nL47: peek r2 2 distance\nL48: gradient r0 r3\nL49: abs r5 25\nL50: abs r6 -1\nL51: sub r3 r2\nL52: jeq 10 360 L41\nL53: mod r5 120\nL54: abs r1 0\nL55: link r6\nL56: sub r0 0.5\nL57: gradient r6 r2"
+    },
+    {
+      "length": 61,
+      "serial": 9529,
+      "founder": 9529,
+      "depth": 0,
+      "parent": 0,
+      "bornTick": 0,
+      "score": 483,
+      "source": "L0: tag 90\nL1: max r3 60\nL2: sub r0 25\nL3: emit 360 2\nL4: sense r4 color\nL5: sense r1 generation\nL6: emit 120 120\nL7: mod r0 120\nL8: sub r1 0.5\nL9: contract 0\nL10: scan_color r0 0.1 0\nL11: jeq 0.75 25 L60\nL12: min r4 r7\nL13: jeq r2 0 L20\nL14: turn 360\nL15: jz 90 L45\nL16: gradient r4 r1\nL17: bond r1 2\nL18: contract 120\nL19: shield r1\nL20: add r4 -1\nL21: mul r5 0.5\nL22: peek r0 r5 bonds\nL23: jgt 10 0.25 L38\nL24: link 0\nL25: max r3 r7\nL26: rand r7 -1\nL27: bud r3\nL28: wait 25\nL29: sub r4 25\nL30: mov r5 120\nL31: rand r2 r5\nL32: unlink 5\nL33: jnz 0.5 L22\nL34: jeq -1 3 L54\nL35: jeq 0 120 L27\nL36: jgt 90 90 L5\nL37: scan r1 0.75 60\nL38: give 3 360\nL39: link 0.25\nL40: max r2 r6\nL41: peek r0 25 energy\nL42: steal 10 25\nL43: max r2 r3\nL44: gradient r1 r6\nL45: nop\nL46: receive r6 r1 0.25\nL47: jeq 0.75 0.25 L29\nL48: jlt 0.75 120 L27\nL49: give 1 0.5\nL50: bond r1 10\nL51: jz -1 L7\nL52: jz 3 L58\nL53: mul r1 10\nL54: jlt 0.25 360 L2\nL55: nop\nL56: mod r4 r0\nL57: jeq 0.25 5 L47\nL58: emit -1 360\nL59: enzyme 0.75\nL60: send r3 90 0.5"
+    },
+    {
+      "length": 52,
+      "serial": 8754,
+      "founder": 8754,
+      "depth": 0,
+      "parent": 0,
+      "bornTick": 0,
+      "score": 1089,
+      "source": "L0: jnz r1 L49\nL1: turn 0.25\nL2: jeq 60 60 L33\nL3: emit r6 60\nL4: bud r0\nL5: split r6\nL6: nop\nL7: bud r3\nL8: link 360\nL9: jgt 60 90 L47\nL10: mul r0 r6\nL11: link 5\nL12: bond r2 3\nL13: wait 120\nL14: jnz 0.1 L45\nL15: move r3\nL16: mod r0 360\nL17: sense r4 tag\nL18: sense r0 reserve_a\nL19: jnz 0.1 L48\nL20: jmp L6\nL21: jlt -1 0.5 L6\nL22: jgt r2 0.5 L42\nL23: rand r3 r2\nL24: scan_color r2 0 r2\nL25: jmp L8\nL26: listen r2 10\nL27: steal 0.25 r3\nL28: color 0.75\nL29: gradient r3 r6\nL30: jlt 2 0.1 L49\nL31: jeq r3 360 L22\nL32: give 0.75 60\nL33: contract 2\nL34: jgt r6 0.75 L40\nL35: add r1 0.1\nL36: add r7 r5\nL37: turn r4\nL38: give 25 r2\nL39: gradient r4 r6\nL40: wait 10\nL41: contract 90\nL42: peek r0 10 tag\nL43: give 60 r2\nL44: scan_color r2 -1 r4\nL45: mov r3 0\nL46: scan_color r3 5 0.75\nL47: send 90 r2 0.5\nL48: jmp L20\nL49: wait r4\nL50: div r4 r7\nL51: send 25 r5 3"
+    },
+    {
+      "length": 31,
+      "serial": 21210,
+      "founder": 21210,
+      "depth": 0,
+      "parent": 0,
+      "bornTick": 0,
+      "score": 640,
+      "source": "L0: wait 90\nL1: jmp L28\nL2: scan_color r2 r2 90\nL3: shield r4\nL4: color 2\nL5: jnz 5 L20\nL6: mov r7 0\nL7: bud r0\nL8: shield 3\nL9: rand r0 0.75\nL10: mov r7 90\nL11: receive r4 r3 -1\nL12: listen r4 0.75\nL13: peek r6 10 bearing\nL14: add r5 360\nL15: enzyme 0.75\nL16: nop\nL17: sense r6 right\nL18: jz r6 L10\nL19: unlink 0\nL20: sub r1 90\nL21: turn 0\nL22: gradient r7 r6\nL23: jeq 120 0 L21\nL24: receive r5 r7 10\nL25: emit r0 5\nL26: unlink 0.25\nL27: contract 5\nL28: split r1\nL29: scan r7 120 0.25\nL30: bud r5"
+    },
+    {
+      "length": 19,
+      "serial": 7757,
+      "founder": 7757,
+      "depth": 0,
+      "parent": 0,
+      "bornTick": 0,
+      "score": 618,
+      "source": "L0: bud r6\nL1: give 0.25 r3\nL2: turn r5\nL3: link 2\nL4: nop\nL5: emit 3 2\nL6: scan_color r1 0 r4\nL7: add r2 r5\nL8: listen r0 90\nL9: add r3 r2\nL10: wait 90\nL11: send 3 0.25 r6\nL12: mov r7 60\nL13: tag 0.1\nL14: unlink 0\nL15: give r4 r5\nL16: jmp L0\nL17: scan r6 0.25 2\nL18: bud r5"
+    },
+    {
+      "length": 34,
+      "serial": 38395,
+      "founder": 8931,
+      "depth": 0,
+      "parent": 8931,
+      "bornTick": 10560,
+      "score": 532,
+      "source": "L0: mul r4 360\nL1: jeq 25 r3 L10\nL2: split r4\nL3: jnz 120 L28\nL4: steal 0.5 r5\nL5: nop\nL6: split r4\nL7: wait 5\nL8: give 0.25 r3\nL9: mod r2 0.1\nL10: min r6 0.75\nL11: enzyme 90\nL12: jmp L18\nL13: mod r7 r2\nL14: jz r0 L33\nL15: move 0\nL16: wait 0.1\nL17: min r3 0.25\nL18: unlink 5\nL19: jeq 120 r6 L9\nL20: add r1 0.25\nL21: unlink 0.1\nL22: scan r6 0.25 3\nL23: scan_color r0 0.5 -1\nL24: scan r4 r2 1\nL25: contract r7\nL26: sub r6 90\nL27: jmp L4\nL28: gradient r7 r2\nL29: unlink r2\nL30: add r5 60\nL31: move 0.75\nL32: wait 90\nL33: bond r3 0.1"
+    },
+    {
+      "length": 18,
+      "serial": 32983,
+      "founder": 32983,
+      "depth": 0,
+      "parent": 0,
+      "bornTick": 420,
+      "score": 590,
+      "source": "L0: mov r3 r3\nL1: mod r0 60\nL2: scan r7 0.25 360\nL3: bond r0 0.25\nL4: sense r7 left\nL5: emit r2 0\nL6: wait 90\nL7: jmp L9\nL8: unlink 0\nL9: peek r2 2 shield\nL10: link 360\nL11: bud r1\nL12: abs r5 5\nL13: jnz 3 L3\nL14: enzyme 0.5\nL15: receive r1 r3 r5\nL16: move r6\nL17: peek r7 0.25 shield"
+    },
+    {
+      "length": 36,
+      "serial": 37227,
+      "founder": 8139,
+      "depth": 1,
+      "parent": 8139,
+      "bornTick": 8400,
+      "score": 543,
+      "source": "L0: give 1 r0\nL1: split r5\nL2: sub r2 1\nL3: add r5 360\nL4: move r1\nL5: sub r2 5\nL6: mod r1 90\nL7: listen r2 5\nL8: give 0.1 10\nL9: sub r4 r6\nL10: split r0\nL11: gradient r0 r0\nL12: min r2 0.5\nL13: emit 1 0.1\nL14: jeq r5 1 L35\nL15: link -1\nL16: wait r5\nL17: div r0 r5\nL18: unlink 2\nL19: div r4 1\nL20: jlt r5 0.5 L9\nL21: mov r0 25\nL22: div r1 120\nL23: receive r0 r4 r3\nL24: color -1\nL25: jeq r3 r3 L31\nL26: add r5 60\nL27: add r0 25\nL28: listen r5 5\nL29: listen r5 r1\nL30: scan_color r6 r5 0.1\nL31: scan_color r6 r1 0.1\nL32: abs r7 r3\nL33: split r2\nL34: jgt 0.1 r1 L16\nL35: sense r3 rotation"
+    },
+    {
+      "length": 60,
+      "serial": 16363,
+      "founder": 16363,
+      "depth": 0,
+      "parent": 0,
+      "bornTick": 0,
+      "score": 563,
+      "source": "L0: turn 0.1\nL1: wait 360\nL2: receive r7 r1 0.1\nL3: steal 0.25 r6\nL4: rand r2 r2\nL5: min r7 r0\nL6: add r4 360\nL7: jnz r4 L51\nL8: sub r4 r7\nL9: peek r6 5 energy\nL10: max r7 r4\nL11: turn -1\nL12: peek r1 60 kin\nL13: min r5 0.75\nL14: move 0.25\nL15: bond r3 0.1\nL16: listen r0 0\nL17: bond r7 360\nL18: jgt 0.1 0.5 L22\nL19: steal 1 0.25\nL20: gradient r7 r3\nL21: add r4 0.25\nL22: color -1\nL23: give 25 10\nL24: mul r4 0\nL25: move 3\nL26: peek r0 10 bonds\nL27: div r4 360\nL28: contract 1\nL29: add r5 10\nL30: split r7\nL31: listen r1 r5\nL32: mov r3 r3\nL33: peek r2 10 bonds\nL34: listen r7 r6\nL35: send 2 25 r3\nL36: bond r2 3\nL37: add r1 60\nL38: link 2\nL39: jmp L30\nL40: enzyme r2\nL41: jmp L12\nL42: jeq r4 0 L35\nL43: bud r6\nL44: steal 90 0.75\nL45: rand r5 r0\nL46: jeq 10 r2 L57\nL47: turn 3\nL48: emit 0.75 -1\nL49: rand r6 90\nL50: jlt -1 360 L58\nL51: listen r5 1\nL52: jlt 5 1 L53\nL53: unlink 3\nL54: jz 25 L31\nL55: peek r2 0.1 shield\nL56: bud r7\nL57: mod r5 60\nL58: jlt 10 0.25 L16\nL59: peek r1 3 tag"
+    },
+    {
+      "length": 38,
+      "serial": 14653,
+      "founder": 14653,
+      "depth": 0,
+      "parent": 0,
+      "bornTick": 0,
+      "score": 568,
+      "source": "L0: unlink 120\nL1: split r0\nL2: peek r1 5 bearing\nL3: abs r2 5\nL4: tag r3\nL5: jgt 3 -1 L32\nL6: link r3\nL7: max r3 r5\nL8: unlink 60\nL9: rand r4 360\nL10: jeq 0.25 3 L25\nL11: wait r3\nL12: wait 25\nL13: div r4 r2\nL14: rand r6 360\nL15: emit 2 r1\nL16: shield 0\nL17: div r4 5\nL18: jz 3 L29\nL19: turn 3\nL20: bond r4 r3\nL21: link r5\nL22: move r3\nL23: link 25\nL24: move r6\nL25: move 5\nL26: gradient r4 r5\nL27: add r7 r3\nL28: scan_color r3 10 0.75\nL29: mod r0 5\nL30: add r1 25\nL31: jlt 3 0.5 L8\nL32: jz 0.5 L9\nL33: wait 25\nL34: unlink 60\nL35: scan_color r5 5 r1\nL36: mov r6 r4\nL37: scan r6 25 360"
+    },
+    {
+      "length": 59,
+      "serial": 31942,
+      "founder": 31942,
+      "depth": 0,
+      "parent": 0,
+      "bornTick": 0,
+      "score": 525,
+      "source": "L0: split r7\nL1: jnz 25 L58\nL2: nop\nL3: mul r6 r4\nL4: sub r6 360\nL5: turn 2\nL6: bond r1 r1\nL7: div r1 0\nL8: move 25\nL9: jlt 0 r3 L41\nL10: rand r4 360\nL11: rand r5 r7\nL12: scan r3 3 r3\nL13: bud r7\nL14: shield r2\nL15: scan_color r2 3 25\nL16: rand r1 r0\nL17: steal 90 60\nL18: split r6\nL19: send 360 3 0\nL20: turn -1\nL21: listen r5 r2\nL22: send 3 1 r3\nL23: max r1 r4\nL24: mod r1 0.75\nL25: emit 90 0.1\nL26: scan_color r0 0.1 0.5\nL27: wait 0.5\nL28: split r4\nL29: wait 0\nL30: unlink 0\nL31: div r2 5\nL32: rand r0 -1\nL33: mul r7 0.75\nL34: sub r7 r2\nL35: peek r1 10 shield\nL36: mod r2 r7\nL37: jgt r2 120 L45\nL38: bud r1\nL39: gradient r4 r7\nL40: enzyme 360\nL41: add r4 120\nL42: bud r3\nL43: turn 2\nL44: scan_color r7 360 90\nL45: peek r0 r6 energy\nL46: jgt 120 r0 L10\nL47: jz -1 L54\nL48: min r5 r7\nL49: wait 5\nL50: gradient r1 r1\nL51: scan r2 r0 3\nL52: jnz 360 L16\nL53: shield 10\nL54: mod r0 r6\nL55: gradient r4 r7\nL56: shield 2\nL57: rand r2 -1\nL58: min r2 r1"
+    },
+    {
+      "length": 53,
+      "serial": 32006,
+      "founder": 32006,
+      "depth": 0,
+      "parent": 0,
+      "bornTick": 0,
+      "score": 544,
+      "source": "L0: scan_color r2 3 r2\nL1: sense r0 ahead\nL2: mul r3 0.25\nL3: bud r7\nL4: give 0 r2\nL5: color 10\nL6: unlink 25\nL7: wait 90\nL8: mov r2 2\nL9: jlt 0.5 10 L18\nL10: unlink 60\nL11: jz 90 L43\nL12: link 3\nL13: color 0.25\nL14: min r4 -1\nL15: move 120\nL16: jlt 0 r1 L50\nL17: turn 0.75\nL18: wait 360\nL19: send 1 0.25 r7\nL20: mod r4 r2\nL21: receive r0 r5 25\nL22: gradient r2 r6\nL23: tag r3\nL24: sense r6 rotation\nL25: mod r7 360\nL26: mov r3 60\nL27: scan_color r7 -1 r7\nL28: emit r2 10\nL29: split r2\nL30: jmp L36\nL31: add r5 0.1\nL32: jeq 25 0.5 L25\nL33: color 10\nL34: wait 60\nL35: listen r6 60\nL36: sense r1 rotation\nL37: receive r5 r7 0.5\nL38: give 25 0.75\nL39: jnz 5 L48\nL40: mul r7 10\nL41: gradient r4 r0\nL42: tag r2\nL43: mod r4 10\nL44: bond r4 10\nL45: split r4\nL46: peek r1 r0 bearing\nL47: shield 0.25\nL48: unlink 2\nL49: receive r0 r6 -1\nL50: div r4 r0\nL51: min r1 r1\nL52: add r3 0.1"
+    },
+    {
+      "length": 11,
+      "serial": 28422,
+      "founder": 28422,
+      "depth": 0,
+      "parent": 0,
+      "bornTick": 0,
+      "score": 496,
+      "source": "L0: give 90 r6\nL1: jnz 360 L4\nL2: sub r1 r2\nL3: rand r3 5\nL4: bud r1\nL5: jmp L4\nL6: jnz 0.5 L0\nL7: contract 10\nL8: mod r2 -1\nL9: scan r3 -1 0.5\nL10: bud r3"
+    },
+    {
+      "length": 59,
+      "serial": 2204,
+      "founder": 2204,
+      "depth": 0,
+      "parent": 0,
+      "bornTick": 0,
+      "score": 594,
+      "source": "L0: jnz r5 L9\nL1: scan r4 10 0.75\nL2: jeq 0.5 r0 L46\nL3: peek r5 60 shield\nL4: jmp L44\nL5: mov r5 0.75\nL6: bud r6\nL7: unlink 60\nL8: color 1\nL9: send -1 r5 r5\nL10: scan_color r7 0.75 60\nL11: mod r4 0.5\nL12: add r4 25\nL13: abs r4 3\nL14: contract 360\nL15: scan r6 -1 360\nL16: send r7 1 0.1\nL17: enzyme 0.25\nL18: sense r3 left\nL19: max r1 25\nL20: split r2\nL21: mov r6 3\nL22: jnz 0.5 L42\nL23: scan r2 0.25 0.25\nL24: jmp L27\nL25: receive r4 r0 0\nL26: scan_color r0 90 10\nL27: receive r0 r2 360\nL28: max r3 5\nL29: min r0 r4\nL30: peek r7 10 bonds\nL31: add r3 120\nL32: shield 120\nL33: abs r1 0.1\nL34: shield 90\nL35: scan_color r5 0 0.75\nL36: emit r2 10\nL37: color r6\nL38: scan_color r6 90 5\nL39: add r3 r6\nL40: div r5 r6\nL41: receive r5 r3 10\nL42: tag 90\nL43: nop\nL44: bud r0\nL45: div r1 10\nL46: mod r5 3\nL47: unlink r5\nL48: color 360\nL49: jgt 0 0.75 L48\nL50: wait 120\nL51: wait 2\nL52: receive r6 r5 r6\nL53: jlt 25 90 L35\nL54: mul r3 5\nL55: scan_color r3 r1 2\nL56: shield 0.75\nL57: min r5 10\nL58: jeq r2 r4 L35"
+    },
+    {
+      "length": 10,
+      "serial": 588,
+      "founder": 588,
+      "depth": 0,
+      "parent": 0,
+      "bornTick": 0,
+      "score": 414,
+      "source": "L0: scan r4 r3 -1\nL1: jgt 120 90 L8\nL2: add r1 1\nL3: jlt r7 r4 L9\nL4: receive r6 r2 r7\nL5: turn 120\nL6: abs r1 1\nL7: gradient r7 r6\nL8: mod r2 25\nL9: split r4"
+    },
+    {
+      "length": 60,
+      "serial": 35746,
+      "founder": 16944,
+      "depth": 1,
+      "parent": 16944,
+      "bornTick": 5640,
+      "score": 714,
+      "source": "L0: contract 120\nL1: sub r1 1\nL2: bud r4\nL3: receive r5 r1 25\nL4: unlink 60\nL5: abs r5 3\nL6: scan_color r0 r0 1\nL7: jgt 360 90 L14\nL8: listen r5 120\nL9: scan_color r7 0.25 120\nL10: send r5 0.25 -1\nL11: unlink 360\nL12: tag r3\nL13: move r1\nL14: send 10 120 r1\nL15: abs r1 0.75\nL16: scan_color r7 90 1\nL17: bud r1\nL18: jmp L17\nL19: jgt 0.75 0.75 L38\nL20: link 25\nL21: split r2\nL22: shield 0.5\nL23: send r2 r5 0\nL24: wait 25\nL25: steal r2 5\nL26: div r6 0.5\nL27: listen r4 r0\nL28: receive r4 r1 0\nL29: max r5 60\nL30: unlink r6\nL31: jnz 10 L15\nL32: min r7 2\nL33: max r0 r6\nL34: send 3 r7 -1\nL35: tag r2\nL36: shield r4\nL37: send 120 1 1\nL38: scan r7 2 360\nL39: tag 0\nL40: bud r7\nL41: jlt 0.75 0.25 L48\nL42: color 0.1\nL43: split r7\nL44: shield r7\nL45: color 25\nL46: mul r6 r1\nL47: div r4 0.75\nL48: div r2 0.25\nL49: scan r1 10 5\nL50: bud r3\nL51: nop\nL52: give r3 60\nL53: abs r0 r0\nL54: wait 2\nL55: turn 0.5\nL56: bud r4\nL57: gradient r6 r0\nL58: unlink r7\nL59: mov r4 0.75"
+    },
+    {
+      "length": 34,
+      "serial": 35898,
+      "founder": 35898,
+      "depth": 0,
+      "parent": 0,
+      "bornTick": 5880,
+      "score": 619,
+      "source": "L0: wait 25\nL1: receive r6 r6 5\nL2: sense r4 energy\nL3: contract 25\nL4: min r1 3\nL5: max r0 5\nL6: mul r3 r7\nL7: div r2 0\nL8: link 0.1\nL9: abs r7 r2\nL10: tag 0.75\nL11: bud r6\nL12: gradient r7 r2\nL13: bud r2\nL14: mov r2 0.5\nL15: bud r4\nL16: jnz 25 L10\nL17: give 3 1\nL18: wait 10\nL19: sense r4 bonds\nL20: shield 0.75\nL21: jlt 60 25 L31\nL22: link 120\nL23: jz -1 L27\nL24: color 90\nL25: mod r0 0\nL26: bond r5 r0\nL27: sub r0 5\nL28: turn 3\nL29: emit 0.5 r4\nL30: jmp L29\nL31: scan_color r6 -1 0.1\nL32: turn 90\nL33: jeq 5 25 L5"
+    },
+    {
+      "length": 38,
+      "serial": 13541,
+      "founder": 13541,
+      "depth": 0,
+      "parent": 0,
+      "bornTick": 0,
+      "score": 1048,
+      "source": "L0: gradient r4 r3\nL1: tag 0.1\nL2: div r0 90\nL3: mod r0 0.25\nL4: wait 1\nL5: gradient r4 r0\nL6: jz 0.5 L37\nL7: unlink 60\nL8: max r1 3\nL9: min r4 r4\nL10: sense r4 nutrient_b\nL11: jlt 0 r3 L6\nL12: sub r7 0.75\nL13: unlink 0.75\nL14: send 60 3 r2\nL15: scan r2 0.25 r7\nL16: unlink 5\nL17: color 10\nL18: bud r1\nL19: mul r0 r5\nL20: min r0 0\nL21: jeq 0.25 10 L5\nL22: move 0.5\nL23: wait 90\nL24: nop\nL25: split r3\nL26: peek r0 90 distance\nL27: jlt 90 r5 L9\nL28: abs r7 3\nL29: move 10\nL30: color 25\nL31: bud r7\nL32: jmp L17\nL33: nop\nL34: shield 0.75\nL35: jmp L22\nL36: min r1 r5\nL37: scan r4 r3 r6"
+    },
+    {
+      "length": 24,
+      "serial": 11547,
+      "founder": 11547,
+      "depth": 0,
+      "parent": 0,
+      "bornTick": 0,
+      "score": 593,
+      "source": "L0: mov r1 0.1\nL1: mod r6 0.1\nL2: bud r6\nL3: listen r4 2\nL4: send 2 25 0.1\nL5: steal r4 25\nL6: color 5\nL7: jmp L16\nL8: color 0.75\nL9: bond r2 r3\nL10: mod r7 r5\nL11: send -1 60 0.5\nL12: min r5 0.5\nL13: unlink 120\nL14: contract 0\nL15: receive r5 r6 r5\nL16: link 0.75\nL17: scan r4 r2 90\nL18: split r4\nL19: bud r5\nL20: mov r6 120\nL21: unlink r1\nL22: max r5 r2\nL23: wait 0.5"
+    },
+    {
+      "length": 47,
+      "serial": 4922,
+      "founder": 4922,
+      "depth": 0,
+      "parent": 0,
+      "bornTick": 0,
+      "score": 512,
+      "source": "L0: abs r3 360\nL1: jmp L30\nL2: move r6\nL3: rand r4 0\nL4: jz 90 L36\nL5: gradient r5 r4\nL6: jgt 2 r7 L45\nL7: scan r2 60 5\nL8: jz r4 L26\nL9: split r5\nL10: gradient r3 r7\nL11: steal 0 r6\nL12: send 120 360 60\nL13: nop\nL14: wait 1\nL15: contract -1\nL16: bud r7\nL17: bond r4 360\nL18: sense r5 reserve_b\nL19: mul r4 r3\nL20: jgt 25 60 L29\nL21: sub r6 25\nL22: jnz 0 L5\nL23: give r3 5\nL24: mod r0 10\nL25: scan_color r1 120 0.1\nL26: emit 2 120\nL27: contract -1\nL28: scan r7 360 25\nL29: shield 3\nL30: move r2\nL31: bud r4\nL32: jeq 60 5 L20\nL33: mod r4 5\nL34: rand r3 360\nL35: jgt r2 25 L33\nL36: wait 120\nL37: split r7\nL38: mod r0 60\nL39: scan_color r1 r2 3\nL40: jnz 0.5 L35\nL41: sense r0 rotation\nL42: jz r0 L29\nL43: link 2\nL44: mul r0 -1\nL45: link r1\nL46: unlink -1"
+    },
+    {
+      "length": 62,
+      "serial": 22730,
+      "founder": 22730,
+      "depth": 0,
+      "parent": 0,
+      "bornTick": 0,
+      "score": 432,
+      "source": "L0: scan r6 -1 60\nL1: give 5 360\nL2: jnz 120 L5\nL3: gradient r7 r4\nL4: rand r3 3\nL5: div r1 r3\nL6: max r5 0\nL7: contract 10\nL8: gradient r3 r7\nL9: turn r4\nL10: steal r7 120\nL11: move r3\nL12: nop\nL13: jz 90 L28\nL14: gradient r6 r1\nL15: mov r3 10\nL16: sub r6 -1\nL17: max r2 r0\nL18: scan_color r5 0.25 r5\nL19: steal 0.1 r0\nL20: steal 60 5\nL21: wait 60\nL22: bud r2\nL23: turn 0.5\nL24: scan_color r3 2 25\nL25: jz 25 L35\nL26: steal r3 0\nL27: steal 25 90\nL28: mul r1 120\nL29: mod r0 r5\nL30: steal 0.5 0.1\nL31: emit 0.1 360\nL32: jlt 120 60 L19\nL33: give 10 r5\nL34: rand r4 1\nL35: steal 10 r3\nL36: steal 0.25 0.5\nL37: turn 1\nL38: mul r5 0.5\nL39: jz -1 L27\nL40: rand r4 r4\nL41: scan_color r4 2 3\nL42: link r1\nL43: steal 0 10\nL44: jgt 3 90 L4\nL45: abs r7 25\nL46: mul r7 5\nL47: add r7 0.5\nL48: max r3 0.25\nL49: split r3\nL50: min r5 r3\nL51: gradient r4 r5\nL52: peek r7 90 shield\nL53: peek r6 r6 distance\nL54: give 120 60\nL55: listen r6 r3\nL56: bud r7\nL57: send r0 0.75 120\nL58: jgt r2 5 L11\nL59: sub r2 r7\nL60: mod r5 r5\nL61: receive r3 r1 120"
+    },
+    {
+      "length": 27,
+      "serial": 466,
+      "founder": 466,
+      "depth": 0,
+      "parent": 0,
+      "bornTick": 0,
+      "score": 962,
+      "source": "L0: receive r7 r4 1\nL1: mov r6 1\nL2: move 0.75\nL3: min r0 r0\nL4: add r2 2\nL5: steal 0.25 2\nL6: div r3 0\nL7: jeq r1 -1 L14\nL8: jeq 60 r3 L24\nL9: scan r0 1 0.25\nL10: color r0\nL11: min r1 10\nL12: wait 90\nL13: jeq -1 0.1 L6\nL14: max r2 5\nL15: move 0.75\nL16: bud r3\nL17: min r2 5\nL18: steal r0 60\nL19: nop\nL20: wait 90\nL21: move 0.5\nL22: receive r2 r7 r7\nL23: gradient r1 r2\nL24: max r6 r0\nL25: jnz 0.25 L7\nL26: listen r5 r4"
+    },
+    {
+      "length": 61,
+      "serial": 19834,
+      "founder": 19834,
+      "depth": 0,
+      "parent": 0,
+      "bornTick": 0,
+      "score": 506,
+      "source": "L0: jz r6 L20\nL1: jnz r3 L60\nL2: bond r5 r4\nL3: add r5 120\nL4: shield 1\nL5: bond r1 0.75\nL6: shield 1\nL7: color 5\nL8: listen r3 0.75\nL9: max r1 120\nL10: jlt 3 3 L10\nL11: scan r7 5 0\nL12: unlink 0.1\nL13: link 0.75\nL14: mov r3 360\nL15: enzyme 60\nL16: jz 25 L16\nL17: give 90 60\nL18: rand r2 2\nL19: wait 0\nL20: give r5 90\nL21: steal r2 120\nL22: add r1 2\nL23: bud r4\nL24: wait 10\nL25: add r6 r2\nL26: jlt 0.25 10 L56\nL27: jeq 25 r2 L25\nL28: div r2 r7\nL29: jgt 25 0.1 L52\nL30: wait 2\nL31: turn 3\nL32: bond r5 360\nL33: mod r5 2\nL34: abs r0 0\nL35: receive r4 r5 0.1\nL36: receive r5 r2 0\nL37: jz 0.5 L27\nL38: unlink 10\nL39: give 120 0\nL40: jgt r3 0.1 L8\nL41: emit 5 0.5\nL42: sense r1 enzyme\nL43: abs r0 10\nL44: max r6 360\nL45: unlink r2\nL46: bond r0 3\nL47: jnz 5 L11\nL48: listen r2 r4\nL49: sub r4 -1\nL50: jz 0 L14\nL51: mul r2 0.75\nL52: enzyme -1\nL53: jz 360 L42\nL54: shield r7\nL55: nop\nL56: bud r0\nL57: rand r1 5\nL58: jlt 3 0.5 L0\nL59: rand r0 r3\nL60: give r6 25"
+    },
+    {
+      "length": 40,
+      "serial": 33292,
+      "founder": 33292,
+      "depth": 0,
+      "parent": 0,
+      "bornTick": 1020,
+      "score": 554,
+      "source": "L0: jgt 1 r6 L18\nL1: bond r1 10\nL2: jeq r2 0 L30\nL3: emit r0 10\nL4: min r1 0.5\nL5: send 120 10 0.25\nL6: listen r6 120\nL7: bud r5\nL8: wait 90\nL9: nop\nL10: min r1 360\nL11: move r1\nL12: steal r5 r2\nL13: mov r1 1\nL14: turn -1\nL15: tag r4\nL16: gradient r3 r7\nL17: jmp L28\nL18: split r5\nL19: contract -1\nL20: min r2 5\nL21: mul r0 0.25\nL22: jmp L18\nL23: mov r4 -1\nL24: jnz r4 L2\nL25: max r2 0\nL26: contract 90\nL27: enzyme 2\nL28: mod r6 r4\nL29: bud r2\nL30: bud r5\nL31: wait 5\nL32: tag r3\nL33: jeq 0.5 0.5 L5\nL34: listen r0 0.25\nL35: color r4\nL36: bond r6 90\nL37: gradient r0 r4\nL38: jlt 90 25 L13\nL39: jmp L5"
+    },
+    {
+      "length": 37,
+      "serial": 33905,
+      "founder": 33905,
+      "depth": 0,
+      "parent": 0,
+      "bornTick": 2160,
+      "score": 550,
+      "source": "L0: mod r1 r5\nL1: bud r7\nL2: move 0.75\nL3: rand r4 0\nL4: receive r5 r6 10\nL5: bud r3\nL6: min r0 5\nL7: unlink 5\nL8: receive r4 r1 0.25\nL9: listen r0 360\nL10: bond r5 0.1\nL11: sub r0 360\nL12: split r6\nL13: gradient r5 r2\nL14: max r7 r3\nL15: wait 25\nL16: mul r2 -1\nL17: jmp L7\nL18: sub r7 2\nL19: add r7 0.1\nL20: split r1\nL21: gradient r4 r2\nL22: unlink r2\nL23: jgt 0 90 L13\nL24: listen r2 25\nL25: wait 0.75\nL26: enzyme r7\nL27: jlt 0.75 0.75 L4\nL28: link r4\nL29: jnz r0 L9\nL30: mod r0 0.75\nL31: split r0\nL32: sense r6 food\nL33: move 5\nL34: jlt r3 r6 L33\nL35: min r0 2\nL36: tag 0.75"
+    },
+    {
+      "length": 31,
+      "serial": 21145,
+      "founder": 21145,
+      "depth": 0,
+      "parent": 0,
+      "bornTick": 0,
+      "score": 593,
+      "source": "L0: listen r2 120\nL1: turn 0\nL2: unlink r4\nL3: min r7 5\nL4: link r7\nL5: listen r0 3\nL6: mod r4 -1\nL7: link 60\nL8: wait 2\nL9: bond r0 3\nL10: bond r0 2\nL11: jnz 0 L20\nL12: link r7\nL13: give r1 r3\nL14: nop\nL15: jnz 360 L22\nL16: receive r4 r3 2\nL17: scan r2 0.25 0.5\nL18: abs r1 r5\nL19: contract r6\nL20: sub r6 5\nL21: min r1 60\nL22: min r2 0.75\nL23: split r2\nL24: split r2\nL25: div r6 0.1\nL26: abs r0 0.25\nL27: shield -1\nL28: wait 60\nL29: turn 10\nL30: receive r3 r5 360"
+    },
+    {
+      "length": 33,
+      "serial": 31089,
+      "founder": 31089,
+      "depth": 0,
+      "parent": 0,
+      "bornTick": 0,
+      "score": 1046,
+      "source": "L0: link -1\nL1: jgt 60 0.1 L3\nL2: abs r1 0.25\nL3: give 1 -1\nL4: bond r2 r0\nL5: give 3 2\nL6: jz r4 L10\nL7: listen r1 360\nL8: max r4 25\nL9: color 10\nL10: jmp L13\nL11: unlink 0.75\nL12: shield 0.1\nL13: split r0\nL14: add r7 120\nL15: wait 25\nL16: give 2 0\nL17: bud r7\nL18: jnz 2 L14\nL19: rand r0 2\nL20: mod r0 3\nL21: emit 5 0.1\nL22: abs r3 0.25\nL23: unlink 0.25\nL24: scan_color r0 0.75 2\nL25: add r3 3\nL26: mod r1 r7\nL27: jz r1 L3\nL28: steal 60 r6\nL29: tag 120\nL30: scan_color r7 r6 120\nL31: listen r1 r3\nL32: listen r5 360"
+    },
+    {
+      "length": 48,
+      "serial": 14310,
+      "founder": 14310,
+      "depth": 0,
+      "parent": 0,
+      "bornTick": 0,
+      "score": 541,
+      "source": "L0: wait 60\nL1: abs r6 0.75\nL2: steal 3 r2\nL3: jmp L34\nL4: link 90\nL5: bond r7 3\nL6: peek r2 r0 bearing\nL7: mul r1 1\nL8: abs r3 60\nL9: rand r0 0.1\nL10: steal r4 90\nL11: div r6 60\nL12: color 2\nL13: turn 5\nL14: steal 0.75 r5\nL15: mod r7 0.75\nL16: emit 3 r4\nL17: steal r1 r5\nL18: scan_color r1 10 r2\nL19: wait 0.25\nL20: gradient r2 r2\nL21: tag 0.5\nL22: enzyme 10\nL23: div r3 0\nL24: jlt 360 0.1 L5\nL25: color 0.5\nL26: gradient r0 r6\nL27: scan_color r7 360 r6\nL28: bud r3\nL29: mod r3 r7\nL30: sense r5 nutrient_a\nL31: scan_color r6 r4 r2\nL32: mov r3 0.25\nL33: sense r3 bonds\nL34: scan r0 0.25 r2\nL35: link r7\nL36: jgt 60 120 L35\nL37: send r1 90 0\nL38: bud r4\nL39: jgt 25 60 L33\nL40: mod r3 120\nL41: scan_color r0 25 r7\nL42: contract 2\nL43: contract 120\nL44: mod r2 r1\nL45: sense r6 ahead\nL46: wait -1\nL47: bud r2"
+    },
+    {
+      "length": 25,
+      "serial": 30239,
+      "founder": 30239,
+      "depth": 0,
+      "parent": 0,
+      "bornTick": 0,
+      "score": 587,
+      "source": "L0: move 0.5\nL1: steal -1 360\nL2: sub r4 r2\nL3: move 3\nL4: add r6 2\nL5: jz 5 L9\nL6: mod r3 2\nL7: listen r0 120\nL8: send 120 1 2\nL9: gradient r3 r6\nL10: nop\nL11: sense r3 reserve_b\nL12: mul r4 5\nL13: split r1\nL14: wait 360\nL15: scan_color r1 r6 0.1\nL16: mov r4 0\nL17: scan_color r4 5 0.1\nL18: sub r1 r0\nL19: jmp L24\nL20: split r6\nL21: receive r7 r6 r3\nL22: steal 0.5 25\nL23: listen r3 10\nL24: abs r1 0.1"
+    },
+    {
+      "length": 30,
+      "serial": 20481,
+      "founder": 20481,
+      "depth": 0,
+      "parent": 0,
+      "bornTick": 0,
+      "score": 508,
+      "source": "L0: sub r2 r5\nL1: emit r4 90\nL2: jgt 25 r4 L4\nL3: turn 0.25\nL4: mov r4 25\nL5: mul r4 3\nL6: emit r0 0\nL7: jeq 5 2 L6\nL8: steal 3 0.1\nL9: steal 90 25\nL10: listen r6 1\nL11: scan r1 3 1\nL12: scan r6 3 3\nL13: nop\nL14: listen r1 0.25\nL15: bud r0\nL16: sub r0 r1\nL17: turn 3\nL18: unlink r3\nL19: split r4\nL20: jgt 3 0 L24\nL21: emit 3 0.1\nL22: peek r6 0.1 bearing\nL23: bud r3\nL24: wait r4\nL25: split r3\nL26: sense r1 color\nL27: sub r6 r5\nL28: jmp L23\nL29: mod r1 0"
+    },
+    {
+      "length": 29,
+      "serial": 813,
+      "founder": 813,
+      "depth": 0,
+      "parent": 0,
+      "bornTick": 0,
+      "score": 500,
+      "source": "L0: wait 2\nL1: split r4\nL2: max r6 90\nL3: jz 360 L3\nL4: bud r0\nL5: div r2 0.25\nL6: jlt r4 0.5 L28\nL7: jnz 0.25 L5\nL8: abs r4 25\nL9: turn r1\nL10: listen r1 3\nL11: sense r1 right\nL12: jmp L20\nL13: gradient r7 r1\nL14: give r2 360\nL15: scan_color r0 r3 -1\nL16: wait 1\nL17: unlink r7\nL18: link 3\nL19: jeq 0.75 r3 L25\nL20: max r0 0\nL21: wait 360\nL22: scan_color r6 r7 0\nL23: shield r4\nL24: turn 1\nL25: steal 120 90\nL26: jnz 90 L17\nL27: jlt 5 0.75 L23\nL28: jgt 360 120 L4"
+    },
+    {
+      "length": 10,
+      "serial": 21995,
+      "founder": 21995,
+      "depth": 0,
+      "parent": 0,
+      "bornTick": 0,
+      "score": 571,
+      "source": "L0: max r5 -1\nL1: peek r2 r5 energy\nL2: mul r1 5\nL3: gradient r0 r6\nL4: split r1\nL5: send 0.25 10 0.75\nL6: peek r0 3 bearing\nL7: wait 90\nL8: peek r3 60 distance\nL9: scan_color r2 1 0.5"
+    },
+    {
+      "length": 17,
+      "serial": 2300,
+      "founder": 2300,
+      "depth": 0,
+      "parent": 0,
+      "bornTick": 0,
+      "score": 448,
+      "source": "L0: contract r5\nL1: bond r7 60\nL2: turn r7\nL3: div r7 r1\nL4: steal 90 2\nL5: tag r4\nL6: peek r4 0.75 distance\nL7: split r2\nL8: mul r3 -1\nL9: link 0.5\nL10: mov r4 120\nL11: add r3 5\nL12: sub r3 2\nL13: sub r7 90\nL14: wait 120\nL15: min r2 0.25\nL16: scan_color r3 25 5"
+    },
+    {
+      "length": 10,
+      "serial": 31405,
+      "founder": 31405,
+      "depth": 0,
+      "parent": 0,
+      "bornTick": 0,
+      "score": 684,
+      "source": "L0: max r6 0.25\nL1: wait 25\nL2: sense r7 energy\nL3: move 2\nL4: jmp L9\nL5: scan r0 90 r4\nL6: nop\nL7: peek r6 r4 kin\nL8: emit 25 0.1\nL9: bud r7"
+    },
+    {
+      "length": 16,
+      "serial": 7034,
+      "founder": 7034,
+      "depth": 0,
+      "parent": 0,
+      "bornTick": 0,
+      "score": 631,
+      "source": "L0: jz r0 L8\nL1: bud r0\nL2: wait r1\nL3: bud r0\nL4: rand r6 r6\nL5: sub r7 10\nL6: jgt 3 r7 L0\nL7: scan_color r0 5 0.25\nL8: jz 1 L11\nL9: jz r7 L4\nL10: wait 0.25\nL11: sub r1 60\nL12: max r0 60\nL13: listen r1 10\nL14: listen r6 5\nL15: rand r6 0.75"
+    },
+    {
+      "length": 43,
+      "serial": 14168,
+      "founder": 14168,
+      "depth": 0,
+      "parent": 0,
+      "bornTick": 0,
+      "score": 498,
+      "source": "L0: wait r4\nL1: sense r5 generation\nL2: steal 60 0.25\nL3: mul r3 r2\nL4: split r6\nL5: contract 60\nL6: move r3\nL7: wait 0.75\nL8: give 25 5\nL9: contract 2\nL10: mod r4 0.5\nL11: sense r4 tag\nL12: jz 1 L16\nL13: mod r0 -1\nL14: bud r7\nL15: bud r2\nL16: mul r5 25\nL17: nop\nL18: jnz -1 L10\nL19: enzyme 0\nL20: turn 0.5\nL21: jnz 0.75 L6\nL22: give -1 r2\nL23: jz r2 L11\nL24: abs r5 r0\nL25: steal r3 0.25\nL26: send 0.25 10 90\nL27: max r7 -1\nL28: shield 0\nL29: sub r3 0.5\nL30: unlink 1\nL31: mul r6 0.1\nL32: scan_color r1 0.5 60\nL33: abs r1 0\nL34: receive r0 r3 0.25\nL35: mod r1 0.75\nL36: wait 0.5\nL37: link r1\nL38: gradient r0 r2\nL39: link 360\nL40: peek r5 360 shield\nL41: steal 0 1\nL42: enzyme 3"
+    },
+    {
+      "length": 23,
+      "serial": 110,
+      "founder": 110,
+      "depth": 0,
+      "parent": 0,
+      "bornTick": 0,
+      "score": 490,
+      "source": "L0: jz r0 L18\nL1: sub r2 1\nL2: split r4\nL3: add r2 r3\nL4: move 60\nL5: listen r1 -1\nL6: shield 0.5\nL7: contract 120\nL8: mul r4 90\nL9: gradient r2 r3\nL10: max r2 90\nL11: jeq 0.5 r3 L14\nL12: scan r4 0.5 3\nL13: sense r7 energy\nL14: send 60 0 r4\nL15: gradient r5 r2\nL16: receive r5 r3 25\nL17: rand r3 r4\nL18: wait 3\nL19: peek r2 r5 bonds\nL20: nop\nL21: bud r2\nL22: steal r6 0.75"
+    },
+    {
+      "length": 49,
+      "serial": 24158,
+      "founder": 24158,
+      "depth": 0,
+      "parent": 0,
+      "bornTick": 0,
+      "score": 670,
+      "source": "L0: bond r2 120\nL1: tag 120\nL2: bond r7 25\nL3: jlt -1 90 L23\nL4: steal 0.5 0.25\nL5: split r5\nL6: jlt 0.1 360 L17\nL7: jmp L19\nL8: scan r5 0.25 5\nL9: sub r2 0.75\nL10: turn 10\nL11: gradient r1 r7\nL12: listen r7 5\nL13: jmp L14\nL14: color r2\nL15: jmp L17\nL16: mul r0 -1\nL17: receive r3 r1 0.1\nL18: bud r7\nL19: split r3\nL20: bud r3\nL21: send 3 2 0.25\nL22: steal 2 25\nL23: abs r3 0.1\nL24: link 90\nL25: tag r3\nL26: turn 3\nL27: sense r2 nutrient_a\nL28: send 0.25 60 360\nL29: jlt 0.1 r0 L34\nL30: wait 60\nL31: peek r6 90 color\nL32: jnz r0 L36\nL33: min r3 0.5\nL34: mul r1 360\nL35: min r1 r4\nL36: link 90\nL37: min r0 0.25\nL38: bond r7 r1\nL39: send r3 0.75 r5\nL40: div r2 r3\nL41: nop\nL42: jgt 25 r4 L16\nL43: give 1 0.1\nL44: send 90 2 25\nL45: listen r4 r4\nL46: sense r4 reserve_b\nL47: receive r7 r2 0.1\nL48: mul r1 3"
+    },
+    {
+      "length": 54,
+      "serial": 10841,
+      "founder": 10841,
+      "depth": 0,
+      "parent": 0,
+      "bornTick": 0,
+      "score": 628,
+      "source": "L0: link 360\nL1: tag 3\nL2: jeq 5 3 L30\nL3: move r4\nL4: steal r6 0.25\nL5: sub r1 0\nL6: bud r7\nL7: mod r6 10\nL8: jnz 360 L6\nL9: enzyme 0.75\nL10: peek r1 r7 tag\nL11: peek r2 90 kin\nL12: link r1\nL13: turn 10\nL14: jz 0.25 L42\nL15: give 3 r1\nL16: move 10\nL17: emit r4 2\nL18: scan_color r3 120 r2\nL19: steal 60 120\nL20: enzyme 0.5\nL21: give r2 3\nL22: contract r0\nL23: send 0.75 3 -1\nL24: turn 0\nL25: sense r3 id\nL26: sense r7 left\nL27: add r1 0.75\nL28: abs r6 0.75\nL29: max r7 r0\nL30: bud r5\nL31: shield 90\nL32: move r4\nL33: emit -1 0.75\nL34: mod r4 0.25\nL35: wait 2\nL36: div r3 3\nL37: move 120\nL38: unlink 0.75\nL39: jz r4 L43\nL40: bond r7 90\nL41: send 0.75 60 1\nL42: turn r7\nL43: steal 90 120\nL44: split r1\nL45: give 0.25 10\nL46: abs r7 0.25\nL47: wait r5\nL48: link 2\nL49: steal r4 0.75\nL50: div r0 1\nL51: mul r2 0.1\nL52: tag 0.5\nL53: max r0 r1"
+    },
+    {
+      "length": 25,
+      "serial": 15280,
+      "founder": 15280,
+      "depth": 0,
+      "parent": 0,
+      "bornTick": 0,
+      "score": 1028,
+      "source": "L0: give 120 r7\nL1: sense r0 enzyme\nL2: move 3\nL3: link r2\nL4: max r3 0.25\nL5: bud r5\nL6: wait 90\nL7: wait 3\nL8: wait 10\nL9: rand r6 1\nL10: div r6 3\nL11: jgt 360 r4 L1\nL12: min r1 25\nL13: gradient r2 r6\nL14: emit 0.75 0.5\nL15: mod r3 360\nL16: listen r4 0.75\nL17: scan_color r6 r3 10\nL18: emit 60 3\nL19: listen r7 -1\nL20: max r3 r5\nL21: move 0.1\nL22: scan r6 -1 60\nL23: turn 0.25\nL24: mod r4 r1"
+    },
+    {
+      "length": 40,
+      "serial": 23819,
+      "founder": 23819,
+      "depth": 0,
+      "parent": 0,
+      "bornTick": 0,
+      "score": 586,
+      "source": "L0: turn 5\nL1: jeq 1 r6 L4\nL2: sense r1 rotation\nL3: enzyme 0.5\nL4: jeq 10 0.25 L6\nL5: bud r7\nL6: jmp L29\nL7: enzyme 10\nL8: sub r1 r2\nL9: tag r6\nL10: sub r3 0.25\nL11: sense r7 food\nL12: link 10\nL13: nop\nL14: jeq 3 1 L10\nL15: max r6 60\nL16: split r4\nL17: enzyme 3\nL18: wait 0.25\nL19: jmp L16\nL20: give 0.25 -1\nL21: add r3 0\nL22: min r6 0.5\nL23: give r7 r4\nL24: mod r5 -1\nL25: sub r5 -1\nL26: turn r7\nL27: jlt 0.5 3 L18\nL28: mov r7 0.5\nL29: min r7 0.25\nL30: wait 60\nL31: jz 25 L10\nL32: max r0 0.75\nL33: turn r4\nL34: mov r4 r3\nL35: nop\nL36: max r1 0.75\nL37: listen r6 120\nL38: emit 0.1 r7\nL39: contract 1"
+    },
+    {
+      "length": 59,
+      "serial": 4781,
+      "founder": 4781,
+      "depth": 0,
+      "parent": 0,
+      "bornTick": 0,
+      "score": 738,
+      "source": "L0: steal 10 5\nL1: bud r1\nL2: nop\nL3: min r4 3\nL4: scan_color r3 r2 2\nL5: jlt 5 r4 L53\nL6: scan_color r0 25 r7\nL7: bud r5\nL8: bud r6\nL9: link r6\nL10: bud r0\nL11: link -1\nL12: scan_color r6 r4 3\nL13: bud r1\nL14: steal r7 60\nL15: jgt 0.25 r4 L2\nL16: emit 1 3\nL17: contract 90\nL18: steal 0.5 r7\nL19: mod r1 0.25\nL20: add r7 1\nL21: jnz 0 L49\nL22: jz 0 L30\nL23: split r7\nL24: wait 0.75\nL25: tag 25\nL26: mov r1 r7\nL27: turn r5\nL28: receive r7 r7 60\nL29: emit 0.1 2\nL30: link 2\nL31: steal 0.75 10\nL32: bud r7\nL33: move r6\nL34: jz 10 L26\nL35: enzyme 360\nL36: give 0 0.1\nL37: contract 90\nL38: sub r0 90\nL39: split r3\nL40: div r6 5\nL41: shield -1\nL42: jmp L3\nL43: jlt 120 r6 L14\nL44: jeq 2 0.5 L11\nL45: give 3 360\nL46: tag r2\nL47: min r2 60\nL48: receive r7 r1 r7\nL49: max r2 r5\nL50: scan_color r7 0.75 2\nL51: jz -1 L43\nL52: add r7 0.75\nL53: min r7 r0\nL54: send r4 10 0.75\nL55: nop\nL56: max r5 5\nL57: mod r6 0.5\nL58: jeq 0 r2 L28"
+    },
+    {
+      "length": 21,
+      "serial": 27862,
+      "founder": 27862,
+      "depth": 0,
+      "parent": 0,
+      "bornTick": 0,
+      "score": 385,
+      "source": "L0: bond r2 r0\nL1: wait 3\nL2: jz 60 L13\nL3: split r4\nL4: div r7 25\nL5: peek r0 0.25 bonds\nL6: add r6 2\nL7: jeq 3 0 L8\nL8: add r5 r4\nL9: split r6\nL10: rand r4 2\nL11: sense r1 nutrient_a\nL12: split r3\nL13: peek r0 3 bonds\nL14: div r4 0.1\nL15: sense r7 color\nL16: sub r1 0.25\nL17: sense r2 ahead\nL18: nop\nL19: steal 0 5\nL20: sub r7 2"
+    },
+    {
+      "length": 27,
+      "serial": 24500,
+      "founder": 24500,
+      "depth": 0,
+      "parent": 0,
+      "bornTick": 0,
+      "score": 690,
+      "source": "L0: jnz -1 L4\nL1: give 1 r2\nL2: sub r2 r7\nL3: mul r6 25\nL4: jeq r5 25 L8\nL5: bond r6 90\nL6: jgt 1 1 L3\nL7: listen r3 90\nL8: scan r7 5 r6\nL9: steal 25 -1\nL10: min r3 10\nL11: add r1 0.25\nL12: move 0.5\nL13: send 1 0.5 5\nL14: max r1 r3\nL15: nop\nL16: wait 60\nL17: mod r3 360\nL18: max r7 0\nL19: sub r7 r7\nL20: split r7\nL21: contract r6\nL22: nop\nL23: tag 10\nL24: jgt r2 120 L22\nL25: split r3\nL26: wait 360"
+    },
+    {
+      "length": 50,
+      "serial": 3295,
+      "founder": 3295,
+      "depth": 0,
+      "parent": 0,
+      "bornTick": 0,
+      "score": 1182,
+      "source": "L0: send 90 10 25\nL1: tag r6\nL2: jmp L23\nL3: mod r2 0.75\nL4: send 60 0 r2\nL5: send 1 10 r5\nL6: jgt r7 r0 L6\nL7: steal 5 10\nL8: mov r2 r5\nL9: emit r1 r3\nL10: bud r6\nL11: give r4 90\nL12: receive r2 r5 10\nL13: send r7 0.75 90\nL14: nop\nL15: add r6 1\nL16: wait 360\nL17: split r5\nL18: gradient r5 r0\nL19: tag r4\nL20: move r3\nL21: sub r7 r0\nL22: move 60\nL23: scan r4 0.75 1\nL24: add r7 2\nL25: color 0.1\nL26: receive r0 r3 2\nL27: wait 0.1\nL28: jlt 0 60 L11\nL29: link 3\nL30: gradient r3 r0\nL31: receive r7 r5 r1\nL32: steal 90 0\nL33: div r1 r4\nL34: gradient r1 r2\nL35: nop\nL36: receive r0 r5 60\nL37: mul r6 2\nL38: shield r2\nL39: add r6 5\nL40: steal r3 -1\nL41: color 120\nL42: abs r6 5\nL43: jmp L48\nL44: abs r2 25\nL45: add r3 5\nL46: rand r0 0.25\nL47: jgt r5 60 L47\nL48: listen r0 0.25\nL49: enzyme 60"
+    },
+    {
+      "length": 20,
+      "serial": 18950,
+      "founder": 18950,
+      "depth": 0,
+      "parent": 0,
+      "bornTick": 0,
+      "score": 395,
+      "source": "L0: jz 60 L13\nL1: split r0\nL2: mod r4 r6\nL3: give r6 0.75\nL4: scan_color r1 2 r7\nL5: nop\nL6: nop\nL7: move 0.5\nL8: steal 90 r0\nL9: link 1\nL10: min r4 0.5\nL11: jz -1 L1\nL12: wait r6\nL13: move 0.5\nL14: max r1 60\nL15: min r0 3\nL16: color r1\nL17: color 0.5\nL18: mod r1 0.1\nL19: gradient r6 r1"
+    },
+    {
+      "length": 10,
+      "serial": 4203,
+      "founder": 4203,
+      "depth": 0,
+      "parent": 0,
+      "bornTick": 0,
+      "score": 655,
+      "source": "L0: shield r2\nL1: mul r5 10\nL2: receive r4 r3 1\nL3: bud r2\nL4: send 1 5 0.75\nL5: link r0\nL6: jz 0.75 L3\nL7: add r1 -1\nL8: min r5 -1\nL9: wait 25"
+    },
+    {
+      "length": 39,
+      "serial": 36833,
+      "founder": 11001,
+      "depth": 1,
+      "parent": 11001,
+      "bornTick": 7680,
+      "score": 509,
+      "source": "L0: link r0\nL1: scan r7 25 3\nL2: max r4 90\nL3: steal 120 0.5\nL4: sub r6 0\nL5: mod r6 r6\nL6: mod r0 r5\nL7: unlink r5\nL8: give r2 r7\nL9: nop\nL10: send 5 r4 r1\nL11: mul r6 r1\nL12: sub r4 10\nL13: div r1 r3\nL14: emit 0.1 90\nL15: nop\nL16: scan r6 -1 10\nL17: max r3 2\nL18: sense r5 nutrient_a\nL19: bud r3\nL20: min r4 1\nL21: tag r1\nL22: unlink 0.1\nL23: jlt 25 2 L1\nL24: receive r1 r6 -1\nL25: max r5 5\nL26: scan r2 120 0.75\nL27: sense r4 nutrient_b\nL28: wait 25\nL29: give 10 0.5\nL30: listen r3 0.5\nL31: color 2\nL32: rand r2 3\nL33: bud r6\nL34: color 0.75\nL35: emit 360 0\nL36: jmp L0\nL37: split r6\nL38: jeq r4 5 L5"
+    },
+    {
+      "length": 16,
+      "serial": 7443,
+      "founder": 7443,
+      "depth": 0,
+      "parent": 0,
+      "bornTick": 0,
+      "score": 617,
+      "source": "L0: bud r3\nL1: move 3\nL2: div r7 360\nL3: scan r0 r1 r4\nL4: link 0.5\nL5: nop\nL6: mul r1 r6\nL7: receive r1 r5 120\nL8: split r0\nL9: sense r4 generation\nL10: link 360\nL11: gradient r3 r5\nL12: send r6 -1 1\nL13: split r5\nL14: mul r6 0\nL15: wait 90"
+    },
+    {
+      "length": 44,
+      "serial": 22921,
+      "founder": 22921,
+      "depth": 0,
+      "parent": 0,
+      "bornTick": 0,
+      "score": 540,
+      "source": "L0: split r2\nL1: bond r2 2\nL2: wait r2\nL3: jz r4 L43\nL4: contract 0.75\nL5: give 25 10\nL6: give 25 0.5\nL7: bud r7\nL8: jlt 25 120 L34\nL9: turn 120\nL10: shield 10\nL11: min r0 r7\nL12: jlt 60 2 L42\nL13: max r1 r3\nL14: contract r3\nL15: emit 1 120\nL16: div r7 60\nL17: steal r0 60\nL18: nop\nL19: jnz 25 L9\nL20: rand r7 r3\nL21: scan r7 25 r5\nL22: nop\nL23: give 360 5\nL24: bond r0 0.25\nL25: shield r0\nL26: jlt 120 360 L33\nL27: gradient r6 r4\nL28: wait r4\nL29: max r5 r1\nL30: peek r3 0.5 bearing\nL31: peek r2 0.5 distance\nL32: contract 0.5\nL33: div r1 5\nL34: split r6\nL35: sub r6 10\nL36: jz r4 L17\nL37: sub r2 0.1\nL38: jeq 0.1 r3 L32\nL39: scan r4 0.1 r0\nL40: emit r2 25\nL41: mul r3 r3\nL42: max r7 25\nL43: send r7 0.75 0.25"
+    },
+    {
+      "length": 23,
+      "serial": 8321,
+      "founder": 8321,
+      "depth": 0,
+      "parent": 0,
+      "bornTick": 0,
+      "score": 439,
+      "source": "L0: bud r1\nL1: mul r6 0\nL2: wait 120\nL3: sense r0 right\nL4: sub r1 r4\nL5: listen r7 r7\nL6: give 2 0.25\nL7: jgt r6 0.25 L11\nL8: sub r5 360\nL9: bond r3 1\nL10: send r4 10 r0\nL11: abs r3 10\nL12: tag 25\nL13: move 120\nL14: unlink r5\nL15: nop\nL16: scan_color r1 r1 r5\nL17: bud r7\nL18: send r4 10 5\nL19: color r0\nL20: mov r5 r3\nL21: add r6 90\nL22: div r5 0.5"
+    },
+    {
+      "length": 38,
+      "serial": 21814,
+      "founder": 21814,
+      "depth": 0,
+      "parent": 0,
+      "bornTick": 0,
+      "score": 456,
+      "source": "L0: nop\nL1: jmp L24\nL2: min r5 r1\nL3: gradient r0 r6\nL4: listen r2 0.5\nL5: rand r4 0\nL6: jgt 10 60 L21\nL7: link r4\nL8: split r6\nL9: receive r7 r1 r5\nL10: mov r1 -1\nL11: gradient r6 r2\nL12: steal 5 r4\nL13: link r3\nL14: give r1 r7\nL15: split r4\nL16: mod r0 0.25\nL17: tag 0.1\nL18: mod r1 1\nL19: bud r0\nL20: jz 0.1 L23\nL21: jlt r3 2 L26\nL22: jlt r0 0.1 L4\nL23: link 25\nL24: max r1 r6\nL25: give 25 r2\nL26: jmp L2\nL27: div r2 25\nL28: tag 0.75\nL29: peek r5 3 bonds\nL30: give 1 r4\nL31: jlt 0 60 L26\nL32: jgt 2 0.75 L20\nL33: sense r6 left\nL34: turn 5\nL35: scan_color r0 90 r2\nL36: sub r4 -1\nL37: listen r1 25"
+    },
+    {
+      "length": 28,
+      "serial": 39924,
+      "founder": 32729,
+      "depth": 1,
+      "parent": 32729,
+      "bornTick": 13440,
+      "score": 463,
+      "source": "L0: tag r7\nL1: wait r5\nL2: scan r3 5 10\nL3: jnz 120 L6\nL4: abs r3 r7\nL5: jgt r5 r1 L9\nL6: link 0\nL7: listen r1 0.75\nL8: bud r0\nL9: receive r3 r3 0.25\nL10: unlink r3\nL11: rand r5 60\nL12: mov r6 r3\nL13: give r2 r3\nL14: sense r3 color\nL15: turn -1\nL16: scan r1 3 360\nL17: sub r4 120\nL18: wait r0\nL19: wait 360\nL20: peek r7 120 shield\nL21: rand r3 r7\nL22: min r4 5\nL23: link 10\nL24: listen r3 2\nL25: jlt r1 0 L3\nL26: add r1 r4\nL27: mul r2 0.1"
+    },
+    {
+      "length": 25,
+      "serial": 30709,
+      "founder": 30709,
+      "depth": 0,
+      "parent": 0,
+      "bornTick": 0,
+      "score": 661,
+      "source": "L0: color 5\nL1: div r4 0\nL2: add r0 0.1\nL3: abs r0 0.5\nL4: peek r2 0 kin\nL5: sub r1 360\nL6: scan_color r4 r7 r3\nL7: wait 5\nL8: jgt 360 r0 L18\nL9: jz 0.5 L4\nL10: min r1 0.25\nL11: send 360 5 2\nL12: jmp L5\nL13: bud r5\nL14: jz 90 L1\nL15: emit 10 0.75\nL16: bud r1\nL17: link r1\nL18: sub r5 0.5\nL19: steal r1 r2\nL20: receive r5 r5 2\nL21: split r6\nL22: give 0.5 r4\nL23: bud r5\nL24: min r5 2"
+    },
+    {
+      "length": 31,
+      "serial": 7149,
+      "founder": 7149,
+      "depth": 0,
+      "parent": 0,
+      "bornTick": 0,
+      "score": 527,
+      "source": "L0: rand r7 r5\nL1: div r3 2\nL2: jeq r6 0.75 L27\nL3: jgt 3 5 L30\nL4: bud r0\nL5: jlt 3 2 L15\nL6: jnz 25 L2\nL7: tag 0\nL8: receive r6 r0 0.5\nL9: enzyme r6\nL10: add r0 r1\nL11: scan_color r5 10 0\nL12: shield 0.1\nL13: nop\nL14: sense r2 food\nL15: nop\nL16: mul r5 10\nL17: bud r4\nL18: scan_color r4 1 60\nL19: receive r1 r7 360\nL20: jz r4 L16\nL21: bond r1 r5\nL22: sub r4 0.1\nL23: shield 120\nL24: rand r3 5\nL25: split r4\nL26: jeq 0 0.25 L19\nL27: jz 90 L29\nL28: rand r0 5\nL29: rand r6 r6\nL30: tag 120"
+    },
+    {
+      "length": 13,
+      "serial": 26682,
+      "founder": 26682,
+      "depth": 0,
+      "parent": 0,
+      "bornTick": 0,
+      "score": 568,
+      "source": "L0: send 360 r5 60\nL1: wait 90\nL2: tag 0.75\nL3: move -1\nL4: split r1\nL5: jmp L1\nL6: color 25\nL7: emit 25 120\nL8: unlink r5\nL9: nop\nL10: jgt 10 r6 L8\nL11: jz r5 L3\nL12: enzyme 1"
+    },
+    {
+      "length": 36,
+      "serial": 31179,
+      "founder": 31179,
+      "depth": 0,
+      "parent": 0,
+      "bornTick": 0,
+      "score": 592,
+      "source": "L0: bond r2 1\nL1: max r3 0\nL2: jlt r6 2 L21\nL3: shield r5\nL4: tag 5\nL5: enzyme 90\nL6: unlink 90\nL7: enzyme 3\nL8: color 0.75\nL9: receive r0 r7 5\nL10: send 5 60 -1\nL11: jnz r0 L26\nL12: give 0.75 5\nL13: rand r6 r5\nL14: bud r5\nL15: mul r6 0\nL16: nop\nL17: jeq 25 r3 L8\nL18: wait 60\nL19: sub r5 2\nL20: emit 3 r2\nL21: jnz 360 L14\nL22: jz 60 L24\nL23: nop\nL24: jz 25 L27\nL25: shield 0\nL26: contract 0.1\nL27: peek r2 3 distance\nL28: jlt 0.25 r4 L9\nL29: jlt r0 120 L0\nL30: give r5 25\nL31: emit 10 2\nL32: mod r3 r4\nL33: emit 0.75 10\nL34: gradient r1 r2\nL35: contract 10"
+    },
+    {
+      "length": 56,
+      "serial": 10392,
+      "founder": 10392,
+      "depth": 0,
+      "parent": 0,
+      "bornTick": 0,
+      "score": 811,
+      "source": "L0: bud r2\nL1: send r1 -1 0.25\nL2: abs r1 r2\nL3: move -1\nL4: send 0.5 90 0.75\nL5: mov r5 r0\nL6: scan r7 r0 3\nL7: bond r0 360\nL8: bud r0\nL9: jmp L7\nL10: link 0.75\nL11: rand r2 0\nL12: jmp L7\nL13: scan_color r7 r1 60\nL14: emit 0 r6\nL15: add r5 r2\nL16: color 25\nL17: shield 0.25\nL18: abs r0 r1\nL19: jmp L52\nL20: wait 0\nL21: jgt 10 0 L3\nL22: scan_color r3 r2 r5\nL23: steal r6 3\nL24: unlink 0.75\nL25: sub r7 2\nL26: color 5\nL27: min r6 r6\nL28: send 10 r2 3\nL29: div r5 r1\nL30: listen r0 r5\nL31: jeq 10 0 L10\nL32: split r7\nL33: peek r6 60 distance\nL34: scan_color r4 0.5 120\nL35: link 0.75\nL36: sense r1 right\nL37: tag r1\nL38: split r7\nL39: peek r0 r2 bonds\nL40: scan r6 10 2\nL41: move -1\nL42: jlt 90 r0 L10\nL43: wait 1\nL44: give 5 r1\nL45: shield 5\nL46: mul r2 5\nL47: jmp L29\nL48: sub r6 -1\nL49: wait 5\nL50: receive r2 r0 r0\nL51: split r7\nL52: color r0\nL53: receive r6 r2 60\nL54: receive r2 r7 r7\nL55: bud r1"
+    },
+    {
+      "length": 49,
+      "serial": 33501,
+      "founder": 33501,
+      "depth": 0,
+      "parent": 0,
+      "bornTick": 1380,
+      "score": 453,
+      "source": "L0: wait 120\nL1: scan r6 120 r3\nL2: rand r7 90\nL3: add r0 360\nL4: contract 10\nL5: bud r7\nL6: listen r2 0.25\nL7: bond r2 10\nL8: jz 0.1 L2\nL9: mod r0 0.1\nL10: emit 0.75 10\nL11: nop\nL12: shield 2\nL13: min r1 0.1\nL14: color 10\nL15: jmp L32\nL16: div r2 r2\nL17: nop\nL18: jmp L47\nL19: steal 0.75 120\nL20: jgt r3 0.1 L16\nL21: contract 0\nL22: steal 1 0.5\nL23: move 60\nL24: unlink r1\nL25: peek r3 360 shield\nL26: split r5\nL27: turn 25\nL28: link 3\nL29: bond r3 25\nL30: enzyme r2\nL31: div r5 r3\nL32: rand r7 -1\nL33: gradient r6 r1\nL34: mov r6 r3\nL35: shield 1\nL36: split r2\nL37: turn 120\nL38: rand r0 r5\nL39: scan r4 2 120\nL40: rand r7 90\nL41: jnz 5 L45\nL42: emit 120 r1\nL43: mul r1 5\nL44: mov r5 90\nL45: steal 0.1 r7\nL46: sub r1 5\nL47: shield r2\nL48: send -1 60 90"
+    },
+    {
+      "length": 20,
+      "serial": 3617,
+      "founder": 3617,
+      "depth": 0,
+      "parent": 0,
+      "bornTick": 0,
+      "score": 729,
+      "source": "L0: scan r1 90 0.25\nL1: color 5\nL2: bond r6 r5\nL3: wait 360\nL4: abs r5 90\nL5: gradient r3 r3\nL6: jz 90 L15\nL7: tag 5\nL8: mul r6 120\nL9: bond r5 r7\nL10: scan r7 r6 0\nL11: max r5 1\nL12: max r4 r4\nL13: split r7\nL14: turn 2\nL15: scan r4 0.75 120\nL16: jeq 5 3 L16\nL17: bond r5 5\nL18: max r5 5\nL19: contract 120"
+    },
+    {
+      "length": 32,
+      "serial": 30068,
+      "founder": 30068,
+      "depth": 0,
+      "parent": 0,
+      "bornTick": 0,
+      "score": 502,
+      "source": "L0: scan_color r3 2 60\nL1: jz 1 L24\nL2: bud r1\nL3: turn 3\nL4: jmp L24\nL5: jmp L27\nL6: contract r3\nL7: give 3 25\nL8: give 0.75 0.75\nL9: sub r2 25\nL10: move r4\nL11: mod r7 90\nL12: move 2\nL13: mod r0 25\nL14: jmp L9\nL15: move 0.5\nL16: mov r7 0.25\nL17: link 120\nL18: jz 10 L17\nL19: send 1 3 10\nL20: emit 2 360\nL21: color 0.75\nL22: send 0.5 90 r3\nL23: jnz -1 L31\nL24: bud r0\nL25: steal 0.5 0.1\nL26: jlt 10 25 L24\nL27: color 3\nL28: gradient r7 r7\nL29: send r0 -1 0.75\nL30: peek r5 90 energy\nL31: tag 5"
+    },
+    {
+      "length": 28,
+      "serial": 12923,
+      "founder": 12923,
+      "depth": 0,
+      "parent": 0,
+      "bornTick": 0,
+      "score": 617,
+      "source": "L0: jgt 120 25 L16\nL1: sense r2 id\nL2: mov r3 25\nL3: mul r7 r7\nL4: abs r5 60\nL5: mul r5 0.25\nL6: wait r7\nL7: jeq r5 2 L18\nL8: steal 5 5\nL9: max r6 90\nL10: bud r2\nL11: send r2 r2 r1\nL12: wait 360\nL13: steal 0.5 r3\nL14: jmp L16\nL15: emit 0.25 0.25\nL16: unlink 3\nL17: jnz 60 L8\nL18: receive r1 r1 5\nL19: send 60 3 0.1\nL20: tag 0.5\nL21: mul r7 3\nL22: sense r7 reserve_a\nL23: turn 0.75\nL24: abs r6 360\nL25: bond r1 r2\nL26: add r7 60\nL27: give 120 r3"
+    },
+    {
+      "length": 52,
+      "serial": 35710,
+      "founder": 27340,
+      "depth": 1,
+      "parent": 27340,
+      "bornTick": 5520,
+      "score": 614,
+      "source": "L0: unlink r2\nL1: gradient r4 r5\nL2: listen r2 360\nL3: steal r3 1\nL4: mod r3 -1\nL5: emit 0 0.25\nL6: mul r0 r1\nL7: wait 60\nL8: mov r3 0.5\nL9: link 120\nL10: mul r2 0.1\nL11: steal 0.1 360\nL12: link 1\nL13: jz r2 L36\nL14: jz 0.1 L15\nL15: mov r3 90\nL16: scan_color r5 0.75 2\nL17: mod r5 r3\nL18: link 90\nL19: scan r2 25 0.5\nL20: tag 0.75\nL21: link r4\nL22: split r0\nL23: link 0.5\nL24: contract 1\nL25: send 5 r1 5\nL26: min r1 r1\nL27: jgt 1 1 L21\nL28: jeq 2 2 L49\nL29: give 25 r1\nL30: min r4 3\nL31: rand r3 r3\nL32: scan_color r1 0 360\nL33: rand r7 120\nL34: jgt 0.5 1 L15\nL35: wait 360\nL36: abs r5 0\nL37: give 120 0.1\nL38: bond r4 -1\nL39: tag 90\nL40: rand r4 5\nL41: nop\nL42: mov r1 r0\nL43: unlink 25\nL44: listen r4 10\nL45: send 60 1 360\nL46: listen r5 120\nL47: scan_color r3 1 120\nL48: bud r0\nL49: move r4\nL50: min r5 1\nL51: abs r4 10"
+    },
+    {
+      "length": 54,
+      "serial": 28950,
+      "founder": 28950,
+      "depth": 0,
+      "parent": 0,
+      "bornTick": 0,
+      "score": 635,
+      "source": "L0: split r2\nL1: jeq 10 25 L50\nL2: nop\nL3: mov r4 r2\nL4: send r6 0.25 -1\nL5: wait 360\nL6: scan_color r1 360 10\nL7: turn 25\nL8: steal r6 0.75\nL9: link -1\nL10: gradient r7 r6\nL11: mov r3 0.25\nL12: unlink 0.1\nL13: nop\nL14: rand r6 0\nL15: scan_color r5 360 3\nL16: min r4 r5\nL17: sub r0 r1\nL18: receive r1 r5 25\nL19: jmp L51\nL20: jgt 360 1 L28\nL21: enzyme 0.5\nL22: nop\nL23: add r7 120\nL24: send r7 5 360\nL25: jgt 10 90 L35\nL26: unlink 0.25\nL27: link 10\nL28: add r0 r6\nL29: turn 0.5\nL30: scan_color r4 r0 120\nL31: max r0 0\nL32: shield r0\nL33: sense r6 nutrient_b\nL34: mov r2 360\nL35: sub r3 120\nL36: abs r3 r0\nL37: bond r7 360\nL38: jlt 360 60 L9\nL39: listen r6 r1\nL40: add r2 0.5\nL41: receive r3 r7 0.1\nL42: add r2 r2\nL43: nop\nL44: jlt r4 60 L29\nL45: enzyme 2\nL46: nop\nL47: jlt 90 10 L28\nL48: shield 5\nL49: sense r4 energy\nL50: jgt 0.5 120 L51\nL51: sub r3 r1\nL52: scan r4 0.75 0.5\nL53: give 5 r0"
+    },
+    {
+      "length": 53,
+      "serial": 20753,
+      "founder": 20753,
+      "depth": 0,
+      "parent": 0,
+      "bornTick": 0,
+      "score": 650,
+      "source": "L0: contract 0.25\nL1: link 120\nL2: peek r4 120 color\nL3: tag 0.1\nL4: jlt r5 90 L26\nL5: mod r4 -1\nL6: wait 360\nL7: jgt 0.1 r0 L31\nL8: add r3 1\nL9: send 3 0 r5\nL10: gradient r5 r7\nL11: link 10\nL12: div r2 10\nL13: wait 60\nL14: send 360 r0 60\nL15: steal r4 0.75\nL16: give 5 1\nL17: wait 1\nL18: mod r3 360\nL19: abs r7 0.1\nL20: steal r7 0.1\nL21: give 360 r1\nL22: mod r1 10\nL23: wait 90\nL24: peek r5 360 color\nL25: receive r5 r1 -1\nL26: shield r1\nL27: scan r2 2 5\nL28: jnz 10 L49\nL29: bond r7 5\nL30: listen r3 0.1\nL31: wait 0.25\nL32: scan r2 360 0\nL33: color 0\nL34: jmp L44\nL35: bud r3\nL36: link r2\nL37: receive r5 r5 r7\nL38: jz r2 L20\nL39: turn 0.25\nL40: peek r0 0.1 bearing\nL41: nop\nL42: rand r5 r2\nL43: jlt 2 10 L45\nL44: color r4\nL45: sense r2 left\nL46: enzyme -1\nL47: enzyme r7\nL48: wait 2\nL49: jnz 0.5 L35\nL50: nop\nL51: gradient r3 r0\nL52: scan_color r4 0.25 0.75"
+    },
+    {
+      "length": 26,
+      "serial": 15509,
+      "founder": 15509,
+      "depth": 0,
+      "parent": 0,
+      "bornTick": 0,
+      "score": 327,
+      "source": "L0: jlt r5 1 L20\nL1: nop\nL2: shield 120\nL3: wait 90\nL4: sense r0 id\nL5: gradient r7 r2\nL6: jnz 5 L13\nL7: split r2\nL8: mul r0 r3\nL9: bond r6 5\nL10: turn r5\nL11: bud r7\nL12: color 0.75\nL13: abs r2 r7\nL14: jlt r0 60 L12\nL15: emit 0.75 5\nL16: steal 10 0.1\nL17: bud r0\nL18: turn 0.25\nL19: nop\nL20: jmp L3\nL21: color 0.75\nL22: listen r7 360\nL23: add r2 0\nL24: split r0\nL25: receive r2 r7 3"
+    },
+    {
+      "length": 59,
+      "serial": 27651,
+      "founder": 27651,
+      "depth": 0,
+      "parent": 0,
+      "bornTick": 0,
+      "score": 447,
+      "source": "L0: jlt 0.75 0 L9\nL1: nop\nL2: rand r1 60\nL3: jz 60 L6\nL4: mod r7 60\nL5: bud r3\nL6: max r0 r1\nL7: gradient r7 r7\nL8: receive r0 r7 r7\nL9: sub r0 360\nL10: gradient r0 r4\nL11: color -1\nL12: emit 0.5 3\nL13: turn 0.75\nL14: give 25 90\nL15: wait 120\nL16: bond r3 0\nL17: split r5\nL18: receive r7 r2 3\nL19: sense r3 tag\nL20: jmp L47\nL21: wait 3\nL22: div r1 60\nL23: link 0.75\nL24: shield 360\nL25: div r4 3\nL26: mod r4 0.5\nL27: unlink 3\nL28: bond r2 r7\nL29: rand r2 r0\nL30: scan r1 0.25 -1\nL31: tag 1\nL32: give 2 0\nL33: receive r6 r3 1\nL34: give 5 90\nL35: gradient r1 r4\nL36: give 1 r5\nL37: add r7 360\nL38: unlink 360\nL39: mov r5 5\nL40: gradient r3 r0\nL41: add r4 360\nL42: shield -1\nL43: gradient r1 r6\nL44: add r7 2\nL45: rand r1 60\nL46: jlt 1 5 L16\nL47: scan_color r7 1 0\nL48: split r5\nL49: max r1 10\nL50: mov r3 25\nL51: send 25 25 0.5\nL52: give 5 3\nL53: abs r0 3\nL54: scan_color r1 r5 2\nL55: jeq 0.75 r0 L7\nL56: listen r5 120\nL57: bond r7 -1\nL58: bud r6"
+    },
+    {
+      "length": 11,
+      "serial": 26941,
+      "founder": 26941,
+      "depth": 0,
+      "parent": 0,
+      "bornTick": 0,
+      "score": 831,
+      "source": "L0: bud r2\nL1: div r2 90\nL2: jgt 0.1 1 L0\nL3: wait 360\nL4: jeq 1 r2 L5\nL5: receive r6 r2 2\nL6: shield 0.25\nL7: sub r7 r2\nL8: move 1\nL9: bud r2\nL10: nop"
+    },
+    {
+      "length": 63,
+      "serial": 30164,
+      "founder": 30164,
+      "depth": 0,
+      "parent": 0,
+      "bornTick": 0,
+      "score": 581,
+      "source": "L0: rand r4 0\nL1: mov r6 r6\nL2: wait r4\nL3: mul r0 -1\nL4: gradient r7 r0\nL5: scan_color r2 0.5 360\nL6: sub r6 r2\nL7: move 60\nL8: div r1 0.1\nL9: scan r6 r6 0.5\nL10: wait 120\nL11: div r3 0.5\nL12: give 2 0.75\nL13: emit 0.25 60\nL14: send r1 25 1\nL15: jeq r2 r2 L56\nL16: emit r3 3\nL17: rand r0 -1\nL18: tag r5\nL19: send r1 360 -1\nL20: div r3 360\nL21: jeq 1 0.25 L17\nL22: add r1 120\nL23: unlink 0.75\nL24: abs r1 r2\nL25: rand r1 r2\nL26: nop\nL27: unlink 3\nL28: mov r3 0.1\nL29: emit -1 0.5\nL30: wait 0.1\nL31: min r2 r2\nL32: split r5\nL33: bond r0 r0\nL34: send 5 90 1\nL35: receive r6 r0 120\nL36: scan r0 120 60\nL37: receive r0 r1 r4\nL38: peek r1 360 kin\nL39: rand r5 0.5\nL40: sub r2 0.5\nL41: contract 0.75\nL42: tag 0.1\nL43: peek r3 r1 distance\nL44: jeq 0.25 r5 L50\nL45: shield r1\nL46: steal 3 r0\nL47: split r2\nL48: max r4 0\nL49: turn r3\nL50: bud r3\nL51: peek r4 0 shield\nL52: nop\nL53: jgt 0.1 3 L4\nL54: jgt 120 1 L40\nL55: color 25\nL56: sense r3 nutrient_b\nL57: unlink 10\nL58: max r2 360\nL59: mul r4 0\nL60: div r2 r5\nL61: rand r6 0.5\nL62: bud r1"
+    },
+    {
+      "length": 38,
+      "serial": 29041,
+      "founder": 29041,
+      "depth": 0,
+      "parent": 0,
+      "bornTick": 0,
+      "score": 485,
+      "source": "L0: mov r0 r7\nL1: jeq r4 r5 L26\nL2: listen r2 0.75\nL3: abs r7 2\nL4: wait r0\nL5: contract 0\nL6: steal 120 90\nL7: shield 5\nL8: jmp L32\nL9: send r1 5 -1\nL10: bond r7 25\nL11: jlt r7 90 L7\nL12: turn 120\nL13: max r4 r3\nL14: peek r3 90 distance\nL15: peek r0 10 distance\nL16: jnz 360 L29\nL17: sense r1 nutrient_a\nL18: sense r5 food\nL19: bud r1\nL20: unlink r6\nL21: div r0 -1\nL22: color 25\nL23: jlt r4 2 L19\nL24: link r5\nL25: emit r6 10\nL26: jnz -1 L19\nL27: jeq 3 90 L13\nL28: jnz 360 L34\nL29: turn 3\nL30: jeq r7 0.25 L4\nL31: jeq 2 25 L19\nL32: mod r1 r7\nL33: wait -1\nL34: color 0.1\nL35: tag r5\nL36: give 0.25 360\nL37: color 5"
+    },
+    {
+      "length": 17,
+      "serial": 38518,
+      "founder": 25287,
+      "depth": 0,
+      "parent": 25287,
+      "bornTick": 10800,
+      "score": 354,
+      "source": "L0: mul r4 2\nL1: give 90 r6\nL2: bud r2\nL3: nop\nL4: scan_color r6 0.5 360\nL5: split r0\nL6: jmp L5\nL7: shield r2\nL8: add r6 360\nL9: peek r4 0.75 shield\nL10: enzyme 0.25\nL11: rand r4 0.75\nL12: mul r2 r6\nL13: link r1\nL14: peek r1 r7 energy\nL15: jz r7 L10\nL16: steal 90 120"
+    },
+    {
+      "length": 9,
+      "serial": 11688,
+      "founder": 11688,
+      "depth": 0,
+      "parent": 0,
+      "bornTick": 0,
+      "score": 769,
+      "source": "L0: bud r7\nL1: rand r6 60\nL2: wait 0.25\nL3: tag 0.25\nL4: shield r0\nL5: jgt r2 3 L5\nL6: mod r5 r1\nL7: abs r1 0.1\nL8: wait r6"
+    },
+    {
+      "length": 21,
+      "serial": 31102,
+      "founder": 31102,
+      "depth": 0,
+      "parent": 0,
+      "bornTick": 0,
+      "score": 506,
+      "source": "L0: jlt 1 r3 L5\nL1: scan r3 25 2\nL2: max r2 2\nL3: listen r0 0\nL4: jgt r5 10 L15\nL5: steal 0.1 r0\nL6: mod r0 0.75\nL7: color 10\nL8: nop\nL9: bud r3\nL10: jz 60 L1\nL11: mul r1 90\nL12: sense r1 generation\nL13: listen r3 120\nL14: max r2 0\nL15: add r2 r4\nL16: bond r6 r5\nL17: bud r4\nL18: tag 2\nL19: split r0\nL20: gradient r2 r5"
+    },
+    {
+      "length": 51,
+      "serial": 20451,
+      "founder": 20451,
+      "depth": 0,
+      "parent": 0,
+      "bornTick": 0,
+      "score": 551,
+      "source": "L0: bud r5\nL1: mul r1 r5\nL2: scan r7 0.5 25\nL3: tag 360\nL4: rand r0 5\nL5: sub r3 25\nL6: mul r6 0.5\nL7: scan r3 r3 3\nL8: div r1 r0\nL9: bud r5\nL10: nop\nL11: unlink 3\nL12: shield -1\nL13: enzyme 25\nL14: send r6 120 r0\nL15: contract 5\nL16: link 0\nL17: min r5 0.5\nL18: link 0.75\nL19: gradient r7 r3\nL20: move 0\nL21: jz 60 L44\nL22: color 120\nL23: enzyme 0.5\nL24: scan r6 3 25\nL25: mov r2 10\nL26: jz 360 L36\nL27: peek r7 r2 distance\nL28: link 0.1\nL29: mul r6 3\nL30: gradient r4 r4\nL31: gradient r2 r0\nL32: min r1 360\nL33: rand r2 0.25\nL34: mul r2 120\nL35: scan_color r7 5 10\nL36: add r5 0.25\nL37: tag 1\nL38: min r1 r7\nL39: move 5\nL40: link 25\nL41: mul r6 0.25\nL42: jeq 1 r7 L30\nL43: color 0.1\nL44: listen r2 10\nL45: bud r2\nL46: scan_color r0 90 1\nL47: wait 60\nL48: steal r6 0\nL49: peek r6 r3 kin\nL50: steal 1 -1"
+    },
+    {
+      "length": 22,
+      "serial": 32776,
+      "founder": 32776,
+      "depth": 0,
+      "parent": 0,
+      "bornTick": 60,
+      "score": 401,
+      "source": "L0: abs r5 10\nL1: emit 10 360\nL2: jmp L17\nL3: unlink 10\nL4: jmp L21\nL5: scan_color r7 0.25 r5\nL6: tag -1\nL7: emit r7 1\nL8: jnz 120 L15\nL9: mod r4 r4\nL10: sub r0 r0\nL11: wait 0.5\nL12: emit -1 90\nL13: turn r6\nL14: min r4 0.25\nL15: color 25\nL16: link 0.25\nL17: gradient r4 r4\nL18: scan r0 0.25 0\nL19: listen r6 5\nL20: wait r5\nL21: split r2"
+    },
+    {
+      "length": 39,
+      "serial": 24721,
+      "founder": 24721,
+      "depth": 0,
+      "parent": 0,
+      "bornTick": 0,
+      "score": 759,
+      "source": "L0: jnz 0.1 L34\nL1: sub r0 r2\nL2: jlt 60 60 L6\nL3: unlink r3\nL4: bud r2\nL5: split r1\nL6: sub r2 r1\nL7: sense r5 age\nL8: listen r2 r0\nL9: scan_color r2 120 0.1\nL10: bud r0\nL11: jeq r3 360 L8\nL12: mul r3 0.5\nL13: split r5\nL14: scan_color r5 10 r4\nL15: mod r1 120\nL16: jlt r2 r5 L17\nL17: give 3 120\nL18: sub r4 120\nL19: mul r5 0.1\nL20: mul r6 2\nL21: sense r5 age\nL22: receive r4 r7 0.5\nL23: receive r3 r6 25\nL24: link r5\nL25: move 360\nL26: bud r6\nL27: link 10\nL28: split r0\nL29: shield 0.1\nL30: mul r4 10\nL31: mod r0 0.75\nL32: give r4 0.1\nL33: color r5\nL34: wait 60\nL35: jgt r7 r2 L22\nL36: move 360\nL37: bud r2\nL38: bud r3"
+    }
+  ],
+  "measurementNotes": "Experimental lifecycle draft, Apple M4 Pro / Metal, Node 24.4.1, webgpu 0.6.0. Wall time includes command encoding/submission/completion but excludes periodic CPU inspection. GPU atomic ordering is not bit-reproducible."
+}
