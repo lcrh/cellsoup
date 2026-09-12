@@ -100,3 +100,5 @@ MIT licensed; see [LICENSE](LICENSE).
 The [evolution and scaling laboratory](research/README.md) contains a native headless client, exported evolved programs, ecological ablations, and a separately validated WebGPU scaling prototype. The prototype is not yet the live ecology backend; its measurements and remaining work are documented explicitly.
 
 The [typed-tree world](research/typed-trees.md) is now the default at `/gpu.html`. Assembly remains available under **Genome language**. It runs autonomous random tree populations, archives successful genomes, and supports separate crossover and resampling-mutation sliders. Named `state`, `let`, and `set!` forms support iterated computation. Division copies genomes and memory exactly. Trees remain experimental: the first closed-population comparison retained fewer cells than assembly.
+
+The GPU page now shows [execution-trace compression and candidate complexity cross-checks](docs/execution-traces.md). The coarse observer is off by default. Raw instruction paths and their programs can be downloaded as compressed JSON for inspection.

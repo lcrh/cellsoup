@@ -75,6 +75,7 @@ export const defaults = {
   archiveHarvest: 120,
   archiveOffspring: 8,
   archiveEnabled: 1,
+  executionTrace: 0,
   solarRate: 4,
   sunContrast: 2,
   cloudCover: 0.5,
@@ -113,6 +114,7 @@ export async function createLifeEngine(device, options = {}) {
     cfg.genomeCapacity < 1 ||
     cfg.genomeCapacity > 65536 ||
     ![0, 1].includes(cfg.treePrograms) ||
+    ![0, 1].includes(cfg.executionTrace) ||
     cfg.crossover > 1 ||
     cfg.initial > Math.min(cfg.capacity, cfg.genomeCapacity) ||
     cfg.side < 5 ||
@@ -166,7 +168,9 @@ export async function createLifeEngine(device, options = {}) {
   const state = [storage(n * CELL_BYTES), storage(n * CELL_BYTES)];
   const treeMemoryOffset =
     Math.ceil((40 * n + 20 * t + 20 * g + 640) / 16) * 16;
-  const scratch = storage(treeMemoryOffset + (cfg.treePrograms ? 48 * n : 0)),
+  const traceOffset = treeMemoryOffset + (cfg.treePrograms ? 48 * n : 0);
+  const traceBytes = 16 + 32 * 16 + 8192 * 4 + 1048576 * 4;
+  const scratch = storage(traceOffset + (cfg.executionTrace ? traceBytes : 0)),
     genomes = storage(g * GENOME_BYTES),
     archive = storage(128 * GENOME_BYTES),
     food = storage(t * 16 + cfg.sources * 32),
@@ -505,6 +509,31 @@ export async function createLifeEngine(device, options = {}) {
       }
       device.queue.submit([encoder.finish()]);
       await device.queue.onSubmittedWorkDone();
+    },
+    armExecutionTrace(selected, seed) {
+      if (!cfg.executionTrace) throw Error("Execution tracing was not enabled");
+      if (!(selected instanceof Uint32Array) || selected.length !== 128)
+        throw Error("Expected 32 trace selections");
+      const begin = tick + 1,
+        end = begin + 256;
+      device.queue.writeBuffer(
+        scratch,
+        traceOffset,
+        new Uint32Array([begin, end, seed >>> 0, 0]),
+      );
+      device.queue.writeBuffer(scratch, traceOffset + 16, selected);
+      const encoder = device.createCommandEncoder();
+      encoder.clearBuffer(scratch, traceOffset + 16 + 32 * 16, 8192 * 4);
+      device.queue.submit([encoder.finish()]);
+      return { begin, end, collectTick: end - 1 };
+    },
+    stopExecutionTrace() {
+      if (cfg.executionTrace)
+        device.queue.writeBuffer(scratch, traceOffset, new Uint32Array(4));
+    },
+    async executionTrace() {
+      if (!cfg.executionTrace) throw Error("Execution tracing was not enabled");
+      return read(scratch, traceOffset, traceBytes);
     },
     async previewTransfers() {
       if (tick !== 0 || cfg.initial !== 0)

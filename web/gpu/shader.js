@@ -5,6 +5,7 @@ export function simulationShader({
   side,
   sources,
   treePrograms = 0,
+  executionTrace = 0,
 }) {
   const types = { r: 1, v: 2, l: 3, s: 4, p: 5 };
   const signatures = GPU_OPS.map(
@@ -88,6 +89,7 @@ struct Scratch {
   freeGenes:array<u32,G>,
   candidates:array<atomic<u32>,ARCH>,
 ${treePrograms ? "  treeMemory:array<vec4f,N*3>," : ""}
+${executionTrace ? "  traceConfig:vec4u, traceSlots:array<vec4u,32>, traceCounts:array<u32,8192>, traceEvents:array<u32,1048576>," : ""}
 }
 struct Field {
   a:array<vec2f,T>,
@@ -453,6 +455,16 @@ fn sunlightAt(p:vec2f)->f32 {
     return;
   }
   var c=old[i];
+${
+  executionTrace
+    ? `  var traceRow=0xffffffffu;
+  if(tick()>=s.traceConfig.x&&tick()<s.traceConfig.y){
+    let bucket=hash(i^s.traceConfig.z)&31u;
+    let selected=s.traceSlots[bucket];
+    if(selected.x==i&&selected.y==c.machine.x&&c.life.w==1u){traceRow=bucket*256u+tick()-s.traceConfig.x;}
+  }`
+    : ""
+}
   var action:Intent;
   action.aim=vec4u(NONE);
 
@@ -495,9 +507,11 @@ fn sunlightAt(p:vec2f)->f32 {
       if(c.b.x<=0.0) {
         break;
       }
-      let ins=genomes[g].code[c.machine.z%len];
+      let pc=c.machine.z%len;
+      let ins=genomes[g].code[pc];
       c.machine.z=(c.machine.z+1u)%len;
       if(!pay(&c,cfg.cost0.x)) {
+${executionTrace ? `        if(traceRow!=0xffffffffu){let n=s.traceCounts[traceRow];s.traceEvents[traceRow*128u+n]=u32(ins.x)|(pc<<8u)|(c.machine.z<<16u);s.traceCounts[traceRow]=n+1u;}` : ""}
         continue;
       }
       let op=u32(ins.x);
@@ -865,6 +879,7 @@ ${
         }
         c.r[k]=clamp(c.r[k],-999999.0,999999.0);
       }
+${executionTrace ? `      if(traceRow!=0xffffffffu){let n=s.traceCounts[traceRow];s.traceEvents[traceRow*128u+n]=op|(pc<<8u)|(c.machine.z<<16u)|(1u<<24u)|select(0u,1u<<25u,yielding);s.traceCounts[traceRow]=n+1u;}` : ""}
       if(yielding) {
         break;
       }

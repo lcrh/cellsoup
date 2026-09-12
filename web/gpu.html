@@ -102,69 +102,121 @@
           </div>
           <section
             class="behavior-panel"
-            aria-label="Behavioral epiplexity estimate"
+            aria-label="Execution trace compression"
           >
             <div class="section-heading">
-              <h2>Behavioral epiplexity <span class="badge">estimate</span></h2>
+              <h2>Execution trace compression</h2>
               <label
-                ><input type="checkbox" id="epi-enabled" checked /> Measure
-                behavior</label
+                ><input type="checkbox" id="trace-enabled" checked /> Record
+                traces</label
               >
             </div>
             <p>
-              How much structure a small predictor learns from the whole world's
-              behavior. Random colors and the camera view are excluded.
+              Actual instruction paths from up to 32 living cells, followed for
+              256 ticks. A fresh sample starts about once a simulated minute.
             </p>
             <div class="behavior-values">
               <div>
-                <strong id="epi-score">—</strong><span>learned model size</span>
+                <strong id="trace-score">—</strong
+                ><span>gzip size / original byte</span>
               </div>
               <div>
-                <strong id="epi-noise">—</strong
-                ><span>unpredicted behavior</span>
+                <strong id="trace-shuffled">—</strong
+                ><span>after shuffling event order</span>
               </div>
               <div>
-                <strong id="epi-shuffled">—</strong
-                ><span>shuffled model size</span>
+                <strong id="trace-saving">—</strong
+                ><span>smaller thanks to ordering</span>
               </div>
             </div>
-            <p id="epi-status" role="status">Recording behavior…</p>
-            <canvas
-              id="epi-history"
-              aria-label="Estimated behavioral model size and shuffled baseline over time"
-            ></canvas>
-            <p class="behavior-legend">
-              Green: behavior · gray: shuffled baseline
+            <p id="trace-structure"></p>
+            <p id="trace-status" role="status">
+              Preparing an execution sample…
             </p>
-            <details>
-              <summary>What this estimate means</summary>
-              <p>
-                Every two simulated seconds, the GPU records a coarse map of
-                cell density, links, motion, recent activity, energy and
-                reserves. Eleven bounded predictors compete to describe a
-                32-sample window. The smallest combined model and prediction
-                code wins; the displayed estimate is that model's size in bits.
-                Prediction error is checked on separate, unseen frames.
-              </p>
-              <p>
-                This is a limited observer, not a universal complexity score or
-                a measure of intelligence. Simple repetition and noise should
-                need small models. Population changes and physics can also
-                create learnable patterns. The shuffled comparison preserves
-                each channel's frequencies while removing spatial and temporal
-                order. Compare scores with the same sampling and model settings.
-              </p>
-              <p>
-                <a
-                  href="https://arxiv.org/abs/2601.03220"
-                  target="_blank"
-                  rel="noopener"
-                  >Epiplexity paper ↗</a
-                >
-              </p>
-            </details>
-            <button id="epi-export" disabled>Save behavior measurement</button>
+            <p>
+              Simple loops also compress well. This measures repetition and
+              ordering, not intelligence or evolutionary complexity by itself.
+              Register values and physics are excluded.
+            </p>
+            <button id="trace-export" disabled>
+              Save compressed execution traces
+            </button>
           </section>
+          <details class="coarse-observer">
+            <summary>Experimental coarse observer</summary>
+            <section
+              class="behavior-panel"
+              aria-label="Behavioral epiplexity estimate"
+            >
+              <div class="section-heading">
+                <h2>
+                  Behavioral epiplexity <span class="badge">estimate</span>
+                </h2>
+                <label
+                  ><input type="checkbox" id="epi-enabled" /> Measure
+                  behavior</label
+                >
+              </div>
+              <p>
+                How much structure a small predictor learns from the whole
+                world's behavior. Random colors and the camera view are
+                excluded.
+              </p>
+              <div class="behavior-values">
+                <div>
+                  <strong id="epi-score">—</strong
+                  ><span>learned model size</span>
+                </div>
+                <div>
+                  <strong id="epi-noise">—</strong
+                  ><span>unpredicted behavior</span>
+                </div>
+                <div>
+                  <strong id="epi-shuffled">—</strong
+                  ><span>shuffled model size</span>
+                </div>
+              </div>
+              <p id="epi-status" role="status">Recording behavior…</p>
+              <canvas
+                id="epi-history"
+                aria-label="Estimated behavioral model size and shuffled baseline over time"
+              ></canvas>
+              <p class="behavior-legend">
+                Green: behavior · gray: shuffled baseline
+              </p>
+              <details>
+                <summary>What this estimate means</summary>
+                <p>
+                  Every two simulated seconds, the GPU records a coarse map of
+                  cell density, links, motion, recent activity, energy and
+                  reserves. Eleven bounded predictors compete to describe a
+                  32-sample window. The smallest combined model and prediction
+                  code wins; the displayed estimate is that model's size in
+                  bits. Prediction error is checked on separate, unseen frames.
+                </p>
+                <p>
+                  This is a limited observer, not a universal complexity score
+                  or a measure of intelligence. Simple repetition and noise
+                  should need small models. Population changes and physics can
+                  also create learnable patterns. The shuffled comparison
+                  preserves each channel's frequencies while removing spatial
+                  and temporal order. Compare scores with the same sampling and
+                  model settings.
+                </p>
+                <p>
+                  <a
+                    href="https://arxiv.org/abs/2601.03220"
+                    target="_blank"
+                    rel="noopener"
+                    >Epiplexity paper ↗</a
+                  >
+                </p>
+              </details>
+              <button id="epi-export" disabled>
+                Save behavior measurement
+              </button>
+            </section>
+          </details>
         </div>
       </section>
       <aside>

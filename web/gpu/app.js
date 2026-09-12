@@ -1,6 +1,7 @@
 import { createLifeEngine, defaults } from "./engine.js";
 import { TREE_SCHEMA } from "./trees.js";
 import { createRenderer } from "./renderer.js";
+import { createExecutionMeter } from "./trace-meter.js";
 import { createBehaviorMeter } from "./behavior-meter.js";
 import { GPU_OPS, GPU_SENSORS, GPU_FIELDS } from "./language.js";
 import {
@@ -128,6 +129,7 @@ let device,
   engine,
   renderer,
   behaviorMeter,
+  executionMeter,
   paused = false,
   busy = true,
   failed = false;
@@ -183,6 +185,7 @@ function options() {
     initial: capacity / 4,
     side: Math.ceil(Math.sqrt(capacity / 2)),
     sources: 1,
+    executionTrace: 1,
   };
   for (const id of numericSettings) {
     const input = $(id);
@@ -227,6 +230,8 @@ async function start() {
         );
     });
   }
+  executionMeter?.destroy();
+  executionMeter = null;
   behaviorMeter?.destroy();
   behaviorMeter = null;
   renderer?.destroy();
@@ -241,6 +246,7 @@ async function start() {
     navigator.gpu.getPreferredCanvasFormat(),
   );
   behaviorMeter = await createBehaviorMeter(device, engine);
+  executionMeter = await createExecutionMeter(device, engine);
   $("genome-kind").textContent = cfg.treePrograms
     ? "Random typed-tree genomes"
     : "Random assembly genomes";
@@ -270,6 +276,7 @@ async function start() {
   snap = null;
   members = [];
   history = [];
+  $("history-range").textContent = "";
   carry = 0;
   pendingPick = null;
   pendingFind = false;
@@ -504,11 +511,16 @@ async function frame(now) {
         }
       }
       await behaviorMeter?.observe();
+      await executionMeter?.observe();
       while (ticks > 0) {
-        const batch = behaviorMeter?.limitStep(ticks) ?? ticks;
+        const batch = Math.min(
+          behaviorMeter?.limitStep(ticks) ?? ticks,
+          executionMeter?.limitStep(ticks) ?? ticks,
+        );
         await engine.step(batch);
         ticks -= batch;
         await behaviorMeter?.observe();
+        await executionMeter?.observe();
       }
       await observe(performance.now());
       renderer.draw(camera, {
