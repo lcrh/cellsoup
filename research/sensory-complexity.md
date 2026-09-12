@@ -142,3 +142,13 @@ python research/plot-sensory-motion.py research/results/sensory-motion.json /tmp
 
 The record checker intentionally verifies the current shader against the saved
 hash. Replay/check against the recorded release if production physics changes.
+
+## Follow-up: the ecological ranking reverses
+
+The [descendant-establishment assays](sensory-establishment.md) show why this
+short task cannot become the evolutionary objective. The strongest light-seeker
+loses under normal heat, then wins when thermal damage is disabled. A common
+program that loses light exposure here establishes well in the full ecology,
+including five of six comparisons against constant forward thrust. The paired
+trace result remains valid, but the functional interpretation must include the
+actual ecological trade-offs and reproduction.

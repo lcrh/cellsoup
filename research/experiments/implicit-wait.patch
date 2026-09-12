@@ -1,0 +1,76 @@
+--- a/web/gpu/trees.js
++++ b/web/gpu/trees.js
+@@ -538,7 +538,6 @@
+   }
+   emit("ROOT:");
+   action(tree);
+-  emit("wait", 0);
+   emit("jmp", "ROOT");
+   const source = lines.join("\n");
+   let code;
+@@ -547,7 +546,8 @@
+   } catch (e) {
+     throw Error(e.message + "\n" + printTree(tree) + "\n" + source);
+   }
+-  if (code.length > 64) throw Error("Compiled tree exceeds 64 instructions");
++  // Preserve the baseline acceptance boundary for this controlled experiment.
++  if (code.length + 1 > 64) throw Error("Compiled tree exceeds 64 instructions");
+   return { ...code, source, tree: clone(tree) };
+ }
+ export function treeRng(seed) {
+--- a/web/gpu/engine.js
++++ b/web/gpu/engine.js
+@@ -465,7 +465,7 @@
+     cfg,
+     fingerprint,
+     genomeSampler: cfg.treePrograms
+-      ? "typed-sequences-state-v2"
++      ? "typed-sequences-state-no-implicit-wait-v1"
+       : "assembly-v1",
+     buffers: { state, scratch, genomes, archive, food, intents, activity },
+     get tick() {
+--- a/research/gpu-life-check.mjs
++++ b/research/gpu-life-check.mjs
+@@ -888,11 +888,23 @@
+   assert.equal((await e.treeMemory())[0], 12);
+   e.destroy();
+ });
++await test("tree repetition obeys the VM budget and explicit waits still yield", async () => {
++  for (const [budget, expected] of [[0, 0], [5, 1], [10, 2]]) {
++    const e = await setup([{tree: "(set m0 (+ (memory m0) 1))"}], [{}], {treePrograms: 1, budget});
++    await e.step();
++    assert.equal((await e.treeMemory())[0], expected);
++    e.destroy();
++  }
++  const e = await setup([{tree: "(seq (set m0 (+ (memory m0) 1)) (wait 0))"}], [{}], {treePrograms: 1, budget: 128});
++  await e.step(3);
++  assert.equal((await e.treeMemory())[0], 3);
++  e.destroy();
++});
+ await test("named state accumulates across ticks while let refreshes each evaluation", async () => {
+   const e = await setup(
+     [
+       {
+-        tree: "(state ((accumulator 5)) (let ((previous accumulator)) (set! accumulator (+ previous 1))))",
++        tree: "(seq (state ((accumulator 5)) (let ((previous accumulator)) (set! accumulator (+ previous 1)))) (wait 0))",
+       },
+     ],
+     [{}],
+@@ -928,7 +940,7 @@
+   const e = await setup(
+     [
+       {
+-        tree: "(state ((accumulator (receive c0))) (set! accumulator (+ accumulator 1)))",
++        tree: "(seq (state ((accumulator (receive c0))) (set! accumulator (+ accumulator 1))) (wait 0))",
+       },
+       { tree: "(seq (send (none) c0 9) (wait 1000))" },
+     ],
+@@ -975,7 +987,7 @@
+   const e = await setup(
+     [
+       {
+-        tree: "(state ((accumulator 7)) (set! accumulator (+ accumulator 1)))",
++        tree: "(seq (state ((accumulator 7)) (set! accumulator (+ accumulator 1))) (wait 0))",
+       },
+     ],
+     [{ x: 20, y: 20 }],

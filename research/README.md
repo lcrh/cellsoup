@@ -104,3 +104,10 @@ shows that successful and disabled behavior can have identical instruction
 traces. Gzip, mutation depth and syntax counts are retained as diagnostics rather
 than a universal complexity objective. The completed operation-mutation comparison
 has mixed outcomes; its raw records are retained and the default remains unchanged.
+
+The [next ecological checks](sensory-establishment.md) reverse the ranking from
+the short light assay: overheating defeats a strong light-seeker, while a less
+obvious forward/backward controller establishes well. A separate
+[compiler-cadence experiment](experiments/implicit-wait.md) removes an implicit
+pause that blocks simple photosynthetic reproduction; matched evolutionary
+worlds are in progress and the default compiler is unchanged.
