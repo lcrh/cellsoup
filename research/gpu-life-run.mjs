@@ -1,3 +1,4 @@
+import { createEvolutionBehaviorObserver } from "./behavior-observer.mjs";
 import { create, globals } from "webgpu";
 import { mkdir, writeFile, rename } from "node:fs/promises";
 import { auditMemory } from "./tree-memory-audit.mjs";
@@ -16,6 +17,7 @@ const args = Object.fromEntries(
   }),
 );
 const allowed = [
+  "behavior",
   "substrate",
   "budget",
   "crossover",
@@ -118,10 +120,16 @@ if (
   (!Number.isInteger(closeAt) || closeAt < 0 || closeAt > seconds)
 )
   throw Error("Invalid close-at");
+if (args.behavior !== undefined && !["0", "1"].includes(args.behavior))
+  throw Error("behavior must be 0 or 1");
 const engine = await createLifeEngine(device, options),
   records = [],
   out = args.out ?? `research/runs/gpu-${seed}`;
 await mkdir(out, { recursive: true });
+const behavior =
+  args.behavior === "1"
+    ? await createEvolutionBehaviorObserver(device, engine, out)
+    : null;
 function analyze(buffer) {
   const f = new Float32Array(buffer),
     u = new Uint32Array(buffer),
@@ -236,6 +244,7 @@ let computeMs = 0;
 const initialConfig = { ...engine.cfg };
 let closure = null;
 for (let second = 0; second <= seconds; second++) {
+  await behavior?.observe();
   if (second === closeAt) {
     engine.setImmigration({ rate: 0, floor: 0 });
     const c = await engine.counters();
@@ -334,6 +343,7 @@ for (let second = 0; second <= seconds; second++) {
       ) + "\n",
     );
     await rename(`${out}/progress.tmp.json`, `${out}/progress.json`);
+    await behavior?.checkpoint();
   }
   if (second < seconds) {
     const start = performance.now();
@@ -432,6 +442,8 @@ await rename(`${out}/progress.tmp.json`, `${out}/progress.json`);
 console.log(
   `Saved ${out}; ${computeMs.toFixed(1)} ms compute for ${seconds} simulated seconds`,
 );
+await behavior?.checkpoint(true);
+behavior?.destroy();
 engine.destroy();
 device.destroy();
 delete globalThis.__lifeGPU;

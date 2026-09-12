@@ -86,3 +86,12 @@ The Dawn instance must be retained for the entire asynchronous run. An initial e
 6. Integrate the validated high-throughput engine into the browser with a fallback, direct GPU rendering, useful organism following and visible ecological events. Verify the shipped UI on actual evolved runs. Publish only after the full model is useful and the results support the claims.
 
 Relevant primary sources for the design investigation: [WebGPU/WGSL specification](https://www.w3.org/TR/WGSL/), [Dawn Node bindings](https://github.com/dawn-gpu/node-webgpu), [task-switching costs and digital division of labor](https://pmc.ncbi.nlm.nih.gov/articles/PMC3427090/), and [evolved multicellular life histories](https://www.frontiersin.org/journals/ecology-and-evolution/articles/10.3389/fevo.2022.750837/full). These motivate experiments; they are not evidence that this simulator has already produced the same outcomes.
+
+## Linked gifts and competitive colonies
+
+The [continuous-world and competition experiments](linked-gift-evolution.md)
+find mixed long-world effects from the gift-range correction, but a strong
+benefit from a matched kin-selective gift in one observed two-genotype ecology.
+The [operation-mutation experiment](experiments/point-mutation.md) now tests a
+general way to refine existing expressions, with explicit behavioral recording.
+Authored controls remain confined to assays; production founders stay random.

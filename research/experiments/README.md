@@ -146,3 +146,10 @@ node research/gpu-life-run.mjs --capacity=32768 --initial=8192 --seconds=3600 --
 
 The patch is experimental; the published default is unchanged. Results and
 interpretation are in [the comparison](../guard-evolution.md).
+
+## Operation-only mutation under linked gifts
+
+The [new point-mutation protocol](point-mutation.md) applies to release 0.8.3,
+not the older base commit above. Its matched continuous worlds record explicit
+behavioral estimates alongside colony trajectories. The variant remains separate
+from production while results are pending.

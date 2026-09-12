@@ -1,0 +1,121 @@
+--- a/web/gpu/trees.js
++++ b/web/gpu/trees.js
+@@ -620,7 +620,50 @@
+   }
+   throw Error("Could not sample bounded tree");
+ }
++// Experimental archive mutation: change one operation with the same typed
++// signature, preserving every argument and literal. No behavior-specific rules.
++export function pointMutateTree(tree, rng = Math.random) {
++  compileTree(tree);
++  const choices = [];
++  function visit(t, path = []) {
++    const spec = byName.get(t.op);
++    if (t.value === undefined) {
++      const alternatives = TREE_SCHEMA.filter(
++        (s) =>
++          s.name !== t.op &&
++          !["number", "bool", "slot", "channel"].includes(s.name) &&
++          s.result === spec.result &&
++          s.args.join(",") === spec.args.join(","),
++      );
++      if (alternatives.length) choices.push({ path, alternatives });
++    }
++    t.args.forEach((child, i) => visit(child, [...path, i]));
++  }
++  visit(tree);
++  if (!choices.length) return null;
++  // Compilation also checks lexical bindings and bounded temporary registers.
++  for (let attempt = 0; attempt < 64; attempt++) {
++    const choice = choices[Math.floor(rng() * choices.length)];
++    const result = clone(tree);
++    let target = result;
++    for (const i of choice.path) target = target.args[i];
++    target.op =
++      choice.alternatives[Math.floor(rng() * choice.alternatives.length)].name;
++    try {
++      compileTree(result);
++      return result;
++    } catch (error) {
++      if (!/limit|temporaries|64 instructions/.test(error.message)) throw error;
++    }
++  }
++  return null;
++}
++
+ export function mutateTree(tree, rng = Math.random) {
++  if (rng() < 1 / 3) {
++    const point = pointMutateTree(tree, rng);
++    if (point) return point;
++  }
+   checkTree(tree);
+   const original = printTree(tree),
+     count = checkTree(tree).count;
+--- a/web/gpu/engine.js
++++ b/web/gpu/engine.js
+@@ -461,7 +461,7 @@
+     cfg,
+     fingerprint,
+     genomeSampler: cfg.treePrograms
+-      ? "typed-sequences-state-v2"
++      ? "typed-sequences-state-point-v1"
+       : "assembly-v1",
+     buffers: { state, scratch, genomes, archive, food, intents, activity },
+     get tick() {
+--- /dev/null
++++ b/tests/tree-point-mutation.test.mjs
+@@ -0,0 +1,54 @@
++import test from "node:test";
++import assert from "node:assert/strict";
++import {
++  randomTree,
++  treeRng,
++  pointMutateTree,
++  compileTree,
++  parseTree,
++  printTree,
++} from "../web/gpu/trees.js";
++import { createHash } from "node:crypto";
++function differences(a, b, out = []) {
++  assert.equal(a.value, b.value);
++  assert.equal(a.args.length, b.args.length);
++  if (a.op !== b.op) out.push([a.op, b.op]);
++  a.args.forEach((child, i) => differences(child, b.args[i], out));
++  return out;
++}
++test("point mutation changes exactly one operation and preserves all inputs", () => {
++  const rng = treeRng(1296);
++  let successful = 0;
++  for (let i = 0; i < 2000; i++) {
++    const tree = randomTree(rng),
++      before = structuredClone(tree);
++    const child = pointMutateTree(tree, rng);
++    assert.deepEqual(tree, before);
++    if (!child) continue;
++    successful++;
++    assert.equal(differences(tree, child).length, 1);
++    compileTree(child);
++  }
++  assert.ok(successful > 1800);
++});
++test("random founders remain byte-for-byte unchanged", () => {
++  const rng = treeRng(904),
++    hash = createHash("sha256");
++  for (let i = 0; i < 1000; i++)
++    hash.update(JSON.stringify(randomTree(rng)) + "\n");
++  assert.equal(
++    hash.digest("hex"),
++    "31ba18bc2f759a386134e76d3f98558386e5fd333189707bfbe07dac31e9d3b0",
++  );
++});
++test("a target predicate can change without discarding its target expression", () => {
++  const tree = parseTree("(if (alive (bond c2)) (photosynthesize) (eat))");
++  const rng = treeRng(11);
++  let found = false;
++  for (let i = 0; i < 100; i++) {
++    const child = pointMutateTree(tree, rng);
++    if (printTree(child) === "(if (kin (bond c2)) (photosynthesize) (eat))")
++      found = true;
++  }
++  assert.ok(found);
++});

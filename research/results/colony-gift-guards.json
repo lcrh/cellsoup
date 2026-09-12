@@ -1,0 +1,1209 @@
+{
+  "scope": "Three mixed-culture trajectories per variant. Alive and kin guards differ in exactly one sensed bytecode field at equal instruction length; original is an observed 23-instruction program, both authored controls are 20 instructions. Compare alive versus kin to isolate the guard, not original versus kin. Exact genome identity is used for kinship. Same seed and founder placement do not make GPU trajectories deterministic. Late means use six snapshots from minute 5 through 10. Population, movement and program syntax are not epiplexity or evidence of coordinated behavior. No authored program is injected into autonomous evolution.",
+  "sources": {
+    "original": "research/results/colony-competition.json",
+    "alive": "research/results/colony-competition-alive.json",
+    "kin": "research/results/colony-competition-kin.json"
+  },
+  "controls": {
+    "alive": {
+      "op": "seq",
+      "args": [
+        {
+          "op": "move",
+          "args": [
+            {
+              "op": "temperature",
+              "args": []
+            }
+          ]
+        },
+        {
+          "op": "seq",
+          "args": [
+            {
+              "op": "photosynthesize",
+              "args": []
+            },
+            {
+              "op": "seq",
+              "args": [
+                {
+                  "op": "let",
+                  "args": [
+                    {
+                      "op": "slot",
+                      "args": [],
+                      "value": 3
+                    },
+                    {
+                      "op": "target-storage",
+                      "args": [
+                        {
+                          "op": "nearest-corpse",
+                          "args": []
+                        }
+                      ]
+                    },
+                    {
+                      "op": "bud",
+                      "args": []
+                    }
+                  ]
+                },
+                {
+                  "op": "seq",
+                  "args": [
+                    {
+                      "op": "eat",
+                      "args": []
+                    },
+                    {
+                      "op": "seq",
+                      "args": [
+                        {
+                          "op": "give",
+                          "args": [
+                            {
+                              "op": "nearest-cell",
+                              "args": []
+                            },
+                            {
+                              "op": "if",
+                              "args": [
+                                {
+                                  "op": "alive",
+                                  "args": [
+                                    {
+                                      "op": "nearest-cell",
+                                      "args": []
+                                    }
+                                  ]
+                                },
+                                {
+                                  "op": "bonds",
+                                  "args": []
+                                },
+                                {
+                                  "op": "number",
+                                  "value": 0,
+                                  "args": []
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "op": "photosynthesize",
+                          "args": []
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "kin": {
+      "op": "seq",
+      "args": [
+        {
+          "op": "move",
+          "args": [
+            {
+              "op": "temperature",
+              "args": []
+            }
+          ]
+        },
+        {
+          "op": "seq",
+          "args": [
+            {
+              "op": "photosynthesize",
+              "args": []
+            },
+            {
+              "op": "seq",
+              "args": [
+                {
+                  "op": "let",
+                  "args": [
+                    {
+                      "op": "slot",
+                      "args": [],
+                      "value": 3
+                    },
+                    {
+                      "op": "target-storage",
+                      "args": [
+                        {
+                          "op": "nearest-corpse",
+                          "args": []
+                        }
+                      ]
+                    },
+                    {
+                      "op": "bud",
+                      "args": []
+                    }
+                  ]
+                },
+                {
+                  "op": "seq",
+                  "args": [
+                    {
+                      "op": "eat",
+                      "args": []
+                    },
+                    {
+                      "op": "seq",
+                      "args": [
+                        {
+                          "op": "give",
+                          "args": [
+                            {
+                              "op": "nearest-cell",
+                              "args": []
+                            },
+                            {
+                              "op": "if",
+                              "args": [
+                                {
+                                  "op": "kin",
+                                  "args": [
+                                    {
+                                      "op": "nearest-cell",
+                                      "args": []
+                                    }
+                                  ]
+                                },
+                                {
+                                  "op": "bonds",
+                                  "args": []
+                                },
+                                {
+                                  "op": "number",
+                                  "value": 0,
+                                  "args": []
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "op": "photosynthesize",
+                          "args": []
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "instructions": 20,
+    "changedInstruction": 12,
+    "aliveSource": "ROOT:\nsense r0 temperature\nmove r0\nphotosynthesize r0\nscan_corpse r0 360\npeek r0 r0 storage\nmem_save 3 r0\nbud r0\nmem_save 8 r0\neat r0\nscan r0 -1 360\nscan r1 -1 360\npeek r1 r1 alive\njz r1 T1\nsense r1 bonds\njmp T2\nT1:\nmov r1 0\nT2:\ngive r0 r1\nphotosynthesize r0\nwait 0\njmp ROOT",
+    "kinSource": "ROOT:\nsense r0 temperature\nmove r0\nphotosynthesize r0\nscan_corpse r0 360\npeek r0 r0 storage\nmem_save 3 r0\nbud r0\nmem_save 8 r0\neat r0\nscan r0 -1 360\nscan r1 -1 360\npeek r1 r1 kin\njz r1 T1\nsense r1 bonds\njmp T2\nT1:\nmov r1 0\nT2:\ngive r0 r1\nphotosynthesize r0\nwait 0\njmp ROOT",
+    "originalInstructions": 23
+  },
+  "trials": [
+    {
+      "seed": 42,
+      "guard": "original",
+      "kernel": "7bee9c022385413c6b4fedfcb0098319a8d44610a43a597649dc32124e0cc7f8",
+      "final": {
+        "seconds": 600,
+        "colonial": 82,
+        "solitary": 2175,
+        "colonialShare": 0.03633141338059371,
+        "movingThrustCells": 0,
+        "largestMovingThrustBody": 0
+      },
+      "lateMean": {
+        "colonial": 265.6666666666667,
+        "solitary": 3376.5,
+        "colonialShare": 0.06933876971485188,
+        "movingThrustCells": 17.666666666666668,
+        "largestMovingThrustBody": 5
+      },
+      "series": [
+        {
+          "seconds": 0,
+          "colonial": 32,
+          "solitary": 32,
+          "colonialShare": 0.5,
+          "movingThrustCells": 0,
+          "largestMovingThrustBody": 0
+        },
+        {
+          "seconds": 60,
+          "colonial": 1494,
+          "solitary": 374,
+          "colonialShare": 0.7997858672376874,
+          "movingThrustCells": 1225,
+          "largestMovingThrustBody": 203
+        },
+        {
+          "seconds": 120,
+          "colonial": 2540,
+          "solitary": 1524,
+          "colonialShare": 0.625,
+          "movingThrustCells": 1780,
+          "largestMovingThrustBody": 259
+        },
+        {
+          "seconds": 180,
+          "colonial": 770,
+          "solitary": 2612,
+          "colonialShare": 0.22767593140153755,
+          "movingThrustCells": 317,
+          "largestMovingThrustBody": 41
+        },
+        {
+          "seconds": 240,
+          "colonial": 423,
+          "solitary": 3665,
+          "colonialShare": 0.10347358121330724,
+          "movingThrustCells": 52,
+          "largestMovingThrustBody": 16
+        },
+        {
+          "seconds": 300,
+          "colonial": 377,
+          "solitary": 3719,
+          "colonialShare": 0.092041015625,
+          "movingThrustCells": 34,
+          "largestMovingThrustBody": 8
+        },
+        {
+          "seconds": 360,
+          "colonial": 360,
+          "solitary": 3736,
+          "colonialShare": 0.087890625,
+          "movingThrustCells": 34,
+          "largestMovingThrustBody": 8
+        },
+        {
+          "seconds": 420,
+          "colonial": 347,
+          "solitary": 3748,
+          "colonialShare": 0.08473748473748474,
+          "movingThrustCells": 28,
+          "largestMovingThrustBody": 8
+        },
+        {
+          "seconds": 480,
+          "colonial": 271,
+          "solitary": 3819,
+          "colonialShare": 0.06625916870415648,
+          "movingThrustCells": 10,
+          "largestMovingThrustBody": 6
+        },
+        {
+          "seconds": 540,
+          "colonial": 157,
+          "solitary": 3062,
+          "colonialShare": 0.048772910841876356,
+          "movingThrustCells": 0,
+          "largestMovingThrustBody": 0
+        },
+        {
+          "seconds": 600,
+          "colonial": 82,
+          "solitary": 2175,
+          "colonialShare": 0.03633141338059371,
+          "movingThrustCells": 0,
+          "largestMovingThrustBody": 0
+        }
+      ]
+    },
+    {
+      "seed": 42,
+      "guard": "alive",
+      "kernel": "7bee9c022385413c6b4fedfcb0098319a8d44610a43a597649dc32124e0cc7f8",
+      "final": {
+        "seconds": 600,
+        "colonial": 52,
+        "solitary": 2091,
+        "colonialShare": 0.02426504899673355,
+        "movingThrustCells": 0,
+        "largestMovingThrustBody": 0
+      },
+      "lateMean": {
+        "colonial": 187,
+        "solitary": 3418.5,
+        "colonialShare": 0.0486809204267064,
+        "movingThrustCells": 11,
+        "largestMovingThrustBody": 4.333333333333333
+      },
+      "series": [
+        {
+          "seconds": 0,
+          "colonial": 32,
+          "solitary": 32,
+          "colonialShare": 0.5,
+          "movingThrustCells": 0,
+          "largestMovingThrustBody": 0
+        },
+        {
+          "seconds": 60,
+          "colonial": 1152,
+          "solitary": 380,
+          "colonialShare": 0.7519582245430809,
+          "movingThrustCells": 1124,
+          "largestMovingThrustBody": 117
+        },
+        {
+          "seconds": 120,
+          "colonial": 1850,
+          "solitary": 1174,
+          "colonialShare": 0.6117724867724867,
+          "movingThrustCells": 1243,
+          "largestMovingThrustBody": 120
+        },
+        {
+          "seconds": 180,
+          "colonial": 505,
+          "solitary": 1791,
+          "colonialShare": 0.21994773519163763,
+          "movingThrustCells": 137,
+          "largestMovingThrustBody": 27
+        },
+        {
+          "seconds": 240,
+          "colonial": 372,
+          "solitary": 3713,
+          "colonialShare": 0.09106487148102815,
+          "movingThrustCells": 37,
+          "largestMovingThrustBody": 6
+        },
+        {
+          "seconds": 300,
+          "colonial": 301,
+          "solitary": 3791,
+          "colonialShare": 0.07355816226783969,
+          "movingThrustCells": 18,
+          "largestMovingThrustBody": 6
+        },
+        {
+          "seconds": 360,
+          "colonial": 268,
+          "solitary": 3828,
+          "colonialShare": 0.0654296875,
+          "movingThrustCells": 17,
+          "largestMovingThrustBody": 5
+        },
+        {
+          "seconds": 420,
+          "colonial": 251,
+          "solitary": 3844,
+          "colonialShare": 0.06129426129426129,
+          "movingThrustCells": 17,
+          "largestMovingThrustBody": 5
+        },
+        {
+          "seconds": 480,
+          "colonial": 166,
+          "solitary": 3922,
+          "colonialShare": 0.04060665362035225,
+          "movingThrustCells": 9,
+          "largestMovingThrustBody": 5
+        },
+        {
+          "seconds": 540,
+          "colonial": 84,
+          "solitary": 3035,
+          "colonialShare": 0.02693170888105162,
+          "movingThrustCells": 5,
+          "largestMovingThrustBody": 5
+        },
+        {
+          "seconds": 600,
+          "colonial": 52,
+          "solitary": 2091,
+          "colonialShare": 0.02426504899673355,
+          "movingThrustCells": 0,
+          "largestMovingThrustBody": 0
+        }
+      ]
+    },
+    {
+      "seed": 42,
+      "guard": "kin",
+      "kernel": "7bee9c022385413c6b4fedfcb0098319a8d44610a43a597649dc32124e0cc7f8",
+      "final": {
+        "seconds": 600,
+        "colonial": 4040,
+        "solitary": 26,
+        "colonialShare": 0.9936055090998525,
+        "movingThrustCells": 2019,
+        "largestMovingThrustBody": 123
+      },
+      "lateMean": {
+        "colonial": 4025.5,
+        "solitary": 46.5,
+        "colonialShare": 0.9885940927468644,
+        "movingThrustCells": 2043.8333333333333,
+        "largestMovingThrustBody": 87.83333333333333
+      },
+      "series": [
+        {
+          "seconds": 0,
+          "colonial": 32,
+          "solitary": 32,
+          "colonialShare": 0.5,
+          "movingThrustCells": 0,
+          "largestMovingThrustBody": 0
+        },
+        {
+          "seconds": 60,
+          "colonial": 2638,
+          "solitary": 64,
+          "colonialShare": 0.9763138415988157,
+          "movingThrustCells": 1665,
+          "largestMovingThrustBody": 149
+        },
+        {
+          "seconds": 120,
+          "colonial": 3996,
+          "solitary": 66,
+          "colonialShare": 0.983751846381093,
+          "movingThrustCells": 2826,
+          "largestMovingThrustBody": 217
+        },
+        {
+          "seconds": 180,
+          "colonial": 3996,
+          "solitary": 70,
+          "colonialShare": 0.9827840629611412,
+          "movingThrustCells": 2499,
+          "largestMovingThrustBody": 125
+        },
+        {
+          "seconds": 240,
+          "colonial": 3979,
+          "solitary": 79,
+          "colonialShare": 0.980532281912272,
+          "movingThrustCells": 2753,
+          "largestMovingThrustBody": 74
+        },
+        {
+          "seconds": 300,
+          "colonial": 4007,
+          "solitary": 79,
+          "colonialShare": 0.9806656877141459,
+          "movingThrustCells": 1659,
+          "largestMovingThrustBody": 54
+        },
+        {
+          "seconds": 360,
+          "colonial": 4025,
+          "solitary": 64,
+          "colonialShare": 0.9843482514062117,
+          "movingThrustCells": 2183,
+          "largestMovingThrustBody": 72
+        },
+        {
+          "seconds": 420,
+          "colonial": 4047,
+          "solitary": 43,
+          "colonialShare": 0.9894865525672372,
+          "movingThrustCells": 1926,
+          "largestMovingThrustBody": 67
+        },
+        {
+          "seconds": 480,
+          "colonial": 4014,
+          "solitary": 35,
+          "colonialShare": 0.9913558903432946,
+          "movingThrustCells": 2335,
+          "largestMovingThrustBody": 83
+        },
+        {
+          "seconds": 540,
+          "colonial": 4020,
+          "solitary": 32,
+          "colonialShare": 0.9921026653504442,
+          "movingThrustCells": 2141,
+          "largestMovingThrustBody": 128
+        },
+        {
+          "seconds": 600,
+          "colonial": 4040,
+          "solitary": 26,
+          "colonialShare": 0.9936055090998525,
+          "movingThrustCells": 2019,
+          "largestMovingThrustBody": 123
+        }
+      ]
+    },
+    {
+      "seed": 97,
+      "guard": "original",
+      "kernel": "7bee9c022385413c6b4fedfcb0098319a8d44610a43a597649dc32124e0cc7f8",
+      "final": {
+        "seconds": 600,
+        "colonial": 951,
+        "solitary": 3145,
+        "colonialShare": 0.232177734375,
+        "movingThrustCells": 664,
+        "largestMovingThrustBody": 23
+      },
+      "lateMean": {
+        "colonial": 1392.1666666666667,
+        "solitary": 2388.5,
+        "colonialShare": 0.38644977876849307,
+        "movingThrustCells": 1112.8333333333333,
+        "largestMovingThrustBody": 74.66666666666667
+      },
+      "series": [
+        {
+          "seconds": 0,
+          "colonial": 32,
+          "solitary": 32,
+          "colonialShare": 0.5,
+          "movingThrustCells": 0,
+          "largestMovingThrustBody": 0
+        },
+        {
+          "seconds": 60,
+          "colonial": 16,
+          "solitary": 24,
+          "colonialShare": 0.4,
+          "movingThrustCells": 0,
+          "largestMovingThrustBody": 0
+        },
+        {
+          "seconds": 120,
+          "colonial": 16,
+          "solitary": 24,
+          "colonialShare": 0.4,
+          "movingThrustCells": 0,
+          "largestMovingThrustBody": 0
+        },
+        {
+          "seconds": 180,
+          "colonial": 16,
+          "solitary": 27,
+          "colonialShare": 0.37209302325581395,
+          "movingThrustCells": 0,
+          "largestMovingThrustBody": 0
+        },
+        {
+          "seconds": 240,
+          "colonial": 288,
+          "solitary": 54,
+          "colonialShare": 0.8421052631578947,
+          "movingThrustCells": 274,
+          "largestMovingThrustBody": 100
+        },
+        {
+          "seconds": 300,
+          "colonial": 1340,
+          "solitary": 872,
+          "colonialShare": 0.6057866184448463,
+          "movingThrustCells": 1136,
+          "largestMovingThrustBody": 77
+        },
+        {
+          "seconds": 360,
+          "colonial": 2113,
+          "solitary": 1980,
+          "colonialShare": 0.5162472514048375,
+          "movingThrustCells": 1847,
+          "largestMovingThrustBody": 130
+        },
+        {
+          "seconds": 420,
+          "colonial": 1518,
+          "solitary": 2576,
+          "colonialShare": 0.3707865168539326,
+          "movingThrustCells": 1209,
+          "largestMovingThrustBody": 94
+        },
+        {
+          "seconds": 480,
+          "colonial": 1343,
+          "solitary": 2753,
+          "colonialShare": 0.327880859375,
+          "movingThrustCells": 1008,
+          "largestMovingThrustBody": 73
+        },
+        {
+          "seconds": 540,
+          "colonial": 1088,
+          "solitary": 3005,
+          "colonialShare": 0.2658196921573418,
+          "movingThrustCells": 813,
+          "largestMovingThrustBody": 51
+        },
+        {
+          "seconds": 600,
+          "colonial": 951,
+          "solitary": 3145,
+          "colonialShare": 0.232177734375,
+          "movingThrustCells": 664,
+          "largestMovingThrustBody": 23
+        }
+      ]
+    },
+    {
+      "seed": 97,
+      "guard": "alive",
+      "kernel": "7bee9c022385413c6b4fedfcb0098319a8d44610a43a597649dc32124e0cc7f8",
+      "final": {
+        "seconds": 600,
+        "colonial": 1301,
+        "solitary": 2794,
+        "colonialShare": 0.3177045177045177,
+        "movingThrustCells": 944,
+        "largestMovingThrustBody": 51
+      },
+      "lateMean": {
+        "colonial": 2078.5,
+        "solitary": 1938.1666666666667,
+        "colonialShare": 0.5218864554693418,
+        "movingThrustCells": 1533.5,
+        "largestMovingThrustBody": 119.16666666666667
+      },
+      "series": [
+        {
+          "seconds": 0,
+          "colonial": 32,
+          "solitary": 32,
+          "colonialShare": 0.5,
+          "movingThrustCells": 0,
+          "largestMovingThrustBody": 0
+        },
+        {
+          "seconds": 60,
+          "colonial": 16,
+          "solitary": 24,
+          "colonialShare": 0.4,
+          "movingThrustCells": 0,
+          "largestMovingThrustBody": 0
+        },
+        {
+          "seconds": 120,
+          "colonial": 16,
+          "solitary": 24,
+          "colonialShare": 0.4,
+          "movingThrustCells": 0,
+          "largestMovingThrustBody": 0
+        },
+        {
+          "seconds": 180,
+          "colonial": 16,
+          "solitary": 27,
+          "colonialShare": 0.37209302325581395,
+          "movingThrustCells": 0,
+          "largestMovingThrustBody": 0
+        },
+        {
+          "seconds": 240,
+          "colonial": 253,
+          "solitary": 61,
+          "colonialShare": 0.8057324840764332,
+          "movingThrustCells": 240,
+          "largestMovingThrustBody": 93
+        },
+        {
+          "seconds": 300,
+          "colonial": 2717,
+          "solitary": 909,
+          "colonialShare": 0.7493105350248207,
+          "movingThrustCells": 2319,
+          "largestMovingThrustBody": 287
+        },
+        {
+          "seconds": 360,
+          "colonial": 2808,
+          "solitary": 1287,
+          "colonialShare": 0.6857142857142857,
+          "movingThrustCells": 2061,
+          "largestMovingThrustBody": 156
+        },
+        {
+          "seconds": 420,
+          "colonial": 2174,
+          "solitary": 1921,
+          "colonialShare": 0.5308913308913309,
+          "movingThrustCells": 1426,
+          "largestMovingThrustBody": 79
+        },
+        {
+          "seconds": 480,
+          "colonial": 1873,
+          "solitary": 2223,
+          "colonialShare": 0.457275390625,
+          "movingThrustCells": 1287,
+          "largestMovingThrustBody": 80
+        },
+        {
+          "seconds": 540,
+          "colonial": 1598,
+          "solitary": 2495,
+          "colonialShare": 0.3904226728560958,
+          "movingThrustCells": 1164,
+          "largestMovingThrustBody": 62
+        },
+        {
+          "seconds": 600,
+          "colonial": 1301,
+          "solitary": 2794,
+          "colonialShare": 0.3177045177045177,
+          "movingThrustCells": 944,
+          "largestMovingThrustBody": 51
+        }
+      ]
+    },
+    {
+      "seed": 97,
+      "guard": "kin",
+      "kernel": "7bee9c022385413c6b4fedfcb0098319a8d44610a43a597649dc32124e0cc7f8",
+      "final": {
+        "seconds": 600,
+        "colonial": 4055,
+        "solitary": 38,
+        "colonialShare": 0.9907158563400928,
+        "movingThrustCells": 1807,
+        "largestMovingThrustBody": 92
+      },
+      "lateMean": {
+        "colonial": 3465.5,
+        "solitary": 65.5,
+        "colonialShare": 0.9728188552677053,
+        "movingThrustCells": 1852.1666666666667,
+        "largestMovingThrustBody": 129.33333333333334
+      },
+      "series": [
+        {
+          "seconds": 0,
+          "colonial": 32,
+          "solitary": 32,
+          "colonialShare": 0.5,
+          "movingThrustCells": 0,
+          "largestMovingThrustBody": 0
+        },
+        {
+          "seconds": 60,
+          "colonial": 16,
+          "solitary": 24,
+          "colonialShare": 0.4,
+          "movingThrustCells": 0,
+          "largestMovingThrustBody": 0
+        },
+        {
+          "seconds": 120,
+          "colonial": 16,
+          "solitary": 24,
+          "colonialShare": 0.4,
+          "movingThrustCells": 0,
+          "largestMovingThrustBody": 0
+        },
+        {
+          "seconds": 180,
+          "colonial": 16,
+          "solitary": 26,
+          "colonialShare": 0.38095238095238093,
+          "movingThrustCells": 0,
+          "largestMovingThrustBody": 0
+        },
+        {
+          "seconds": 240,
+          "colonial": 71,
+          "solitary": 30,
+          "colonialShare": 0.7029702970297029,
+          "movingThrustCells": 56,
+          "largestMovingThrustBody": 34
+        },
+        {
+          "seconds": 300,
+          "colonial": 665,
+          "solitary": 59,
+          "colonialShare": 0.9185082872928176,
+          "movingThrustCells": 662,
+          "largestMovingThrustBody": 86
+        },
+        {
+          "seconds": 360,
+          "colonial": 4002,
+          "solitary": 94,
+          "colonialShare": 0.97705078125,
+          "movingThrustCells": 2534,
+          "largestMovingThrustBody": 175
+        },
+        {
+          "seconds": 420,
+          "colonial": 4002,
+          "solitary": 94,
+          "colonialShare": 0.97705078125,
+          "movingThrustCells": 2139,
+          "largestMovingThrustBody": 136
+        },
+        {
+          "seconds": 480,
+          "colonial": 4027,
+          "solitary": 64,
+          "colonialShare": 0.984355903202151,
+          "movingThrustCells": 2363,
+          "largestMovingThrustBody": 156
+        },
+        {
+          "seconds": 540,
+          "colonial": 4042,
+          "solitary": 44,
+          "colonialShare": 0.9892315222711698,
+          "movingThrustCells": 1608,
+          "largestMovingThrustBody": 131
+        },
+        {
+          "seconds": 600,
+          "colonial": 4055,
+          "solitary": 38,
+          "colonialShare": 0.9907158563400928,
+          "movingThrustCells": 1807,
+          "largestMovingThrustBody": 92
+        }
+      ]
+    },
+    {
+      "seed": 321,
+      "guard": "original",
+      "kernel": "7bee9c022385413c6b4fedfcb0098319a8d44610a43a597649dc32124e0cc7f8",
+      "final": {
+        "seconds": 600,
+        "colonial": 574,
+        "solitary": 1825,
+        "colonialShare": 0.23926636098374324,
+        "movingThrustCells": 302,
+        "largestMovingThrustBody": 55
+      },
+      "lateMean": {
+        "colonial": 1612.5,
+        "solitary": 1984.6666666666667,
+        "colonialShare": 0.42551246075175686,
+        "movingThrustCells": 1081,
+        "largestMovingThrustBody": 68.83333333333333
+      },
+      "series": [
+        {
+          "seconds": 0,
+          "colonial": 32,
+          "solitary": 32,
+          "colonialShare": 0.5,
+          "movingThrustCells": 0,
+          "largestMovingThrustBody": 0
+        },
+        {
+          "seconds": 60,
+          "colonial": 32,
+          "solitary": 32,
+          "colonialShare": 0.5,
+          "movingThrustCells": 0,
+          "largestMovingThrustBody": 0
+        },
+        {
+          "seconds": 120,
+          "colonial": 32,
+          "solitary": 32,
+          "colonialShare": 0.5,
+          "movingThrustCells": 0,
+          "largestMovingThrustBody": 0
+        },
+        {
+          "seconds": 180,
+          "colonial": 340,
+          "solitary": 113,
+          "colonialShare": 0.7505518763796909,
+          "movingThrustCells": 301,
+          "largestMovingThrustBody": 89
+        },
+        {
+          "seconds": 240,
+          "colonial": 3173,
+          "solitary": 923,
+          "colonialShare": 0.774658203125,
+          "movingThrustCells": 2733,
+          "largestMovingThrustBody": 188
+        },
+        {
+          "seconds": 300,
+          "colonial": 2816,
+          "solitary": 1276,
+          "colonialShare": 0.6881720430107527,
+          "movingThrustCells": 1959,
+          "largestMovingThrustBody": 120
+        },
+        {
+          "seconds": 360,
+          "colonial": 2401,
+          "solitary": 1692,
+          "colonialShare": 0.5866112875641338,
+          "movingThrustCells": 1774,
+          "largestMovingThrustBody": 89
+        },
+        {
+          "seconds": 420,
+          "colonial": 1729,
+          "solitary": 2361,
+          "colonialShare": 0.4227383863080685,
+          "movingThrustCells": 1205,
+          "largestMovingThrustBody": 58
+        },
+        {
+          "seconds": 480,
+          "colonial": 1314,
+          "solitary": 2488,
+          "colonialShare": 0.34560757496054706,
+          "movingThrustCells": 840,
+          "largestMovingThrustBody": 58
+        },
+        {
+          "seconds": 540,
+          "colonial": 841,
+          "solitary": 2266,
+          "colonialShare": 0.2706791116832958,
+          "movingThrustCells": 406,
+          "largestMovingThrustBody": 33
+        },
+        {
+          "seconds": 600,
+          "colonial": 574,
+          "solitary": 1825,
+          "colonialShare": 0.23926636098374324,
+          "movingThrustCells": 302,
+          "largestMovingThrustBody": 55
+        }
+      ]
+    },
+    {
+      "seed": 321,
+      "guard": "alive",
+      "kernel": "7bee9c022385413c6b4fedfcb0098319a8d44610a43a597649dc32124e0cc7f8",
+      "final": {
+        "seconds": 600,
+        "colonial": 949,
+        "solitary": 1724,
+        "colonialShare": 0.3550317994762439,
+        "movingThrustCells": 578,
+        "largestMovingThrustBody": 33
+      },
+      "lateMean": {
+        "colonial": 1850.5,
+        "solitary": 1867.6666666666667,
+        "colonialShare": 0.4865587143022525,
+        "movingThrustCells": 1403.1666666666667,
+        "largestMovingThrustBody": 77.33333333333333
+      },
+      "series": [
+        {
+          "seconds": 0,
+          "colonial": 32,
+          "solitary": 32,
+          "colonialShare": 0.5,
+          "movingThrustCells": 0,
+          "largestMovingThrustBody": 0
+        },
+        {
+          "seconds": 60,
+          "colonial": 32,
+          "solitary": 32,
+          "colonialShare": 0.5,
+          "movingThrustCells": 0,
+          "largestMovingThrustBody": 0
+        },
+        {
+          "seconds": 120,
+          "colonial": 32,
+          "solitary": 32,
+          "colonialShare": 0.5,
+          "movingThrustCells": 0,
+          "largestMovingThrustBody": 0
+        },
+        {
+          "seconds": 180,
+          "colonial": 340,
+          "solitary": 106,
+          "colonialShare": 0.7623318385650224,
+          "movingThrustCells": 143,
+          "largestMovingThrustBody": 35
+        },
+        {
+          "seconds": 240,
+          "colonial": 2261,
+          "solitary": 1399,
+          "colonialShare": 0.6177595628415301,
+          "movingThrustCells": 2015,
+          "largestMovingThrustBody": 145
+        },
+        {
+          "seconds": 300,
+          "colonial": 2539,
+          "solitary": 1556,
+          "colonialShare": 0.62002442002442,
+          "movingThrustCells": 2039,
+          "largestMovingThrustBody": 158
+        },
+        {
+          "seconds": 360,
+          "colonial": 2421,
+          "solitary": 1668,
+          "colonialShare": 0.5920763022743947,
+          "movingThrustCells": 1790,
+          "largestMovingThrustBody": 116
+        },
+        {
+          "seconds": 420,
+          "colonial": 2074,
+          "solitary": 2018,
+          "colonialShare": 0.5068426197458455,
+          "movingThrustCells": 1754,
+          "largestMovingThrustBody": 70
+        },
+        {
+          "seconds": 480,
+          "colonial": 1729,
+          "solitary": 2178,
+          "colonialShare": 0.4425390325057589,
+          "movingThrustCells": 1278,
+          "largestMovingThrustBody": 46
+        },
+        {
+          "seconds": 540,
+          "colonial": 1391,
+          "solitary": 2062,
+          "colonialShare": 0.402838111786852,
+          "movingThrustCells": 980,
+          "largestMovingThrustBody": 41
+        },
+        {
+          "seconds": 600,
+          "colonial": 949,
+          "solitary": 1724,
+          "colonialShare": 0.3550317994762439,
+          "movingThrustCells": 578,
+          "largestMovingThrustBody": 33
+        }
+      ]
+    },
+    {
+      "seed": 321,
+      "guard": "kin",
+      "kernel": "7bee9c022385413c6b4fedfcb0098319a8d44610a43a597649dc32124e0cc7f8",
+      "final": {
+        "seconds": 600,
+        "colonial": 2717,
+        "solitary": 28,
+        "colonialShare": 0.989799635701275,
+        "movingThrustCells": 788,
+        "largestMovingThrustBody": 40
+      },
+      "lateMean": {
+        "colonial": 3701.6666666666665,
+        "solitary": 29.833333333333332,
+        "colonialShare": 0.9918995970575196,
+        "movingThrustCells": 1683.5,
+        "largestMovingThrustBody": 145
+      },
+      "series": [
+        {
+          "seconds": 0,
+          "colonial": 32,
+          "solitary": 32,
+          "colonialShare": 0.5,
+          "movingThrustCells": 0,
+          "largestMovingThrustBody": 0
+        },
+        {
+          "seconds": 60,
+          "colonial": 32,
+          "solitary": 32,
+          "colonialShare": 0.5,
+          "movingThrustCells": 0,
+          "largestMovingThrustBody": 0
+        },
+        {
+          "seconds": 120,
+          "colonial": 32,
+          "solitary": 32,
+          "colonialShare": 0.5,
+          "movingThrustCells": 0,
+          "largestMovingThrustBody": 0
+        },
+        {
+          "seconds": 180,
+          "colonial": 737,
+          "solitary": 46,
+          "colonialShare": 0.9412515964240102,
+          "movingThrustCells": 454,
+          "largestMovingThrustBody": 113
+        },
+        {
+          "seconds": 240,
+          "colonial": 4042,
+          "solitary": 48,
+          "colonialShare": 0.9882640586797066,
+          "movingThrustCells": 2695,
+          "largestMovingThrustBody": 185
+        },
+        {
+          "seconds": 300,
+          "colonial": 4046,
+          "solitary": 42,
+          "colonialShare": 0.9897260273972602,
+          "movingThrustCells": 2148,
+          "largestMovingThrustBody": 148
+        },
+        {
+          "seconds": 360,
+          "colonial": 4042,
+          "solitary": 38,
+          "colonialShare": 0.990686274509804,
+          "movingThrustCells": 1600,
+          "largestMovingThrustBody": 141
+        },
+        {
+          "seconds": 420,
+          "colonial": 4027,
+          "solitary": 24,
+          "colonialShare": 0.994075536904468,
+          "movingThrustCells": 1981,
+          "largestMovingThrustBody": 119
+        },
+        {
+          "seconds": 480,
+          "colonial": 4030,
+          "solitary": 21,
+          "colonialShare": 0.9948160947914095,
+          "movingThrustCells": 2057,
+          "largestMovingThrustBody": 163
+        },
+        {
+          "seconds": 540,
+          "colonial": 3348,
+          "solitary": 26,
+          "colonialShare": 0.992294013040901,
+          "movingThrustCells": 1527,
+          "largestMovingThrustBody": 259
+        },
+        {
+          "seconds": 600,
+          "colonial": 2717,
+          "solitary": 28,
+          "colonialShare": 0.989799635701275,
+          "movingThrustCells": 788,
+          "largestMovingThrustBody": 40
+        }
+      ]
+    }
+  ]
+}
