@@ -77,9 +77,9 @@ the initial sample, versus error one with instantaneous input. These are small
 computational checks, not evolved organisms or ecological fitness results.
 The controls are never inserted into evolving worlds.
 
-## Evolutionary comparison, in progress
+## Completed evolutionary comparison
 
-The three temporal-variant worlds use the same baseline as the ongoing cadence
+The three temporal-variant worlds use the same baseline as the completed cadence
 comparison: 32,768 slots, 8,192 random founders, eight arrivals per second, no
 population floor, 80% archive mutation, 25% crossover, zero division mutation,
 and 3,600 simulated seconds. The original compiler pause is retained here to
@@ -87,12 +87,48 @@ avoid combining two experimental changes. The old aggregate observer is off.
 Censuses every 300 seconds retain populations, motion, lifecycle counts and
 surviving programs.
 
-After all three seeds finish, compare sustained colonies and inspect the temporal
-expressions in survivors. Apply the matched history intervention to candidates
-before claiming functional temporal control. Then test ecological maintenance
-and descendants, as the earlier light-steering example failed outside its short
-assay. A larger population, more stateful syntax, or a more compressible trace
-is insufficient. No result from this comparison is claimed yet.
+All three worlds completed, with matched settings, shader fingerprints and
+demographic accounting. Means over the seven late censuses (minutes 30–60) are:
+
+| Seed | Baseline living | Temporal living | Baseline fraction in moving groups | Temporal fraction in moving groups |
+| --- | ---: | ---: | ---: | ---: |
+| 42 | 12,083 | 21,500 | 35.46% | 0.04% |
+| 97 | 25,993 | 12,151 | 1.00% | 42.20% |
+| 321 | 22,625 | 25,512 | 4.23% | 0.66% |
+
+Groups meet the existing movement threshold and contain recent thrust within
+60 ticks. These are connected components, not verified coordinated organisms.
+Results vary strongly by seed. The greatest group-movement gain occurs in seed
+97, whose two largest final lineages share the simple program
+`(seq (photosynthesize) (move (max (sunlight) (temperature))) (eat) (bud) (photosynthesize))`.
+It contains none of the new temporal expressions. The worlds do not isolate
+whether the new forms indirectly caused this ecological outcome; later mutation
+draws and competitive histories diverge. No default change is promoted.
+
+Final populations contain 29, 1,150 and 867 cells whose programs mention a new
+temporal expression (20, 46 and 67 genotypes). Those are syntax counts. For
+example, seed-97 program 15158 uses `(max (delta (sunlight)) (temperature))` as
+movement strength: sunlight differences are at most one, while temperature under
+this configuration is at least the ambient 20, and movement clamps to one.
+Its temporal result cannot affect movement strength under those bounds. Other
+survivors put history in a condition with the same action in both branches;
+their instruction timing still requires examination. Syntax alone is insufficient.
+
+One observed program has now passed a [causal crowding-pulse assay](../crowding-history.md)
+and thirty ecological control trials. Its difference detector contributes to
+movement and beats removing movement, but its extra delay has mixed effects and
+constant forward movement wins in two of three environmental seeds. The result
+supports a functional temporal response while rejecting stronger claims based
+only on nested memory syntax or a single ablation.
+
+All 48 original temporal-world files are retained with raw-byte hashes in
+[temporal-worlds](../results/temporal-worlds/manifest.json), alongside the 96 files
+from the shared baseline/cadence experiment. The [comparison](../results/temporal-world-comparison.json)
+can be regenerated with the production checkout:
+
+```sh
+node research/compare-evolution-variants.mjs research/results/cadence-worlds research/results/temporal-worlds temporal /tmp/temporal-comparison.json
+```
 
 ## Reproduction
 

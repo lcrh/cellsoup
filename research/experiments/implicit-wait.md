@@ -37,7 +37,7 @@ loop, retaining their state-initialization and inheritance checks. A separate ne
 test checks zero, one and two evaluations as the budget changes, plus explicit
 waiting. No production tests or compiler files have been changed.
 
-## Matched evolutionary comparison, in progress
+## Completed matched evolutionary comparison
 
 Baseline and variant each use seeds 42, 97 and 321, 32,768 slots, 8,192 random
 founders, eight arrivals per second, no population floor, 80% archive mutation,
@@ -58,6 +58,32 @@ benefits under matched interventions. More births, larger trees, extra iteration
 or faster score growth alone are insufficient. Existing selected-genome replays
 are mixed and do not substitute for this evolutionary comparison. Concurrent
 world runs are not performance benchmarks.
+
+All six one-hour runs completed. Configuration, physics shader, demographic
+accounting and 13 censuses per run pass the comparison checks. The following
+are means over seven late censuses (minutes 30–60), summarized within each world.
+They are three environmental seeds, not 42 independent samples.
+
+| Seed | Baseline living | Faster living | Baseline fraction in moving groups | Faster fraction in moving groups |
+| --- | ---: | ---: | ---: | ---: |
+| 42 | 12,083 | 21,864 | 35.46% | 0.26% |
+| 97 | 25,993 | 27,377 | 1.00% | 0.68% |
+| 321 | 22,625 | 31,993 | 4.23% | 3.36% |
+
+Moving groups require the existing motion threshold and recent thrust within
+60 ticks. They are connected components, not validated coordinated organisms.
+The faster compiler raises abundance in all three worlds but lowers this fraction
+in all three. Seed 321 produces many linked cells while its final population's
+mean mutation depth falls from 1.39 to 0.14. Higher abundance is therefore not a
+reliable improvement in the intended behavior. No default change is promoted.
+
+All 96 original files are individually gzipped with raw-byte hashes in
+[cadence-worlds](../results/cadence-worlds/manifest.json). Recompute the
+[comparison](../results/cadence-world-comparison.json) without experimental code:
+
+```sh
+node research/compare-evolution-variants.mjs research/results/cadence-worlds research/results/cadence-worlds cadence /tmp/cadence-comparison.json
+```
 
 [Full-light cadence check](../results/implicit-wait-check.json),
 [ecological replay analysis](../sensory-establishment.md).

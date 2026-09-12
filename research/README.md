@@ -109,11 +109,15 @@ The [next ecological checks](sensory-establishment.md) reverse the ranking from
 the short light assay: overheating defeats a strong light-seeker, while a less
 obvious forward/backward controller establishes well. A separate
 [compiler-cadence experiment](experiments/implicit-wait.md) removes an implicit
-pause that blocks simple photosynthetic reproduction; matched evolutionary
-worlds are in progress and the default compiler is unchanged.
+pause that blocks simple photosynthetic reproduction; six completed evolutionary
+worlds have higher populations but lower moving-group fractions. The default
+compiler is unchanged.
 
 A separate [temporal-expression experiment](experiments/temporal-expressions.md)
 adds generic previous-value, difference and smoothing expressions through archive
 mutation while keeping all initial founders identical. Its calibrated history
 intervention preserves current input and instruction timing. Evolutionary trials
-are in progress; no usefulness claim follows from the new primitives themselves.
+are complete and show mixed group-movement outcomes across three seeds.
+An [observed crowding-response program](crowding-history.md)
+uses history causally, but thirty ecological controls show why deleting history
+alone would overstate its advantage over simpler movement.

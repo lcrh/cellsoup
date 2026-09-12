@@ -6,15 +6,25 @@ import { assemble } from "../web/language.js";
 import { compileTree, TREE_VM_OPS } from "../web/gpu/trees.js";
 import { GPU_SENSORS, GPU_FIELDS } from "../web/gpu/language.js";
 import { GENOME_BYTES } from "../web/gpu/engine.js";
-export function withoutTemporalHistory(tree) {
+export function withoutTemporalHistory(tree, selectedSlots = null) {
   const original = compileTree(tree);
   assert.ok(
     original.statefulSlots,
     "Requires the temporal-expression compiler",
   );
+  if (selectedSlots !== null) {
+    assert.ok(Array.isArray(selectedSlots));
+    assert.equal(new Set(selectedSlots).size, selectedSlots.length);
+    assert.ok(
+      selectedSlots.every((slot) =>
+        original.statefulSlots.some((item) => item.slot === slot),
+      ),
+    );
+  }
   const lines = original.source.split("\n"),
     replacements = [];
   for (const { slot, op } of original.statefulSlots) {
+    if (selectedSlots !== null && !selectedSlots.includes(slot)) continue;
     const indexes = lines
       .map((line, index) =>
         new RegExp(`^mem_load r[0-7] ${slot}$`).test(line) ? index : -1,

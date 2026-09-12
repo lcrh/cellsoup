@@ -1,0 +1,171 @@
+{
+  "source": "research/runs/continuous-temporal-variant-42/observation-2400.json",
+  "sha256": "b6553ec1794a3c922137f0f13b29de06eb258d864f6ef25e54803952bf3e00ac",
+  "seconds": 2400,
+  "world": 4096,
+  "genome": {
+    "slot": 921,
+    "length": 30,
+    "serial": 14515,
+    "founder": 419,
+    "depth": 2,
+    "parent": 10556,
+    "bornTick": 47460,
+    "secondParent": 0,
+    "score": 0,
+    "source": "(seq\n  (seq\n    (seq\n      (if true (nop) (nop))\n      (move\n        (lag\n          (delta\n            (let ((local6 (target-bonds (bond c2))))\n              (crowding)\n            )\n          )\n        )\n      )\n    )\n    (eat)\n    (photosynthesize)\n  )\n  (tag-set (target-bearing (nearest-cell)))\n  (do (photosynthesize) (split))\n  (mobilize (target-energy (none)))\n  (photosynthesize)\n)",
+    "tree": {
+      "op": "seq",
+      "args": [
+        {
+          "op": "seq",
+          "args": [
+            {
+              "op": "seq",
+              "args": [
+                {
+                  "op": "if",
+                  "args": [
+                    {
+                      "op": "bool",
+                      "args": [],
+                      "value": 1
+                    },
+                    {
+                      "op": "nop",
+                      "args": []
+                    },
+                    {
+                      "op": "nop",
+                      "args": []
+                    }
+                  ]
+                },
+                {
+                  "op": "move",
+                  "args": [
+                    {
+                      "op": "lag",
+                      "args": [
+                        {
+                          "op": "delta",
+                          "args": [
+                            {
+                              "op": "let",
+                              "args": [
+                                {
+                                  "op": "slot",
+                                  "args": [],
+                                  "value": 6
+                                },
+                                {
+                                  "op": "target-bonds",
+                                  "args": [
+                                    {
+                                      "op": "bond",
+                                      "args": [
+                                        {
+                                          "op": "channel",
+                                          "args": [],
+                                          "value": 2
+                                        }
+                                      ]
+                                    }
+                                  ]
+                                },
+                                {
+                                  "op": "crowding",
+                                  "args": []
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "op": "seq",
+              "args": [
+                {
+                  "op": "eat",
+                  "args": []
+                },
+                {
+                  "op": "photosynthesize",
+                  "args": []
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "op": "seq",
+          "args": [
+            {
+              "op": "tag-set",
+              "args": [
+                {
+                  "op": "target-bearing",
+                  "args": [
+                    {
+                      "op": "nearest-cell",
+                      "args": []
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "op": "seq",
+              "args": [
+                {
+                  "op": "do",
+                  "args": [
+                    {
+                      "op": "photosynthesize",
+                      "args": []
+                    },
+                    {
+                      "op": "split",
+                      "args": []
+                    }
+                  ]
+                },
+                {
+                  "op": "seq",
+                  "args": [
+                    {
+                      "op": "mobilize",
+                      "args": [
+                        {
+                          "op": "target-energy",
+                          "args": [
+                            {
+                              "op": "none",
+                              "args": []
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "op": "photosynthesize",
+                      "args": []
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "nodes": 32,
+    "bytecode": "L0: mov r0 1\nL1: jz r0 L4\nL2: nop\nL3: jmp L5\nL4: nop\nL5: bond r0 2\nL6: peek r0 r0 bonds\nL7: mem_save 6 r0\nL8: sense r0 crowding\nL9: mem_load r1 1\nL10: mem_save 1 r0\nL11: sub r0 r1\nL12: mem_load r1 0\nL13: mem_save 0 r0\nL14: mov r0 r1\nL15: move r0\nL16: eat r0\nL17: photosynthesize r0\nL18: scan r0 -1 360\nL19: peek r0 r0 bearing\nL20: tag r0\nL21: photosynthesize r0\nL22: split r0\nL23: mem_save 8 r0\nL24: mov r0 0\nL25: peek r0 r0 energy\nL26: mobilize r0 r0\nL27: photosynthesize r0\nL28: wait 0\nL29: jmp L0",
+    "substrate": "tree"
+  }
+}

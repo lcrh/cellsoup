@@ -1,0 +1,5272 @@
+{
+  "candidate": {
+    "source": "research/runs/continuous-temporal-variant-42/observation-2400.json",
+    "sha256": "b6553ec1794a3c922137f0f13b29de06eb258d864f6ef25e54803952bf3e00ac",
+    "seconds": 2400,
+    "world": 4096,
+    "genome": {
+      "slot": 921,
+      "length": 30,
+      "serial": 14515,
+      "founder": 419,
+      "depth": 2,
+      "parent": 10556,
+      "bornTick": 47460,
+      "secondParent": 0,
+      "score": 0,
+      "source": "(seq\n  (seq\n    (seq\n      (if true (nop) (nop))\n      (move\n        (lag\n          (delta\n            (let ((local6 (target-bonds (bond c2))))\n              (crowding)\n            )\n          )\n        )\n      )\n    )\n    (eat)\n    (photosynthesize)\n  )\n  (tag-set (target-bearing (nearest-cell)))\n  (do (photosynthesize) (split))\n  (mobilize (target-energy (none)))\n  (photosynthesize)\n)",
+      "tree": {
+        "op": "seq",
+        "args": [
+          {
+            "op": "seq",
+            "args": [
+              {
+                "op": "seq",
+                "args": [
+                  {
+                    "op": "if",
+                    "args": [
+                      {
+                        "op": "bool",
+                        "args": [],
+                        "value": 1
+                      },
+                      {
+                        "op": "nop",
+                        "args": []
+                      },
+                      {
+                        "op": "nop",
+                        "args": []
+                      }
+                    ]
+                  },
+                  {
+                    "op": "move",
+                    "args": [
+                      {
+                        "op": "lag",
+                        "args": [
+                          {
+                            "op": "delta",
+                            "args": [
+                              {
+                                "op": "let",
+                                "args": [
+                                  {
+                                    "op": "slot",
+                                    "args": [],
+                                    "value": 6
+                                  },
+                                  {
+                                    "op": "target-bonds",
+                                    "args": [
+                                      {
+                                        "op": "bond",
+                                        "args": [
+                                          {
+                                            "op": "channel",
+                                            "args": [],
+                                            "value": 2
+                                          }
+                                        ]
+                                      }
+                                    ]
+                                  },
+                                  {
+                                    "op": "crowding",
+                                    "args": []
+                                  }
+                                ]
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "op": "seq",
+                "args": [
+                  {
+                    "op": "eat",
+                    "args": []
+                  },
+                  {
+                    "op": "photosynthesize",
+                    "args": []
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "op": "seq",
+            "args": [
+              {
+                "op": "tag-set",
+                "args": [
+                  {
+                    "op": "target-bearing",
+                    "args": [
+                      {
+                        "op": "nearest-cell",
+                        "args": []
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "op": "seq",
+                "args": [
+                  {
+                    "op": "do",
+                    "args": [
+                      {
+                        "op": "photosynthesize",
+                        "args": []
+                      },
+                      {
+                        "op": "split",
+                        "args": []
+                      }
+                    ]
+                  },
+                  {
+                    "op": "seq",
+                    "args": [
+                      {
+                        "op": "mobilize",
+                        "args": [
+                          {
+                            "op": "target-energy",
+                            "args": [
+                              {
+                                "op": "none",
+                                "args": []
+                              }
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "op": "photosynthesize",
+                        "args": []
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "nodes": 32,
+      "bytecode": "L0: mov r0 1\nL1: jz r0 L4\nL2: nop\nL3: jmp L5\nL4: nop\nL5: bond r0 2\nL6: peek r0 r0 bonds\nL7: mem_save 6 r0\nL8: sense r0 crowding\nL9: mem_load r1 1\nL10: mem_save 1 r0\nL11: sub r0 r1\nL12: mem_load r1 0\nL13: mem_save 0 r0\nL14: mov r0 r1\nL15: move r0\nL16: eat r0\nL17: photosynthesize r0\nL18: scan r0 -1 360\nL19: peek r0 r0 bearing\nL20: tag r0\nL21: photosynthesize r0\nL22: split r0\nL23: mem_save 8 r0\nL24: mov r0 0\nL25: peek r0 r0 energy\nL26: mobilize r0 r0\nL27: photosynthesize r0\nL28: wait 0\nL29: jmp L0",
+      "substrate": "tree"
+    }
+  },
+  "scope": "Controlled 60-tick density pulse using two passive neighbors pinned 12 units to either side for ticks 13–36 and 80 units away otherwise. This produces crowding without contact repulsion (range 10). Neighbors track the subject position, fixing the cue independently of its motion. Normal costs, no sunlight or reproduction; three slots already occupied. A manipulated-input assay, not spontaneous behavior or a fitness test.",
+  "trials": [
+    {
+      "treatment": "intact",
+      "config": {
+        "treePrograms": 1,
+        "crossover": 0.25,
+        "capacity": 3,
+        "genomeCapacity": 2,
+        "side": 8,
+        "sources": 1,
+        "initial": 0,
+        "seed": 42,
+        "budget": 24,
+        "floor": 0,
+        "rate": 0,
+        "share": 0.5,
+        "mutation": 0.8,
+        "seedEnergy": 24,
+        "seedStorage": 24,
+        "upkeep": 0.5,
+        "ambientTemperature": 20,
+        "sunlightHeating": 1,
+        "activityHeating": 0.12,
+        "cooling": 0.2,
+        "thermalExchange": 0.12,
+        "crowdInsulation": 1,
+        "safeTemperature": 28,
+        "heatDamage": 0.5,
+        "energyDecay": 0.05,
+        "divisionCost": 12,
+        "minimumBirthEnergy": 12,
+        "exchange": 0.12,
+        "shieldUpkeep": 0.72,
+        "cpuCost": 0.00005,
+        "moveCost": 0.004,
+        "turnCost": 0.0001,
+        "linkCost": 0.5,
+        "contractCost": 0.08,
+        "attackCost": 0.08,
+        "attackDamageCost": 0.2,
+        "emitCost": 0.01,
+        "sendCost": 0.01,
+        "jitter": 12,
+        "archiveAge": 60,
+        "archiveHarvest": 120,
+        "archiveOffspring": 8,
+        "archiveEnabled": 0,
+        "executionTrace": 0,
+        "solarRate": 4,
+        "sunContrast": 2,
+        "cloudCover": 0.5,
+        "cloudOpacity": 0.95,
+        "cloudScale": 1200,
+        "cloudSpeed": 12,
+        "cloudMorph": 180,
+        "solarEnabled": 0,
+        "corpseEnergy": 8,
+        "corpseLifetime": 900,
+        "eatCost": 0.04,
+        "storageCapacity": 400
+      },
+      "kernel": "60b4c0186a4a01ad0200339e9a2d676fcb9f717902e70747b127a3fd37f8067c",
+      "originalSource": "ROOT:\nmov r0 1\njz r0 T0\nnop\njmp T1\nT0:\nnop\nT1:\nbond r0 2\npeek r0 r0 bonds\nmem_save 6 r0\nsense r0 crowding\nmem_load r1 1\nmem_save 1 r0\nsub r0 r1\nmem_load r1 0\nmem_save 0 r0\nmov r0 r1\nmove r0\neat r0\nphotosynthesize r0\nscan r0 -1 360\npeek r0 r0 bearing\ntag r0\nphotosynthesize r0\nsplit r0\nmem_save 8 r0\nmov r0 0\npeek r0 r0 energy\nmobilize r0 r0\nphotosynthesize r0\nwait 0\njmp ROOT",
+      "alteredSource": "ROOT:\nmov r0 1\njz r0 T0\nnop\njmp T1\nT0:\nnop\nT1:\nbond r0 2\npeek r0 r0 bonds\nmem_save 6 r0\nsense r0 crowding\nmem_load r1 1\nmem_save 1 r0\nsub r0 r1\nmem_load r1 0\nmem_save 0 r0\nmov r0 r1\nmove r0\neat r0\nphotosynthesize r0\nscan r0 -1 360\npeek r0 r0 bearing\ntag r0\nphotosynthesize r0\nsplit r0\nmem_save 8 r0\nmov r0 0\npeek r0 r0 energy\nmobilize r0 r0\nphotosynthesize r0\nwait 0\njmp ROOT",
+      "replacements": [],
+      "rows": [
+        {
+          "tick": 1,
+          "near": false,
+          "crowding": 0,
+          "x": 128,
+          "vx": 0,
+          "inferredImpulse": 0,
+          "lastThrustTick": 0,
+          "pc": 23,
+          "memory": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tick": 2,
+          "near": false,
+          "crowding": 0,
+          "x": 128,
+          "vx": 0,
+          "inferredImpulse": 0,
+          "lastThrustTick": 0,
+          "pc": 29,
+          "memory": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tick": 3,
+          "near": false,
+          "crowding": 0,
+          "x": 128,
+          "vx": 0,
+          "inferredImpulse": 0,
+          "lastThrustTick": 0,
+          "pc": 23,
+          "memory": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tick": 4,
+          "near": false,
+          "crowding": 0,
+          "x": 128,
+          "vx": 0,
+          "inferredImpulse": 0,
+          "lastThrustTick": 0,
+          "pc": 29,
+          "memory": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tick": 5,
+          "near": false,
+          "crowding": 0,
+          "x": 128,
+          "vx": 0,
+          "inferredImpulse": 0,
+          "lastThrustTick": 0,
+          "pc": 23,
+          "memory": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tick": 6,
+          "near": false,
+          "crowding": 0,
+          "x": 128,
+          "vx": 0,
+          "inferredImpulse": 0,
+          "lastThrustTick": 0,
+          "pc": 29,
+          "memory": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tick": 7,
+          "near": false,
+          "crowding": 0,
+          "x": 128,
+          "vx": 0,
+          "inferredImpulse": 0,
+          "lastThrustTick": 0,
+          "pc": 23,
+          "memory": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tick": 8,
+          "near": false,
+          "crowding": 0,
+          "x": 128,
+          "vx": 0,
+          "inferredImpulse": 0,
+          "lastThrustTick": 0,
+          "pc": 29,
+          "memory": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tick": 9,
+          "near": false,
+          "crowding": 0,
+          "x": 128,
+          "vx": 0,
+          "inferredImpulse": 0,
+          "lastThrustTick": 0,
+          "pc": 23,
+          "memory": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tick": 10,
+          "near": false,
+          "crowding": 0,
+          "x": 128,
+          "vx": 0,
+          "inferredImpulse": 0,
+          "lastThrustTick": 0,
+          "pc": 29,
+          "memory": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tick": 11,
+          "near": false,
+          "crowding": 0,
+          "x": 128,
+          "vx": 0,
+          "inferredImpulse": 0,
+          "lastThrustTick": 0,
+          "pc": 23,
+          "memory": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tick": 12,
+          "near": false,
+          "crowding": 0,
+          "x": 128,
+          "vx": 0,
+          "inferredImpulse": 0,
+          "lastThrustTick": 0,
+          "pc": 29,
+          "memory": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tick": 13,
+          "near": true,
+          "crowding": 0.666666567325592,
+          "x": 128,
+          "vx": 0,
+          "inferredImpulse": 0,
+          "lastThrustTick": 0,
+          "pc": 23,
+          "memory": [
+            0.666666567325592,
+            0.666666567325592,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tick": 14,
+          "near": true,
+          "crowding": 0.666666567325592,
+          "x": 128,
+          "vx": 0,
+          "inferredImpulse": 0,
+          "lastThrustTick": 0,
+          "pc": 29,
+          "memory": [
+            0.666666567325592,
+            0.666666567325592,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tick": 15,
+          "near": true,
+          "crowding": 0.666666567325592,
+          "x": 128.05221557617188,
+          "vx": 3.1333327293395996,
+          "inferredImpulse": 3.333332699241366,
+          "lastThrustTick": 15,
+          "pc": 23,
+          "memory": [
+            0,
+            0.666666567325592,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tick": 16,
+          "near": true,
+          "crowding": 0.666666567325592,
+          "x": 128.10130310058594,
+          "vx": 2.9453327655792236,
+          "inferredImpulse": 7.947284608178506e-9,
+          "lastThrustTick": 15,
+          "pc": 29,
+          "memory": [
+            0,
+            0.666666567325592,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tick": 17,
+          "near": true,
+          "crowding": 0.666666567325592,
+          "x": 128.14744567871094,
+          "vx": 2.768612861633301,
+          "inferredImpulse": 7.341601193644465e-8,
+          "lastThrustTick": 15,
+          "pc": 23,
+          "memory": [
+            0,
+            0.666666567325592,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tick": 18,
+          "near": true,
+          "crowding": 0.666666567325592,
+          "x": 128.19082641601562,
+          "vx": 2.6024961471557617,
+          "inferredImpulse": 6.789504958248926e-8,
+          "lastThrustTick": 15,
+          "pc": 29,
+          "memory": [
+            0,
+            0.666666567325592,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tick": 19,
+          "near": true,
+          "crowding": 0.666666567325592,
+          "x": 128.23159790039062,
+          "vx": 2.4463462829589844,
+          "inferredImpulse": -9.48538270151289e-8,
+          "lastThrustTick": 15,
+          "pc": 23,
+          "memory": [
+            0,
+            0.666666567325592,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tick": 20,
+          "near": true,
+          "crowding": 0.666666567325592,
+          "x": 128.26992797851562,
+          "vx": 2.299565553665161,
+          "inferredImpulse": 5.693219140567862e-8,
+          "lastThrustTick": 15,
+          "pc": 29,
+          "memory": [
+            0,
+            0.666666567325592,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tick": 21,
+          "near": true,
+          "crowding": 0.666666567325592,
+          "x": 128.3059539794922,
+          "vx": 2.1615915298461914,
+          "inferredImpulse": -9.05494350611491e-8,
+          "lastThrustTick": 15,
+          "pc": 23,
+          "memory": [
+            0,
+            0.666666567325592,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tick": 22,
+          "near": true,
+          "crowding": 0.666666567325592,
+          "x": 128.33981323242188,
+          "vx": 2.0318961143493652,
+          "inferredImpulse": 8.664636297339712e-8,
+          "lastThrustTick": 15,
+          "pc": 29,
+          "memory": [
+            0,
+            0.666666567325592,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tick": 23,
+          "near": true,
+          "crowding": 0.666666567325592,
+          "x": 128.37164306640625,
+          "vx": 1.9099823236465454,
+          "inferredImpulse": -2.0210042528390204e-8,
+          "lastThrustTick": 15,
+          "pc": 23,
+          "memory": [
+            0,
+            0.666666567325592,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tick": 24,
+          "near": true,
+          "crowding": 0.666666567325592,
+          "x": 128.4015655517578,
+          "vx": 1.795383334159851,
+          "inferredImpulse": -4.8419307452363114e-8,
+          "lastThrustTick": 15,
+          "pc": 29,
+          "memory": [
+            0,
+            0.666666567325592,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tick": 25,
+          "near": true,
+          "crowding": 0.666666567325592,
+          "x": 128.4296875,
+          "vx": 1.6876603364944458,
+          "inferredImpulse": 7.09012049071589e-9,
+          "lastThrustTick": 15,
+          "pc": 23,
+          "memory": [
+            0,
+            0.666666567325592,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tick": 26,
+          "near": true,
+          "crowding": 0.666666567325592,
+          "x": 128.4561309814453,
+          "vx": 1.5864007472991943,
+          "inferredImpulse": 3.725330977033536e-8,
+          "lastThrustTick": 15,
+          "pc": 29,
+          "memory": [
+            0,
+            0.666666567325592,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tick": 27,
+          "near": true,
+          "crowding": 0.666666567325592,
+          "x": 128.48098754882812,
+          "vx": 1.4912166595458984,
+          "inferredImpulse": -4.16309258177705e-8,
+          "lastThrustTick": 15,
+          "pc": 23,
+          "memory": [
+            0,
+            0.666666567325592,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tick": 28,
+          "near": true,
+          "crowding": 0.666666567325592,
+          "x": 128.5043487548828,
+          "vx": 1.4017436504364014,
+          "inferredImpulse": -6.36319752445047e-9,
+          "lastThrustTick": 15,
+          "pc": 29,
+          "memory": [
+            0,
+            0.666666567325592,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tick": 29,
+          "near": true,
+          "crowding": 0.666666567325592,
+          "x": 128.52630615234375,
+          "vx": 1.3176389932632446,
+          "inferredImpulse": -3.702654827186791e-8,
+          "lastThrustTick": 15,
+          "pc": 23,
+          "memory": [
+            0,
+            0.666666567325592,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tick": 30,
+          "near": true,
+          "crowding": 0.666666567325592,
+          "x": 128.5469512939453,
+          "vx": 1.2385807037353516,
+          "inferredImpulse": 5.6605742537740866e-8,
+          "lastThrustTick": 15,
+          "pc": 29,
+          "memory": [
+            0,
+            0.666666567325592,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tick": 31,
+          "near": true,
+          "crowding": 0.666666567325592,
+          "x": 128.5663604736328,
+          "vx": 1.1642658710479736,
+          "inferredImpulse": 1.328696774827165e-8,
+          "lastThrustTick": 15,
+          "pc": 23,
+          "memory": [
+            0,
+            0.666666567325592,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tick": 32,
+          "near": true,
+          "crowding": 0.666666567325592,
+          "x": 128.5845947265625,
+          "vx": 1.0944099426269531,
+          "inferredImpulse": 2.831668521885433e-8,
+          "lastThrustTick": 15,
+          "pc": 29,
+          "memory": [
+            0,
+            0.666666567325592,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tick": 33,
+          "near": true,
+          "crowding": 0.666666567325592,
+          "x": 128.60174560546875,
+          "vx": 1.0287452936172485,
+          "inferredImpulse": -5.3024266977175216e-8,
+          "lastThrustTick": 15,
+          "pc": 23,
+          "memory": [
+            0,
+            0.666666567325592,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tick": 34,
+          "near": true,
+          "crowding": 0.666666567325592,
+          "x": 128.61785888671875,
+          "vx": 0.967020571231842,
+          "inferredImpulse": -2.463459214396835e-9,
+          "lastThrustTick": 15,
+          "pc": 29,
+          "memory": [
+            0,
+            0.666666567325592,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tick": 35,
+          "near": true,
+          "crowding": 0.666666567325592,
+          "x": 128.6330108642578,
+          "vx": 0.9089993238449097,
+          "inferredImpulse": -1.1497303331609032e-8,
+          "lastThrustTick": 15,
+          "pc": 23,
+          "memory": [
+            0,
+            0.666666567325592,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tick": 36,
+          "near": true,
+          "crowding": 0.666666567325592,
+          "x": 128.64724731445312,
+          "vx": 0.8544593453407288,
+          "inferredImpulse": -1.7985386291385907e-8,
+          "lastThrustTick": 15,
+          "pc": 29,
+          "memory": [
+            0,
+            0.666666567325592,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tick": 37,
+          "near": false,
+          "crowding": 0,
+          "x": 128.66062927246094,
+          "vx": 0.8031917810440063,
+          "inferredImpulse": -1.637328606030053e-9,
+          "lastThrustTick": 15,
+          "pc": 23,
+          "memory": [
+            -0.666666567325592,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tick": 38,
+          "near": false,
+          "crowding": 0,
+          "x": 128.6732177734375,
+          "vx": 0.7550002932548523,
+          "inferredImpulse": 2.2328132787130528e-8,
+          "lastThrustTick": 15,
+          "pc": 29,
+          "memory": [
+            -0.666666567325592,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tick": 39,
+          "near": false,
+          "crowding": 0,
+          "x": 128.63282775878906,
+          "vx": -2.4236323833465576,
+          "inferredImpulse": -3.3333326225035553,
+          "lastThrustTick": 39,
+          "pc": 23,
+          "memory": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tick": 40,
+          "near": false,
+          "crowding": 0,
+          "x": 128.59486389160156,
+          "vx": -2.278214454650879,
+          "inferredImpulse": -2.1365430313835532e-8,
+          "lastThrustTick": 39,
+          "pc": 29,
+          "memory": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tick": 41,
+          "near": false,
+          "crowding": 0,
+          "x": 128.55917358398438,
+          "vx": -2.141521692276001,
+          "inferredImpulse": -1.1737857619209535e-7,
+          "lastThrustTick": 39,
+          "pc": 23,
+          "memory": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tick": 42,
+          "near": false,
+          "crowding": 0,
+          "x": 128.52561950683594,
+          "vx": -2.0130302906036377,
+          "inferredImpulse": 1.0109576376038376e-7,
+          "lastThrustTick": 39,
+          "pc": 29,
+          "memory": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tick": 43,
+          "near": false,
+          "crowding": 0,
+          "x": 128.49407958984375,
+          "vx": -1.892248511314392,
+          "inferredImpulse": -4.568767142387742e-8,
+          "lastThrustTick": 39,
+          "pc": 23,
+          "memory": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tick": 44,
+          "near": false,
+          "crowding": 0,
+          "x": 128.4644317626953,
+          "vx": -1.778713583946228,
+          "inferredImpulse": 1.2955136741155115e-8,
+          "lastThrustTick": 39,
+          "pc": 29,
+          "memory": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tick": 45,
+          "near": false,
+          "crowding": 0,
+          "x": 128.4365692138672,
+          "vx": -1.6719907522201538,
+          "inferredImpulse": 1.3243103058613315e-8,
+          "lastThrustTick": 39,
+          "pc": 23,
+          "memory": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tick": 46,
+          "near": false,
+          "crowding": 0,
+          "x": 128.41036987304688,
+          "vx": -1.5716712474822998,
+          "inferredImpulse": 5.9168413057975044e-8,
+          "lastThrustTick": 39,
+          "pc": 29,
+          "memory": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tick": 47,
+          "near": false,
+          "crowding": 0,
+          "x": 128.3857421875,
+          "vx": -1.4773709774017334,
+          "inferredImpulse": -9.059072159089965e-9,
+          "lastThrustTick": 39,
+          "pc": 23,
+          "memory": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tick": 48,
+          "near": false,
+          "crowding": 0,
+          "x": 128.3625946044922,
+          "vx": -1.3887287378311157,
+          "inferredImpulse": -2.4038099288858916e-8,
+          "lastThrustTick": 39,
+          "pc": 29,
+          "memory": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tick": 49,
+          "near": false,
+          "crowding": 0,
+          "x": 128.34083557128906,
+          "vx": -1.3054050207138062,
+          "inferredImpulse": -1.1131430666111441e-8,
+          "lastThrustTick": 39,
+          "pc": 23,
+          "memory": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tick": 50,
+          "near": false,
+          "crowding": 0,
+          "x": 128.3203887939453,
+          "vx": -1.2270807027816772,
+          "inferredImpulse": 1.4443587659229706e-8,
+          "lastThrustTick": 39,
+          "pc": 29,
+          "memory": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tick": 51,
+          "near": false,
+          "crowding": 0,
+          "x": 128.30116271972656,
+          "vx": -1.1534558534622192,
+          "inferredImpulse": 4.496775618534343e-9,
+          "lastThrustTick": 39,
+          "pc": 23,
+          "memory": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tick": 52,
+          "near": false,
+          "crowding": 0,
+          "x": 128.28309631347656,
+          "vx": -1.0842485427856445,
+          "inferredImpulse": -4.6043842072407415e-8,
+          "lastThrustTick": 39,
+          "pc": 29,
+          "memory": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tick": 53,
+          "near": false,
+          "crowding": 0,
+          "x": 128.26611328125,
+          "vx": -1.0191936492919922,
+          "inferredImpulse": -2.3040996222079002e-8,
+          "lastThrustTick": 39,
+          "pc": 23,
+          "memory": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tick": 54,
+          "near": false,
+          "crowding": 0,
+          "x": 128.25015258789062,
+          "vx": -0.9580420255661011,
+          "inferredImpulse": 2.4876856130617853e-9,
+          "lastThrustTick": 39,
+          "pc": 29,
+          "memory": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tick": 55,
+          "near": false,
+          "crowding": 0,
+          "x": 128.23513793945312,
+          "vx": -0.9005594849586487,
+          "inferredImpulse": 1.7860995904506183e-8,
+          "lastThrustTick": 39,
+          "pc": 23,
+          "memory": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tick": 56,
+          "near": false,
+          "crowding": 0,
+          "x": 128.2210235595703,
+          "vx": -0.8465259075164795,
+          "inferredImpulse": 6.593137369392821e-9,
+          "lastThrustTick": 39,
+          "pc": 29,
+          "memory": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tick": 57,
+          "near": false,
+          "crowding": 0,
+          "x": 128.207763671875,
+          "vx": -0.7957343459129333,
+          "inferredImpulse": 5.462002516942732e-9,
+          "lastThrustTick": 39,
+          "pc": 23,
+          "memory": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tick": 58,
+          "near": false,
+          "crowding": 0,
+          "x": 128.19529724121094,
+          "vx": -0.7479903101921082,
+          "inferredImpulse": -2.865013770669833e-8,
+          "lastThrustTick": 39,
+          "pc": 29,
+          "memory": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tick": 59,
+          "near": false,
+          "crowding": 0,
+          "x": 128.18357849121094,
+          "vx": -0.7031108736991882,
+          "inferredImpulse": 1.7125580398236195e-8,
+          "lastThrustTick": 39,
+          "pc": 23,
+          "memory": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tick": 60,
+          "near": false,
+          "crowding": 0,
+          "x": 128.1725616455078,
+          "vx": -0.6609241962432861,
+          "inferredImpulse": 2.484851480133443e-8,
+          "lastThrustTick": 39,
+          "pc": 29,
+          "memory": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "treatment": "all",
+      "config": {
+        "treePrograms": 1,
+        "crossover": 0.25,
+        "capacity": 3,
+        "genomeCapacity": 2,
+        "side": 8,
+        "sources": 1,
+        "initial": 0,
+        "seed": 42,
+        "budget": 24,
+        "floor": 0,
+        "rate": 0,
+        "share": 0.5,
+        "mutation": 0.8,
+        "seedEnergy": 24,
+        "seedStorage": 24,
+        "upkeep": 0.5,
+        "ambientTemperature": 20,
+        "sunlightHeating": 1,
+        "activityHeating": 0.12,
+        "cooling": 0.2,
+        "thermalExchange": 0.12,
+        "crowdInsulation": 1,
+        "safeTemperature": 28,
+        "heatDamage": 0.5,
+        "energyDecay": 0.05,
+        "divisionCost": 12,
+        "minimumBirthEnergy": 12,
+        "exchange": 0.12,
+        "shieldUpkeep": 0.72,
+        "cpuCost": 0.00005,
+        "moveCost": 0.004,
+        "turnCost": 0.0001,
+        "linkCost": 0.5,
+        "contractCost": 0.08,
+        "attackCost": 0.08,
+        "attackDamageCost": 0.2,
+        "emitCost": 0.01,
+        "sendCost": 0.01,
+        "jitter": 12,
+        "archiveAge": 60,
+        "archiveHarvest": 120,
+        "archiveOffspring": 8,
+        "archiveEnabled": 0,
+        "executionTrace": 0,
+        "solarRate": 4,
+        "sunContrast": 2,
+        "cloudCover": 0.5,
+        "cloudOpacity": 0.95,
+        "cloudScale": 1200,
+        "cloudSpeed": 12,
+        "cloudMorph": 180,
+        "solarEnabled": 0,
+        "corpseEnergy": 8,
+        "corpseLifetime": 900,
+        "eatCost": 0.04,
+        "storageCapacity": 400
+      },
+      "kernel": "60b4c0186a4a01ad0200339e9a2d676fcb9f717902e70747b127a3fd37f8067c",
+      "originalSource": "ROOT:\nmov r0 1\njz r0 T0\nnop\njmp T1\nT0:\nnop\nT1:\nbond r0 2\npeek r0 r0 bonds\nmem_save 6 r0\nsense r0 crowding\nmem_load r1 1\nmem_save 1 r0\nsub r0 r1\nmem_load r1 0\nmem_save 0 r0\nmov r0 r1\nmove r0\neat r0\nphotosynthesize r0\nscan r0 -1 360\npeek r0 r0 bearing\ntag r0\nphotosynthesize r0\nsplit r0\nmem_save 8 r0\nmov r0 0\npeek r0 r0 energy\nmobilize r0 r0\nphotosynthesize r0\nwait 0\njmp ROOT",
+      "alteredSource": "ROOT:\nmov r0 1\njz r0 T0\nnop\njmp T1\nT0:\nnop\nT1:\nbond r0 2\npeek r0 r0 bonds\nmem_save 6 r0\nsense r0 crowding\nmov r1 r0\nmem_save 1 r0\nsub r0 r1\nmov r1 r0\nmem_save 0 r0\nmov r0 r1\nmove r0\neat r0\nphotosynthesize r0\nscan r0 -1 360\npeek r0 r0 bearing\ntag r0\nphotosynthesize r0\nsplit r0\nmem_save 8 r0\nmov r0 0\npeek r0 r0 energy\nmobilize r0 r0\nphotosynthesize r0\nwait 0\njmp ROOT",
+      "replacements": [
+        {
+          "slot": 0,
+          "op": "lag",
+          "before": "mem_load r1 0",
+          "after": "mov r1 r0"
+        },
+        {
+          "slot": 1,
+          "op": "delta",
+          "before": "mem_load r1 1",
+          "after": "mov r1 r0"
+        }
+      ],
+      "rows": [
+        {
+          "tick": 1,
+          "near": false,
+          "crowding": 0,
+          "x": 128,
+          "vx": 0,
+          "inferredImpulse": 0,
+          "lastThrustTick": 0,
+          "pc": 23,
+          "memory": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tick": 2,
+          "near": false,
+          "crowding": 0,
+          "x": 128,
+          "vx": 0,
+          "inferredImpulse": 0,
+          "lastThrustTick": 0,
+          "pc": 29,
+          "memory": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tick": 3,
+          "near": false,
+          "crowding": 0,
+          "x": 128,
+          "vx": 0,
+          "inferredImpulse": 0,
+          "lastThrustTick": 0,
+          "pc": 23,
+          "memory": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tick": 4,
+          "near": false,
+          "crowding": 0,
+          "x": 128,
+          "vx": 0,
+          "inferredImpulse": 0,
+          "lastThrustTick": 0,
+          "pc": 29,
+          "memory": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tick": 5,
+          "near": false,
+          "crowding": 0,
+          "x": 128,
+          "vx": 0,
+          "inferredImpulse": 0,
+          "lastThrustTick": 0,
+          "pc": 23,
+          "memory": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tick": 6,
+          "near": false,
+          "crowding": 0,
+          "x": 128,
+          "vx": 0,
+          "inferredImpulse": 0,
+          "lastThrustTick": 0,
+          "pc": 29,
+          "memory": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tick": 7,
+          "near": false,
+          "crowding": 0,
+          "x": 128,
+          "vx": 0,
+          "inferredImpulse": 0,
+          "lastThrustTick": 0,
+          "pc": 23,
+          "memory": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tick": 8,
+          "near": false,
+          "crowding": 0,
+          "x": 128,
+          "vx": 0,
+          "inferredImpulse": 0,
+          "lastThrustTick": 0,
+          "pc": 29,
+          "memory": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tick": 9,
+          "near": false,
+          "crowding": 0,
+          "x": 128,
+          "vx": 0,
+          "inferredImpulse": 0,
+          "lastThrustTick": 0,
+          "pc": 23,
+          "memory": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tick": 10,
+          "near": false,
+          "crowding": 0,
+          "x": 128,
+          "vx": 0,
+          "inferredImpulse": 0,
+          "lastThrustTick": 0,
+          "pc": 29,
+          "memory": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tick": 11,
+          "near": false,
+          "crowding": 0,
+          "x": 128,
+          "vx": 0,
+          "inferredImpulse": 0,
+          "lastThrustTick": 0,
+          "pc": 23,
+          "memory": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tick": 12,
+          "near": false,
+          "crowding": 0,
+          "x": 128,
+          "vx": 0,
+          "inferredImpulse": 0,
+          "lastThrustTick": 0,
+          "pc": 29,
+          "memory": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tick": 13,
+          "near": true,
+          "crowding": 0.666666567325592,
+          "x": 128,
+          "vx": 0,
+          "inferredImpulse": 0,
+          "lastThrustTick": 0,
+          "pc": 23,
+          "memory": [
+            0,
+            0.666666567325592,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tick": 14,
+          "near": true,
+          "crowding": 0.666666567325592,
+          "x": 128,
+          "vx": 0,
+          "inferredImpulse": 0,
+          "lastThrustTick": 0,
+          "pc": 29,
+          "memory": [
+            0,
+            0.666666567325592,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tick": 15,
+          "near": true,
+          "crowding": 0.666666567325592,
+          "x": 128,
+          "vx": 0,
+          "inferredImpulse": 0,
+          "lastThrustTick": 0,
+          "pc": 23,
+          "memory": [
+            0,
+            0.666666567325592,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tick": 16,
+          "near": true,
+          "crowding": 0.666666567325592,
+          "x": 128,
+          "vx": 0,
+          "inferredImpulse": 0,
+          "lastThrustTick": 0,
+          "pc": 29,
+          "memory": [
+            0,
+            0.666666567325592,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tick": 17,
+          "near": true,
+          "crowding": 0.666666567325592,
+          "x": 128,
+          "vx": 0,
+          "inferredImpulse": 0,
+          "lastThrustTick": 0,
+          "pc": 23,
+          "memory": [
+            0,
+            0.666666567325592,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tick": 18,
+          "near": true,
+          "crowding": 0.666666567325592,
+          "x": 128,
+          "vx": 0,
+          "inferredImpulse": 0,
+          "lastThrustTick": 0,
+          "pc": 29,
+          "memory": [
+            0,
+            0.666666567325592,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tick": 19,
+          "near": true,
+          "crowding": 0.666666567325592,
+          "x": 128,
+          "vx": 0,
+          "inferredImpulse": 0,
+          "lastThrustTick": 0,
+          "pc": 23,
+          "memory": [
+            0,
+            0.666666567325592,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tick": 20,
+          "near": true,
+          "crowding": 0.666666567325592,
+          "x": 128,
+          "vx": 0,
+          "inferredImpulse": 0,
+          "lastThrustTick": 0,
+          "pc": 29,
+          "memory": [
+            0,
+            0.666666567325592,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tick": 21,
+          "near": true,
+          "crowding": 0.666666567325592,
+          "x": 128,
+          "vx": 0,
+          "inferredImpulse": 0,
+          "lastThrustTick": 0,
+          "pc": 23,
+          "memory": [
+            0,
+            0.666666567325592,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tick": 22,
+          "near": true,
+          "crowding": 0.666666567325592,
+          "x": 128,
+          "vx": 0,
+          "inferredImpulse": 0,
+          "lastThrustTick": 0,
+          "pc": 29,
+          "memory": [
+            0,
+            0.666666567325592,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tick": 23,
+          "near": true,
+          "crowding": 0.666666567325592,
+          "x": 128,
+          "vx": 0,
+          "inferredImpulse": 0,
+          "lastThrustTick": 0,
+          "pc": 23,
+          "memory": [
+            0,
+            0.666666567325592,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tick": 24,
+          "near": true,
+          "crowding": 0.666666567325592,
+          "x": 128,
+          "vx": 0,
+          "inferredImpulse": 0,
+          "lastThrustTick": 0,
+          "pc": 29,
+          "memory": [
+            0,
+            0.666666567325592,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tick": 25,
+          "near": true,
+          "crowding": 0.666666567325592,
+          "x": 128,
+          "vx": 0,
+          "inferredImpulse": 0,
+          "lastThrustTick": 0,
+          "pc": 23,
+          "memory": [
+            0,
+            0.666666567325592,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tick": 26,
+          "near": true,
+          "crowding": 0.666666567325592,
+          "x": 128,
+          "vx": 0,
+          "inferredImpulse": 0,
+          "lastThrustTick": 0,
+          "pc": 29,
+          "memory": [
+            0,
+            0.666666567325592,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tick": 27,
+          "near": true,
+          "crowding": 0.666666567325592,
+          "x": 128,
+          "vx": 0,
+          "inferredImpulse": 0,
+          "lastThrustTick": 0,
+          "pc": 23,
+          "memory": [
+            0,
+            0.666666567325592,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tick": 28,
+          "near": true,
+          "crowding": 0.666666567325592,
+          "x": 128,
+          "vx": 0,
+          "inferredImpulse": 0,
+          "lastThrustTick": 0,
+          "pc": 29,
+          "memory": [
+            0,
+            0.666666567325592,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tick": 29,
+          "near": true,
+          "crowding": 0.666666567325592,
+          "x": 128,
+          "vx": 0,
+          "inferredImpulse": 0,
+          "lastThrustTick": 0,
+          "pc": 23,
+          "memory": [
+            0,
+            0.666666567325592,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tick": 30,
+          "near": true,
+          "crowding": 0.666666567325592,
+          "x": 128,
+          "vx": 0,
+          "inferredImpulse": 0,
+          "lastThrustTick": 0,
+          "pc": 29,
+          "memory": [
+            0,
+            0.666666567325592,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tick": 31,
+          "near": true,
+          "crowding": 0.666666567325592,
+          "x": 128,
+          "vx": 0,
+          "inferredImpulse": 0,
+          "lastThrustTick": 0,
+          "pc": 23,
+          "memory": [
+            0,
+            0.666666567325592,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tick": 32,
+          "near": true,
+          "crowding": 0.666666567325592,
+          "x": 128,
+          "vx": 0,
+          "inferredImpulse": 0,
+          "lastThrustTick": 0,
+          "pc": 29,
+          "memory": [
+            0,
+            0.666666567325592,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tick": 33,
+          "near": true,
+          "crowding": 0.666666567325592,
+          "x": 128,
+          "vx": 0,
+          "inferredImpulse": 0,
+          "lastThrustTick": 0,
+          "pc": 23,
+          "memory": [
+            0,
+            0.666666567325592,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tick": 34,
+          "near": true,
+          "crowding": 0.666666567325592,
+          "x": 128,
+          "vx": 0,
+          "inferredImpulse": 0,
+          "lastThrustTick": 0,
+          "pc": 29,
+          "memory": [
+            0,
+            0.666666567325592,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tick": 35,
+          "near": true,
+          "crowding": 0.666666567325592,
+          "x": 128,
+          "vx": 0,
+          "inferredImpulse": 0,
+          "lastThrustTick": 0,
+          "pc": 23,
+          "memory": [
+            0,
+            0.666666567325592,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tick": 36,
+          "near": true,
+          "crowding": 0.666666567325592,
+          "x": 128,
+          "vx": 0,
+          "inferredImpulse": 0,
+          "lastThrustTick": 0,
+          "pc": 29,
+          "memory": [
+            0,
+            0.666666567325592,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tick": 37,
+          "near": false,
+          "crowding": 0,
+          "x": 128,
+          "vx": 0,
+          "inferredImpulse": 0,
+          "lastThrustTick": 0,
+          "pc": 23,
+          "memory": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tick": 38,
+          "near": false,
+          "crowding": 0,
+          "x": 128,
+          "vx": 0,
+          "inferredImpulse": 0,
+          "lastThrustTick": 0,
+          "pc": 29,
+          "memory": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tick": 39,
+          "near": false,
+          "crowding": 0,
+          "x": 128,
+          "vx": 0,
+          "inferredImpulse": 0,
+          "lastThrustTick": 0,
+          "pc": 23,
+          "memory": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tick": 40,
+          "near": false,
+          "crowding": 0,
+          "x": 128,
+          "vx": 0,
+          "inferredImpulse": 0,
+          "lastThrustTick": 0,
+          "pc": 29,
+          "memory": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tick": 41,
+          "near": false,
+          "crowding": 0,
+          "x": 128,
+          "vx": 0,
+          "inferredImpulse": 0,
+          "lastThrustTick": 0,
+          "pc": 23,
+          "memory": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tick": 42,
+          "near": false,
+          "crowding": 0,
+          "x": 128,
+          "vx": 0,
+          "inferredImpulse": 0,
+          "lastThrustTick": 0,
+          "pc": 29,
+          "memory": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tick": 43,
+          "near": false,
+          "crowding": 0,
+          "x": 128,
+          "vx": 0,
+          "inferredImpulse": 0,
+          "lastThrustTick": 0,
+          "pc": 23,
+          "memory": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tick": 44,
+          "near": false,
+          "crowding": 0,
+          "x": 128,
+          "vx": 0,
+          "inferredImpulse": 0,
+          "lastThrustTick": 0,
+          "pc": 29,
+          "memory": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tick": 45,
+          "near": false,
+          "crowding": 0,
+          "x": 128,
+          "vx": 0,
+          "inferredImpulse": 0,
+          "lastThrustTick": 0,
+          "pc": 23,
+          "memory": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tick": 46,
+          "near": false,
+          "crowding": 0,
+          "x": 128,
+          "vx": 0,
+          "inferredImpulse": 0,
+          "lastThrustTick": 0,
+          "pc": 29,
+          "memory": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tick": 47,
+          "near": false,
+          "crowding": 0,
+          "x": 128,
+          "vx": 0,
+          "inferredImpulse": 0,
+          "lastThrustTick": 0,
+          "pc": 23,
+          "memory": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tick": 48,
+          "near": false,
+          "crowding": 0,
+          "x": 128,
+          "vx": 0,
+          "inferredImpulse": 0,
+          "lastThrustTick": 0,
+          "pc": 29,
+          "memory": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tick": 49,
+          "near": false,
+          "crowding": 0,
+          "x": 128,
+          "vx": 0,
+          "inferredImpulse": 0,
+          "lastThrustTick": 0,
+          "pc": 23,
+          "memory": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tick": 50,
+          "near": false,
+          "crowding": 0,
+          "x": 128,
+          "vx": 0,
+          "inferredImpulse": 0,
+          "lastThrustTick": 0,
+          "pc": 29,
+          "memory": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tick": 51,
+          "near": false,
+          "crowding": 0,
+          "x": 128,
+          "vx": 0,
+          "inferredImpulse": 0,
+          "lastThrustTick": 0,
+          "pc": 23,
+          "memory": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tick": 52,
+          "near": false,
+          "crowding": 0,
+          "x": 128,
+          "vx": 0,
+          "inferredImpulse": 0,
+          "lastThrustTick": 0,
+          "pc": 29,
+          "memory": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tick": 53,
+          "near": false,
+          "crowding": 0,
+          "x": 128,
+          "vx": 0,
+          "inferredImpulse": 0,
+          "lastThrustTick": 0,
+          "pc": 23,
+          "memory": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tick": 54,
+          "near": false,
+          "crowding": 0,
+          "x": 128,
+          "vx": 0,
+          "inferredImpulse": 0,
+          "lastThrustTick": 0,
+          "pc": 29,
+          "memory": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tick": 55,
+          "near": false,
+          "crowding": 0,
+          "x": 128,
+          "vx": 0,
+          "inferredImpulse": 0,
+          "lastThrustTick": 0,
+          "pc": 23,
+          "memory": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tick": 56,
+          "near": false,
+          "crowding": 0,
+          "x": 128,
+          "vx": 0,
+          "inferredImpulse": 0,
+          "lastThrustTick": 0,
+          "pc": 29,
+          "memory": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tick": 57,
+          "near": false,
+          "crowding": 0,
+          "x": 128,
+          "vx": 0,
+          "inferredImpulse": 0,
+          "lastThrustTick": 0,
+          "pc": 23,
+          "memory": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tick": 58,
+          "near": false,
+          "crowding": 0,
+          "x": 128,
+          "vx": 0,
+          "inferredImpulse": 0,
+          "lastThrustTick": 0,
+          "pc": 29,
+          "memory": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tick": 59,
+          "near": false,
+          "crowding": 0,
+          "x": 128,
+          "vx": 0,
+          "inferredImpulse": 0,
+          "lastThrustTick": 0,
+          "pc": 23,
+          "memory": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tick": 60,
+          "near": false,
+          "crowding": 0,
+          "x": 128,
+          "vx": 0,
+          "inferredImpulse": 0,
+          "lastThrustTick": 0,
+          "pc": 29,
+          "memory": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "treatment": "lag",
+      "config": {
+        "treePrograms": 1,
+        "crossover": 0.25,
+        "capacity": 3,
+        "genomeCapacity": 2,
+        "side": 8,
+        "sources": 1,
+        "initial": 0,
+        "seed": 42,
+        "budget": 24,
+        "floor": 0,
+        "rate": 0,
+        "share": 0.5,
+        "mutation": 0.8,
+        "seedEnergy": 24,
+        "seedStorage": 24,
+        "upkeep": 0.5,
+        "ambientTemperature": 20,
+        "sunlightHeating": 1,
+        "activityHeating": 0.12,
+        "cooling": 0.2,
+        "thermalExchange": 0.12,
+        "crowdInsulation": 1,
+        "safeTemperature": 28,
+        "heatDamage": 0.5,
+        "energyDecay": 0.05,
+        "divisionCost": 12,
+        "minimumBirthEnergy": 12,
+        "exchange": 0.12,
+        "shieldUpkeep": 0.72,
+        "cpuCost": 0.00005,
+        "moveCost": 0.004,
+        "turnCost": 0.0001,
+        "linkCost": 0.5,
+        "contractCost": 0.08,
+        "attackCost": 0.08,
+        "attackDamageCost": 0.2,
+        "emitCost": 0.01,
+        "sendCost": 0.01,
+        "jitter": 12,
+        "archiveAge": 60,
+        "archiveHarvest": 120,
+        "archiveOffspring": 8,
+        "archiveEnabled": 0,
+        "executionTrace": 0,
+        "solarRate": 4,
+        "sunContrast": 2,
+        "cloudCover": 0.5,
+        "cloudOpacity": 0.95,
+        "cloudScale": 1200,
+        "cloudSpeed": 12,
+        "cloudMorph": 180,
+        "solarEnabled": 0,
+        "corpseEnergy": 8,
+        "corpseLifetime": 900,
+        "eatCost": 0.04,
+        "storageCapacity": 400
+      },
+      "kernel": "60b4c0186a4a01ad0200339e9a2d676fcb9f717902e70747b127a3fd37f8067c",
+      "originalSource": "ROOT:\nmov r0 1\njz r0 T0\nnop\njmp T1\nT0:\nnop\nT1:\nbond r0 2\npeek r0 r0 bonds\nmem_save 6 r0\nsense r0 crowding\nmem_load r1 1\nmem_save 1 r0\nsub r0 r1\nmem_load r1 0\nmem_save 0 r0\nmov r0 r1\nmove r0\neat r0\nphotosynthesize r0\nscan r0 -1 360\npeek r0 r0 bearing\ntag r0\nphotosynthesize r0\nsplit r0\nmem_save 8 r0\nmov r0 0\npeek r0 r0 energy\nmobilize r0 r0\nphotosynthesize r0\nwait 0\njmp ROOT",
+      "alteredSource": "ROOT:\nmov r0 1\njz r0 T0\nnop\njmp T1\nT0:\nnop\nT1:\nbond r0 2\npeek r0 r0 bonds\nmem_save 6 r0\nsense r0 crowding\nmem_load r1 1\nmem_save 1 r0\nsub r0 r1\nmov r1 r0\nmem_save 0 r0\nmov r0 r1\nmove r0\neat r0\nphotosynthesize r0\nscan r0 -1 360\npeek r0 r0 bearing\ntag r0\nphotosynthesize r0\nsplit r0\nmem_save 8 r0\nmov r0 0\npeek r0 r0 energy\nmobilize r0 r0\nphotosynthesize r0\nwait 0\njmp ROOT",
+      "replacements": [
+        {
+          "slot": 0,
+          "op": "lag",
+          "before": "mem_load r1 0",
+          "after": "mov r1 r0"
+        }
+      ],
+      "rows": [
+        {
+          "tick": 1,
+          "near": false,
+          "crowding": 0,
+          "x": 128,
+          "vx": 0,
+          "inferredImpulse": 0,
+          "lastThrustTick": 0,
+          "pc": 23,
+          "memory": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tick": 2,
+          "near": false,
+          "crowding": 0,
+          "x": 128,
+          "vx": 0,
+          "inferredImpulse": 0,
+          "lastThrustTick": 0,
+          "pc": 29,
+          "memory": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tick": 3,
+          "near": false,
+          "crowding": 0,
+          "x": 128,
+          "vx": 0,
+          "inferredImpulse": 0,
+          "lastThrustTick": 0,
+          "pc": 23,
+          "memory": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tick": 4,
+          "near": false,
+          "crowding": 0,
+          "x": 128,
+          "vx": 0,
+          "inferredImpulse": 0,
+          "lastThrustTick": 0,
+          "pc": 29,
+          "memory": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tick": 5,
+          "near": false,
+          "crowding": 0,
+          "x": 128,
+          "vx": 0,
+          "inferredImpulse": 0,
+          "lastThrustTick": 0,
+          "pc": 23,
+          "memory": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tick": 6,
+          "near": false,
+          "crowding": 0,
+          "x": 128,
+          "vx": 0,
+          "inferredImpulse": 0,
+          "lastThrustTick": 0,
+          "pc": 29,
+          "memory": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tick": 7,
+          "near": false,
+          "crowding": 0,
+          "x": 128,
+          "vx": 0,
+          "inferredImpulse": 0,
+          "lastThrustTick": 0,
+          "pc": 23,
+          "memory": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tick": 8,
+          "near": false,
+          "crowding": 0,
+          "x": 128,
+          "vx": 0,
+          "inferredImpulse": 0,
+          "lastThrustTick": 0,
+          "pc": 29,
+          "memory": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tick": 9,
+          "near": false,
+          "crowding": 0,
+          "x": 128,
+          "vx": 0,
+          "inferredImpulse": 0,
+          "lastThrustTick": 0,
+          "pc": 23,
+          "memory": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tick": 10,
+          "near": false,
+          "crowding": 0,
+          "x": 128,
+          "vx": 0,
+          "inferredImpulse": 0,
+          "lastThrustTick": 0,
+          "pc": 29,
+          "memory": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tick": 11,
+          "near": false,
+          "crowding": 0,
+          "x": 128,
+          "vx": 0,
+          "inferredImpulse": 0,
+          "lastThrustTick": 0,
+          "pc": 23,
+          "memory": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tick": 12,
+          "near": false,
+          "crowding": 0,
+          "x": 128,
+          "vx": 0,
+          "inferredImpulse": 0,
+          "lastThrustTick": 0,
+          "pc": 29,
+          "memory": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tick": 13,
+          "near": true,
+          "crowding": 0.666666567325592,
+          "x": 128.05221557617188,
+          "vx": 3.1333327293395996,
+          "inferredImpulse": 3.333332699241366,
+          "lastThrustTick": 13,
+          "pc": 23,
+          "memory": [
+            0.666666567325592,
+            0.666666567325592,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tick": 14,
+          "near": true,
+          "crowding": 0.666666567325592,
+          "x": 128.10130310058594,
+          "vx": 2.9453327655792236,
+          "inferredImpulse": 7.947284608178506e-9,
+          "lastThrustTick": 13,
+          "pc": 29,
+          "memory": [
+            0.666666567325592,
+            0.666666567325592,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tick": 15,
+          "near": true,
+          "crowding": 0.666666567325592,
+          "x": 128.14744567871094,
+          "vx": 2.768612861633301,
+          "inferredImpulse": 7.341601193644465e-8,
+          "lastThrustTick": 13,
+          "pc": 23,
+          "memory": [
+            0,
+            0.666666567325592,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tick": 16,
+          "near": true,
+          "crowding": 0.666666567325592,
+          "x": 128.19082641601562,
+          "vx": 2.6024961471557617,
+          "inferredImpulse": 6.789504958248926e-8,
+          "lastThrustTick": 13,
+          "pc": 29,
+          "memory": [
+            0,
+            0.666666567325592,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tick": 17,
+          "near": true,
+          "crowding": 0.666666567325592,
+          "x": 128.23159790039062,
+          "vx": 2.4463462829589844,
+          "inferredImpulse": -9.48538270151289e-8,
+          "lastThrustTick": 13,
+          "pc": 23,
+          "memory": [
+            0,
+            0.666666567325592,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tick": 18,
+          "near": true,
+          "crowding": 0.666666567325592,
+          "x": 128.26992797851562,
+          "vx": 2.299565553665161,
+          "inferredImpulse": 5.693219140567862e-8,
+          "lastThrustTick": 13,
+          "pc": 29,
+          "memory": [
+            0,
+            0.666666567325592,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tick": 19,
+          "near": true,
+          "crowding": 0.666666567325592,
+          "x": 128.3059539794922,
+          "vx": 2.1615915298461914,
+          "inferredImpulse": -9.05494350611491e-8,
+          "lastThrustTick": 13,
+          "pc": 23,
+          "memory": [
+            0,
+            0.666666567325592,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tick": 20,
+          "near": true,
+          "crowding": 0.666666567325592,
+          "x": 128.33981323242188,
+          "vx": 2.0318961143493652,
+          "inferredImpulse": 8.664636297339712e-8,
+          "lastThrustTick": 13,
+          "pc": 29,
+          "memory": [
+            0,
+            0.666666567325592,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tick": 21,
+          "near": true,
+          "crowding": 0.666666567325592,
+          "x": 128.37164306640625,
+          "vx": 1.9099823236465454,
+          "inferredImpulse": -2.0210042528390204e-8,
+          "lastThrustTick": 13,
+          "pc": 23,
+          "memory": [
+            0,
+            0.666666567325592,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tick": 22,
+          "near": true,
+          "crowding": 0.666666567325592,
+          "x": 128.4015655517578,
+          "vx": 1.795383334159851,
+          "inferredImpulse": -4.8419307452363114e-8,
+          "lastThrustTick": 13,
+          "pc": 29,
+          "memory": [
+            0,
+            0.666666567325592,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tick": 23,
+          "near": true,
+          "crowding": 0.666666567325592,
+          "x": 128.4296875,
+          "vx": 1.6876603364944458,
+          "inferredImpulse": 7.09012049071589e-9,
+          "lastThrustTick": 13,
+          "pc": 23,
+          "memory": [
+            0,
+            0.666666567325592,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tick": 24,
+          "near": true,
+          "crowding": 0.666666567325592,
+          "x": 128.4561309814453,
+          "vx": 1.5864007472991943,
+          "inferredImpulse": 3.725330977033536e-8,
+          "lastThrustTick": 13,
+          "pc": 29,
+          "memory": [
+            0,
+            0.666666567325592,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tick": 25,
+          "near": true,
+          "crowding": 0.666666567325592,
+          "x": 128.48098754882812,
+          "vx": 1.4912166595458984,
+          "inferredImpulse": -4.16309258177705e-8,
+          "lastThrustTick": 13,
+          "pc": 23,
+          "memory": [
+            0,
+            0.666666567325592,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tick": 26,
+          "near": true,
+          "crowding": 0.666666567325592,
+          "x": 128.5043487548828,
+          "vx": 1.4017436504364014,
+          "inferredImpulse": -6.36319752445047e-9,
+          "lastThrustTick": 13,
+          "pc": 29,
+          "memory": [
+            0,
+            0.666666567325592,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tick": 27,
+          "near": true,
+          "crowding": 0.666666567325592,
+          "x": 128.52630615234375,
+          "vx": 1.3176389932632446,
+          "inferredImpulse": -3.702654827186791e-8,
+          "lastThrustTick": 13,
+          "pc": 23,
+          "memory": [
+            0,
+            0.666666567325592,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tick": 28,
+          "near": true,
+          "crowding": 0.666666567325592,
+          "x": 128.5469512939453,
+          "vx": 1.2385807037353516,
+          "inferredImpulse": 5.6605742537740866e-8,
+          "lastThrustTick": 13,
+          "pc": 29,
+          "memory": [
+            0,
+            0.666666567325592,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tick": 29,
+          "near": true,
+          "crowding": 0.666666567325592,
+          "x": 128.5663604736328,
+          "vx": 1.1642658710479736,
+          "inferredImpulse": 1.328696774827165e-8,
+          "lastThrustTick": 13,
+          "pc": 23,
+          "memory": [
+            0,
+            0.666666567325592,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tick": 30,
+          "near": true,
+          "crowding": 0.666666567325592,
+          "x": 128.5845947265625,
+          "vx": 1.0944099426269531,
+          "inferredImpulse": 2.831668521885433e-8,
+          "lastThrustTick": 13,
+          "pc": 29,
+          "memory": [
+            0,
+            0.666666567325592,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tick": 31,
+          "near": true,
+          "crowding": 0.666666567325592,
+          "x": 128.60174560546875,
+          "vx": 1.0287452936172485,
+          "inferredImpulse": -5.3024266977175216e-8,
+          "lastThrustTick": 13,
+          "pc": 23,
+          "memory": [
+            0,
+            0.666666567325592,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tick": 32,
+          "near": true,
+          "crowding": 0.666666567325592,
+          "x": 128.61785888671875,
+          "vx": 0.967020571231842,
+          "inferredImpulse": -2.463459214396835e-9,
+          "lastThrustTick": 13,
+          "pc": 29,
+          "memory": [
+            0,
+            0.666666567325592,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tick": 33,
+          "near": true,
+          "crowding": 0.666666567325592,
+          "x": 128.6330108642578,
+          "vx": 0.9089993238449097,
+          "inferredImpulse": -1.1497303331609032e-8,
+          "lastThrustTick": 13,
+          "pc": 23,
+          "memory": [
+            0,
+            0.666666567325592,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tick": 34,
+          "near": true,
+          "crowding": 0.666666567325592,
+          "x": 128.64724731445312,
+          "vx": 0.8544593453407288,
+          "inferredImpulse": -1.7985386291385907e-8,
+          "lastThrustTick": 13,
+          "pc": 29,
+          "memory": [
+            0,
+            0.666666567325592,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tick": 35,
+          "near": true,
+          "crowding": 0.666666567325592,
+          "x": 128.66062927246094,
+          "vx": 0.8031917810440063,
+          "inferredImpulse": -1.637328606030053e-9,
+          "lastThrustTick": 13,
+          "pc": 23,
+          "memory": [
+            0,
+            0.666666567325592,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tick": 36,
+          "near": true,
+          "crowding": 0.666666567325592,
+          "x": 128.6732177734375,
+          "vx": 0.7550002932548523,
+          "inferredImpulse": 2.2328132787130528e-8,
+          "lastThrustTick": 13,
+          "pc": 29,
+          "memory": [
+            0,
+            0.666666567325592,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tick": 37,
+          "near": false,
+          "crowding": 0,
+          "x": 128.63282775878906,
+          "vx": -2.4236323833465576,
+          "inferredImpulse": -3.3333326225035553,
+          "lastThrustTick": 37,
+          "pc": 23,
+          "memory": [
+            -0.666666567325592,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tick": 38,
+          "near": false,
+          "crowding": 0,
+          "x": 128.59486389160156,
+          "vx": -2.278214454650879,
+          "inferredImpulse": -2.1365430313835532e-8,
+          "lastThrustTick": 37,
+          "pc": 29,
+          "memory": [
+            -0.666666567325592,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tick": 39,
+          "near": false,
+          "crowding": 0,
+          "x": 128.55917358398438,
+          "vx": -2.141521692276001,
+          "inferredImpulse": -1.1737857619209535e-7,
+          "lastThrustTick": 37,
+          "pc": 23,
+          "memory": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tick": 40,
+          "near": false,
+          "crowding": 0,
+          "x": 128.52561950683594,
+          "vx": -2.0130302906036377,
+          "inferredImpulse": 1.0109576376038376e-7,
+          "lastThrustTick": 37,
+          "pc": 29,
+          "memory": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tick": 41,
+          "near": false,
+          "crowding": 0,
+          "x": 128.49407958984375,
+          "vx": -1.892248511314392,
+          "inferredImpulse": -4.568767142387742e-8,
+          "lastThrustTick": 37,
+          "pc": 23,
+          "memory": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tick": 42,
+          "near": false,
+          "crowding": 0,
+          "x": 128.4644317626953,
+          "vx": -1.778713583946228,
+          "inferredImpulse": 1.2955136741155115e-8,
+          "lastThrustTick": 37,
+          "pc": 29,
+          "memory": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tick": 43,
+          "near": false,
+          "crowding": 0,
+          "x": 128.4365692138672,
+          "vx": -1.6719907522201538,
+          "inferredImpulse": 1.3243103058613315e-8,
+          "lastThrustTick": 37,
+          "pc": 23,
+          "memory": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tick": 44,
+          "near": false,
+          "crowding": 0,
+          "x": 128.41036987304688,
+          "vx": -1.5716712474822998,
+          "inferredImpulse": 5.9168413057975044e-8,
+          "lastThrustTick": 37,
+          "pc": 29,
+          "memory": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tick": 45,
+          "near": false,
+          "crowding": 0,
+          "x": 128.3857421875,
+          "vx": -1.4773709774017334,
+          "inferredImpulse": -9.059072159089965e-9,
+          "lastThrustTick": 37,
+          "pc": 23,
+          "memory": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tick": 46,
+          "near": false,
+          "crowding": 0,
+          "x": 128.3625946044922,
+          "vx": -1.3887287378311157,
+          "inferredImpulse": -2.4038099288858916e-8,
+          "lastThrustTick": 37,
+          "pc": 29,
+          "memory": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tick": 47,
+          "near": false,
+          "crowding": 0,
+          "x": 128.34083557128906,
+          "vx": -1.3054050207138062,
+          "inferredImpulse": -1.1131430666111441e-8,
+          "lastThrustTick": 37,
+          "pc": 23,
+          "memory": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tick": 48,
+          "near": false,
+          "crowding": 0,
+          "x": 128.3203887939453,
+          "vx": -1.2270807027816772,
+          "inferredImpulse": 1.4443587659229706e-8,
+          "lastThrustTick": 37,
+          "pc": 29,
+          "memory": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tick": 49,
+          "near": false,
+          "crowding": 0,
+          "x": 128.30116271972656,
+          "vx": -1.1534558534622192,
+          "inferredImpulse": 4.496775618534343e-9,
+          "lastThrustTick": 37,
+          "pc": 23,
+          "memory": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tick": 50,
+          "near": false,
+          "crowding": 0,
+          "x": 128.28309631347656,
+          "vx": -1.0842485427856445,
+          "inferredImpulse": -4.6043842072407415e-8,
+          "lastThrustTick": 37,
+          "pc": 29,
+          "memory": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tick": 51,
+          "near": false,
+          "crowding": 0,
+          "x": 128.26611328125,
+          "vx": -1.0191936492919922,
+          "inferredImpulse": -2.3040996222079002e-8,
+          "lastThrustTick": 37,
+          "pc": 23,
+          "memory": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tick": 52,
+          "near": false,
+          "crowding": 0,
+          "x": 128.25015258789062,
+          "vx": -0.9580420255661011,
+          "inferredImpulse": 2.4876856130617853e-9,
+          "lastThrustTick": 37,
+          "pc": 29,
+          "memory": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tick": 53,
+          "near": false,
+          "crowding": 0,
+          "x": 128.23513793945312,
+          "vx": -0.9005594849586487,
+          "inferredImpulse": 1.7860995904506183e-8,
+          "lastThrustTick": 37,
+          "pc": 23,
+          "memory": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tick": 54,
+          "near": false,
+          "crowding": 0,
+          "x": 128.2210235595703,
+          "vx": -0.8465259075164795,
+          "inferredImpulse": 6.593137369392821e-9,
+          "lastThrustTick": 37,
+          "pc": 29,
+          "memory": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tick": 55,
+          "near": false,
+          "crowding": 0,
+          "x": 128.207763671875,
+          "vx": -0.7957343459129333,
+          "inferredImpulse": 5.462002516942732e-9,
+          "lastThrustTick": 37,
+          "pc": 23,
+          "memory": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tick": 56,
+          "near": false,
+          "crowding": 0,
+          "x": 128.19529724121094,
+          "vx": -0.7479903101921082,
+          "inferredImpulse": -2.865013770669833e-8,
+          "lastThrustTick": 37,
+          "pc": 29,
+          "memory": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tick": 57,
+          "near": false,
+          "crowding": 0,
+          "x": 128.18357849121094,
+          "vx": -0.7031108736991882,
+          "inferredImpulse": 1.7125580398236195e-8,
+          "lastThrustTick": 37,
+          "pc": 23,
+          "memory": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tick": 58,
+          "near": false,
+          "crowding": 0,
+          "x": 128.1725616455078,
+          "vx": -0.6609241962432861,
+          "inferredImpulse": 2.484851480133443e-8,
+          "lastThrustTick": 37,
+          "pc": 29,
+          "memory": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tick": 59,
+          "near": false,
+          "crowding": 0,
+          "x": 128.16220092773438,
+          "vx": -0.6212687492370605,
+          "inferredImpulse": -6.749082626100744e-9,
+          "lastThrustTick": 37,
+          "pc": 23,
+          "memory": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tick": 60,
+          "near": false,
+          "crowding": 0,
+          "x": 128.1524658203125,
+          "vx": -0.583992600440979,
+          "inferredImpulse": 2.3787912639683384e-8,
+          "lastThrustTick": 37,
+          "pc": 29,
+          "memory": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "treatment": "delta",
+      "config": {
+        "treePrograms": 1,
+        "crossover": 0.25,
+        "capacity": 3,
+        "genomeCapacity": 2,
+        "side": 8,
+        "sources": 1,
+        "initial": 0,
+        "seed": 42,
+        "budget": 24,
+        "floor": 0,
+        "rate": 0,
+        "share": 0.5,
+        "mutation": 0.8,
+        "seedEnergy": 24,
+        "seedStorage": 24,
+        "upkeep": 0.5,
+        "ambientTemperature": 20,
+        "sunlightHeating": 1,
+        "activityHeating": 0.12,
+        "cooling": 0.2,
+        "thermalExchange": 0.12,
+        "crowdInsulation": 1,
+        "safeTemperature": 28,
+        "heatDamage": 0.5,
+        "energyDecay": 0.05,
+        "divisionCost": 12,
+        "minimumBirthEnergy": 12,
+        "exchange": 0.12,
+        "shieldUpkeep": 0.72,
+        "cpuCost": 0.00005,
+        "moveCost": 0.004,
+        "turnCost": 0.0001,
+        "linkCost": 0.5,
+        "contractCost": 0.08,
+        "attackCost": 0.08,
+        "attackDamageCost": 0.2,
+        "emitCost": 0.01,
+        "sendCost": 0.01,
+        "jitter": 12,
+        "archiveAge": 60,
+        "archiveHarvest": 120,
+        "archiveOffspring": 8,
+        "archiveEnabled": 0,
+        "executionTrace": 0,
+        "solarRate": 4,
+        "sunContrast": 2,
+        "cloudCover": 0.5,
+        "cloudOpacity": 0.95,
+        "cloudScale": 1200,
+        "cloudSpeed": 12,
+        "cloudMorph": 180,
+        "solarEnabled": 0,
+        "corpseEnergy": 8,
+        "corpseLifetime": 900,
+        "eatCost": 0.04,
+        "storageCapacity": 400
+      },
+      "kernel": "60b4c0186a4a01ad0200339e9a2d676fcb9f717902e70747b127a3fd37f8067c",
+      "originalSource": "ROOT:\nmov r0 1\njz r0 T0\nnop\njmp T1\nT0:\nnop\nT1:\nbond r0 2\npeek r0 r0 bonds\nmem_save 6 r0\nsense r0 crowding\nmem_load r1 1\nmem_save 1 r0\nsub r0 r1\nmem_load r1 0\nmem_save 0 r0\nmov r0 r1\nmove r0\neat r0\nphotosynthesize r0\nscan r0 -1 360\npeek r0 r0 bearing\ntag r0\nphotosynthesize r0\nsplit r0\nmem_save 8 r0\nmov r0 0\npeek r0 r0 energy\nmobilize r0 r0\nphotosynthesize r0\nwait 0\njmp ROOT",
+      "alteredSource": "ROOT:\nmov r0 1\njz r0 T0\nnop\njmp T1\nT0:\nnop\nT1:\nbond r0 2\npeek r0 r0 bonds\nmem_save 6 r0\nsense r0 crowding\nmov r1 r0\nmem_save 1 r0\nsub r0 r1\nmem_load r1 0\nmem_save 0 r0\nmov r0 r1\nmove r0\neat r0\nphotosynthesize r0\nscan r0 -1 360\npeek r0 r0 bearing\ntag r0\nphotosynthesize r0\nsplit r0\nmem_save 8 r0\nmov r0 0\npeek r0 r0 energy\nmobilize r0 r0\nphotosynthesize r0\nwait 0\njmp ROOT",
+      "replacements": [
+        {
+          "slot": 1,
+          "op": "delta",
+          "before": "mem_load r1 1",
+          "after": "mov r1 r0"
+        }
+      ],
+      "rows": [
+        {
+          "tick": 1,
+          "near": false,
+          "crowding": 0,
+          "x": 128,
+          "vx": 0,
+          "inferredImpulse": 0,
+          "lastThrustTick": 0,
+          "pc": 23,
+          "memory": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tick": 2,
+          "near": false,
+          "crowding": 0,
+          "x": 128,
+          "vx": 0,
+          "inferredImpulse": 0,
+          "lastThrustTick": 0,
+          "pc": 29,
+          "memory": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tick": 3,
+          "near": false,
+          "crowding": 0,
+          "x": 128,
+          "vx": 0,
+          "inferredImpulse": 0,
+          "lastThrustTick": 0,
+          "pc": 23,
+          "memory": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tick": 4,
+          "near": false,
+          "crowding": 0,
+          "x": 128,
+          "vx": 0,
+          "inferredImpulse": 0,
+          "lastThrustTick": 0,
+          "pc": 29,
+          "memory": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tick": 5,
+          "near": false,
+          "crowding": 0,
+          "x": 128,
+          "vx": 0,
+          "inferredImpulse": 0,
+          "lastThrustTick": 0,
+          "pc": 23,
+          "memory": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tick": 6,
+          "near": false,
+          "crowding": 0,
+          "x": 128,
+          "vx": 0,
+          "inferredImpulse": 0,
+          "lastThrustTick": 0,
+          "pc": 29,
+          "memory": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tick": 7,
+          "near": false,
+          "crowding": 0,
+          "x": 128,
+          "vx": 0,
+          "inferredImpulse": 0,
+          "lastThrustTick": 0,
+          "pc": 23,
+          "memory": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tick": 8,
+          "near": false,
+          "crowding": 0,
+          "x": 128,
+          "vx": 0,
+          "inferredImpulse": 0,
+          "lastThrustTick": 0,
+          "pc": 29,
+          "memory": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tick": 9,
+          "near": false,
+          "crowding": 0,
+          "x": 128,
+          "vx": 0,
+          "inferredImpulse": 0,
+          "lastThrustTick": 0,
+          "pc": 23,
+          "memory": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tick": 10,
+          "near": false,
+          "crowding": 0,
+          "x": 128,
+          "vx": 0,
+          "inferredImpulse": 0,
+          "lastThrustTick": 0,
+          "pc": 29,
+          "memory": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tick": 11,
+          "near": false,
+          "crowding": 0,
+          "x": 128,
+          "vx": 0,
+          "inferredImpulse": 0,
+          "lastThrustTick": 0,
+          "pc": 23,
+          "memory": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tick": 12,
+          "near": false,
+          "crowding": 0,
+          "x": 128,
+          "vx": 0,
+          "inferredImpulse": 0,
+          "lastThrustTick": 0,
+          "pc": 29,
+          "memory": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tick": 13,
+          "near": true,
+          "crowding": 0.666666567325592,
+          "x": 128,
+          "vx": 0,
+          "inferredImpulse": 0,
+          "lastThrustTick": 0,
+          "pc": 23,
+          "memory": [
+            0,
+            0.666666567325592,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tick": 14,
+          "near": true,
+          "crowding": 0.666666567325592,
+          "x": 128,
+          "vx": 0,
+          "inferredImpulse": 0,
+          "lastThrustTick": 0,
+          "pc": 29,
+          "memory": [
+            0,
+            0.666666567325592,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tick": 15,
+          "near": true,
+          "crowding": 0.666666567325592,
+          "x": 128,
+          "vx": 0,
+          "inferredImpulse": 0,
+          "lastThrustTick": 0,
+          "pc": 23,
+          "memory": [
+            0,
+            0.666666567325592,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tick": 16,
+          "near": true,
+          "crowding": 0.666666567325592,
+          "x": 128,
+          "vx": 0,
+          "inferredImpulse": 0,
+          "lastThrustTick": 0,
+          "pc": 29,
+          "memory": [
+            0,
+            0.666666567325592,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tick": 17,
+          "near": true,
+          "crowding": 0.666666567325592,
+          "x": 128,
+          "vx": 0,
+          "inferredImpulse": 0,
+          "lastThrustTick": 0,
+          "pc": 23,
+          "memory": [
+            0,
+            0.666666567325592,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tick": 18,
+          "near": true,
+          "crowding": 0.666666567325592,
+          "x": 128,
+          "vx": 0,
+          "inferredImpulse": 0,
+          "lastThrustTick": 0,
+          "pc": 29,
+          "memory": [
+            0,
+            0.666666567325592,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tick": 19,
+          "near": true,
+          "crowding": 0.666666567325592,
+          "x": 128,
+          "vx": 0,
+          "inferredImpulse": 0,
+          "lastThrustTick": 0,
+          "pc": 23,
+          "memory": [
+            0,
+            0.666666567325592,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tick": 20,
+          "near": true,
+          "crowding": 0.666666567325592,
+          "x": 128,
+          "vx": 0,
+          "inferredImpulse": 0,
+          "lastThrustTick": 0,
+          "pc": 29,
+          "memory": [
+            0,
+            0.666666567325592,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tick": 21,
+          "near": true,
+          "crowding": 0.666666567325592,
+          "x": 128,
+          "vx": 0,
+          "inferredImpulse": 0,
+          "lastThrustTick": 0,
+          "pc": 23,
+          "memory": [
+            0,
+            0.666666567325592,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tick": 22,
+          "near": true,
+          "crowding": 0.666666567325592,
+          "x": 128,
+          "vx": 0,
+          "inferredImpulse": 0,
+          "lastThrustTick": 0,
+          "pc": 29,
+          "memory": [
+            0,
+            0.666666567325592,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tick": 23,
+          "near": true,
+          "crowding": 0.666666567325592,
+          "x": 128,
+          "vx": 0,
+          "inferredImpulse": 0,
+          "lastThrustTick": 0,
+          "pc": 23,
+          "memory": [
+            0,
+            0.666666567325592,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tick": 24,
+          "near": true,
+          "crowding": 0.666666567325592,
+          "x": 128,
+          "vx": 0,
+          "inferredImpulse": 0,
+          "lastThrustTick": 0,
+          "pc": 29,
+          "memory": [
+            0,
+            0.666666567325592,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tick": 25,
+          "near": true,
+          "crowding": 0.666666567325592,
+          "x": 128,
+          "vx": 0,
+          "inferredImpulse": 0,
+          "lastThrustTick": 0,
+          "pc": 23,
+          "memory": [
+            0,
+            0.666666567325592,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tick": 26,
+          "near": true,
+          "crowding": 0.666666567325592,
+          "x": 128,
+          "vx": 0,
+          "inferredImpulse": 0,
+          "lastThrustTick": 0,
+          "pc": 29,
+          "memory": [
+            0,
+            0.666666567325592,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tick": 27,
+          "near": true,
+          "crowding": 0.666666567325592,
+          "x": 128,
+          "vx": 0,
+          "inferredImpulse": 0,
+          "lastThrustTick": 0,
+          "pc": 23,
+          "memory": [
+            0,
+            0.666666567325592,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tick": 28,
+          "near": true,
+          "crowding": 0.666666567325592,
+          "x": 128,
+          "vx": 0,
+          "inferredImpulse": 0,
+          "lastThrustTick": 0,
+          "pc": 29,
+          "memory": [
+            0,
+            0.666666567325592,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tick": 29,
+          "near": true,
+          "crowding": 0.666666567325592,
+          "x": 128,
+          "vx": 0,
+          "inferredImpulse": 0,
+          "lastThrustTick": 0,
+          "pc": 23,
+          "memory": [
+            0,
+            0.666666567325592,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tick": 30,
+          "near": true,
+          "crowding": 0.666666567325592,
+          "x": 128,
+          "vx": 0,
+          "inferredImpulse": 0,
+          "lastThrustTick": 0,
+          "pc": 29,
+          "memory": [
+            0,
+            0.666666567325592,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tick": 31,
+          "near": true,
+          "crowding": 0.666666567325592,
+          "x": 128,
+          "vx": 0,
+          "inferredImpulse": 0,
+          "lastThrustTick": 0,
+          "pc": 23,
+          "memory": [
+            0,
+            0.666666567325592,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tick": 32,
+          "near": true,
+          "crowding": 0.666666567325592,
+          "x": 128,
+          "vx": 0,
+          "inferredImpulse": 0,
+          "lastThrustTick": 0,
+          "pc": 29,
+          "memory": [
+            0,
+            0.666666567325592,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tick": 33,
+          "near": true,
+          "crowding": 0.666666567325592,
+          "x": 128,
+          "vx": 0,
+          "inferredImpulse": 0,
+          "lastThrustTick": 0,
+          "pc": 23,
+          "memory": [
+            0,
+            0.666666567325592,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tick": 34,
+          "near": true,
+          "crowding": 0.666666567325592,
+          "x": 128,
+          "vx": 0,
+          "inferredImpulse": 0,
+          "lastThrustTick": 0,
+          "pc": 29,
+          "memory": [
+            0,
+            0.666666567325592,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tick": 35,
+          "near": true,
+          "crowding": 0.666666567325592,
+          "x": 128,
+          "vx": 0,
+          "inferredImpulse": 0,
+          "lastThrustTick": 0,
+          "pc": 23,
+          "memory": [
+            0,
+            0.666666567325592,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tick": 36,
+          "near": true,
+          "crowding": 0.666666567325592,
+          "x": 128,
+          "vx": 0,
+          "inferredImpulse": 0,
+          "lastThrustTick": 0,
+          "pc": 29,
+          "memory": [
+            0,
+            0.666666567325592,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tick": 37,
+          "near": false,
+          "crowding": 0,
+          "x": 128,
+          "vx": 0,
+          "inferredImpulse": 0,
+          "lastThrustTick": 0,
+          "pc": 23,
+          "memory": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tick": 38,
+          "near": false,
+          "crowding": 0,
+          "x": 128,
+          "vx": 0,
+          "inferredImpulse": 0,
+          "lastThrustTick": 0,
+          "pc": 29,
+          "memory": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tick": 39,
+          "near": false,
+          "crowding": 0,
+          "x": 128,
+          "vx": 0,
+          "inferredImpulse": 0,
+          "lastThrustTick": 0,
+          "pc": 23,
+          "memory": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tick": 40,
+          "near": false,
+          "crowding": 0,
+          "x": 128,
+          "vx": 0,
+          "inferredImpulse": 0,
+          "lastThrustTick": 0,
+          "pc": 29,
+          "memory": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tick": 41,
+          "near": false,
+          "crowding": 0,
+          "x": 128,
+          "vx": 0,
+          "inferredImpulse": 0,
+          "lastThrustTick": 0,
+          "pc": 23,
+          "memory": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tick": 42,
+          "near": false,
+          "crowding": 0,
+          "x": 128,
+          "vx": 0,
+          "inferredImpulse": 0,
+          "lastThrustTick": 0,
+          "pc": 29,
+          "memory": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tick": 43,
+          "near": false,
+          "crowding": 0,
+          "x": 128,
+          "vx": 0,
+          "inferredImpulse": 0,
+          "lastThrustTick": 0,
+          "pc": 23,
+          "memory": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tick": 44,
+          "near": false,
+          "crowding": 0,
+          "x": 128,
+          "vx": 0,
+          "inferredImpulse": 0,
+          "lastThrustTick": 0,
+          "pc": 29,
+          "memory": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tick": 45,
+          "near": false,
+          "crowding": 0,
+          "x": 128,
+          "vx": 0,
+          "inferredImpulse": 0,
+          "lastThrustTick": 0,
+          "pc": 23,
+          "memory": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tick": 46,
+          "near": false,
+          "crowding": 0,
+          "x": 128,
+          "vx": 0,
+          "inferredImpulse": 0,
+          "lastThrustTick": 0,
+          "pc": 29,
+          "memory": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tick": 47,
+          "near": false,
+          "crowding": 0,
+          "x": 128,
+          "vx": 0,
+          "inferredImpulse": 0,
+          "lastThrustTick": 0,
+          "pc": 23,
+          "memory": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tick": 48,
+          "near": false,
+          "crowding": 0,
+          "x": 128,
+          "vx": 0,
+          "inferredImpulse": 0,
+          "lastThrustTick": 0,
+          "pc": 29,
+          "memory": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tick": 49,
+          "near": false,
+          "crowding": 0,
+          "x": 128,
+          "vx": 0,
+          "inferredImpulse": 0,
+          "lastThrustTick": 0,
+          "pc": 23,
+          "memory": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tick": 50,
+          "near": false,
+          "crowding": 0,
+          "x": 128,
+          "vx": 0,
+          "inferredImpulse": 0,
+          "lastThrustTick": 0,
+          "pc": 29,
+          "memory": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tick": 51,
+          "near": false,
+          "crowding": 0,
+          "x": 128,
+          "vx": 0,
+          "inferredImpulse": 0,
+          "lastThrustTick": 0,
+          "pc": 23,
+          "memory": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tick": 52,
+          "near": false,
+          "crowding": 0,
+          "x": 128,
+          "vx": 0,
+          "inferredImpulse": 0,
+          "lastThrustTick": 0,
+          "pc": 29,
+          "memory": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tick": 53,
+          "near": false,
+          "crowding": 0,
+          "x": 128,
+          "vx": 0,
+          "inferredImpulse": 0,
+          "lastThrustTick": 0,
+          "pc": 23,
+          "memory": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tick": 54,
+          "near": false,
+          "crowding": 0,
+          "x": 128,
+          "vx": 0,
+          "inferredImpulse": 0,
+          "lastThrustTick": 0,
+          "pc": 29,
+          "memory": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tick": 55,
+          "near": false,
+          "crowding": 0,
+          "x": 128,
+          "vx": 0,
+          "inferredImpulse": 0,
+          "lastThrustTick": 0,
+          "pc": 23,
+          "memory": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tick": 56,
+          "near": false,
+          "crowding": 0,
+          "x": 128,
+          "vx": 0,
+          "inferredImpulse": 0,
+          "lastThrustTick": 0,
+          "pc": 29,
+          "memory": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tick": 57,
+          "near": false,
+          "crowding": 0,
+          "x": 128,
+          "vx": 0,
+          "inferredImpulse": 0,
+          "lastThrustTick": 0,
+          "pc": 23,
+          "memory": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tick": 58,
+          "near": false,
+          "crowding": 0,
+          "x": 128,
+          "vx": 0,
+          "inferredImpulse": 0,
+          "lastThrustTick": 0,
+          "pc": 29,
+          "memory": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tick": 59,
+          "near": false,
+          "crowding": 0,
+          "x": 128,
+          "vx": 0,
+          "inferredImpulse": 0,
+          "lastThrustTick": 0,
+          "pc": 23,
+          "memory": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tick": 60,
+          "near": false,
+          "crowding": 0,
+          "x": 128,
+          "vx": 0,
+          "inferredImpulse": 0,
+          "lastThrustTick": 0,
+          "pc": 29,
+          "memory": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        }
+      ]
+    }
+  ],
+  "complete": true
+}
