@@ -1,5 +1,11 @@
 import { GPU_OPS, GPU_SENSORS, GPU_FIELDS } from "./language.js";
-export function simulationShader({ capacity, genomeCapacity, side, sources }) {
+export function simulationShader({
+  capacity,
+  genomeCapacity,
+  side,
+  sources,
+  treePrograms = 0,
+}) {
   const types = { r: 1, v: 2, l: 3, s: 4, p: 5 };
   const signatures = GPU_OPS.map(
     (op) =>
@@ -81,6 +87,7 @@ struct Scratch {
   genes:array<GeneStats,G>,
   freeGenes:array<u32,G>,
   candidates:array<atomic<u32>,ARCH>,
+${treePrograms ? "  treeMemory:array<vec4f,N*3>," : ""}
 }
 struct Field {
   a:array<vec2f,T>,
@@ -821,6 +828,18 @@ fn sunlightAt(p:vec2f)->f32 {
           let amount=min(quantum(max(0.0,b)),min(u32(c.res.z),CAP_E-u32(c.b.x)));
           c.res.z-=f32(amount);c.b.x+=f32(amount);c.r[d]=f32(amount)/Q;
         }
+${
+  treePrograms
+    ? `        case 46u:{
+          c.r[d]=0;
+          if(b>=0&&b<9&&b==floor(b)){let slot=u32(b);c.r[d]=s.treeMemory[i*3u+slot/4u][slot%4u];}
+        }
+        case 47u:{
+          if(a>=0&&a<9&&a==floor(a)){let slot=u32(a);s.treeMemory[i*3u+slot/4u][slot%4u]=clamp(b,-999999.0,999999.0);}
+        }
+`
+    : ""
+}
         case 45u:{
           let g=storedGradient(i,v);c.r[d]=select(bearing(g,c.b.y),0.0,dot(g,g)<.00000001);
           c.r[u32(max(0.0,-ins.z-1000000.0))%8u]=length(g);
@@ -1113,6 +1132,7 @@ fn birthCapacity()->u32 {
         child.link[0]=i+1u;
         child.anchor[0]=fract(c.b.y+.5-child.b.y);
       }
+${treePrograms ? "      for(var q=0u;q<3u;q++){s.treeMemory[j*3u+q]=s.treeMemory[i*3u+q];}" : ""}
       cells[j]=child;
       atomicAdd(&s.genes[c.machine.y].refs,1u);
       atomicAdd(&s.genes[c.machine.y].births,1u);
@@ -1317,6 +1337,7 @@ fn birthCapacity()->u32 {
   atomicStore(&s.genes[g].births,0u);
   atomicStore(&s.genes[g].harvest,0u);
   cells[i]=newCell(i,g,identity,rng+10u);
+${treePrograms ? "  for(var q=0u;q<3u;q++){s.treeMemory[i*3u+q]=vec4f(0);}" : ""}
   atomicAdd(&s.counter[1],1u);
 }
 `;

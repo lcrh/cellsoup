@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import { crossoverTrees, parseTree, treeRng } from "../web/gpu/trees.js";
 import { create, globals } from "webgpu";
 import { createLifeEngine, describeGenome } from "../web/gpu/engine.js";
 Object.assign(globalThis, globals);
@@ -692,62 +693,174 @@ await test("a motor cell pulls its linked body through springs", async () => {
   e.destroy();
 });
 await test("link interiors repel cells and distribute equal opposite reactions", async () => {
-  const e = await setup(["wait 1000"], [
-    { x: 100, y: 100, rest: 40 / 18, links: [2, 0, 0, 0] },
-    { x: 140, y: 100, rest: 40 / 18, links: [1, 0, 0, 0], anchors: [.5, 0, 0, 0] },
-    { x: 111, y: 104 },
-  ]);
+  const e = await setup(
+    ["wait 1000"],
+    [
+      { x: 100, y: 100, rest: 40 / 18, links: [2, 0, 0, 0] },
+      {
+        x: 140,
+        y: 100,
+        rest: 40 / 18,
+        links: [1, 0, 0, 0],
+        anchors: [0.5, 0, 0, 0],
+      },
+      { x: 111, y: 104 },
+    ],
+  );
   await e.step();
   const c = await state(e);
   assert.ok(c[2].vy > 2);
   assert.ok(c[0].vy < c[1].vy && c[1].vy < 0);
-  assert.ok(Math.abs(c[0].vy + c[1].vy + c[2].vy) < .00001);
+  assert.ok(Math.abs(c[0].vy + c[1].vy + c[2].vy) < 0.00001);
   // Barycentric reactions preserve the moment as well as net linear force.
-  assert.ok(Math.abs(100*c[0].vy + 140*c[1].vy + 111*c[2].vy) < .001);
+  assert.ok(Math.abs(100 * c[0].vy + 140 * c[1].vy + 111 * c[2].vy) < 0.001);
   e.destroy();
 });
 await test("link barriers cover periodic seams and stretched link midpoints", async () => {
-  for (const [a,b,p] of [[246,30,1], [31,95,63]]) {
-    const length = (b-a+256)%256;
-    const e = await setup(["wait 1000"], [
-      { x:a, y:100, rest:length/18, links:[2,0,0,0] },
-      { x:b, y:100, rest:length/18, links:[1,0,0,0], anchors:[.5,0,0,0] },
-      { x:p, y:105 },
-    ]);
-    await e.step(); const c=await state(e);
-    assert.ok(c[2].vy>1);
-    assert.ok(Math.abs(c[0].vy+c[1].vy+c[2].vy)<.00001);
+  for (const [a, b, p] of [
+    [246, 30, 1],
+    [31, 95, 63],
+  ]) {
+    const length = (b - a + 256) % 256;
+    const e = await setup(
+      ["wait 1000"],
+      [
+        { x: a, y: 100, rest: length / 18, links: [2, 0, 0, 0] },
+        {
+          x: b,
+          y: 100,
+          rest: length / 18,
+          links: [1, 0, 0, 0],
+          anchors: [0.5, 0, 0, 0],
+        },
+        { x: p, y: 105 },
+      ],
+    );
+    await e.step();
+    const c = await state(e);
+    assert.ok(c[2].vy > 1);
+    assert.ok(Math.abs(c[0].vy + c[1].vy + c[2].vy) < 0.00001);
     e.destroy();
   }
 });
 await test("a moving cell is resisted by a link without wedging its endpoints", async () => {
-  const e=await setup(["wait 1000"],[
-    {x:100,y:100,rest:40/18,links:[2,0,0,0]},
-    {x:140,y:100,rest:40/18,links:[1,0,0,0],anchors:[.5,0,0,0]},
-    {x:120,y:106,vy:-60},
-  ]);
-  await e.step(60);const c=await state(e);
-  assert.ok(c[2].y > (c[0].y+c[1].y)/2+3);
-  assert.equal(c[0].links[0],2);assert.equal(c[1].links[0],1);
-  assert.ok(c.every(c=>Number.isFinite(c.x)&&Number.isFinite(c.y)));
+  const e = await setup(
+    ["wait 1000"],
+    [
+      { x: 100, y: 100, rest: 40 / 18, links: [2, 0, 0, 0] },
+      {
+        x: 140,
+        y: 100,
+        rest: 40 / 18,
+        links: [1, 0, 0, 0],
+        anchors: [0.5, 0, 0, 0],
+      },
+      { x: 120, y: 106, vy: -60 },
+    ],
+  );
+  await e.step(60);
+  const c = await state(e);
+  assert.ok(c[2].y > (c[0].y + c[1].y) / 2 + 3);
+  assert.equal(c[0].links[0], 2);
+  assert.equal(c[1].links[0], 1);
+  assert.ok(c.every((c) => Number.isFinite(c.x) && Number.isFinite(c.y)));
   e.destroy();
-  const pair=await setup(["wait 1000"],[
-    {x:100,y:100,links:[2,0,0,0]},
-    {x:118,y:100,links:[1,0,0,0],anchors:[.5,0,0,0]},
-  ]);
-  await pair.step(60);const settled=await state(pair);
-  assert.ok(Math.abs(settled[0].x-100)<.001 && Math.abs(settled[1].x-118)<.001);
+  const pair = await setup(
+    ["wait 1000"],
+    [
+      { x: 100, y: 100, links: [2, 0, 0, 0] },
+      { x: 118, y: 100, links: [1, 0, 0, 0], anchors: [0.5, 0, 0, 0] },
+    ],
+  );
+  await pair.step(60);
+  const settled = await state(pair);
+  assert.ok(
+    Math.abs(settled[0].x - 100) < 0.001 &&
+      Math.abs(settled[1].x - 118) < 0.001,
+  );
   pair.destroy();
 });
 await test("exact link overlap has a finite balanced separation force", async () => {
-  const e=await setup(["wait 1000"],[
-    {x:100,y:100,rest:40/18,links:[2,0,0,0]},
-    {x:140,y:100,rest:40/18,links:[1,0,0,0],anchors:[.5,0,0,0]},
-    {x:120,y:100},
-  ]);
-  await e.step();const c=await state(e);
-  assert.ok(Number.isFinite(c[2].vy)&&Math.abs(c[2].vy)>1);
-  assert.ok(Math.abs(c[0].vy+c[1].vy+c[2].vy)<.00001);
+  const e = await setup(
+    ["wait 1000"],
+    [
+      { x: 100, y: 100, rest: 40 / 18, links: [2, 0, 0, 0] },
+      {
+        x: 140,
+        y: 100,
+        rest: 40 / 18,
+        links: [1, 0, 0, 0],
+        anchors: [0.5, 0, 0, 0],
+      },
+      { x: 120, y: 100 },
+    ],
+  );
+  await e.step();
+  const c = await state(e);
+  assert.ok(Number.isFinite(c[2].vy) && Math.abs(c[2].vy) > 1);
+  assert.ok(Math.abs(c[0].vy + c[1].vy + c[2].vy) < 0.00001);
+  e.destroy();
+});
+await test("typed trees execute ReLU with memory independent of temporary registers", async () => {
+  const e = await setup(
+    [
+      {
+        tree: "(seq (set m0 (max 0 (+ (* (memory m1) 2) -3))) (move (memory m0)))",
+      },
+    ],
+    [{ memory: [0, 4], heading: 0 }],
+    { budget: 24, treePrograms: 1 },
+  );
+  await e.step();
+  const memory = await e.treeMemory();
+  assert.equal(memory[0], 5);
+  assert.equal(memory[1], 4);
+  assert.ok((await state(e))[0].vx > 0);
+  const genes = await e.genes();
+  assert.match(describeGenome(genes.data, 0).source, /mem_save/);
+  e.destroy();
+});
+await test("typed division copies genome and memory and returns distinct birth results", async () => {
+  const e = await setup(
+    [{ tree: "(seq (bud) (set m0 (birth-result)) (wait 1000))" }],
+    [{ memory: [23, 19] }],
+    { budget: 24, treePrograms: 1 },
+  );
+  await e.step(4);
+  const c = await state(e),
+    memory = await e.treeMemory();
+  const living = c.map((c, i) => ({ c, i })).filter((x) => x.c.alive === 1);
+  assert.equal(living.length, 2);
+  assert.equal(living[0].c.genome, living[1].c.genome);
+  assert.deepEqual(living.map((x) => memory[x.i * 12]).sort(), [0, 1]);
+  assert.ok(living.every((x) => memory[x.i * 12 + 1] === 19));
+  e.destroy();
+});
+await test("typed lazy branches do not execute effects from the untaken branch", async () => {
+  const e = await setup(
+    [{ tree: "(if (> (memory m1) 0) (set m0 7) (split))" }],
+    [{ memory: [0, 1] }],
+    { budget: 24, treePrograms: 1 },
+  );
+  await e.step(3);
+  assert.equal((await e.treeMemory())[0], 7);
+  assert.equal((await state(e)).filter((c) => c.alive === 1).length, 1);
+  e.destroy();
+});
+await test("a crossed typed genome executes its donor expression on the GPU", async () => {
+  const crossed = crossoverTrees(
+    parseTree("(set m0 (+ 1 2))"),
+    parseTree("(set m1 (* 3 4))"),
+    treeRng(9),
+  );
+  assert.equal(crossed.crossed, true);
+  const e = await setup([{ tree: crossed.tree }], [{}], { treePrograms: 1 });
+  await e.step();
+  assert.equal((await e.treeMemory())[0], 12);
+  assert.throws(
+    () => e.setImmigration({ rate: 1, floor: 0 }),
+    /not integrated/,
+  );
   e.destroy();
 });
 await test("successful archive resampling creates a mutated genome, not division mutations", async () => {

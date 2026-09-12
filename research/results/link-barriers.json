@@ -1,0 +1,48 @@
+{
+  "description": "Soft link barrier validation; single local M4 Pro GPU run, not a general performance claim.",
+  "baseline": "8e8c862",
+  "barriers": "1b293f6",
+  "benchmark": [
+    {
+      "name": "baseline",
+      "cells": 8192,
+      "links": 4096,
+      "steps": 120,
+      "ms": [
+        30.429875000000038,
+        30.769457999999986,
+        13.596499999999992,
+        31.48341700000003,
+        28.185375000000022
+      ],
+      "medianMs": 30.429875000000038
+    },
+    {
+      "name": "barriers",
+      "cells": 8192,
+      "links": 4096,
+      "steps": 120,
+      "ms": [
+        35.52295800000002,
+        44.34133300000008,
+        36.65516699999989,
+        38.76670800000011,
+        42.207165999999916
+      ],
+      "medianMs": 38.76670800000011
+    }
+  ],
+  "benchmarkNotes": "8192 idle linked cells, 4096 links, five timed batches after 60 warmup ticks. GPU completion awaited. Other browser activity may add timing noise.",
+  "autonomousSmoke": {
+    "capacity": 32768,
+    "initial": 8192,
+    "seed": 42,
+    "simulatedSeconds": 120,
+    "computeMs": 13677.006996,
+    "finalLiving": 1970,
+    "finalLinkedCells": 259,
+    "finalLargestBody": 30,
+    "finalMovingBodies": 10,
+    "notes": "Random founders, default continuing arrivals. Short stability check only; does not establish long-term viability or benefit from links."
+  }
+}

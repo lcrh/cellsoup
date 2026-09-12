@@ -94,3 +94,5 @@ MIT licensed; see [LICENSE](LICENSE).
 ## Research in progress
 
 The [evolution and scaling laboratory](research/README.md) contains a native headless client, exported evolved programs, ecological ablations, and a separately validated WebGPU scaling prototype. The prototype is not yet the live ecology backend; its measurements and remaining work are documented explicitly.
+
+The [typed-tree experiment](research/typed-trees.md) compiles typed Lisp genomes and provides separate crossover and mutation controls for an experimental arrival sampler. It is tested on the GPU but is not yet the interactive world's genome substrate.

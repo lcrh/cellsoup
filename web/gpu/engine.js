@@ -1,5 +1,6 @@
+import { compileTree, decodeTreeBytecode } from "./trees.js";
 import { simulationShader } from "./shader.js";
-import { compile, decode } from "./language.js";
+import { compile } from "./language.js";
 export const CELL_FLOATS = 52,
   CELL_BYTES = 208,
   GENOME_BYTES = 1056,
@@ -23,6 +24,7 @@ const stages = [
   "arrivals",
 ];
 export const defaults = {
+  treePrograms: 0,
   capacity: 131072,
   genomeCapacity: 32768,
   side: 256,
@@ -101,6 +103,12 @@ export async function createLifeEngine(device, options = {}) {
     cfg.capacity > 262144 ||
     cfg.genomeCapacity < 1 ||
     cfg.genomeCapacity > 65536 ||
+    ![0, 1].includes(cfg.treePrograms) ||
+    (cfg.treePrograms === 1 &&
+      (cfg.initial !== 0 ||
+        cfg.rate !== 0 ||
+        cfg.floor !== 0 ||
+        cfg.archiveEnabled !== 0)) ||
     cfg.initial > Math.min(cfg.capacity, cfg.genomeCapacity) ||
     cfg.side < 5 ||
     cfg.sources < 1 ||
@@ -151,7 +159,9 @@ export async function createLifeEngine(device, options = {}) {
         GPUBufferUsage.COPY_DST,
     });
   const state = [storage(n * CELL_BYTES), storage(n * CELL_BYTES)];
-  const scratch = storage(40 * n + 20 * t + 20 * g + 640),
+  const treeMemoryOffset =
+    Math.ceil((40 * n + 20 * t + 20 * g + 640) / 16) * 16;
+  const scratch = storage(treeMemoryOffset + (cfg.treePrograms ? 48 * n : 0)),
     genomes = storage(g * GENOME_BYTES),
     archive = storage(128 * GENOME_BYTES),
     food = storage(t * 16 + cfg.sources * 32),
@@ -380,6 +390,8 @@ export async function createLifeEngine(device, options = {}) {
       };
     },
     setImmigration({ rate = cfg.rate, floor = cfg.floor } = {}) {
+      if (cfg.treePrograms && (rate !== 0 || floor !== 0))
+        throw Error("Tree immigration is not integrated yet");
       for (const [name, value] of Object.entries({ rate, floor }))
         if (!Number.isInteger(value) || value < 0 || value > cfg.capacity)
           throw Error(`Invalid ${name}`);
@@ -412,6 +424,10 @@ export async function createLifeEngine(device, options = {}) {
         raw: [...c],
       };
     },
+    async treeMemory() {
+      if (!cfg.treePrograms) throw Error("Tree memory is disabled");
+      return new Float32Array(await read(scratch, treeMemoryOffset, n * 48));
+    },
     async state() {
       return read(state[parity]);
     },
@@ -437,15 +453,21 @@ export async function createLifeEngine(device, options = {}) {
     async fixture({ programs, cells: seeds, sunlight = 0 }) {
       if (tick !== 0 || cfg.initial !== 0)
         throw Error("Fixtures require an empty engine before stepping");
+      if (!cfg.treePrograms && programs.some((p) => typeof p !== "string"))
+        throw Error("Tree fixtures require treePrograms: 1");
       if (programs.length > g) throw Error("Too many programs");
       const codeBuffer = new ArrayBuffer(g * GENOME_BYTES),
         cv = new DataView(codeBuffer),
         data = new ArrayBuffer(n * CELL_BYTES),
         cf = new Float32Array(data),
         cu = new Uint32Array(data),
-        refs = new Uint32Array(g * 4);
+        refs = new Uint32Array(g * 4),
+        treeMemory = new Float32Array(n * 12);
       programs.forEach((source, j) => {
-        const code = compile(source),
+        const code =
+            typeof source === "string"
+              ? compile(source)
+              : compileTree(source.tree),
           v = new DataView(code.buffer),
           base = j * GENOME_BYTES;
         cv.setUint32(base, code.length, true);
@@ -484,6 +506,10 @@ export async function createLifeEngine(device, options = {}) {
           k + 4,
         );
         if (c.registers) cf.set(c.registers, k + 8);
+        if (c.memory) {
+          if (c.memory.length > 8) throw Error("Too much fixture memory");
+          treeMemory.set(c.memory, slot * 12);
+        }
         cu.set([slot + 1, genome, 0, c.sleep ?? 0], k + 24);
         cu.set([c.age ?? 0, c.generation ?? 0, 0, c.corpse ? 2 : 1], k + 28);
         cu.set(c.links ?? [0, 0, 0, 0], k + 32);
@@ -503,6 +529,8 @@ export async function createLifeEngine(device, options = {}) {
         if (!c.corpse) refs[genome * 4]++;
       });
       device.queue.writeBuffer(state[parity], 0, data);
+      if (cfg.treePrograms)
+        device.queue.writeBuffer(scratch, treeMemoryOffset, treeMemory);
       device.queue.writeBuffer(genomes, 0, codeBuffer);
       device.queue.writeBuffer(scratch, geneOffset, refs);
       const counters = new Uint32Array(32);
@@ -555,6 +583,6 @@ export function describeGenome(buffer, index = 0) {
     parent: view.getUint32(base + 16, true),
     bornTick: view.getUint32(base + 20, true),
     score: view.getUint32(base + 24, true),
-    source: decode(data),
+    source: decodeTreeBytecode(data),
   };
 }
