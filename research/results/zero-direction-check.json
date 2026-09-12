@@ -1,0 +1,113 @@
+{
+  "checks": [
+    {
+      "name": "zero relative sensors",
+      "heading": 0,
+      "registers": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "name": "zero relative sensors",
+      "heading": 0.25,
+      "registers": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "name": "zero relative sensors",
+      "heading": 0.73,
+      "registers": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "name": "coincident link stays finite and separates",
+      "heading": 0,
+      "anchors": [
+        0,
+        0.30000001192092896
+      ],
+      "separation": 9.008865356445312
+    },
+    {
+      "name": "coincident link stays finite and separates",
+      "heading": 0.25,
+      "anchors": [
+        0,
+        0.30000001192092896
+      ],
+      "separation": 9.008865356445312
+    },
+    {
+      "name": "coincident link stays finite and separates",
+      "heading": 0.73,
+      "anchors": [
+        0,
+        0.30000001192092896
+      ],
+      "separation": 9.009033494452973
+    },
+    {
+      "name": "nonzero target bearing",
+      "x": 110,
+      "y": 100,
+      "heading": 0,
+      "bearing": 0
+    },
+    {
+      "name": "nonzero target bearing",
+      "x": 100,
+      "y": 110,
+      "heading": 0,
+      "bearing": 90
+    },
+    {
+      "name": "nonzero target bearing",
+      "x": 100,
+      "y": 110,
+      "heading": 0.25,
+      "bearing": 0
+    },
+    {
+      "name": "nonzero target bearing",
+      "x": 254,
+      "y": 100,
+      "heading": 0,
+      "bearing": -180
+    },
+    {
+      "name": "nonzero relative sunlight gradient",
+      "axis": 0,
+      "heading": 0,
+      "bearing": 0,
+      "strength": 0.00390625
+    },
+    {
+      "name": "nonzero relative sunlight gradient",
+      "axis": 1,
+      "heading": 0,
+      "bearing": 90,
+      "strength": 0.00390625
+    },
+    {
+      "name": "nonzero relative sunlight gradient",
+      "axis": 0,
+      "heading": 0.25,
+      "bearing": -90,
+      "strength": 0.00390625
+    }
+  ]
+}

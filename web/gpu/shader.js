@@ -213,6 +213,7 @@ fn liveLink(i:u32,k:u32)->u32 {
   return j;
 }
 fn bearing(d:vec2f,h:f32)->f32 {
+  if(dot(d,d)<1e-12){return 0.0;}
   return fract(atan2(d.y,d.x)/6.28318530718-h+.5)*360.0-180.0;
 }
 fn searchKind(i:u32,tag:f32,cone:f32,hue:f32,tolerance:f32,kind:u32)->u32 {
@@ -787,7 +788,8 @@ ${executionTrace ? `        if(traceRow!=0xffffffffu){let n=s.traceCounts[traceR
           let f=fvalue(bin(c.p.xy+dir))-fvalue(bin(c.p.xy-dir));
           let r=fvalue(bin(c.p.xy+vec2f(-dir.y,dir.x)))-fvalue(bin(c.p.xy-vec2f(-dir.y,dir.x)));
           let gradient=vec2f(f.x+f.y,r.x+r.y);
-          c.r[d]=atan2(gradient.y,gradient.x)*57.29578;
+          c.r[d]=0.0;
+          if(dot(gradient,gradient)>1e-12){c.r[d]=atan2(gradient.y,gradient.x)*57.29578;}
           c.r[u32(max(0.0,-ins.z-1000000.0))%8u]=length(gradient)/64.0;
         }
         case 36u: {
@@ -1222,7 +1224,11 @@ ${
   }
   let d=delta(cells[j].p.xy,cells[i].p.xy);
   cells[i].link[free]=j+1u;
-  cells[i].anchor[free]=fract(atan2(d.y,d.x)/6.2831853-cells[i].b.y);
+  // Coincident centers have no geometric bearing. Use the initiating cell's
+  // heading as a shared local axis, with opposite endpoints on that axis.
+  var axis=cells[source].b.y+select(.5,0.0,i==source);
+  if(dot(d,d)>1e-12){axis=atan2(d.y,d.x)/6.2831853;}
+  cells[i].anchor[free]=fract(axis-cells[i].b.y);
 }
 @compute @workgroup_size(128) fn mailAndPrune(@builtin(global_invocation_id) id:vec3u) {
   let i=id.x;

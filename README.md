@@ -14,6 +14,8 @@ Use **Find colony**, **Moving colony**, **Follow**, and the energy/storage/activ
 
 This sunlight model is a working prototype. Three earlier assembly trials sustained thousands of reproducing cells for ten simulated minutes after newcomers stopped; moving connected groups emerged in each. The named-state tree grammar has since completed three one-hour continuous evolution runs. One naturally generated genotype showed a reproducible growth advantage from giving energy in controlled regrowth tests; this does not establish general evolved cooperation. Predation remains uncommon. Performance depends strongly on density and hardware; older nutrient-model speed measurements do not apply to this version. [Current GPU model](docs/gpu-model.md) · [Historical nutrient model and measurements](docs/gpu-model-nutrients.md) · [Headless experiments](research/README.md).
 
+Version 0.8.8 fixes undefined directions for coincident links and flat sunlight, preventing NaN spring anchors and false sensor readings. [Repair and validation](docs/release-0.8.8.md).
+
 Version 0.8.7 restores a separate **Division mutation** slider, defaulting to 1%, for both linked and detached divisions in both genome languages. Zero restores exact copies. Random worlds sample 0–5%. [Semantics and validation](docs/release-0.8.7.md).
 
 Version 0.8.6 adds **Random new world** in Habitat & evolution. It picks a new seed and varies sunlight, clouds, energy costs, temperature, movement and archive resampling around the working defaults, then starts the new world immediately. Capacity and genome language remain selected. The resulting values are visible and editable in the settings.
