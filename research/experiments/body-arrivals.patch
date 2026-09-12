@@ -1,0 +1,336 @@
+--- a/web/gpu/engine.js
++++ b/web/gpu/engine.js
+@@ -306,7 +306,8 @@
+     }),
+   );
+   let parity = 0,
+-    tick = 0;
++    tick = 0,
++    hostOperation = false;
+   function dispatch(encoder, name, count) {
+     if (!count) return;
+     const pass = encoder.beginComputePass();
+@@ -477,38 +478,293 @@
+     async step(ticks = 1) {
+       if (!Number.isInteger(ticks) || ticks < 0 || ticks > 600)
+         throw Error("step accepts 0–600 ticks");
+-      let encoder = device.createCommandEncoder();
+-      for (let k = 0; k < ticks; k++) {
+-        tick++;
+-        for (const name of stages) {
+-          if (cfg.treePrograms && name === "arrivals") continue;
+-          if (name === "weather" && tick !== 1 && tick % 30 !== 0) continue;
+-          if (
+-            ["geneScan", "archiveUpdate", "arrivals"].includes(name) &&
+-            tick % 60 !== 0
++      if (hostOperation) throw Error("Engine operation already in progress");
++      hostOperation = true;
++      try {
++        let encoder = device.createCommandEncoder();
++        for (let k = 0; k < ticks; k++) {
++          tick++;
++          for (const name of stages) {
++            if (cfg.treePrograms && name === "arrivals") continue;
++            if (name === "weather" && tick !== 1 && tick % 30 !== 0) continue;
++            if (
++              ["geneScan", "archiveUpdate", "arrivals"].includes(name) &&
++              tick % 60 !== 0
++            )
++              continue;
++            let count = n;
++            if (["field", "foodDebit"].includes(name)) count = t;
++            else if (name === "clear") count = Math.max(n, t, 128);
++            else if (name === "weather") count = cfg.sources;
++            else if (name === "geneScan") count = g;
++            else if (name === "archiveUpdate") count = 128;
++            else if (name === "arrivals")
++              count = Math.min(n, cfg.rate + Math.floor(n / 512) + 1);
++            dispatch(encoder, name, count);
++          }
++          if (cfg.treePrograms && tick % 60 === 0) {
++            device.queue.submit([encoder.finish()]);
++            await device.queue.onSubmittedWorkDone();
++            const count = await prepareTreeArrivals();
++            encoder = device.createCommandEncoder();
++            dispatch(encoder, "arrivals", count);
++          }
++          parity = 1 - parity;
++        }
++        device.queue.submit([encoder.finish()]);
++        await device.queue.onSubmittedWorkDone();
++      } finally {
++        hostOperation = false;
++      }
++    },
++    // Experimental host admission. No automatic selection or extra arrivals:
++    // the caller owns the arrival budget and supplies a validated saved fragment.
++    async admitBody({ programs, cells: seeds }) {
++      if (!cfg.treePrograms)
++        throw Error("Body arrivals require typed programs");
++      if (hostOperation) throw Error("Engine operation already in progress");
++      if (
++        !Array.isArray(seeds) ||
++        !seeds.length ||
++        seeds.length > 64 ||
++        !Array.isArray(programs) ||
++        !programs.length ||
++        programs.length > seeds.length
++      )
++        throw Error("Expected 1–64 cells and their programs");
++      const finite = (x) =>
++        Number.isFinite(x) && Number.isFinite(Math.fround(x));
++      const integer = (x) => Number.isInteger(x) && x >= 1 && x <= 0xffffffff;
++      const prepared = programs.map((p) => {
++        const code = compileTree(p.tree),
++          origin = p.origin;
++        if (
++          origin &&
++          (!integer(origin.serial) ||
++            !integer(origin.founder) ||
++            !Number.isInteger(origin.depth) ||
++            origin.depth < 0 ||
++            origin.depth >= 0xffffffff)
++        )
++          throw Error("Invalid source ancestry");
++        const mutated =
++          !!origin &&
++          formatTree(code.tree) !== formatTree(compileTree(origin.tree).tree);
++        return { tree: code.tree, origin, mutated };
++      });
++      const normalized = seeds.map((c) => {
++        if (
++          Object.keys(c).some(
++            (k) =>
++              ![
++                "x",
++                "y",
++                "heading",
++                "energy",
++                "storage",
++                "genome",
++                "rest",
++                "links",
++                "anchors",
++                "color",
++              ].includes(k),
+           )
+-            continue;
+-          let count = n;
+-          if (["field", "foodDebit"].includes(name)) count = t;
+-          else if (name === "clear") count = Math.max(n, t, 128);
+-          else if (name === "weather") count = cfg.sources;
+-          else if (name === "geneScan") count = g;
+-          else if (name === "archiveUpdate") count = 128;
+-          else if (name === "arrivals")
+-            count = Math.min(n, cfg.rate + Math.floor(n / 512) + 1);
+-          dispatch(encoder, name, count);
+-        }
+-        if (cfg.treePrograms && tick % 60 === 0) {
+-          device.queue.submit([encoder.finish()]);
+-          await device.queue.onSubmittedWorkDone();
+-          const count = await prepareTreeArrivals();
+-          encoder = device.createCommandEncoder();
+-          dispatch(encoder, "arrivals", count);
+-        }
+-        parity = 1 - parity;
++        )
++          throw Error("Body arrivals reset physiology and program state");
++        const result = {
++          x: c.x,
++          y: c.y,
++          heading: c.heading ?? 0,
++          energy: c.energy ?? cfg.seedEnergy,
++          storage: c.storage ?? cfg.seedStorage,
++          genome: c.genome ?? 0,
++          rest: c.rest ?? 1,
++          links: c.links ?? [0, 0, 0, 0],
++          anchors: c.anchors ?? [0, 0, 0, 0],
++          color: c.color,
++        };
++        if (
++          ![
++            result.x,
++            result.y,
++            result.heading,
++            result.energy,
++            result.storage,
++            result.rest,
++          ].every(finite) ||
++          result.energy < 1 / ENERGY_SCALE ||
++          result.energy > 200 ||
++          result.storage < 0 ||
++          result.storage > cfg.storageCapacity ||
++          result.rest < 0.55 ||
++          result.rest > 1.5 ||
++          !Number.isInteger(result.genome) ||
++          result.genome < 0 ||
++          result.genome >= programs.length ||
++          (result.color !== undefined && !finite(result.color)) ||
++          !Array.isArray(result.links) ||
++          result.links.length !== 4 ||
++          !Array.isArray(result.anchors) ||
++          result.anchors.length !== 4 ||
++          !result.anchors.every(finite)
++        )
++          throw Error("Invalid body cell");
++        return result;
++      });
++      if (new Set(normalized.map((c) => c.genome)).size !== programs.length)
++        throw Error("Every body program must be used");
++      normalized.forEach((c, i) => {
++        const neighbors = c.links.filter(Boolean);
++        if (
++          new Set(neighbors).size !== neighbors.length ||
++          c.links.some(
++            (h) =>
++              !Number.isInteger(h) || h < 0 || h > seeds.length || h === i + 1,
++          ) ||
++          neighbors.some((h) => !normalized[h - 1].links.includes(i + 1))
++        )
++          throw Error("Body links must be reciprocal local handles");
++      });
++      hostOperation = true;
++      try {
++        const [stateData, counterData, geneData] = await Promise.all([
++          read(state[parity]),
++          read(scratch, counterOffset, 128),
++          read(scratch, geneOffset, g * 16),
++        ]);
++        const oldWords = new Uint32Array(stateData),
++          counters = new Uint32Array(counterData),
++          stats = new Uint32Array(geneData);
++        const freeCells = [],
++          freeGenes = [];
++        for (let i = 0; i < n; i++)
++          if (oldWords[i * 52 + 31] === 0) freeCells.push(i);
++        for (let i = 0; i < g; i++) if (stats[i * 4] === 0) freeGenes.push(i);
++        if (
++          freeCells.length < seeds.length ||
++          freeGenes.length < programs.length
++        )
++          return {
++            admitted: 0,
++            reason: "capacity",
++            cellSlots: [],
++            genomeSlots: [],
++          };
++        if (
++          counters[11] + seeds.length > 0xffffffff ||
++          counters[12] + programs.length > 0xffffffff
++        )
++          throw Error("Arrival identity capacity exceeded");
++        const cellSlots = freeCells.slice(0, seeds.length),
++          genomeSlots = freeGenes.slice(0, programs.length);
++        const records = prepared.map((p, j) =>
++          treeRecord(
++            p.tree,
++            counters[12] + j,
++            p.origin
++              ? {
++                  id: p.origin.serial,
++                  founder: p.origin.founder,
++                  depth: p.origin.depth,
++                }
++              : null,
++            0,
++            p.mutated,
++          ),
++        );
++        const references = new Uint32Array(programs.length),
++          packets = normalized.map((c, j) => {
++            const data = new ArrayBuffer(CELL_BYTES),
++              cf = new Float32Array(data),
++              cu = new Uint32Array(data),
++              program = c.genome;
++            const wrap = (x, size) => ((x % size) + size) % size;
++            cf.set(
++              [wrap(c.x, cfg.side * 32), wrap(c.y, cfg.side * 32), 0, 0],
++              0,
++            );
++            cf.set(
++              [Math.round(c.energy * ENERGY_SCALE), wrap(c.heading, 1), 0, 0],
++              4,
++            );
++            cu.set([counters[11] + j, genomeSlots[program], 0, 0], 24);
++            cu.set([0, 0, 0, 1], 28);
++            cu.set(
++              c.links.map((h) => (h ? cellSlots[h - 1] + 1 : 0)),
++              32,
++            );
++            cf.set(
++              [
++                c.rest,
++                0,
++                Math.round(c.storage * ENERGY_SCALE),
++                cfg.ambientTemperature,
++              ],
++              36,
++            );
++            cf.set(c.anchors, 44);
++            let z = (records[program].record.founder + 0x9e3779b9) >>> 0;
++            z = Math.imul(z ^ (z >>> 16), 0x21f0aaad) >>> 0;
++            z = Math.imul(z ^ (z >>> 15), 0x735a2d97) >>> 0;
++            z = (z ^ (z >>> 15)) >>> 0;
++            cf[48] =
++              c.color === undefined
++                ? Math.fround(((z >>> 8) / 16777216) * 360)
++                : wrap(c.color, 360);
++            references[program]++;
++            if (prepared[program].origin) counters[9]++;
++            else counters[8]++;
++            return data;
++          });
++        counters[1] += seeds.length;
++        counters[11] += seeds.length;
++        counters[12] += programs.length;
++        counters[10] += prepared.filter((p) => p.mutated).length;
++        counters[2] = freeCells.length - seeds.length;
++        counters[4] = freeGenes.length - programs.length;
++        // Validation and all allocation decisions precede the first mutation.
++        records.forEach(({ record, buffer }, j) => {
++          treeSlots[genomeSlots[j]] = record;
++          device.queue.writeBuffer(
++            genomes,
++            genomeSlots[j] * GENOME_BYTES,
++            buffer,
++          );
++          device.queue.writeBuffer(
++            scratch,
++            geneOffset + genomeSlots[j] * 16,
++            new Uint32Array([references[j], 0, 0, 0]),
++          );
++        });
++        packets.forEach((data, j) => {
++          device.queue.writeBuffer(
++            state[parity],
++            cellSlots[j] * CELL_BYTES,
++            data,
++          );
++          device.queue.writeBuffer(
++            scratch,
++            treeMemoryOffset + cellSlots[j] * 48,
++            new Uint32Array(12),
++          );
++          device.queue.writeBuffer(
++            activity,
++            cellSlots[j] * 32,
++            new Uint32Array(8),
++          );
++        });
++        device.queue.writeBuffer(scratch, counterOffset, counters);
++        await device.queue.onSubmittedWorkDone();
++        return {
++          admitted: seeds.length,
++          cellSlots,
++          genomeSlots,
++          serials: records.map((r) => r.record.id),
++          mutations: prepared.filter((p) => p.mutated).length,
++        };
++      } finally {
++        hostOperation = false;
+       }
+-      device.queue.submit([encoder.finish()]);
+-      await device.queue.onSubmittedWorkDone();
+     },
+     armExecutionTrace(selected, seed) {
+       if (!cfg.executionTrace) throw Error("Execution tracing was not enabled");

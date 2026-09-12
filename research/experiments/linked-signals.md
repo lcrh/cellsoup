@@ -59,7 +59,7 @@ seeds 901, 1907 and 2309. Founders exclude the new forms; archive subtree mutati
 can introduce them and crossover can transfer them once present. Division stays
 exact. A further 3,000 founder/mutation pairs in the control match production.
 
-## Evolutionary comparison, in progress
+## Completed evolutionary comparison
 
 Three fresh environmental seeds, 901, 1907 and 2309, run for 3,600 simulated
 seconds per condition. Both use 32,768 slots, 8,192 random founders, eight arrivals
@@ -74,7 +74,32 @@ and outputs. Replay promising bodies with neighbor input removed while retaining
 links, publication, instruction count and costs. Then compare against constant
 inputs or simpler motor programs; disabled motion alone is a weak control.
 Publication/reading counts, population size, or a built-in mean are insufficient.
-No evolutionary result is claimed yet.
+All six worlds completed and passed matching configuration, shader, census and
+population-accounting checks. Means over the seven late censuses (minutes 30–60):
+
+| Seed | Control living | Variant living | Control fraction in moving groups | Variant fraction in moving groups |
+| --- | ---: | ---: | ---: | ---: |
+| 901 | 21,052 | 12,688 | 0.05% | 6.36% |
+| 1907 | 27,356 | 26,096 | 0.09% | 4.62% |
+| 2309 | 14,936 | 18,752 | 4.09% | 3.40% |
+
+Moving groups require the existing motion threshold and recent thrust, not
+verified coordination. Two seeds improve this descriptor and one does not.
+Final populations contain 117, 49 and 215 cells with new communication syntax.
+That does not establish a causal communication advantage. In seed 1907, the
+dominant 26,050-cell lineage uses budding and linked energy gifts without the new
+forms; the most abundant new linked-reader gives to a corpse, which cannot accept
+gifts. Seed 901's largest linked-reader has the rejected self-gift described below.
+Other readers remain candidates for appropriate contexts, not verified collective
+computations. No default change is promoted from this comparison.
+
+[All 96 source files](../results/linked-worlds/manifest.json) are retained with
+raw-byte hashes. Reproduce the [comparison](../results/linked-world-comparison.json)
+from production, without either experimental patch:
+
+```sh
+node research/compare-evolution-variants.mjs research/results/linked-worlds research/results/linked-worlds linked /tmp/linked-worlds.json
+```
 
 The [functional-dependency calibration](../functional-dependencies.md) now adds
 a self-history control: homogeneous recurrent signaling is exactly reproducible
@@ -82,7 +107,7 @@ without neighbor information, whereas heterogeneous input propagation is not.
 The first completed world's most abundant new linked-reader feeds a rejected
 self-gift. A forced-input GPU assay confirms changing registers without changing
 cellular state. These are cautions against counting reading syntax or signal
-traffic; the full evolutionary comparison remains in progress.
+traffic; they constrain interpretation of the completed evolutionary comparison.
 
 ## Reproduce
 

@@ -78,8 +78,9 @@ test, not a general ecological replay.
 
 [Observed-program record](results/observed-linked-noop.json),
 [retained source-world bytes](results/linked-worlds/manifest.json).
-The retained world collection is currently partial: the completed seed-901
-control and variant only. No three-seed evolutionary conclusion follows yet.
+The retained world collection now includes all six completed worlds. Their
+[comparison](experiments/linked-signals.md) has mixed group-movement outcomes and
+does not establish a causal advantage from the new communication forms.
 
 ## Reproduce
 

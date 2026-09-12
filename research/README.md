@@ -124,8 +124,14 @@ alone would overstate its advantage over simpler movement.
 
 The [linked-signal experiment](experiments/linked-signals.md) now tests a generic
 way to publish a value and read the mean signal from linked neighbors. A controlled
-recurrent circuit passes GPU checks; autonomous evolutionary trials are running
-with exactly matched random founders. The calibration is not an evolved behavior.
+recurrent circuit passes GPU checks; six completed autonomous worlds with exactly
+matched founders show mixed group-movement outcomes. The calibration is not an
+evolved behavior.
 The [current proxy requirements](functional-dependencies.md) distinguish neighbor
 information from local history, changes in registers from changes in behavior,
 and behavioral effects from reproductive value.
+
+The [body-arrival prototype](experiments/body-arrivals.md) can now insert saved
+fragments into a running world with preserved links, fresh physiology and checked
+accounting. Observed cooperative fragments regrow through this path; automatic
+structural resampling and its evolutionary comparison remain to be implemented.
