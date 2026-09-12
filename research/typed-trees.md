@@ -105,3 +105,7 @@ Use `--substrate=assembly` for the same ecology with assembly, or `--crossover=0
 for trees without recombination. These are different stochastic trajectories;
 a single seed cannot establish a causal benefit from crossover. See the saved
 trial summary in `research/results/typed-arrivals.json` for current evidence.
+
+## Memory-use experiments
+
+The [memory and variation experiments](experiments/README.md) record scoped-variable generation, smaller mutations, a larger computation budget, and isolated read-ablation probes. These experiments distinguish syntax from behavior and ecological persistence from continued evolution. They do not change the published sampler.

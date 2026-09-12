@@ -1,0 +1,66 @@
+--- a/web/gpu/trees.js
++++ b/web/gpu/trees.js
+@@ -634,12 +634,13 @@
+     const chosen = choices[Math.floor(rng() * choices.length)],
+       mode = rng();
+     let replacement;
+-    if (chosen.t.op === "number" && mode < 0.5) {
+-      const v = chosen.t.value;
+-      replacement = node(
+-        "number",
+-        [],
+-        Math.fround(
++    if (mode < 0.5) {
++      // Local edits retain every child expression. A viable sensor/action
++      // relationship can change one operation without being rebuilt wholesale.
++      replacement = clone(chosen.t);
++      if (chosen.t.op === "number") {
++        const v = chosen.t.value;
++        replacement.value = Math.fround(
+           Math.max(
+             -999999,
+             Math.min(
+@@ -647,9 +648,29 @@
+               v + (rng() - 0.5) * Math.max(0.1, Math.abs(v) * 0.25),
+             ),
+           ),
+-        ),
+-      );
+-    } else if (mode < 0.3) {
++        );
++      } else if (["bool", "slot", "channel"].includes(chosen.t.op)) {
++        const range =
++          chosen.t.op === "bool" ? 2 : chosen.t.op === "slot" ? 8 : 4;
++        replacement.value =
++          (chosen.t.value + 1 + Math.floor(rng() * (range - 1))) % range;
++      } else {
++        const signature = byName.get(chosen.t.op);
++        const peers = TREE_SCHEMA.filter(
++          (s) =>
++            s.name !== chosen.t.op &&
++            s.result === signature.result &&
++            s.args.join(",") === signature.args.join(","),
++        );
++        if (!peers.length) continue;
++        replacement.op = peers[Math.floor(rng() * peers.length)].name;
++        if (replacement.op === "number")
++          replacement.value = Math.fround(
++            constants[Math.floor(rng() * constants.length)],
++          );
++        if (replacement.op === "bool") replacement.value = Number(rng() < 0.5);
++      }
++    } else if (mode < 0.6) {
+       const descendants = paths(chosen.t)
+         .slice(1)
+         .filter((x) => x.type === chosen.type);
+--- a/web/gpu/engine.js
++++ b/web/gpu/engine.js
+@@ -461,7 +461,7 @@
+     cfg,
+     fingerprint,
+     genomeSampler: cfg.treePrograms
+-      ? "typed-sequences-state-v2"
++      ? "typed-sequences-local-mutation-v3"
+       : "assembly-v1",
+     buffers: { state, scratch, genomes, archive, food, intents, activity },
+     get tick() {

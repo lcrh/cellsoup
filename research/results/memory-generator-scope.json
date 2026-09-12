@@ -1,0 +1,19 @@
+{
+  "programs": 10000,
+  "seed": 731,
+  "scope": "Static syntax; system birth-result excluded. Flat memory aliases count by slot. No claim of execution or fitness.",
+  "random": {
+    "stateBindings": 3705,
+    "localBindings": 3545,
+    "memoryReads": 1204,
+    "bindingsWithReadInBody": 160,
+    "bindingsWithRecurrentUpdate": 2
+  },
+  "mutated": {
+    "stateBindings": 3928,
+    "localBindings": 3979,
+    "memoryReads": 1283,
+    "bindingsWithReadInBody": 181,
+    "bindingsWithRecurrentUpdate": 2
+  }
+}

@@ -1,5 +1,6 @@
 import { create, globals } from "webgpu";
 import { mkdir, writeFile } from "node:fs/promises";
+import { auditMemory } from "./tree-memory-audit.mjs";
 import { createLifeEngine, describeGenome } from "../web/gpu/engine.js";
 const args = Object.fromEntries(
   process.argv.slice(2).map((a) => {
@@ -10,6 +11,7 @@ const args = Object.fromEntries(
 );
 const allowed = [
   "substrate",
+  "budget",
   "crossover",
   "mutation",
   "capacity",
@@ -80,6 +82,7 @@ const options = {
   floor: Number(args.floor ?? Math.floor(capacity / 64)),
 };
 for (const [flag, key] of [
+  ["budget", "budget"],
   ["crossover", "crossover"],
   ["mutation", "mutation"],
   ["minimum-birth-energy", "minimumBirthEnergy"],
@@ -142,6 +145,7 @@ function analyze(buffer) {
         }
       }
   let living = 0,
+    bornInWorld = 0,
     energy = 0,
     reserves = 0,
     temperature = 0,
@@ -155,6 +159,7 @@ function analyze(buffer) {
     if (u[i * 52 + 31] === 1) {
       living++;
       const k = i * 52;
+      bornInWorld += Number(u[k + 30] !== 0);
       for (let q = 0; q < 52; q++)
         if (
           (q < 24 || (q >= 36 && q < 40) || q >= 44) &&
@@ -201,6 +206,8 @@ function analyze(buffer) {
     }
   return {
     living,
+    bornInWorld,
+    livingArrivals: living - bornInWorld,
     energy,
     reserves,
     mature,
@@ -280,6 +287,27 @@ const leaders = await Promise.all(
     recordedHarvest: genes.stats[slot * 4 + 2] / 256,
   })),
 );
+// Audit every surviving genotype, rather than only the twelve leaders.
+// This is static syntax evidence; it does not establish that reads execute.
+const survivingTrees = [];
+if (options.treePrograms) {
+  for (let slot = 0; slot < counts.length; slot++) {
+    if (!counts[slot]) continue;
+    const gene = await engine.genome(slot);
+    survivingTrees.push({
+      slot,
+      living: counts[slot],
+      serial: gene.serial,
+      founder: gene.founder,
+      parent: gene.parent,
+      secondParent: gene.secondParent,
+      depth: gene.depth,
+      bornTick: gene.bornTick,
+      tree: gene.tree,
+      memorySyntax: auditMemory(gene.tree),
+    });
+  }
+}
 const archive = await engine.archived(),
   archived = Array.from({ length: 128 }, (_, i) =>
     describeGenome(archive, i),
@@ -297,6 +325,7 @@ await writeFile(
       leaders,
       archived,
       archivedTrees: engine.archivedTrees(),
+      survivingTrees,
     },
     null,
     2,

@@ -1,0 +1,99 @@
+--- a/web/gpu/trees.js
++++ b/web/gpu/trees.js
+@@ -563,7 +563,7 @@
+ const constants = [
+   -1, 0, 0.1, 0.25, 0.5, 0.75, 1, 2, 3, 5, 10, 25, 60, 90, 120, 360,
+ ];
+-function grow(type, budget, depth, rng) {
++function grow(type, budget, depth, rng, scope = []) {
+   const options = TREE_SCHEMA.filter(
+     (s) =>
+       (s.result === type ||
+@@ -572,7 +572,16 @@
+       s.args.length < budget &&
+       (depth > 1 || s.args.length === 0),
+   );
++  // A bound variable is a grammar choice, just like a sensor. Its lowered
++  // representation still costs two AST nodes (memory + slot). Addresses are
++  // also available to set!, so evolution can connect updates to those reads.
++  if (type === "Memory" || (type === "Number" && budget >= 2 && depth > 1))
++    for (const slot of scope) options.push({ boundSlot: slot });
+   const s = options[Math.floor(rng() * options.length)];
++  if (s?.boundSlot !== undefined) {
++    const address = node("slot", [], s.boundSlot);
++    return type === "Memory" ? address : node("memory", [address]);
++  }
+   if (!s) throw Error("Cannot generate type " + type);
+   if (s.name === "number")
+     return node(
+@@ -584,14 +593,25 @@
+   if (s.name === "slot" || s.name === "channel")
+     return node(s.name, [], Math.floor(rng() * (s.name === "slot" ? 8 : 4)));
+   let remaining = budget - 1;
+-  const args = s.args.map((child, i) => {
++  const args = [];
++  for (const [i, child] of s.args.entries()) {
+     const spare = remaining - (s.args.length - i - 1);
+     const allowance =
+       i === s.args.length - 1 ? spare : 1 + Math.floor(rng() * spare);
+-    const t = grow(child === "Any" ? type : child, allowance, depth - 1, rng);
++    const binding = s.name === "state" || s.name === "let";
++    // The new name is visible only in the body, not in its initializer.
++    const childScope =
++      binding && i === 2 ? [...new Set([...scope, args[0].value])] : scope;
++    const t = grow(
++      child === "Any" ? type : child,
++      allowance,
++      depth - 1,
++      rng,
++      binding && i === 0 ? [] : childScope,
++    );
++    args.push(t);
+     remaining -= checkTree(t, null).count;
+-    return t;
+-  });
++  }
+   return node(s.name, args);
+ }
+ export function randomTree(rng = Math.random, maxNodes = MAX_TREE_NODES) {
+@@ -624,9 +644,18 @@
+   checkTree(tree);
+   const original = printTree(tree),
+     count = checkTree(tree).count;
+-  function paths(t, path = [], out = []) {
+-    out.push({ t, path, type: checkTree(t, null).type });
+-    t.args.forEach((a, i) => paths(a, [...path, i], out));
++  function paths(t, path = [], out = [], scope = []) {
++    out.push({ t, path, scope, type: checkTree(t, null).type });
++    t.args.forEach((a, i) =>
++      paths(
++        a,
++        [...path, i],
++        out,
++        (t.op === "state" || t.op === "let") && i === 2
++          ? [...new Set([...scope, t.args[0].value])]
++          : scope,
++      ),
++    );
+     return out;
+   }
+   const choices = paths(tree);
+@@ -663,6 +692,7 @@
+         MAX_TREE_NODES - count + checkTree(chosen.t, null).count,
+         6,
+         rng,
++        chosen.scope,
+       );
+     const result = clone(tree);
+     let parent = result;
+--- a/web/gpu/engine.js
++++ b/web/gpu/engine.js
+@@ -461,7 +461,7 @@
+     cfg,
+     fingerprint,
+     genomeSampler: cfg.treePrograms
+-      ? "typed-sequences-state-v2"
++      ? "typed-sequences-scope-v3"
+       : "assembly-v1",
+     buffers: { state, scratch, genomes, archive, food, intents, activity },
+     get tick() {
