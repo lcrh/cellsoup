@@ -68,7 +68,8 @@ main {
   padding: 18px;
   position: sticky;
   top: 0;
-  height: calc(100vh - 66px);
+  height: calc(100dvh - 66px);
+  min-height: 540px;
   display: flex;
   flex-direction: column;
 }
@@ -107,6 +108,8 @@ button:disabled {
   font-weight: 600;
 }
 .toolbar {
+  flex-shrink: 0;
+  flex-wrap: wrap;
   display: flex;
   gap: 8px;
   align-items: center;
@@ -131,6 +134,17 @@ button:disabled {
   border-radius: 10px;
   overflow: hidden;
   background: #071014;
+}
+.simulation-info {
+  flex: 0 0 clamp(160px, 24dvh, 240px);
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior-y: contain;
+  scrollbar-gutter: stable;
+  scrollbar-color: #456258 transparent;
+  padding-right: 8px;
+  margin-top: 12px;
+  border-top: 1px solid #273b3e;
 }
 #world {
   display: block;
@@ -251,6 +265,11 @@ button:disabled {
   font-size: 10px;
 }
 aside {
+  height: calc(100dvh - 66px);
+  min-height: 540px;
+  overflow-y: auto;
+  overscroll-behavior-y: contain;
+  scrollbar-color: #456258 transparent;
   border-left: 1px solid #2b3d40;
   background: #102026;
   padding: 22px 22px 12px;
@@ -517,14 +536,17 @@ footer {
   }
   .laboratory {
     position: relative;
-    height: 76vh;
-    min-height: 520px;
+    height: calc(100dvh - 55px);
+    min-height: 640px;
     padding: 12px;
   }
   .viewport {
     min-height: 230px;
   }
   aside {
+    height: auto;
+    min-height: 0;
+    overflow-y: visible;
     border-left: 0;
     border-top: 1px solid #2b3d40;
     padding: 23px 20px;
@@ -682,10 +704,6 @@ dialog textarea {
   .toolbar #fit {
     grid-column: 1 / 4;
   }
-  .laboratory {
-    min-height: 620px;
-    height: 82vh;
-  }
 }
 
 .cell-memory {
@@ -703,4 +721,56 @@ dialog textarea {
   display: block;
   font-size: 12px;
   overflow-wrap: anywhere;
+}
+
+.behavior-panel {
+  margin-top: 20px;
+  padding: 18px;
+  border: 1px solid #2b3d40;
+  border-radius: 10px;
+}
+.behavior-panel h2 {
+  font-size: 17px;
+  margin: 0;
+}
+.behavior-panel p {
+  color: #9baead;
+  line-height: 1.5;
+}
+.behavior-panel .section-heading {
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.behavior-values {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin-top: 20px;
+}
+.behavior-values strong {
+  display: block;
+  font-size: 20px;
+  color: #dce8e5;
+}
+.behavior-values span {
+  display: block;
+  color: #9baead;
+  font-size: 12px;
+  margin-top: 4px;
+}
+#epi-history {
+  width: 100%;
+  height: 90px;
+  display: block;
+}
+.behavior-legend {
+  font-size: 12px;
+}
+.behavior-panel details {
+  margin-bottom: 16px;
+}
+@media (max-width: 600px) {
+  .behavior-values {
+    grid-template-columns: 1fr;
+  }
 }

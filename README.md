@@ -14,6 +14,8 @@ Use **Find colony**, **Moving colony**, **Follow**, and the energy/storage/activ
 
 This sunlight model is a working prototype. Three earlier assembly trials sustained thousands of reproducing cells for ten simulated minutes after newcomers stopped; moving connected groups emerged in each. The named-state tree grammar has since completed three one-hour continuous evolution runs. One naturally generated genotype showed a reproducible growth advantage from giving energy in controlled regrowth tests; this does not establish general evolved cooperation. Predation remains uncommon. Performance depends strongly on density and hardware; older nutrient-model speed measurements do not apply to this version. [Current GPU model](docs/gpu-model.md) · [Historical nutrient model and measurements](docs/gpu-model-nutrients.md) · [Headless experiments](research/README.md).
 
+Version 0.8.3 adds a live **behavioral epiplexity estimate**: model-description bits from a bounded predictor of whole-world behavior, separate held-out prediction error, a shuffled baseline, and exportable recordings. [Measurement method and limitations](docs/behavioral-epiplexity.md) · [Release notes](docs/release-0.8.3.md).
+
 Version 0.8.2 lets explicit energy gifts travel along reciprocal links, including stretched links outside the ordinary 18-unit contact range. Random founders, single-cell archive arrivals and exact-copy division remain the defaults. [Release notes](docs/release-0.8.2.md) · [Controlled colony regrowth experiments](research/propagule-experiments.md).
 
 ## Run the classic laboratory

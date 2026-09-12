@@ -48,41 +48,123 @@
             Scroll to zoom · drag to pan · click to inspect
           </div>
         </div>
-        <div class="metrics" aria-label="Population statistics">
-          <div><strong id="living">—</strong><span>living cells</span></div>
-          <div>
-            <strong id="elapsed">0:00</strong><span>simulated time</span>
+        <div
+          class="simulation-info"
+          role="region"
+          aria-label="Simulation statistics and behavior"
+          tabindex="0"
+        >
+          <div class="metrics" aria-label="Population statistics">
+            <div><strong id="living">—</strong><span>living cells</span></div>
+            <div>
+              <strong id="elapsed">0:00</strong><span>simulated time</span>
+            </div>
+            <div>
+              <strong id="throughput">—</strong><span>actual speed</span>
+            </div>
+            <div>
+              <strong id="corpses">—</strong><span>edible corpses</span>
+            </div>
+            <div>
+              <strong id="attacks">—</strong><span>successful attacks</span>
+            </div>
+            <div><strong id="births">—</strong><span>divisions</span></div>
           </div>
-          <div><strong id="throughput">—</strong><span>actual speed</span></div>
-          <div><strong id="corpses">—</strong><span>edible corpses</span></div>
-          <div>
-            <strong id="attacks">—</strong><span>successful attacks</span>
+          <div class="view-controls">
+            <label
+              >Cell color
+              <select id="color">
+                <option value="0">Biological hue</option>
+                <option value="1">Storage</option>
+                <option value="2">Energy</option>
+                <option value="3">Recent activity</option>
+                <option value="4">Temperature</option>
+              </select></label
+            ><label><input id="food" type="checkbox" checked /> Light</label
+            ><label><input id="links" type="checkbox" checked /> Links</label
+            ><label
+              ><input id="activity" type="checkbox" checked /> Activity</label
+            >
           </div>
-          <div><strong id="births">—</strong><span>divisions</span></div>
-        </div>
-        <div class="view-controls">
-          <label
-            >Cell color
-            <select id="color">
-              <option value="0">Biological hue</option>
-              <option value="1">Storage</option>
-              <option value="2">Energy</option>
-              <option value="3">Recent activity</option>
-              <option value="4">Temperature</option>
-            </select></label
-          ><label><input id="food" type="checkbox" checked /> Light</label
-          ><label><input id="links" type="checkbox" checked /> Links</label
-          ><label
-            ><input id="activity" type="checkbox" checked /> Activity</label
+          <p class="activity-key">
+            Red traces: attacks · cyan tails: thrust · gold rings: eating ·
+            green arrows: energy gifts ·
+            <span id="render-note"
+              >Max advances 24 ticks between drawings.</span
+            >
+          </p>
+          <div class="history">
+            <canvas
+              id="history"
+              aria-label="Living population over time"
+            ></canvas
+            ><span>Population history <span id="history-range"></span></span>
+          </div>
+          <section
+            class="behavior-panel"
+            aria-label="Behavioral epiplexity estimate"
           >
-        </div>
-        <p class="activity-key">
-          Red traces: attacks · cyan tails: thrust · gold rings: eating · green arrows: energy gifts ·
-          <span id="render-note">Max advances 24 ticks between drawings.</span>
-        </p>
-        <div class="history">
-          <canvas id="history" aria-label="Living population over time"></canvas
-          ><span>Population history <span id="history-range"></span></span>
+            <div class="section-heading">
+              <h2>Behavioral epiplexity <span class="badge">estimate</span></h2>
+              <label
+                ><input type="checkbox" id="epi-enabled" checked /> Measure
+                behavior</label
+              >
+            </div>
+            <p>
+              How much structure a small predictor learns from the whole world's
+              behavior. Random colors and the camera view are excluded.
+            </p>
+            <div class="behavior-values">
+              <div>
+                <strong id="epi-score">—</strong><span>learned model size</span>
+              </div>
+              <div>
+                <strong id="epi-noise">—</strong
+                ><span>unpredicted behavior</span>
+              </div>
+              <div>
+                <strong id="epi-shuffled">—</strong
+                ><span>shuffled model size</span>
+              </div>
+            </div>
+            <p id="epi-status" role="status">Recording behavior…</p>
+            <canvas
+              id="epi-history"
+              aria-label="Estimated behavioral model size and shuffled baseline over time"
+            ></canvas>
+            <p class="behavior-legend">
+              Green: behavior · gray: shuffled baseline
+            </p>
+            <details>
+              <summary>What this estimate means</summary>
+              <p>
+                Every two simulated seconds, the GPU records a coarse map of
+                cell density, links, motion, recent activity, energy and
+                reserves. Eleven bounded predictors compete to describe a
+                32-sample window. The smallest combined model and prediction
+                code wins; the displayed estimate is that model's size in bits.
+                Prediction error is checked on separate, unseen frames.
+              </p>
+              <p>
+                This is a limited observer, not a universal complexity score or
+                a measure of intelligence. Simple repetition and noise should
+                need small models. Population changes and physics can also
+                create learnable patterns. The shuffled comparison preserves
+                each channel's frequencies while removing spatial and temporal
+                order. Compare scores with the same sampling and model settings.
+              </p>
+              <p>
+                <a
+                  href="https://arxiv.org/abs/2601.03220"
+                  target="_blank"
+                  rel="noopener"
+                  >Epiplexity paper ↗</a
+                >
+              </p>
+            </details>
+            <button id="epi-export" disabled>Save behavior measurement</button>
+          </section>
         </div>
       </section>
       <aside>

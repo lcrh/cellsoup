@@ -1,6 +1,7 @@
 import { createLifeEngine, defaults } from "./engine.js";
 import { TREE_SCHEMA } from "./trees.js";
 import { createRenderer } from "./renderer.js";
+import { createBehaviorMeter } from "./behavior-meter.js";
 import { GPU_OPS, GPU_SENSORS, GPU_FIELDS } from "./language.js";
 import {
   snapshot,
@@ -126,6 +127,7 @@ $("floor").value = 512;
 let device,
   engine,
   renderer,
+  behaviorMeter,
   paused = false,
   busy = true,
   failed = false;
@@ -225,6 +227,8 @@ async function start() {
         );
     });
   }
+  behaviorMeter?.destroy();
+  behaviorMeter = null;
   renderer?.destroy();
   engine?.destroy();
   renderer = null;
@@ -236,6 +240,7 @@ async function start() {
     engine,
     navigator.gpu.getPreferredCanvasFormat(),
   );
+  behaviorMeter = await createBehaviorMeter(device, engine);
   $("genome-kind").textContent = cfg.treePrograms
     ? "Random typed-tree genomes"
     : "Random assembly genomes";
@@ -498,7 +503,13 @@ async function frame(now) {
           carry = Math.min(carry, 24);
         }
       }
-      if (ticks) await engine.step(ticks);
+      await behaviorMeter?.observe();
+      while (ticks > 0) {
+        const batch = behaviorMeter?.limitStep(ticks) ?? ticks;
+        await engine.step(batch);
+        ticks -= batch;
+        await behaviorMeter?.observe();
+      }
       await observe(performance.now());
       renderer.draw(camera, {
         food: $("food").checked,
