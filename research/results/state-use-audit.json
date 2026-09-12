@@ -1,0 +1,122 @@
+{
+  "scope": "The 12 recorded leading genomes at the end of named-state-42, 180 simulated seconds. Static syntax inspection, not executed-instruction tracing. Does not cover every surviving genotype.",
+  "finding": "None of these 12 genomes reads any of the eight user memory locations. The separate system birth-result value is excluded from this count. Their state/let forms and explicit writes do not demonstrate useful recurrent computation. One leading genome retains two direct crossover parents.",
+  "nextExperiment": "Compare ordinary generation with generation that makes an in-scope bound variable available as a numeric expression. Keep actions random and measure live memory-dependent behavior rather than mere presence of a binding.",
+  "leaders": [
+    {
+      "serial": 3343,
+      "living": 148,
+      "parents": [],
+      "stateBindings": 0,
+      "localBindings": 0,
+      "explicitWrites": 0,
+      "memoryReads": 0
+    },
+    {
+      "serial": 1653,
+      "living": 75,
+      "parents": [],
+      "stateBindings": 0,
+      "localBindings": 0,
+      "explicitWrites": 0,
+      "memoryReads": 0
+    },
+    {
+      "serial": 1802,
+      "living": 68,
+      "parents": [],
+      "stateBindings": 0,
+      "localBindings": 0,
+      "explicitWrites": 0,
+      "memoryReads": 0
+    },
+    {
+      "serial": 5925,
+      "living": 45,
+      "parents": [],
+      "stateBindings": 0,
+      "localBindings": 0,
+      "explicitWrites": 0,
+      "memoryReads": 0
+    },
+    {
+      "serial": 3556,
+      "living": 16,
+      "parents": [],
+      "stateBindings": 0,
+      "localBindings": 0,
+      "explicitWrites": 1,
+      "memoryReads": 0
+    },
+    {
+      "serial": 7449,
+      "living": 16,
+      "parents": [],
+      "stateBindings": 0,
+      "localBindings": 1,
+      "explicitWrites": 1,
+      "memoryReads": 0
+    },
+    {
+      "serial": 3784,
+      "living": 11,
+      "parents": [],
+      "stateBindings": 0,
+      "localBindings": 0,
+      "explicitWrites": 0,
+      "memoryReads": 0
+    },
+    {
+      "serial": 8665,
+      "living": 9,
+      "parents": [
+        3784,
+        2813
+      ],
+      "stateBindings": 0,
+      "localBindings": 0,
+      "explicitWrites": 0,
+      "memoryReads": 0
+    },
+    {
+      "serial": 9292,
+      "living": 8,
+      "parents": [
+        7658
+      ],
+      "stateBindings": 0,
+      "localBindings": 1,
+      "explicitWrites": 0,
+      "memoryReads": 0
+    },
+    {
+      "serial": 9196,
+      "living": 8,
+      "parents": [
+        3343
+      ],
+      "stateBindings": 0,
+      "localBindings": 0,
+      "explicitWrites": 0,
+      "memoryReads": 0
+    },
+    {
+      "serial": 309,
+      "living": 8,
+      "parents": [],
+      "stateBindings": 1,
+      "localBindings": 1,
+      "explicitWrites": 0,
+      "memoryReads": 0
+    },
+    {
+      "serial": 419,
+      "living": 8,
+      "parents": [],
+      "stateBindings": 1,
+      "localBindings": 0,
+      "explicitWrites": 0,
+      "memoryReads": 0
+    }
+  ]
+}
