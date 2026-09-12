@@ -67,3 +67,7 @@ if len(sys.argv) > 3:
     colony_output = output.parent / f"colony-{colony_seed}-{observation['seconds']}"
     fig.savefig(str(colony_output) + ".png", dpi=170)
     fig.savefig(str(colony_output) + ".svg")
+
+# Keep generated vector artifacts clean in diffs; newlines retain SVG token separation.
+for svg_path in [Path(str(output) + ".svg")] + ([Path(str(colony_output) + ".svg")] if len(sys.argv) > 3 else []):
+    svg_path.write_text("\n".join(line.rstrip() for line in svg_path.read_text().splitlines()) + "\n")
