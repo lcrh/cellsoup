@@ -2,6 +2,7 @@ import {
   compileTree,
   decodeTreeBytecode,
   randomTree,
+  mutateTree,
   sampleTreeArrival,
   treeRng,
   formatTree,
@@ -9,6 +10,7 @@ import {
 } from "./trees.js";
 import { simulationShader } from "./shader.js";
 import { compile } from "./language.js";
+import { mutateAssemblyGenome } from "./fork-mutation.js";
 export const CELL_FLOATS = 52,
   CELL_BYTES = 208,
   GENOME_BYTES = 1056,
@@ -45,6 +47,7 @@ export const defaults = {
   rate: 32,
   share: 0.5,
   mutation: 0.8,
+  forkMutation: 0.01,
   seedEnergy: 24,
   seedStorage: 24,
   upkeep: 0.5,
@@ -149,6 +152,7 @@ export async function createLifeEngine(device, options = {}) {
     cfg.budget > 128 ||
     cfg.exchange > 0.25 ||
     cfg.mutation > 1 ||
+    cfg.forkMutation > 1 ||
     cfg.share > 1 ||
     cfg.side > 512 ||
     cfg.sources > 256
@@ -170,7 +174,11 @@ export async function createLifeEngine(device, options = {}) {
     Math.ceil((40 * n + 20 * t + 20 * g + 640) / 16) * 16;
   const traceOffset = treeMemoryOffset + (cfg.treePrograms ? 48 * n : 0);
   const traceBytes = 16 + 32 * 16 + 8192 * 4 + 1048576 * 4;
-  const scratch = storage(traceOffset + (cfg.executionTrace ? traceBytes : 0)),
+  const birthMutationOffset =
+    traceOffset + (cfg.executionTrace ? traceBytes : 0);
+  const scratch = storage(
+      birthMutationOffset + (cfg.forkMutation > 0 ? n * 16 : 0),
+    ),
     genomes = storage(g * GENOME_BYTES),
     archive = storage(128 * GENOME_BYTES),
     food = storage(t * 16 + cfg.sources * 32),
@@ -189,7 +197,7 @@ export async function createLifeEngine(device, options = {}) {
       cfg.rate,
       cfg.share,
       cfg.mutation,
-      0,
+      cfg.forkMutation,
       cfg.seedEnergy,
       cfg.upkeep,
       cfg.divisionCost,
@@ -461,6 +469,149 @@ export async function createLifeEngine(device, options = {}) {
     );
     return count;
   }
+  // Mutating newborns wait for the next fixed 16-tick boundary. Only they
+  // pause their VM; physics, energy and exact-copy siblings continue normally.
+  async function readPackets(buffer, slots, stride) {
+    const size = slots.length * stride;
+    const output = device.createBuffer({
+      size,
+      usage: GPUBufferUsage.COPY_DST | GPUBufferUsage.MAP_READ,
+    });
+    try {
+      const encoder = device.createCommandEncoder();
+      slots.forEach((slot, i) =>
+        encoder.copyBufferToBuffer(
+          buffer,
+          slot * stride,
+          output,
+          i * stride,
+          stride,
+        ),
+      );
+      device.queue.submit([encoder.finish()]);
+      await output.mapAsync(GPUMapMode.READ);
+      return output.getMappedRange().slice(0);
+    } finally {
+      output.destroy();
+    }
+  }
+  async function resolveBirthMutations() {
+    const counters = new Uint32Array(await read(scratch, counterOffset, 128));
+    const count = Math.min(n, counters[25]);
+    if (!count) return;
+    const requests = new Uint32Array(
+      await read(scratch, birthMutationOffset, count * 16),
+    );
+    const slots = Array.from({ length: count }, (_, i) => requests[i * 4]);
+    const destination = state[1 - parity];
+    const [packets, statsBuffer] = await Promise.all([
+      readPackets(destination, slots, CELL_BYTES),
+      read(scratch, geneOffset, g * 16),
+    ]);
+    const words = new Uint32Array(packets),
+      stats = new Uint32Array(statsBuffer),
+      freeGenes = [];
+    for (let i = 0; i < g; i++) if (stats[i * 4] === 0) freeGenes.push(i);
+    const living = slots.flatMap((slot, i) => {
+      const k = i * CELL_FLOATS;
+      return words[k + 24] === requests[i * 4 + 1] &&
+        words[k + 31] === 1 &&
+        words[k + 27] === 0xffffffff
+        ? [i]
+        : [];
+    });
+    const parents = [...new Set(living.map((i) => requests[i * 4 + 2]))];
+    const assembly = new Map();
+    if (!cfg.treePrograms && parents.length) {
+      const packed = await readPackets(genomes, parents, GENOME_BYTES);
+      parents.forEach((slot, i) =>
+        assembly.set(
+          slot,
+          packed.slice(i * GENOME_BYTES, (i + 1) * GENOME_BYTES),
+        ),
+      );
+    }
+    let allocated = 0;
+    const changedStats = new Set();
+    for (const i of living) {
+      const slot = slots[i],
+        parentSlot = requests[i * 4 + 2],
+        birthTick = requests[i * 4 + 3];
+      const cell = packets.slice(i * CELL_BYTES, (i + 1) * CELL_BYTES);
+      const cu = new Uint32Array(cell),
+        cf = new Float32Array(cell);
+      cu[27] = 0;
+      if (allocated < freeGenes.length && counters[12] < 0xffffffff) {
+        const gene = freeGenes[allocated++],
+          serial = counters[12]++;
+        const rng = treeRng(
+          cfg.seed ^ cu[24] ^ Math.imul(birthTick, 0x85ebca6b),
+        );
+        let buffer;
+        if (cfg.treePrograms) {
+          const parent = treeSlots[parentSlot];
+          if (!parent) throw Error("Missing division source tree");
+          const child = treeRecord(
+            mutateTree(parent.tree, rng),
+            serial,
+            parent,
+            0,
+            true,
+          );
+          treeSlots[gene] = child.record;
+          buffer = child.buffer;
+          cf.fill(0, 8, 16);
+          const memory = new Float32Array(12);
+          memory[8] = 1;
+          device.queue.writeBuffer(
+            scratch,
+            treeMemoryOffset + slot * 48,
+            memory,
+          );
+        } else {
+          buffer = mutateAssemblyGenome(assembly.get(parentSlot), rng);
+          const info = new Uint32Array(buffer);
+          info.set([
+            info[0],
+            serial,
+            info[2],
+            info[3] + 1,
+            info[1],
+            tick,
+            0,
+            0,
+          ]);
+        }
+        cu[25] = gene;
+        cu[26] = 0;
+        // Start this genotype's harvest accounting at assignment time.
+        cf[50] = 0;
+        stats[parentSlot * 4]--;
+        stats.set([1, 0, 0, 0], gene * 4);
+        changedStats.add(parentSlot);
+        changedStats.add(gene);
+        device.queue.writeBuffer(genomes, gene * GENOME_BYTES, buffer);
+        counters[26]++;
+      } else counters[27]++;
+      device.queue.writeBuffer(destination, slot * CELL_BYTES, cell);
+    }
+    for (const gene of changedStats)
+      device.queue.writeBuffer(
+        scratch,
+        geneOffset + gene * 16,
+        stats.subarray(gene * 4, gene * 4 + 4),
+      );
+    device.queue.writeBuffer(
+      scratch,
+      counterOffset + 12 * 4,
+      new Uint32Array([counters[12]]),
+    );
+    device.queue.writeBuffer(
+      scratch,
+      counterOffset + 25 * 4,
+      new Uint32Array([0, counters[26], counters[27]]),
+    );
+  }
   return {
     cfg,
     fingerprint,
@@ -504,6 +655,12 @@ export async function createLifeEngine(device, options = {}) {
           const count = await prepareTreeArrivals();
           encoder = device.createCommandEncoder();
           dispatch(encoder, "arrivals", count);
+        }
+        if (cfg.forkMutation > 0 && tick % 16 === 0) {
+          device.queue.submit([encoder.finish()]);
+          await device.queue.onSubmittedWorkDone();
+          await resolveBirthMutations();
+          encoder = device.createCommandEncoder();
         }
         parity = 1 - parity;
       }
@@ -590,6 +747,8 @@ export async function createLifeEngine(device, options = {}) {
         sampledArrivals: c[9],
         mutations: c[10],
         crossovers: c[24],
+        divisionMutations: c[26],
+        skippedDivisionMutations: c[27],
         raw: [...c],
       };
     },

@@ -8,7 +8,7 @@ struct Output { winners:array<atomic<u32>,32>, selected:array<vec4u,32> }
 @group(0) @binding(2) var<uniform> cfg:vec4u;
 fn hash(x:u32)->u32{var z=x+0x9e3779b9u;z=(z^(z>>16u))*0x21f0aaadu;z=(z^(z>>15u))*0x735a2d97u;return z^(z>>15u);}
 @compute @workgroup_size(128) fn choose(@builtin(global_invocation_id) id:vec3u){
- let i=id.x;if(i>=cfg.x||cells[i*52u+31u]!=1u){return;}
+ let i=id.x;if(i>=cfg.x||cells[i*52u+31u]!=1u||cells[i*52u+27u]==0xffffffffu){return;}
  let h=hash(i^cfg.y);let bucket=h&31u;let rank=((h>>5u)&8191u)<<18u;
  atomicMin(&result.winners[bucket],rank|i);
 }

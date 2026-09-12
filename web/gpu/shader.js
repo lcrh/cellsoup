@@ -6,6 +6,7 @@ export function simulationShader({
   sources,
   treePrograms = 0,
   executionTrace = 0,
+  forkMutation = 0,
 }) {
   const types = { r: 1, v: 2, l: 3, s: 4, p: 5 };
   const signatures = GPU_OPS.map(
@@ -90,6 +91,7 @@ struct Scratch {
   candidates:array<atomic<u32>,ARCH>,
 ${treePrograms ? "  treeMemory:array<vec4f,N*3>," : ""}
 ${executionTrace ? "  traceConfig:vec4u, traceSlots:array<vec4u,32>, traceCounts:array<u32,8192>, traceEvents:array<u32,1048576>," : ""}
+${forkMutation > 0 ? "  birthMutations:array<vec4u,N>," : ""}
 }
 struct Field {
   a:array<vec2f,T>,
@@ -461,7 +463,7 @@ ${
   if(tick()>=s.traceConfig.x&&tick()<s.traceConfig.y){
     let bucket=hash(i^s.traceConfig.z)&31u;
     let selected=s.traceSlots[bucket];
-    if(selected.x==i&&selected.y==c.machine.x&&c.life.w==1u){traceRow=bucket*256u+tick()-s.traceConfig.x;}
+    if(selected.x==i&&selected.y==c.machine.x&&selected.z==c.machine.y&&c.life.w==1u){traceRow=bucket*256u+tick()-s.traceConfig.x;}
   }`
     : ""
 }
@@ -498,7 +500,7 @@ ${
   c.life.x++;
   c.signal*=.97;
   if(c.machine.w>0u) {
-    c.machine.w--;
+    if(c.machine.w!=NONE){c.machine.w--;}
   }
   else {
     let g=c.machine.y;
@@ -1160,6 +1162,17 @@ fn birthCapacity()->u32 {
         child.anchor[0]=fract(c.b.y+.5-child.b.y);
       }
 ${treePrograms ? "      for(var q=0u;q<3u;q++){s.treeMemory[j*3u+q]=s.treeMemory[i*3u+q];}" : ""}
+${
+  forkMutation > 0
+    ? `      if(random(hash(cfg.sim.x ^ identity ^ (tick()*0x9e3779b9u)))<cfg.arrivals.w){
+        let pending=atomicAdd(&s.counter[25],1u);
+        if(pending<N){
+          s.birthMutations[pending]=vec4u(j,identity,c.machine.y,tick());
+          child.machine.w=NONE;
+        }else{atomicAdd(&s.counter[27],1u);}
+      }`
+    : ""
+}
       cells[j]=child;
       atomicAdd(&s.genes[c.machine.y].refs,1u);
       atomicAdd(&s.genes[c.machine.y].births,1u);

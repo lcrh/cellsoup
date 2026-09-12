@@ -28,6 +28,7 @@ const settingGroups = [
       ["floor", "Population floor", 0, 262144, 1],
       ["share", "Archive share", 0, 1, 0.05],
       ["mutation", "Resampling mutation", 0, 1, 0.05],
+      ["forkMutation", "Division mutation", 0, 1, 0.001],
       ["crossover", "Crossover (trees)", 0, 1, 0.05],
     ],
   ],
@@ -108,12 +109,12 @@ for (const [title, fields] of settingGroups) {
     input.step = step;
     input.value = defaults[id];
     label.append(input);
-    if (["mutation", "crossover"].includes(id)) {
+    if (["mutation", "crossover", "forkMutation"].includes(id)) {
       input.type = "range";
       const output = document.createElement("output");
       output.htmlFor = id;
       const update = () => {
-        output.textContent = `${Math.round(Number(input.value) * 100)}%`;
+        output.textContent = `${Math.round(Number(input.value) * 1000) / 10}%`;
       };
       input.addEventListener("input", update);
       update();
@@ -452,6 +453,7 @@ async function observe(now) {
     $("kills").textContent = formatNumber(c.kills);
     $("eaten").textContent = formatNumber(c.eaten);
     $("mutations").textContent = formatNumber(c.mutations);
+    $("division-mutations").textContent = formatNumber(c.divisionMutations);
     $("crossovers").textContent = formatNumber(c.crossovers);
     $("archive").textContent = c.archive;
     const actual = (engine.tick - speedTick) / 60 / ((now - speedTime) / 1000);
@@ -735,8 +737,8 @@ function renderReference(trees) {
     ? "Typed-tree reference"
     : "Assembly reference";
   $("reference-note").textContent = trees
-    ? "Up to 32 typed nodes. Numbers feed arithmetic, conditions and actions; cell references select targets. Use state for once-initialized numeric memory, let for per-evaluation numeric locals, and set! for updates. Eight values persist across ticks. Division copies the tree and memory; birth-result is 0 for the parent, 1 for its daughter, or −1 on failure. New arrivals may cross compatible subtrees and then mutate."
-    : "Eight registers, relative sensing and motion, at most 64 instructions per genome. Division copies code exactly. Archive resampling is the mutation source.";
+    ? "Up to 32 typed nodes. Numbers feed arithmetic, conditions and actions; cell references select targets. Use state for once-initialized numeric memory, let for per-evaluation numeric locals, and set! for updates. Eight values persist across ticks. Unmutated division copies the tree and memory; mutated daughters start their changed tree with fresh memory. birth-result is 0 for the parent, 1 for its daughter, or −1 on failure. New arrivals may cross compatible subtrees and then mutate."
+    : "Eight registers, relative sensing and motion, at most 64 instructions per genome. Division and archive resampling have separate mutation controls.";
   const dl = document.createElement("dl");
   if (trees) {
     const example = document.createElement("pre");
@@ -778,8 +780,8 @@ function substrateSettings() {
   const trees = $("substrate").value === "trees";
   $("crossover").disabled = !trees;
   $("substrate-note").textContent = trees
-    ? "Random typed trees. Archived arrivals can combine two parents, then mutate independently. Division always copies the genome."
-    : "Division copies genomes exactly. New arrivals mix random founders and archived lineages.";
+    ? "Random typed trees. Archived arrivals can combine two parents, then mutate independently. Division has its own mutation chance."
+    : "Division has its own mutation chance. New arrivals mix random founders and archived lineages.";
 }
 const requestedSubstrate = new URLSearchParams(location.search).get(
   "substrate",

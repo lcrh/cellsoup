@@ -269,6 +269,7 @@
           </div>
           <p class="hint">
             <span id="mutations">0</span> resampling mutations ·
+            <span id="division-mutations">0</span> division mutations ·
             <span id="archive">0</span> archived lineages ·
             <span id="crossovers">0</span> crossovers ·
             <span id="kills">0</span> attack kills ·
@@ -300,8 +301,8 @@
               </select>
             </label>
             <p class="hint" id="substrate-note">
-              Division copies genomes exactly. New arrivals mix random founders
-              and archived lineages.
+              Division has its own mutation chance. New arrivals mix random
+              founders and archived lineages.
             </p>
             <div class="world-actions">
               <button id="restart" class="primary" disabled>
@@ -362,8 +363,8 @@
             <p id="reference-note">
               Eight registers, relative sensing and motion, at most 64
               instructions per genome. Target handles can be reused after a cell
-              or corpse disappears. Division copies code exactly. Archive
-              resampling is the mutation source.
+              or corpse disappears. Division and archive resampling have
+              separate mutation controls.
             </p>
             <div id="reference"></div>
           </div>

@@ -17,6 +17,7 @@ const device = await adapter.requestDevice();
 let errors = [];
 device.addEventListener("uncapturederror", (e) => errors.push(e.error.message));
 const options = {
+  forkMutation: 0,
   treePrograms: 0,
   capacity: 64,
   genomeCapacity: 32,

@@ -28,6 +28,7 @@ export function randomWorldSettings({
     ),
     share: range(0.25, 0.75, 0.05),
     mutation: range(0.5, 0.95, 0.05),
+    forkMutation: pick([0, 0.005, 0.01, 0.02, 0.03, 0.05]),
     crossover: range(0.1, 0.5, 0.05),
     solarRate: range(3, 6, 0.5),
     sunContrast: range(1.25, 3.5, 0.25),
