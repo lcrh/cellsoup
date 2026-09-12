@@ -76,13 +76,22 @@ inputs or simpler motor programs; disabled motion alone is a weak control.
 Publication/reading counts, population size, or a built-in mean are insufficient.
 No evolutionary result is claimed yet.
 
+The [functional-dependency calibration](../functional-dependencies.md) now adds
+a self-history control: homogeneous recurrent signaling is exactly reproducible
+without neighbor information, whereas heterogeneous input propagation is not.
+The first completed world's most abundant new linked-reader feeds a rejected
+self-gift. A forced-input GPU assay confirms changing registers without changing
+cellular state. These are cautions against counting reading syntax or signal
+traffic; the full evolutionary comparison remains in progress.
+
 ## Reproduce
 
 Apply [linked-signals.patch](linked-signals.patch) to a disposable checkout of
 `a387106`. For the control, additionally apply
 [linked-signals-control.patch](linked-signals-control.patch). Copy the current
-`research/gpu-linked-signal-check.mjs`, `research/check-linked-founders.mjs`, and
-their existing helper `research/temporal-ablation.mjs` into the experimental
+`research/gpu-linked-signal-check.mjs`, `research/check-linked-founders.mjs`,
+`research/linked-signal-intervention.mjs`, and the existing helper
+`research/temporal-ablation.mjs` into the experimental
 checkout. Then run:
 
 ```sh

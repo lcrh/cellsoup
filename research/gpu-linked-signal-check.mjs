@@ -7,6 +7,8 @@ import { parseTree, compileTree, TREE_VM_OPS } from "../web/gpu/trees.js";
 import { assemble } from "../web/language.js";
 import { GPU_SENSORS, GPU_FIELDS } from "../web/gpu/language.js";
 import { uploadFixtureCode } from "./temporal-ablation.mjs";
+import { linkedSignalDevice } from "./linked-signal-intervention.mjs";
+const interventionHashes = new WeakMap();
 const output = process.argv[2];
 if (!output) throw Error("Supply output JSON");
 Object.assign(globalThis, globals);
@@ -43,10 +45,24 @@ const report = {
   checks: [],
 };
 const close = (a, b) => assert.ok(Math.abs(a - b) < 1e-5, `${a} != ${b}`);
-async function fixture(source, cells, signals, config = {}, alter = false) {
+async function fixture(
+  source,
+  cells,
+  signals,
+  config = {},
+  alter = false,
+  reading = null,
+) {
+  const wrapped = reading
+    ? linkedSignalDevice(device, { mode: reading })
+    : null;
   const tree = parseTree(source),
     code = compileTree(tree),
-    e = await createLifeEngine(device, { ...base, ...config });
+    e = await createLifeEngine(wrapped?.device ?? device, {
+      ...base,
+      ...config,
+    });
+  interventionHashes.set(e, wrapped?.actualSha256 ?? e.fingerprint);
   await e.fixture({
     programs: [{ tree }, { tree: parseTree("(wait 1000)") }],
     cells,
@@ -208,57 +224,82 @@ try {
   );
   const source =
     "(seq (set m7 (+ (memory m7) 1)) (emit c0 (max 0 (+ (tag) (* 0.5 (linked-signal c0))))))";
-  const circuitCells = [
-    { x: 82, y: 100, tag: 2, links: [2, 0, 0, 0] },
-    { x: 100, y: 100, tag: -0.1, links: [1, 3, 0, 0] },
-    { x: 118, y: 100, tag: -0.1, links: [2, 0, 0, 0] },
-  ];
-  const circuits = [];
-  for (const altered of [false, true]) {
-    const e = await fixture(
-        source,
-        circuitCells,
-        [
-          [0, 0, 0, 0],
-          [0, 0, 0, 0],
-          [0, 0, 0, 0],
-        ],
-        {},
-        altered,
-      ),
-      rows = [await sample(e)];
-    try {
-      for (let tick = 1; tick <= 30; tick++) {
-        await e.step();
-        const row = await sample(e),
-          previous = rows.at(-1);
-        for (let i = 0; i < 3; i++) {
-          const updated = row.cells[i].memory[7] > previous.cells[i].memory[7];
-          const neighbors = i === 1 ? [0, 2] : [1];
-          const input = altered
-            ? 0
-            : neighbors.reduce((n, j) => n + previous.cells[j].signal[0], 0) /
-              neighbors.length;
-          const expected = updated
-            ? Math.max(0, Math.fround(circuitCells[i].tag) + 0.5 * input)
-            : previous.cells[i].signal[0] * Math.fround(0.97);
-          close(row.cells[i].signal[0], expected);
+  for (const inputs of [
+    [2, -0.1, -0.1],
+    [1, 1, 1],
+  ]) {
+    const circuitCells = [
+      { x: 82, y: 100, tag: inputs[0], links: [2, 0, 0, 0] },
+      { x: 100, y: 100, tag: inputs[1], links: [1, 3, 0, 0] },
+      { x: 118, y: 100, tag: inputs[2], links: [2, 0, 0, 0] },
+    ];
+    const circuits = [];
+    for (const treatment of ["intact", "zero-bytecode", "zero", "self"]) {
+      const altered = treatment === "zero-bytecode";
+      const e = await fixture(
+          source,
+          circuitCells,
+          [
+            [0, 0, 0, 0],
+            [0, 0, 0, 0],
+            [0, 0, 0, 0],
+          ],
+          {},
+          altered,
+          ["self", "zero"].includes(treatment) ? treatment : null,
+        ),
+        rows = [await sample(e)];
+      try {
+        for (let tick = 1; tick <= 30; tick++) {
+          await e.step();
+          const row = await sample(e),
+            previous = rows.at(-1);
+          for (let i = 0; i < 3; i++) {
+            const updated =
+              row.cells[i].memory[7] > previous.cells[i].memory[7];
+            const neighbors = i === 1 ? [0, 2] : [1];
+            const input = treatment.startsWith("zero")
+              ? 0
+              : treatment === "self"
+                ? previous.cells[i].signal[0]
+                : neighbors.reduce(
+                    (n, j) => n + previous.cells[j].signal[0],
+                    0,
+                  ) / neighbors.length;
+            const expected = updated
+              ? Math.max(0, Math.fround(circuitCells[i].tag) + 0.5 * input)
+              : previous.cells[i].signal[0] * Math.fround(0.97);
+            close(row.cells[i].signal[0], expected);
+          }
+          rows.push(row);
         }
-        rows.push(row);
+        if (inputs[2] < 0 && treatment !== "intact")
+          assert.equal(rows.at(-1).cells[2].signal[0], 0);
+        else assert.ok(rows.at(-1).cells[2].signal[0] > 0.05);
+        circuits.push({
+          treatment,
+          altered,
+          actualShaderSha256: interventionHashes.get(e),
+          config: e.cfg,
+          kernel: e.fingerprint,
+          rows,
+        });
+      } finally {
+        e.destroy();
       }
-      if (altered) assert.equal(rows.at(-1).cells[2].signal[0], 0);
-      else assert.ok(rows.at(-1).cells[2].signal[0] > 0.05);
-      circuits.push({ altered, config: e.cfg, kernel: e.fingerprint, rows });
-    } finally {
-      e.destroy();
     }
+    report.checks.push({
+      name:
+        inputs[2] < 0
+          ? "heterogeneous inputs require neighbor information for distant activation"
+          : "homogeneous inputs are reproduced exactly with local signal history",
+      source,
+      circuitCells,
+      circuits,
+    });
+    if (inputs[2] > 0) assert.deepEqual(circuits[0].rows, circuits[3].rows);
+    assert.deepEqual(circuits[1].rows, circuits[2].rows);
   }
-  report.checks.push({
-    name: "recurrent ReLU signals propagate across two links; matched zero-input control blocks propagation",
-    source,
-    circuitCells,
-    circuits,
-  });
   assert.deepEqual(errors, []);
   report.complete = true;
   await writeFile(output, JSON.stringify(report, null, 2) + "\n");

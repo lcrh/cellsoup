@@ -7,9 +7,9 @@ import { join } from "node:path";
 const [controlRoot, variantRoot, variant, output] = process.argv.slice(2);
 if (!output)
   throw Error(
-    "Usage: node research/compare-evolution-variants.mjs control-runs variant-runs cadence|temporal output.json",
+    "Usage: node research/compare-evolution-variants.mjs control-runs variant-runs cadence|temporal|linked output.json",
   );
-assert.ok(["cadence", "temporal"].includes(variant));
+assert.ok(["cadence", "temporal", "linked"].includes(variant));
 async function json(path) {
   try {
     return JSON.parse(await readFile(path, "utf8"));
@@ -37,19 +37,23 @@ const records = [
 const report = {
   variant,
   scope:
-    "Three one-hour worlds per condition. Seven late censuses at 30–60 minutes are summarized within each world, not treated as independent replicates. Founder equivalence was calibrated separately: 1,000 samples for cadence and all 8,192 initial trees per seed for temporal expressions. GPU contention prevents exact population counterfactuals. Population, motion, ancestry depth, tree size and temporal syntax are separate descriptors; no combined complexity score or promotion decision follows automatically.",
+    variant === "linked"
+      ? "Three one-hour worlds per condition using fresh seeds 901, 1907 and 2309. The control and variant have identical initial founder programs, shader code and ecology; only the mutation vocabulary and sampler label differ. Seven late censuses are summarized within worlds. Population, group movement and surviving communication syntax are separate descriptors, not proof of information use or a complexity score."
+      : "Three one-hour worlds per condition. Seven late censuses at 30–60 minutes are summarized within each world, not treated as independent replicates. Founder equivalence was calibrated separately: 1,000 samples for cadence and all 8,192 initial trees per seed for temporal expressions. GPU contention prevents exact population counterfactuals. Population, motion, ancestry depth, tree size and temporal syntax are separate descriptors; no combined complexity score or promotion decision follows automatically.",
   trials: [],
 };
-for (const seed of [42, 97, 321]) {
+for (const seed of variant === "linked" ? [901, 1907, 2309] : [42, 97, 321]) {
   let reference;
   for (const condition of ["control", variant]) {
     const root = condition === "control" ? controlRoot : variantRoot;
     const prefix =
-      condition === "control"
-        ? "continuous-cadence-control"
-        : variant === "cadence"
-          ? "continuous-cadence-variant"
-          : "continuous-temporal-variant";
+      variant === "linked"
+        ? `continuous-linked-${condition === "control" ? "control" : "variant"}`
+        : condition === "control"
+          ? "continuous-cadence-control"
+          : variant === "cadence"
+            ? "continuous-cadence-variant"
+            : "continuous-temporal-variant";
     const directory = join(root, `${prefix}-${seed}`);
     const run = await json(join(directory, "run.json")),
       progress = await json(join(directory, "progress.json"));
@@ -63,11 +67,13 @@ for (const seed of [42, 97, 321]) {
     assert.equal(run.config.rate, 8);
     assert.equal(run.config.floor, 0);
     const expected =
-      condition === "control"
-        ? "typed-sequences-state-v2"
-        : variant === "cadence"
-          ? "typed-sequences-state-no-implicit-wait-v1"
-          : "typed-sequences-state-temporal-mutations-v1";
+      variant === "linked"
+        ? `typed-sequences-state-linked-signals-${condition === "control" ? "control" : "mutations"}-v1`
+        : condition === "control"
+          ? "typed-sequences-state-v2"
+          : variant === "cadence"
+            ? "typed-sequences-state-no-implicit-wait-v1"
+            : "typed-sequences-state-temporal-mutations-v1";
     assert.equal(run.genomeSampler, expected);
     if (reference) {
       assert.deepEqual(run.config, reference.config);
@@ -120,6 +126,11 @@ for (const seed of [42, 97, 321]) {
       "movingThrustFraction",
       "bornFraction",
     ];
+    const linkedSignals = survivors.filter((g) =>
+      has(g.tree, ["couple", "linked-signal"]),
+    );
+    if (variant === "linked" && condition === "control")
+      assert.equal(linkedSignals.length, 0);
     const temporal = survivors.filter((g) =>
       has(g.tree, ["lag", "delta", "smooth"]),
     );
@@ -139,12 +150,28 @@ for (const seed of [42, 97, 321]) {
         meanMutationDepth: weighted((g) => g.depth),
         meanTreeDepth: weighted((g) => depth(g.tree)),
         meanTreeNodes: weighted((g) => nodes(g.tree)),
+        ...(variant === "linked"
+          ? {
+              linkedSignalGenotypes: linkedSignals.length,
+              linkedSignalCells: linkedSignals.reduce(
+                (n, g) => n + g.living,
+                0,
+              ),
+            }
+          : {}),
         temporalGenotypes: temporal.length,
         temporalCells: temporal.reduce((n, g) => n + g.living, 0),
         explicitMemoryReadCells: survivors
           .filter((g) => has(g.tree, ["memory"]))
           .reduce((n, g) => n + g.living, 0),
       },
+      ...(variant === "linked"
+        ? {
+            linkedSignalLeaders: linkedSignals
+              .sort((a, b) => b.living - a.living)
+              .slice(0, 12),
+          }
+        : {}),
       temporalLeaders: temporal
         .sort((a, b) => b.living - a.living)
         .slice(0, 12),

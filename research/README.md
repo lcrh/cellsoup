@@ -126,3 +126,6 @@ The [linked-signal experiment](experiments/linked-signals.md) now tests a generi
 way to publish a value and read the mean signal from linked neighbors. A controlled
 recurrent circuit passes GPU checks; autonomous evolutionary trials are running
 with exactly matched random founders. The calibration is not an evolved behavior.
+The [current proxy requirements](functional-dependencies.md) distinguish neighbor
+information from local history, changes in registers from changes in behavior,
+and behavioral effects from reproductive value.
