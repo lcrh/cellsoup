@@ -108,3 +108,14 @@ Validation: 97 Node tests; 52 GPU lifecycle regressions; direct GPU trace checks
 of exact instruction/PC order, fixed recording windows, identical traced versus
 untraced state, unaffordable instructions and slot reuse; lossless gzip and
 histogram-preserving shuffle tests; and live browser recording/export checks.
+
+## Causal calibration: a demonstrated blind spot
+
+A [controlled sensory replay](../research/sensory-complexity.md) found two natural
+programs that reach brighter light when their directional sensor works. For one,
+mean encountered sunlight is 0.799 versus 0.500 with that sensor zeroed, and final
+energy is 28.8% higher. Yet every paired 256-tick path is byte-for-byte identical.
+A common sensor-using swimmer instead loses light exposure. These observed cases
+confirm that instruction-path compression cannot measure the usefulness of
+values flowing through an otherwise fixed program. The raw paired recordings,
+matched intervention and authored positive/negative controls are retained.

@@ -65,3 +65,44 @@ Validation before these runs: 93 Node tests, including 2,000 point-mutation
 structural checks and a 1,000-genome baseline founder hash; 52 real GPU lifecycle
 checks; and a 66-second trial verifying 34 samples, an exact 120-tick cadence,
 32 frames in the final fitted window, and completed population/genome audits.
+
+## Completed comparison
+
+All six one-hour worlds completed. Each saved observer has 1,801 samples and 222
+fits at the stipulated cadence; every world has 13 censuses and complete final
+survivor trees. Configuration, shader fingerprints, census accounting and
+completion markers were checked before comparison. The old observer is now a
+historical diagnostic, not a trusted evolutionary objective.
+
+Late means use the seven censuses from minutes 30–60:
+
+| Seed | Baseline linked cells | Point mixture linked cells | Baseline moving-group cells with recent thrust | Point mixture moving-group cells with recent thrust |
+| --- | ---: | ---: | ---: | ---: |
+| 42 | 9.65% | 6.92% | 0.93% | 1.44% |
+| 97 | 82.72% | 3.17% | 5.13% | 1.83% |
+| 321 | 0.62% | 0.76% | 0.13% | 0.18% |
+
+The outcome is mixed and strongly seed-dependent; this does not justify changing
+the default mutation operator. Syntax counts also fail: the baseline seed-42
+world has 1,505 living cells with `kin` somewhere in their tree, but its dominant
+such program uses `(or true (kin (self)))`, a constant true condition. Several
+other programs put kin sensing into dead or unused expressions.
+
+Inspection found rare natural gradient-steering programs. A subsequent
+[matched sensory assay](../sensory-complexity.md) establishes a light-navigation
+benefit for two examples from point-mixture worlds. This is an existence result
+from selected candidates, not a sampled prevalence comparison or evidence that
+the mutation change caused an improvement. It is a useful next calibration target
+for a complexity proxy beyond syntax and compression.
+
+All source files, including intermediate observations, are retained as individual
+gzip files under `research/results/point-worlds/`; the manifest records the SHA-256
+of each original uncompressed file. The comparison reader supports either plain
+run files or these compressed copies:
+
+```sh
+node research/compare-point-worlds.mjs research/results/point-worlds research/results/point-worlds /tmp/point-world-comparison.json
+```
+
+[Saved comparison](../results/point-world-comparison.json),
+[raw-record manifest](../results/point-worlds/manifest.json).

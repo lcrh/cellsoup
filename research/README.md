@@ -95,3 +95,12 @@ benefit from a matched kin-selective gift in one observed two-genotype ecology.
 The [operation-mutation experiment](experiments/point-mutation.md) now tests a
 general way to refine existing expressions, with explicit behavioral recording.
 Authored controls remain confined to assays; production founders stay random.
+
+## Execution paths and useful perception
+
+The [sensory calibration](sensory-complexity.md) demonstrates naturally generated
+light steering, with matched sensor ablation and exact replay controls. It also
+shows that successful and disabled behavior can have identical instruction
+traces. Gzip, mutation depth and syntax counts are retained as diagnostics rather
+than a universal complexity objective. The completed operation-mutation comparison
+has mixed outcomes; its raw records are retained and the default remains unchanged.
