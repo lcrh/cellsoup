@@ -922,14 +922,62 @@ fn sunlightAt(p:vec2f)->f32 {
   if(eating){if(credit>0u){activity[i].marks.w=tick();}cells[i].r[intents[i].misc.z-1u]=f32(credit)/Q;let previous=atomicAdd(&s.counter[15],credit);if(previous+credit<previous){atomicAdd(&s.counter[23],1u);}cells[i].phen.z+=f32(credit)/Q;}
   else if(amount>0u){activity[i].marks.y=tick();activity[i].impact=vec4f(old[j].p.xy,f32(amount)/Q,activity[i].impact.w);atomicAdd(&s.counter[14],1u);let previous=atomicAdd(&s.counter[20],amount);if(previous+amount<previous){atomicAdd(&s.counter[21],1u);}}
 }
+// A link is a soft capsule around the line between its cell centers. Return
+// the force on the third cell and its position along the link. All three
+// participants evaluate the same snapshot, distributing the opposite force
+// to the endpoints without floating-point atomics or another GPU pass.
+fn linkContact(p:u32,a:u32,b:u32)->vec3f {
+  let edge=delta(old[b].p.xy,old[a].p.xy);
+  let size=dot(edge,edge);
+  if(size<.000001||size>4225.0){return vec3f(0);}
+  let offset=delta(old[p].p.xy,old[a].p.xy);
+  let along=clamp(dot(offset,edge)/size,0.0,1.0);
+  let separation=offset-edge*along;
+  let distance=length(separation);
+  if(distance>=6.0){return vec3f(0);}
+  let velocity=old[p].p.zw-mix(old[a].p.zw,old[b].p.zw,along);
+  var normal=vec2f(-edge.y,edge.x)/sqrt(size);
+  if(distance>.00001){normal=separation/distance;}
+  else {
+    // At exact overlap, resist the incoming motion; a stationary tie has a
+    // stable side, shared by the endpoint reaction calculations.
+    if(dot(velocity,normal)>0.0){normal=-normal;}
+  }
+  let magnitude=min(800.0,(6.0-distance)*90.0+max(0.0,-dot(velocity,normal))*5.0);
+  return vec3f(normal*magnitude,along);
+}
+fn linkReaction(i:u32,j:u32)->vec2f {
+  let a=min(i,j);let b=max(i,j);
+  let edge=delta(old[b].p.xy,old[a].p.xy);
+  if(dot(edge,edge)>4225.0){return vec2f(0);}
+  let start=old[a].p.xy;let end=start+edge;
+  let lo=vec2i(floor((min(start,end)-vec2f(6.0))/32.0));
+  let hi=vec2i(floor((max(start,end)+vec2f(6.0))/32.0));
+  var force=vec2f(0);
+  for(var y=lo.y;y<=hi.y;y++){
+    for(var x=lo.x;x<=hi.x;x++){
+      let tile=(vec2i(x,y)+vec2i(i32(SIDE)))%vec2i(i32(SIDE));
+      var p=atomicLoad(&s.heads[u32(tile.y)*SIDE+u32(tile.x)]);
+      loop {
+        if(p==NONE){break;}
+        if(p!=a&&p!=b&&old[p].life.w==1u){
+          let contact=linkContact(p,a,b);
+          force-=contact.xy*select(1.0-contact.z,contact.z,i==b);
+        }
+        p=s.next[p];
+      }
+    }
+  }
+  return force;
+}
 fn forces(i:u32)->vec4f {
   let c=old[i];
   let base=vec2i(floor(c.p.xy/32.0));
   var f=vec2f(0);
   var torque=0.0;
   var crowding=0.0;
-  for(var y=-1;y<=1;y++) {
-    for(var x=-1;x<=1;x++) {
+  for(var y=-2;y<=2;y++) {
+    for(var x=-2;x<=2;x++) {
       let b=(base+vec2i(x,y)+vec2i(i32(SIDE)))%vec2i(i32(SIDE));
       var j=atomicLoad(&s.heads[u32(b.y)*SIDE+u32(b.x)]);
       loop {
@@ -941,6 +989,19 @@ fn forces(i:u32)->vec4f {
           let q=dot(d,d);
           if(old[j].life.w==1u&&q<324.0){
             crowding+=1.0-sqrt(q)/18.0;
+          }
+          if(old[j].life.w==1u&&q<1125.0){
+            for(var slot=0u;slot<4u;slot++){
+              let partner=liveLink(j,slot);
+              if(partner==NONE||partner==i){continue;}
+              let other=delta(c.p.xy,old[partner].p.xy);
+              let otherQ=dot(other,other);
+              // Only the nearer endpoint contributes, even if both are in
+              // the query. Canonical ordering also makes reaction ties exact.
+              if(q<otherQ||(q==otherQ&&j<partner)){
+                f+=linkContact(i,min(j,partner),max(j,partner)).xy;
+              }
+            }
           }
           if(q<100.0&&q>.000001) {
             let distance=sqrt(q);
@@ -956,6 +1017,7 @@ fn forces(i:u32)->vec4f {
     if(j==NONE) {
       continue;
     }
+    f+=linkReaction(i,j);
     let n=old[j];
     var other=0u;
     for(var q=0u;q<4u;q++) {
