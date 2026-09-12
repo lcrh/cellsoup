@@ -1,4 +1,5 @@
 import { createLifeEngine, defaults } from "./engine.js";
+import { randomWorldSettings } from "./random-world.js";
 import { TREE_SCHEMA } from "./trees.js";
 import { createRenderer } from "./renderer.js";
 import { createExecutionMeter } from "./trace-meter.js";
@@ -169,9 +170,18 @@ function fail(error) {
   $("step").disabled = true;
   $("find").disabled = true;
   $("restart").disabled = false;
+  $("random-world").disabled = false;
 }
 function controls(enabled) {
-  for (const id of ["pause", "step", "find", "find-moving", "fit", "restart"])
+  for (const id of [
+    "pause",
+    "step",
+    "find",
+    "find-moving",
+    "fit",
+    "restart",
+    "random-world",
+  ])
     $(id).disabled = !enabled;
   $("step").disabled = !enabled || !paused;
   $("pause").textContent = paused ? "Resume" : "Pause";
@@ -550,6 +560,18 @@ $("step").onclick = () => {
   if (paused) pendingStep = true;
 };
 $("restart").onclick = () => {
+  pendingReset = true;
+};
+$("random-world").onclick = () => {
+  const settings = randomWorldSettings({
+    capacity: Number($("capacity").value),
+    previousSeed: Number($("seed").value),
+  });
+  for (const [id, value] of Object.entries(settings)) {
+    $(id).value = value;
+    $(id).dispatchEvent(new Event("input", { bubbles: true }));
+  }
+  controls(false);
   pendingReset = true;
 };
 $("find").onclick = () => {
