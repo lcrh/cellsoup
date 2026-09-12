@@ -46,3 +46,7 @@ fig.text(.02, .025, '16 balanced heading / light-direction pairs per program; 15
 fig.tight_layout(rect=(0,.12,1,.93))
 fig.savefig(output, dpi=170, facecolor='white')
 fig.savefig(output.with_suffix('.svg'), facecolor='white')
+
+# Matplotlib emits insignificant trailing spaces inside SVG paths.
+svg = output.with_suffix('.svg')
+svg.write_text('\n'.join(line.rstrip() for line in svg.read_text().splitlines()) + '\n')
