@@ -1,0 +1,2614 @@
+{
+  "seconds": 3000,
+  "world": 4096,
+  "colonies": [
+    {
+      "selection": "largest",
+      "size": 15,
+      "speed": 6.2632391858972065,
+      "cells": [
+        {
+          "slot": 1505,
+          "incarnation": 167659,
+          "genomeSlot": 993,
+          "x": 1960.889892578125,
+          "y": 3159.82275390625,
+          "vx": -4.00383996963501,
+          "vy": 9.216062545776367,
+          "heading": 0.01730409450829029,
+          "energy": 8.43017578125,
+          "storage": 1.602294921875,
+          "temperature": 29.495065689086914,
+          "hue": 0,
+          "ageTicks": 23996,
+          "generation": 2,
+          "parent": 167266,
+          "pc": 29,
+          "sleep": 0,
+          "registers": [
+            0.030517578125,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "signal": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "mail": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "links": [
+            8677,
+            28675,
+            3736
+          ],
+          "memory": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "birthResult": -1,
+          "initializedStateMask": 8
+        },
+        {
+          "slot": 8677,
+          "incarnation": 167266,
+          "genomeSlot": 993,
+          "x": 1937.9583740234375,
+          "y": 3160.1298828125,
+          "vx": -1.3367830514907837,
+          "vy": 13.997353553771973,
+          "heading": 0.8101349472999573,
+          "energy": 9.815673828125,
+          "storage": 1.6005859375,
+          "temperature": 29.44403076171875,
+          "hue": 0,
+          "ageTicks": 25163,
+          "generation": 1,
+          "parent": 149699,
+          "pc": 17,
+          "sleep": 0,
+          "registers": [
+            -1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "signal": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "mail": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "links": [
+            5349,
+            1505,
+            13944,
+            12716
+          ],
+          "memory": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "birthResult": -1,
+          "initializedStateMask": 8
+        },
+        {
+          "slot": 28675,
+          "incarnation": 169236,
+          "genomeSlot": 993,
+          "x": 1966.6026611328125,
+          "y": 3143.959228515625,
+          "vx": -1.2877576351165771,
+          "vy": 2.4218392372131348,
+          "heading": 0.7769214510917664,
+          "energy": 8.6806640625,
+          "storage": 1.604248046875,
+          "temperature": 29.52458381652832,
+          "hue": 0,
+          "ageTicks": 20567,
+          "generation": 3,
+          "parent": 167659,
+          "pc": 17,
+          "sleep": 0,
+          "registers": [
+            -1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "signal": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "mail": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "links": [
+            1505,
+            12681
+          ],
+          "memory": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "birthResult": -1,
+          "initializedStateMask": 8
+        },
+        {
+          "slot": 3736,
+          "incarnation": 171347,
+          "genomeSlot": 993,
+          "x": 1948.7288818359375,
+          "y": 3155.7744140625,
+          "vx": -5.233541011810303,
+          "vy": 10.56290054321289,
+          "heading": 0.5506206154823303,
+          "energy": 11.446533203125,
+          "storage": 1.604248046875,
+          "temperature": 29.503629684448242,
+          "hue": 0,
+          "ageTicks": 19175,
+          "generation": 3,
+          "parent": 167659,
+          "pc": 17,
+          "sleep": 0,
+          "registers": [
+            -1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "signal": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "mail": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "links": [
+            1505
+          ],
+          "memory": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "birthResult": -1,
+          "initializedStateMask": 8
+        },
+        {
+          "slot": 5349,
+          "incarnation": 149699,
+          "genomeSlot": 993,
+          "x": 1927.2847900390625,
+          "y": 3205.177734375,
+          "vx": -4.399766445159912,
+          "vy": 2.3387863636016846,
+          "heading": 0.0849672481417656,
+          "energy": 8.52978515625,
+          "storage": 1.5986328125,
+          "temperature": 29.358783721923828,
+          "hue": 0,
+          "ageTicks": 33120,
+          "generation": 0,
+          "parent": 0,
+          "pc": 29,
+          "sleep": 0,
+          "registers": [
+            0.03173828125,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "signal": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "mail": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "links": [
+            23149,
+            8677,
+            9703,
+            10734
+          ],
+          "memory": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "birthResult": -1,
+          "initializedStateMask": 8
+        },
+        {
+          "slot": 13944,
+          "incarnation": 169570,
+          "genomeSlot": 993,
+          "x": 1956.56103515625,
+          "y": 3138.439453125,
+          "vx": -8.127202987670898,
+          "vy": 2.59849214553833,
+          "heading": 0.918984591960907,
+          "energy": 8.865966796875,
+          "storage": 1.602294921875,
+          "temperature": 29.46902084350586,
+          "hue": 0,
+          "ageTicks": 20392,
+          "generation": 2,
+          "parent": 167266,
+          "pc": 29,
+          "sleep": 0,
+          "registers": [
+            0.030517578125,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "signal": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "mail": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "links": [
+            8677,
+            8331
+          ],
+          "memory": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "birthResult": -1,
+          "initializedStateMask": 8
+        },
+        {
+          "slot": 12716,
+          "incarnation": 171696,
+          "genomeSlot": 993,
+          "x": 1956.8890380859375,
+          "y": 3145.141845703125,
+          "vx": -2.747758626937866,
+          "vy": 3.382845401763916,
+          "heading": 0.8932220935821533,
+          "energy": 8.80078125,
+          "storage": 1.602294921875,
+          "temperature": 29.454069137573242,
+          "hue": 0,
+          "ageTicks": 18942,
+          "generation": 2,
+          "parent": 167266,
+          "pc": 29,
+          "sleep": 0,
+          "registers": [
+            0.030517578125,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "signal": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "mail": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "links": [
+            8677
+          ],
+          "memory": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "birthResult": -1,
+          "initializedStateMask": 8
+        },
+        {
+          "slot": 12681,
+          "incarnation": 171319,
+          "genomeSlot": 993,
+          "x": 1956.8665771484375,
+          "y": 3152.911376953125,
+          "vx": -4.207354545593262,
+          "vy": 4.985748291015625,
+          "heading": 0.3327959179878235,
+          "energy": 8.27685546875,
+          "storage": 1.606201171875,
+          "temperature": 29.537120819091797,
+          "hue": 0,
+          "ageTicks": 19198,
+          "generation": 4,
+          "parent": 169236,
+          "pc": 29,
+          "sleep": 0,
+          "registers": [
+            0.030517578125,
+            0.6948323249816895,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "signal": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "mail": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "links": [
+            28675
+          ],
+          "memory": [
+            0,
+            0.6948323249816895,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "birthResult": -1,
+          "initializedStateMask": 8
+        },
+        {
+          "slot": 23149,
+          "incarnation": 160231,
+          "genomeSlot": 993,
+          "x": 1937.332763671875,
+          "y": 3232.962646484375,
+          "vx": -0.25523602962493896,
+          "vy": 1.2267385721206665,
+          "heading": 0.19957298040390015,
+          "energy": 8.82373046875,
+          "storage": 1.5966796875,
+          "temperature": 29.393356323242188,
+          "hue": 0,
+          "ageTicks": 29813,
+          "generation": 1,
+          "parent": 149699,
+          "pc": 17,
+          "sleep": 0,
+          "registers": [
+            -1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "signal": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "mail": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "links": [
+            5349,
+            18265
+          ],
+          "memory": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "birthResult": -1,
+          "initializedStateMask": 8
+        },
+        {
+          "slot": 9703,
+          "incarnation": 167614,
+          "genomeSlot": 993,
+          "x": 1922.352294921875,
+          "y": 3235.12109375,
+          "vx": -0.4558422863483429,
+          "vy": 7.298780918121338,
+          "heading": 0.2678499221801758,
+          "energy": 8.41552734375,
+          "storage": 1.5966796875,
+          "temperature": 29.375179290771484,
+          "hue": 0,
+          "ageTicks": 24153,
+          "generation": 1,
+          "parent": 149699,
+          "pc": 17,
+          "sleep": 0,
+          "registers": [
+            -1,
+            0.1263706535100937,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "signal": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "mail": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "links": [
+            5349,
+            1973
+          ],
+          "memory": [
+            0,
+            0.1263706535100937,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "birthResult": -1,
+          "initializedStateMask": 8
+        },
+        {
+          "slot": 10734,
+          "incarnation": 170093,
+          "genomeSlot": 993,
+          "x": 1917.4580078125,
+          "y": 3226.6171875,
+          "vx": 0.5951107740402222,
+          "vy": 10.70199203491211,
+          "heading": 0.3339621424674988,
+          "energy": 8.293701171875,
+          "storage": 1.5966796875,
+          "temperature": 29.301008224487305,
+          "hue": 0,
+          "ageTicks": 20211,
+          "generation": 1,
+          "parent": 149699,
+          "pc": 17,
+          "sleep": 0,
+          "registers": [
+            -1,
+            0.2785440981388092,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "signal": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "mail": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "links": [
+            5349,
+            4990
+          ],
+          "memory": [
+            0,
+            0.2785440981388092,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "birthResult": -1,
+          "initializedStateMask": 8
+        },
+        {
+          "slot": 8331,
+          "incarnation": 171616,
+          "genomeSlot": 993,
+          "x": 1981.3790283203125,
+          "y": 3140.779541015625,
+          "vx": -0.2197096198797226,
+          "vy": 0.7425671815872192,
+          "heading": 0.05305646359920502,
+          "energy": 9.18701171875,
+          "storage": 1.604248046875,
+          "temperature": 29.481487274169922,
+          "hue": 0,
+          "ageTicks": 18997,
+          "generation": 3,
+          "parent": 169570,
+          "pc": 17,
+          "sleep": 0,
+          "registers": [
+            -1,
+            0.5317991375923157,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "signal": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "mail": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "links": [
+            13944
+          ],
+          "memory": [
+            0,
+            0.5317991375923157,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "birthResult": -1,
+          "initializedStateMask": 8
+        },
+        {
+          "slot": 18265,
+          "incarnation": 169842,
+          "genomeSlot": 993,
+          "x": 1945.7447509765625,
+          "y": 3256.843017578125,
+          "vx": -0.7803233861923218,
+          "vy": 3.034396171569824,
+          "heading": 0.21231324970722198,
+          "energy": 9.799560546875,
+          "storage": 1.594970703125,
+          "temperature": 29.40640640258789,
+          "hue": 0,
+          "ageTicks": 20302,
+          "generation": 2,
+          "parent": 160231,
+          "pc": 29,
+          "sleep": 0,
+          "registers": [
+            0.032958984375,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "signal": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "mail": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "links": [
+            23149
+          ],
+          "memory": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "birthResult": -1,
+          "initializedStateMask": 8
+        },
+        {
+          "slot": 1973,
+          "incarnation": 170350,
+          "genomeSlot": 993,
+          "x": 1930.107666015625,
+          "y": 3259.035400390625,
+          "vx": -5.85493278503418,
+          "vy": 6.182064056396484,
+          "heading": 0.16443762183189392,
+          "energy": 8.85009765625,
+          "storage": 1.594970703125,
+          "temperature": 29.389379501342773,
+          "hue": 0,
+          "ageTicks": 20058,
+          "generation": 2,
+          "parent": 167614,
+          "pc": 29,
+          "sleep": 0,
+          "registers": [
+            0.032958984375,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "signal": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "mail": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "links": [
+            9703
+          ],
+          "memory": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "birthResult": -1,
+          "initializedStateMask": 8
+        },
+        {
+          "slot": 4990,
+          "incarnation": 172541,
+          "genomeSlot": 993,
+          "x": 1916.8775634765625,
+          "y": 3247.67529296875,
+          "vx": -1.096201777458191,
+          "vy": 6.59190034866333,
+          "heading": 0.20946189761161804,
+          "energy": 8.52880859375,
+          "storage": 1.594970703125,
+          "temperature": 29.286090850830078,
+          "hue": 0,
+          "ageTicks": 18358,
+          "generation": 2,
+          "parent": 170093,
+          "pc": 29,
+          "sleep": 0,
+          "registers": [
+            0.032958984375,
+            0.31976982951164246,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "signal": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "mail": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "links": [
+            10734
+          ],
+          "memory": [
+            0,
+            0.31976982951164246,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "birthResult": -1,
+          "initializedStateMask": 8
+        }
+      ]
+    }
+  ],
+  "genomes": [
+    {
+      "slot": 3364,
+      "length": 21,
+      "serial": 12839,
+      "founder": 1462,
+      "depth": 1,
+      "parent": 10015,
+      "bornTick": 34860,
+      "secondParent": 5790,
+      "score": 0,
+      "source": "(seq\n  (photosynthesize)\n  (nop)\n  (let ((local1 (target-storage (nearest-corpse))))\n    (turn (random (crowding)))\n  )\n  (split)\n  (seq\n    (move (energy))\n    (do\n      (mobilize (sunlight))\n      (do (photosynthesize) (eat))\n    )\n    (split)\n  )\n  (photosynthesize)\n)",
+      "tree": {
+        "op": "seq",
+        "args": [
+          {
+            "op": "photosynthesize",
+            "args": []
+          },
+          {
+            "op": "seq",
+            "args": [
+              {
+                "op": "nop",
+                "args": []
+              },
+              {
+                "op": "seq",
+                "args": [
+                  {
+                    "op": "let",
+                    "args": [
+                      {
+                        "op": "slot",
+                        "args": [],
+                        "value": 1
+                      },
+                      {
+                        "op": "target-storage",
+                        "args": [
+                          {
+                            "op": "nearest-corpse",
+                            "args": []
+                          }
+                        ]
+                      },
+                      {
+                        "op": "turn",
+                        "args": [
+                          {
+                            "op": "random",
+                            "args": [
+                              {
+                                "op": "crowding",
+                                "args": []
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "op": "seq",
+                    "args": [
+                      {
+                        "op": "split",
+                        "args": []
+                      },
+                      {
+                        "op": "seq",
+                        "args": [
+                          {
+                            "op": "seq",
+                            "args": [
+                              {
+                                "op": "move",
+                                "args": [
+                                  {
+                                    "op": "energy",
+                                    "args": []
+                                  }
+                                ]
+                              },
+                              {
+                                "op": "seq",
+                                "args": [
+                                  {
+                                    "op": "do",
+                                    "args": [
+                                      {
+                                        "op": "mobilize",
+                                        "args": [
+                                          {
+                                            "op": "sunlight",
+                                            "args": []
+                                          }
+                                        ]
+                                      },
+                                      {
+                                        "op": "do",
+                                        "args": [
+                                          {
+                                            "op": "photosynthesize",
+                                            "args": []
+                                          },
+                                          {
+                                            "op": "eat",
+                                            "args": []
+                                          }
+                                        ]
+                                      }
+                                    ]
+                                  },
+                                  {
+                                    "op": "split",
+                                    "args": []
+                                  }
+                                ]
+                              }
+                            ]
+                          },
+                          {
+                            "op": "photosynthesize",
+                            "args": []
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "nodes": 27,
+      "bytecode": "L0: photosynthesize r0\nL1: nop\nL2: scan_corpse r0 360\nL3: peek r0 r0 storage\nL4: mem_save 1 r0\nL5: sense r0 crowding\nL6: rand r0 r0\nL7: turn r0\nL8: split r0\nL9: mem_save 8 r0\nL10: sense r0 energy\nL11: move r0\nL12: sense r0 sunlight\nL13: mobilize r0 r0\nL14: photosynthesize r0\nL15: eat r0\nL16: split r0\nL17: mem_save 8 r0\nL18: photosynthesize r0\nL19: wait 0\nL20: jmp L0",
+      "substrate": "tree"
+    },
+    {
+      "slot": 2525,
+      "length": 22,
+      "serial": 10015,
+      "founder": 1462,
+      "depth": 1,
+      "parent": 1462,
+      "bornTick": 13680,
+      "secondParent": 2638,
+      "score": 0,
+      "source": "(seq\n  (photosynthesize)\n  (nop)\n  (let ((local1 (target-storage (nearest-corpse))))\n    (turn (random (crowding)))\n  )\n  (split)\n  (seq\n    (move (storage-bearing 0.25))\n    (do\n      (mobilize (sunlight))\n      (do (photosynthesize) (eat))\n    )\n    (split)\n  )\n  (photosynthesize)\n)",
+      "tree": {
+        "op": "seq",
+        "args": [
+          {
+            "op": "photosynthesize",
+            "args": []
+          },
+          {
+            "op": "seq",
+            "args": [
+              {
+                "op": "nop",
+                "args": []
+              },
+              {
+                "op": "seq",
+                "args": [
+                  {
+                    "op": "let",
+                    "args": [
+                      {
+                        "op": "slot",
+                        "args": [],
+                        "value": 1
+                      },
+                      {
+                        "op": "target-storage",
+                        "args": [
+                          {
+                            "op": "nearest-corpse",
+                            "args": []
+                          }
+                        ]
+                      },
+                      {
+                        "op": "turn",
+                        "args": [
+                          {
+                            "op": "random",
+                            "args": [
+                              {
+                                "op": "crowding",
+                                "args": []
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "op": "seq",
+                    "args": [
+                      {
+                        "op": "split",
+                        "args": []
+                      },
+                      {
+                        "op": "seq",
+                        "args": [
+                          {
+                            "op": "seq",
+                            "args": [
+                              {
+                                "op": "move",
+                                "args": [
+                                  {
+                                    "op": "storage-bearing",
+                                    "args": [
+                                      {
+                                        "op": "number",
+                                        "args": [],
+                                        "value": 0.25
+                                      }
+                                    ]
+                                  }
+                                ]
+                              },
+                              {
+                                "op": "seq",
+                                "args": [
+                                  {
+                                    "op": "do",
+                                    "args": [
+                                      {
+                                        "op": "mobilize",
+                                        "args": [
+                                          {
+                                            "op": "sunlight",
+                                            "args": []
+                                          }
+                                        ]
+                                      },
+                                      {
+                                        "op": "do",
+                                        "args": [
+                                          {
+                                            "op": "photosynthesize",
+                                            "args": []
+                                          },
+                                          {
+                                            "op": "eat",
+                                            "args": []
+                                          }
+                                        ]
+                                      }
+                                    ]
+                                  },
+                                  {
+                                    "op": "split",
+                                    "args": []
+                                  }
+                                ]
+                              }
+                            ]
+                          },
+                          {
+                            "op": "photosynthesize",
+                            "args": []
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "nodes": 28,
+      "bytecode": "L0: photosynthesize r0\nL1: nop\nL2: scan_corpse r0 360\nL3: peek r0 r0 storage\nL4: mem_save 1 r0\nL5: sense r0 crowding\nL6: rand r0 r0\nL7: turn r0\nL8: split r0\nL9: mem_save 8 r0\nL10: mov r0 0.25\nL11: storage_gradient r0 r1 r0\nL12: move r0\nL13: sense r0 sunlight\nL14: mobilize r0 r0\nL15: photosynthesize r0\nL16: eat r0\nL17: split r0\nL18: mem_save 8 r0\nL19: photosynthesize r0\nL20: wait 0\nL21: jmp L0",
+      "substrate": "tree"
+    },
+    {
+      "slot": 2457,
+      "length": 28,
+      "serial": 11665,
+      "founder": 1462,
+      "depth": 2,
+      "parent": 10015,
+      "bornTick": 26100,
+      "secondParent": 0,
+      "score": 0,
+      "source": "(seq\n  (photosynthesize)\n  (if (kin (self)) (nop) (split))\n  (let ((local1 (target-storage (nearest-corpse))))\n    (turn (random (crowding)))\n  )\n  (split)\n  (seq\n    (move (storage-bearing 0.25))\n    (do\n      (mobilize (sunlight))\n      (do (photosynthesize) (eat))\n    )\n    (split)\n  )\n  (photosynthesize)\n)",
+      "tree": {
+        "op": "seq",
+        "args": [
+          {
+            "op": "photosynthesize",
+            "args": []
+          },
+          {
+            "op": "seq",
+            "args": [
+              {
+                "op": "if",
+                "args": [
+                  {
+                    "op": "kin",
+                    "args": [
+                      {
+                        "op": "self",
+                        "args": []
+                      }
+                    ]
+                  },
+                  {
+                    "op": "nop",
+                    "args": []
+                  },
+                  {
+                    "op": "split",
+                    "args": []
+                  }
+                ]
+              },
+              {
+                "op": "seq",
+                "args": [
+                  {
+                    "op": "let",
+                    "args": [
+                      {
+                        "op": "slot",
+                        "args": [],
+                        "value": 1
+                      },
+                      {
+                        "op": "target-storage",
+                        "args": [
+                          {
+                            "op": "nearest-corpse",
+                            "args": []
+                          }
+                        ]
+                      },
+                      {
+                        "op": "turn",
+                        "args": [
+                          {
+                            "op": "random",
+                            "args": [
+                              {
+                                "op": "crowding",
+                                "args": []
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "op": "seq",
+                    "args": [
+                      {
+                        "op": "split",
+                        "args": []
+                      },
+                      {
+                        "op": "seq",
+                        "args": [
+                          {
+                            "op": "seq",
+                            "args": [
+                              {
+                                "op": "move",
+                                "args": [
+                                  {
+                                    "op": "storage-bearing",
+                                    "args": [
+                                      {
+                                        "op": "number",
+                                        "args": [],
+                                        "value": 0.25
+                                      }
+                                    ]
+                                  }
+                                ]
+                              },
+                              {
+                                "op": "seq",
+                                "args": [
+                                  {
+                                    "op": "do",
+                                    "args": [
+                                      {
+                                        "op": "mobilize",
+                                        "args": [
+                                          {
+                                            "op": "sunlight",
+                                            "args": []
+                                          }
+                                        ]
+                                      },
+                                      {
+                                        "op": "do",
+                                        "args": [
+                                          {
+                                            "op": "photosynthesize",
+                                            "args": []
+                                          },
+                                          {
+                                            "op": "eat",
+                                            "args": []
+                                          }
+                                        ]
+                                      }
+                                    ]
+                                  },
+                                  {
+                                    "op": "split",
+                                    "args": []
+                                  }
+                                ]
+                              }
+                            ]
+                          },
+                          {
+                            "op": "photosynthesize",
+                            "args": []
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "nodes": 32,
+      "bytecode": "L0: photosynthesize r0\nL1: sense r0 id\nL2: peek r0 r0 kin\nL3: jz r0 L6\nL4: nop\nL5: jmp L8\nL6: split r0\nL7: mem_save 8 r0\nL8: scan_corpse r0 360\nL9: peek r0 r0 storage\nL10: mem_save 1 r0\nL11: sense r0 crowding\nL12: rand r0 r0\nL13: turn r0\nL14: split r0\nL15: mem_save 8 r0\nL16: mov r0 0.25\nL17: storage_gradient r0 r1 r0\nL18: move r0\nL19: sense r0 sunlight\nL20: mobilize r0 r0\nL21: photosynthesize r0\nL22: eat r0\nL23: split r0\nL24: mem_save 8 r0\nL25: photosynthesize r0\nL26: wait 0\nL27: jmp L0",
+      "substrate": "tree"
+    },
+    {
+      "slot": 2363,
+      "length": 22,
+      "serial": 14216,
+      "founder": 1462,
+      "depth": 1,
+      "parent": 10015,
+      "bornTick": 45180,
+      "secondParent": 0,
+      "score": 0,
+      "source": "(seq\n  (photosynthesize)\n  (nop)\n  (let ((local1 (target-storage (nearest-corpse))))\n    (turn (random (crowding)))\n  )\n  (split)\n  (seq\n    (move (storage-bearing 0.25))\n    (do\n      (mobilize (sunlight))\n      (do (photosynthesize) (eat))\n    )\n    (split)\n  )\n  (photosynthesize)\n)",
+      "tree": {
+        "op": "seq",
+        "args": [
+          {
+            "op": "photosynthesize",
+            "args": []
+          },
+          {
+            "op": "seq",
+            "args": [
+              {
+                "op": "nop",
+                "args": []
+              },
+              {
+                "op": "seq",
+                "args": [
+                  {
+                    "op": "let",
+                    "args": [
+                      {
+                        "op": "slot",
+                        "args": [],
+                        "value": 1
+                      },
+                      {
+                        "op": "target-storage",
+                        "args": [
+                          {
+                            "op": "nearest-corpse",
+                            "args": []
+                          }
+                        ]
+                      },
+                      {
+                        "op": "turn",
+                        "args": [
+                          {
+                            "op": "random",
+                            "args": [
+                              {
+                                "op": "crowding",
+                                "args": []
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "op": "seq",
+                    "args": [
+                      {
+                        "op": "split",
+                        "args": []
+                      },
+                      {
+                        "op": "seq",
+                        "args": [
+                          {
+                            "op": "seq",
+                            "args": [
+                              {
+                                "op": "move",
+                                "args": [
+                                  {
+                                    "op": "storage-bearing",
+                                    "args": [
+                                      {
+                                        "op": "number",
+                                        "args": [],
+                                        "value": 0.25
+                                      }
+                                    ]
+                                  }
+                                ]
+                              },
+                              {
+                                "op": "seq",
+                                "args": [
+                                  {
+                                    "op": "do",
+                                    "args": [
+                                      {
+                                        "op": "mobilize",
+                                        "args": [
+                                          {
+                                            "op": "sunlight",
+                                            "args": []
+                                          }
+                                        ]
+                                      },
+                                      {
+                                        "op": "do",
+                                        "args": [
+                                          {
+                                            "op": "photosynthesize",
+                                            "args": []
+                                          },
+                                          {
+                                            "op": "eat",
+                                            "args": []
+                                          }
+                                        ]
+                                      }
+                                    ]
+                                  },
+                                  {
+                                    "op": "split",
+                                    "args": []
+                                  }
+                                ]
+                              }
+                            ]
+                          },
+                          {
+                            "op": "photosynthesize",
+                            "args": []
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "nodes": 28,
+      "bytecode": "L0: photosynthesize r0\nL1: nop\nL2: scan_corpse r0 360\nL3: peek r0 r0 storage\nL4: mem_save 1 r0\nL5: sense r0 crowding\nL6: rand r0 r0\nL7: turn r0\nL8: split r0\nL9: mem_save 8 r0\nL10: mov r0 0.25\nL11: storage_gradient r0 r1 r0\nL12: move r0\nL13: sense r0 sunlight\nL14: mobilize r0 r0\nL15: photosynthesize r0\nL16: eat r0\nL17: split r0\nL18: mem_save 8 r0\nL19: photosynthesize r0\nL20: wait 0\nL21: jmp L0",
+      "substrate": "tree"
+    },
+    {
+      "slot": 945,
+      "length": 25,
+      "serial": 13990,
+      "founder": 1462,
+      "depth": 2,
+      "parent": 10015,
+      "bornTick": 43500,
+      "secondParent": 0,
+      "score": 0,
+      "source": "(seq\n  (photosynthesize)\n  (nop)\n  (let ((local1 (target-storage (nearest-corpse))))\n    (turn (random (crowding)))\n  )\n  (split)\n  (seq\n    (move (storage-bearing 0.25))\n    (do\n      (mobilize (sunlight))\n      (do (photosynthesize) (eat))\n    )\n    (state ((state0 (temperature)))\n      (photosynthesize)\n    )\n  )\n  (photosynthesize)\n)",
+      "tree": {
+        "op": "seq",
+        "args": [
+          {
+            "op": "photosynthesize",
+            "args": []
+          },
+          {
+            "op": "seq",
+            "args": [
+              {
+                "op": "nop",
+                "args": []
+              },
+              {
+                "op": "seq",
+                "args": [
+                  {
+                    "op": "let",
+                    "args": [
+                      {
+                        "op": "slot",
+                        "args": [],
+                        "value": 1
+                      },
+                      {
+                        "op": "target-storage",
+                        "args": [
+                          {
+                            "op": "nearest-corpse",
+                            "args": []
+                          }
+                        ]
+                      },
+                      {
+                        "op": "turn",
+                        "args": [
+                          {
+                            "op": "random",
+                            "args": [
+                              {
+                                "op": "crowding",
+                                "args": []
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "op": "seq",
+                    "args": [
+                      {
+                        "op": "split",
+                        "args": []
+                      },
+                      {
+                        "op": "seq",
+                        "args": [
+                          {
+                            "op": "seq",
+                            "args": [
+                              {
+                                "op": "move",
+                                "args": [
+                                  {
+                                    "op": "storage-bearing",
+                                    "args": [
+                                      {
+                                        "op": "number",
+                                        "args": [],
+                                        "value": 0.25
+                                      }
+                                    ]
+                                  }
+                                ]
+                              },
+                              {
+                                "op": "seq",
+                                "args": [
+                                  {
+                                    "op": "do",
+                                    "args": [
+                                      {
+                                        "op": "mobilize",
+                                        "args": [
+                                          {
+                                            "op": "sunlight",
+                                            "args": []
+                                          }
+                                        ]
+                                      },
+                                      {
+                                        "op": "do",
+                                        "args": [
+                                          {
+                                            "op": "photosynthesize",
+                                            "args": []
+                                          },
+                                          {
+                                            "op": "eat",
+                                            "args": []
+                                          }
+                                        ]
+                                      }
+                                    ]
+                                  },
+                                  {
+                                    "op": "state",
+                                    "args": [
+                                      {
+                                        "op": "slot",
+                                        "args": [],
+                                        "value": 0
+                                      },
+                                      {
+                                        "op": "temperature",
+                                        "args": []
+                                      },
+                                      {
+                                        "op": "photosynthesize",
+                                        "args": []
+                                      }
+                                    ]
+                                  }
+                                ]
+                              }
+                            ]
+                          },
+                          {
+                            "op": "photosynthesize",
+                            "args": []
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "nodes": 31,
+      "bytecode": "L0: photosynthesize r0\nL1: nop\nL2: scan_corpse r0 360\nL3: peek r0 r0 storage\nL4: mem_save 1 r0\nL5: sense r0 crowding\nL6: rand r0 r0\nL7: turn r0\nL8: split r0\nL9: mem_save 8 r0\nL10: mov r0 0.25\nL11: storage_gradient r0 r1 r0\nL12: move r0\nL13: sense r0 sunlight\nL14: mobilize r0 r0\nL15: photosynthesize r0\nL16: eat r0\nL17: mem_ready r0 0\nL18: jnz r0 L21\nL19: sense r0 temperature\nL20: mem_init 0 r0\nL21: photosynthesize r0\nL22: photosynthesize r0\nL23: wait 0\nL24: jmp L0",
+      "substrate": "tree"
+    },
+    {
+      "slot": 2403,
+      "length": 16,
+      "serial": 11553,
+      "founder": 4947,
+      "depth": 2,
+      "parent": 9668,
+      "bornTick": 25260,
+      "secondParent": 0,
+      "score": 0,
+      "source": "(seq\n  (photosynthesize)\n  (split)\n  (move (storage))\n  (eat)\n  (photosynthesize)\n  (give\n    (none)\n    (let ((local5 (color)))\n      (storage-slope local5)\n    )\n  )\n)",
+      "tree": {
+        "op": "seq",
+        "args": [
+          {
+            "op": "photosynthesize",
+            "args": []
+          },
+          {
+            "op": "seq",
+            "args": [
+              {
+                "op": "split",
+                "args": []
+              },
+              {
+                "op": "seq",
+                "args": [
+                  {
+                    "op": "move",
+                    "args": [
+                      {
+                        "op": "storage",
+                        "args": []
+                      }
+                    ]
+                  },
+                  {
+                    "op": "seq",
+                    "args": [
+                      {
+                        "op": "eat",
+                        "args": []
+                      },
+                      {
+                        "op": "seq",
+                        "args": [
+                          {
+                            "op": "photosynthesize",
+                            "args": []
+                          },
+                          {
+                            "op": "give",
+                            "args": [
+                              {
+                                "op": "none",
+                                "args": []
+                              },
+                              {
+                                "op": "let",
+                                "args": [
+                                  {
+                                    "op": "slot",
+                                    "args": [],
+                                    "value": 5
+                                  },
+                                  {
+                                    "op": "color",
+                                    "args": []
+                                  },
+                                  {
+                                    "op": "storage-slope",
+                                    "args": [
+                                      {
+                                        "op": "memory",
+                                        "args": [
+                                          {
+                                            "op": "slot",
+                                            "args": [],
+                                            "value": 5
+                                          }
+                                        ]
+                                      }
+                                    ]
+                                  }
+                                ]
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "nodes": 19,
+      "bytecode": "L0: photosynthesize r0\nL1: split r0\nL2: mem_save 8 r0\nL3: sense r0 storage\nL4: move r0\nL5: eat r0\nL6: photosynthesize r0\nL7: mov r0 0\nL8: sense r1 color\nL9: mem_save 5 r1\nL10: mem_load r1 5\nL11: storage_gradient r1 r2 r1\nL12: mov r1 r2\nL13: give r0 r1\nL14: wait 0\nL15: jmp L0",
+      "substrate": "tree"
+    },
+    {
+      "slot": 3427,
+      "length": 27,
+      "serial": 11753,
+      "founder": 3870,
+      "depth": 1,
+      "parent": 10620,
+      "bornTick": 26760,
+      "secondParent": 5893,
+      "score": 0,
+      "source": "(seq\n  (state ((state1 (listen c1)))\n    (do (photosynthesize) (split))\n  )\n  (if\n    (< (temperature) (tag))\n    (bud)\n    (color-set (rotation))\n  )\n  (eat)\n  (unlink (nearest-corpse))\n  (move (sunlight-bearing))\n  (photosynthesize)\n)",
+      "tree": {
+        "op": "seq",
+        "args": [
+          {
+            "op": "state",
+            "args": [
+              {
+                "op": "slot",
+                "args": [],
+                "value": 1
+              },
+              {
+                "op": "listen",
+                "args": [
+                  {
+                    "op": "channel",
+                    "args": [],
+                    "value": 1
+                  }
+                ]
+              },
+              {
+                "op": "do",
+                "args": [
+                  {
+                    "op": "photosynthesize",
+                    "args": []
+                  },
+                  {
+                    "op": "split",
+                    "args": []
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "op": "seq",
+            "args": [
+              {
+                "op": "if",
+                "args": [
+                  {
+                    "op": "<",
+                    "args": [
+                      {
+                        "op": "temperature",
+                        "args": []
+                      },
+                      {
+                        "op": "tag",
+                        "args": []
+                      }
+                    ]
+                  },
+                  {
+                    "op": "bud",
+                    "args": []
+                  },
+                  {
+                    "op": "color-set",
+                    "args": [
+                      {
+                        "op": "rotation",
+                        "args": []
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "op": "seq",
+                "args": [
+                  {
+                    "op": "eat",
+                    "args": []
+                  },
+                  {
+                    "op": "seq",
+                    "args": [
+                      {
+                        "op": "unlink",
+                        "args": [
+                          {
+                            "op": "nearest-corpse",
+                            "args": []
+                          }
+                        ]
+                      },
+                      {
+                        "op": "seq",
+                        "args": [
+                          {
+                            "op": "move",
+                            "args": [
+                              {
+                                "op": "sunlight-bearing",
+                                "args": []
+                              }
+                            ]
+                          },
+                          {
+                            "op": "photosynthesize",
+                            "args": []
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "nodes": 25,
+      "bytecode": "L0: mem_ready r0 1\nL1: jnz r0 L4\nL2: listen r0 1\nL3: mem_init 1 r0\nL4: photosynthesize r0\nL5: split r0\nL6: mem_save 8 r0\nL7: sense r0 temperature\nL8: sense r1 tag\nL9: jlt r0 r1 L12\nL10: mov r0 0\nL11: jmp L13\nL12: mov r0 1\nL13: jz r0 L17\nL14: bud r0\nL15: mem_save 8 r0\nL16: jmp L19\nL17: sense r0 rotation\nL18: color r0\nL19: eat r0\nL20: scan_corpse r0 360\nL21: unlink r0\nL22: gradient r0 r1\nL23: move r0\nL24: photosynthesize r0\nL25: wait 0\nL26: jmp L0",
+      "substrate": "tree"
+    },
+    {
+      "slot": 3499,
+      "length": 17,
+      "serial": 12314,
+      "founder": 4947,
+      "depth": 2,
+      "parent": 9668,
+      "bornTick": 30960,
+      "secondParent": 0,
+      "score": 0,
+      "source": "(seq\n  (photosynthesize)\n  (split)\n  (move (storage))\n  (eat)\n  (photosynthesize)\n  (give\n    (none)\n    (let ((local3 (target-tag (none))))\n      (storage-slope (memory m5))\n    )\n  )\n)",
+      "tree": {
+        "op": "seq",
+        "args": [
+          {
+            "op": "photosynthesize",
+            "args": []
+          },
+          {
+            "op": "seq",
+            "args": [
+              {
+                "op": "split",
+                "args": []
+              },
+              {
+                "op": "seq",
+                "args": [
+                  {
+                    "op": "move",
+                    "args": [
+                      {
+                        "op": "storage",
+                        "args": []
+                      }
+                    ]
+                  },
+                  {
+                    "op": "seq",
+                    "args": [
+                      {
+                        "op": "eat",
+                        "args": []
+                      },
+                      {
+                        "op": "seq",
+                        "args": [
+                          {
+                            "op": "photosynthesize",
+                            "args": []
+                          },
+                          {
+                            "op": "give",
+                            "args": [
+                              {
+                                "op": "none",
+                                "args": []
+                              },
+                              {
+                                "op": "let",
+                                "args": [
+                                  {
+                                    "op": "slot",
+                                    "args": [],
+                                    "value": 3
+                                  },
+                                  {
+                                    "op": "target-tag",
+                                    "args": [
+                                      {
+                                        "op": "none",
+                                        "args": []
+                                      }
+                                    ]
+                                  },
+                                  {
+                                    "op": "storage-slope",
+                                    "args": [
+                                      {
+                                        "op": "memory",
+                                        "args": [
+                                          {
+                                            "op": "slot",
+                                            "args": [],
+                                            "value": 5
+                                          }
+                                        ]
+                                      }
+                                    ]
+                                  }
+                                ]
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "nodes": 20,
+      "bytecode": "L0: photosynthesize r0\nL1: split r0\nL2: mem_save 8 r0\nL3: sense r0 storage\nL4: move r0\nL5: eat r0\nL6: photosynthesize r0\nL7: mov r0 0\nL8: mov r1 0\nL9: peek r1 r1 tag\nL10: mem_save 3 r1\nL11: mem_load r1 5\nL12: storage_gradient r1 r2 r1\nL13: mov r1 r2\nL14: give r0 r1\nL15: wait 0\nL16: jmp L0",
+      "substrate": "tree"
+    },
+    {
+      "slot": 2442,
+      "length": 22,
+      "serial": 12073,
+      "founder": 1462,
+      "depth": 1,
+      "parent": 10015,
+      "bornTick": 29160,
+      "secondParent": 0,
+      "score": 0,
+      "source": "(seq\n  (photosynthesize)\n  (nop)\n  (let ((local1 (target-storage (nearest-corpse))))\n    (turn (random (crowding)))\n  )\n  (split)\n  (seq\n    (move (storage-bearing 0.25))\n    (do\n      (mobilize (sunlight))\n      (do (photosynthesize) (eat))\n    )\n    (split)\n  )\n  (photosynthesize)\n)",
+      "tree": {
+        "op": "seq",
+        "args": [
+          {
+            "op": "photosynthesize",
+            "args": []
+          },
+          {
+            "op": "seq",
+            "args": [
+              {
+                "op": "nop",
+                "args": []
+              },
+              {
+                "op": "seq",
+                "args": [
+                  {
+                    "op": "let",
+                    "args": [
+                      {
+                        "op": "slot",
+                        "args": [],
+                        "value": 1
+                      },
+                      {
+                        "op": "target-storage",
+                        "args": [
+                          {
+                            "op": "nearest-corpse",
+                            "args": []
+                          }
+                        ]
+                      },
+                      {
+                        "op": "turn",
+                        "args": [
+                          {
+                            "op": "random",
+                            "args": [
+                              {
+                                "op": "crowding",
+                                "args": []
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "op": "seq",
+                    "args": [
+                      {
+                        "op": "split",
+                        "args": []
+                      },
+                      {
+                        "op": "seq",
+                        "args": [
+                          {
+                            "op": "seq",
+                            "args": [
+                              {
+                                "op": "move",
+                                "args": [
+                                  {
+                                    "op": "storage-bearing",
+                                    "args": [
+                                      {
+                                        "op": "number",
+                                        "args": [],
+                                        "value": 0.25
+                                      }
+                                    ]
+                                  }
+                                ]
+                              },
+                              {
+                                "op": "seq",
+                                "args": [
+                                  {
+                                    "op": "do",
+                                    "args": [
+                                      {
+                                        "op": "mobilize",
+                                        "args": [
+                                          {
+                                            "op": "sunlight",
+                                            "args": []
+                                          }
+                                        ]
+                                      },
+                                      {
+                                        "op": "do",
+                                        "args": [
+                                          {
+                                            "op": "photosynthesize",
+                                            "args": []
+                                          },
+                                          {
+                                            "op": "eat",
+                                            "args": []
+                                          }
+                                        ]
+                                      }
+                                    ]
+                                  },
+                                  {
+                                    "op": "split",
+                                    "args": []
+                                  }
+                                ]
+                              }
+                            ]
+                          },
+                          {
+                            "op": "photosynthesize",
+                            "args": []
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "nodes": 28,
+      "bytecode": "L0: photosynthesize r0\nL1: nop\nL2: scan_corpse r0 360\nL3: peek r0 r0 storage\nL4: mem_save 1 r0\nL5: sense r0 crowding\nL6: rand r0 r0\nL7: turn r0\nL8: split r0\nL9: mem_save 8 r0\nL10: mov r0 0.25\nL11: storage_gradient r0 r1 r0\nL12: move r0\nL13: sense r0 sunlight\nL14: mobilize r0 r0\nL15: photosynthesize r0\nL16: eat r0\nL17: split r0\nL18: mem_save 8 r0\nL19: photosynthesize r0\nL20: wait 0\nL21: jmp L0",
+      "substrate": "tree"
+    },
+    {
+      "slot": 3578,
+      "length": 22,
+      "serial": 11712,
+      "founder": 4947,
+      "depth": 2,
+      "parent": 9668,
+      "bornTick": 26400,
+      "secondParent": 0,
+      "score": 0,
+      "source": "(seq\n  (photosynthesize)\n  (split)\n  (move (storage))\n  (eat)\n  (photosynthesize)\n  (give\n    (none)\n    (let ((local5 (mod\n        (storage-slope 360)\n        (target-tag (do (eat) (nearest-cell)))\n      )))\n      (storage-slope local5)\n    )\n  )\n)",
+      "tree": {
+        "op": "seq",
+        "args": [
+          {
+            "op": "photosynthesize",
+            "args": []
+          },
+          {
+            "op": "seq",
+            "args": [
+              {
+                "op": "split",
+                "args": []
+              },
+              {
+                "op": "seq",
+                "args": [
+                  {
+                    "op": "move",
+                    "args": [
+                      {
+                        "op": "storage",
+                        "args": []
+                      }
+                    ]
+                  },
+                  {
+                    "op": "seq",
+                    "args": [
+                      {
+                        "op": "eat",
+                        "args": []
+                      },
+                      {
+                        "op": "seq",
+                        "args": [
+                          {
+                            "op": "photosynthesize",
+                            "args": []
+                          },
+                          {
+                            "op": "give",
+                            "args": [
+                              {
+                                "op": "none",
+                                "args": []
+                              },
+                              {
+                                "op": "let",
+                                "args": [
+                                  {
+                                    "op": "slot",
+                                    "args": [],
+                                    "value": 5
+                                  },
+                                  {
+                                    "op": "mod",
+                                    "args": [
+                                      {
+                                        "op": "storage-slope",
+                                        "args": [
+                                          {
+                                            "op": "number",
+                                            "args": [],
+                                            "value": 360
+                                          }
+                                        ]
+                                      },
+                                      {
+                                        "op": "target-tag",
+                                        "args": [
+                                          {
+                                            "op": "do",
+                                            "args": [
+                                              {
+                                                "op": "eat",
+                                                "args": []
+                                              },
+                                              {
+                                                "op": "nearest-cell",
+                                                "args": []
+                                              }
+                                            ]
+                                          }
+                                        ]
+                                      }
+                                    ]
+                                  },
+                                  {
+                                    "op": "storage-slope",
+                                    "args": [
+                                      {
+                                        "op": "memory",
+                                        "args": [
+                                          {
+                                            "op": "slot",
+                                            "args": [],
+                                            "value": 5
+                                          }
+                                        ]
+                                      }
+                                    ]
+                                  }
+                                ]
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "nodes": 25,
+      "bytecode": "L0: photosynthesize r0\nL1: split r0\nL2: mem_save 8 r0\nL3: sense r0 storage\nL4: move r0\nL5: eat r0\nL6: photosynthesize r0\nL7: mov r0 0\nL8: mov r1 360\nL9: storage_gradient r1 r2 r1\nL10: mov r1 r2\nL11: eat r2\nL12: scan r2 -1 360\nL13: peek r2 r2 tag\nL14: mod r1 r2\nL15: mem_save 5 r1\nL16: mem_load r1 5\nL17: storage_gradient r1 r2 r1\nL18: mov r1 r2\nL19: give r0 r1\nL20: wait 0\nL21: jmp L0",
+      "substrate": "tree"
+    },
+    {
+      "slot": 3440,
+      "length": 17,
+      "serial": 17948,
+      "founder": 4947,
+      "depth": 2,
+      "parent": 11829,
+      "bornTick": 73200,
+      "secondParent": 0,
+      "score": 0,
+      "source": "(seq\n  (photosynthesize)\n  (split)\n  (move (storage))\n  (eat)\n  (photosynthesize)\n  (give\n    (none)\n    (let ((local5 (target-tag (none))))\n      (storage-slope (memory m1))\n    )\n  )\n)",
+      "tree": {
+        "op": "seq",
+        "args": [
+          {
+            "op": "photosynthesize",
+            "args": []
+          },
+          {
+            "op": "seq",
+            "args": [
+              {
+                "op": "split",
+                "args": []
+              },
+              {
+                "op": "seq",
+                "args": [
+                  {
+                    "op": "move",
+                    "args": [
+                      {
+                        "op": "storage",
+                        "args": []
+                      }
+                    ]
+                  },
+                  {
+                    "op": "seq",
+                    "args": [
+                      {
+                        "op": "eat",
+                        "args": []
+                      },
+                      {
+                        "op": "seq",
+                        "args": [
+                          {
+                            "op": "photosynthesize",
+                            "args": []
+                          },
+                          {
+                            "op": "give",
+                            "args": [
+                              {
+                                "op": "none",
+                                "args": []
+                              },
+                              {
+                                "op": "let",
+                                "args": [
+                                  {
+                                    "op": "slot",
+                                    "args": [],
+                                    "value": 5
+                                  },
+                                  {
+                                    "op": "target-tag",
+                                    "args": [
+                                      {
+                                        "op": "none",
+                                        "args": []
+                                      }
+                                    ]
+                                  },
+                                  {
+                                    "op": "storage-slope",
+                                    "args": [
+                                      {
+                                        "op": "memory",
+                                        "args": [
+                                          {
+                                            "op": "slot",
+                                            "args": [],
+                                            "value": 1
+                                          }
+                                        ]
+                                      }
+                                    ]
+                                  }
+                                ]
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "nodes": 20,
+      "bytecode": "L0: photosynthesize r0\nL1: split r0\nL2: mem_save 8 r0\nL3: sense r0 storage\nL4: move r0\nL5: eat r0\nL6: photosynthesize r0\nL7: mov r0 0\nL8: mov r1 0\nL9: peek r1 r1 tag\nL10: mem_save 5 r1\nL11: mem_load r1 1\nL12: storage_gradient r1 r2 r1\nL13: mov r1 r2\nL14: give r0 r1\nL15: wait 0\nL16: jmp L0",
+      "substrate": "tree"
+    },
+    {
+      "slot": 2476,
+      "length": 17,
+      "serial": 11604,
+      "founder": 4947,
+      "depth": 1,
+      "parent": 9668,
+      "bornTick": 25620,
+      "secondParent": 0,
+      "score": 0,
+      "source": "(seq\n  (photosynthesize)\n  (split)\n  (move (storage))\n  (eat)\n  (photosynthesize)\n  (give\n    (none)\n    (let ((local5 (target-tag (none))))\n      (storage-slope local5)\n    )\n  )\n)",
+      "tree": {
+        "op": "seq",
+        "args": [
+          {
+            "op": "photosynthesize",
+            "args": []
+          },
+          {
+            "op": "seq",
+            "args": [
+              {
+                "op": "split",
+                "args": []
+              },
+              {
+                "op": "seq",
+                "args": [
+                  {
+                    "op": "move",
+                    "args": [
+                      {
+                        "op": "storage",
+                        "args": []
+                      }
+                    ]
+                  },
+                  {
+                    "op": "seq",
+                    "args": [
+                      {
+                        "op": "eat",
+                        "args": []
+                      },
+                      {
+                        "op": "seq",
+                        "args": [
+                          {
+                            "op": "photosynthesize",
+                            "args": []
+                          },
+                          {
+                            "op": "give",
+                            "args": [
+                              {
+                                "op": "none",
+                                "args": []
+                              },
+                              {
+                                "op": "let",
+                                "args": [
+                                  {
+                                    "op": "slot",
+                                    "args": [],
+                                    "value": 5
+                                  },
+                                  {
+                                    "op": "target-tag",
+                                    "args": [
+                                      {
+                                        "op": "none",
+                                        "args": []
+                                      }
+                                    ]
+                                  },
+                                  {
+                                    "op": "storage-slope",
+                                    "args": [
+                                      {
+                                        "op": "memory",
+                                        "args": [
+                                          {
+                                            "op": "slot",
+                                            "args": [],
+                                            "value": 5
+                                          }
+                                        ]
+                                      }
+                                    ]
+                                  }
+                                ]
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "nodes": 20,
+      "bytecode": "L0: photosynthesize r0\nL1: split r0\nL2: mem_save 8 r0\nL3: sense r0 storage\nL4: move r0\nL5: eat r0\nL6: photosynthesize r0\nL7: mov r0 0\nL8: mov r1 0\nL9: peek r1 r1 tag\nL10: mem_save 5 r1\nL11: mem_load r1 5\nL12: storage_gradient r1 r2 r1\nL13: mov r1 r2\nL14: give r0 r1\nL15: wait 0\nL16: jmp L0",
+      "substrate": "tree"
+    },
+    {
+      "slot": 993,
+      "length": 30,
+      "serial": 26804,
+      "founder": 6608,
+      "depth": 1,
+      "parent": 13849,
+      "bornTick": 146880,
+      "secondParent": 18275,
+      "score": 0,
+      "source": "(seq\n  (nop)\n  (color-set (target-shield (nearest-cell)))\n  (state ((state3 (rotation)))\n    (photosynthesize)\n  )\n  (eat)\n  (move (energy))\n  (do\n    (if false (photosynthesize) (bud))\n    (let ((local1 (storage-slope (sunlight-bearing))))\n      (if\n        false\n        (store (receive c1))\n        (photosynthesize)\n      )\n    )\n  )\n)",
+      "tree": {
+        "op": "seq",
+        "args": [
+          {
+            "op": "nop",
+            "args": []
+          },
+          {
+            "op": "seq",
+            "args": [
+              {
+                "op": "color-set",
+                "args": [
+                  {
+                    "op": "target-shield",
+                    "args": [
+                      {
+                        "op": "nearest-cell",
+                        "args": []
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "op": "seq",
+                "args": [
+                  {
+                    "op": "state",
+                    "args": [
+                      {
+                        "op": "slot",
+                        "args": [],
+                        "value": 3
+                      },
+                      {
+                        "op": "rotation",
+                        "args": []
+                      },
+                      {
+                        "op": "photosynthesize",
+                        "args": []
+                      }
+                    ]
+                  },
+                  {
+                    "op": "seq",
+                    "args": [
+                      {
+                        "op": "eat",
+                        "args": []
+                      },
+                      {
+                        "op": "seq",
+                        "args": [
+                          {
+                            "op": "move",
+                            "args": [
+                              {
+                                "op": "energy",
+                                "args": []
+                              }
+                            ]
+                          },
+                          {
+                            "op": "do",
+                            "args": [
+                              {
+                                "op": "if",
+                                "args": [
+                                  {
+                                    "op": "bool",
+                                    "args": [],
+                                    "value": 0
+                                  },
+                                  {
+                                    "op": "photosynthesize",
+                                    "args": []
+                                  },
+                                  {
+                                    "op": "bud",
+                                    "args": []
+                                  }
+                                ]
+                              },
+                              {
+                                "op": "let",
+                                "args": [
+                                  {
+                                    "op": "slot",
+                                    "args": [],
+                                    "value": 1
+                                  },
+                                  {
+                                    "op": "storage-slope",
+                                    "args": [
+                                      {
+                                        "op": "sunlight-bearing",
+                                        "args": []
+                                      }
+                                    ]
+                                  },
+                                  {
+                                    "op": "if",
+                                    "args": [
+                                      {
+                                        "op": "bool",
+                                        "args": [],
+                                        "value": 0
+                                      },
+                                      {
+                                        "op": "store",
+                                        "args": [
+                                          {
+                                            "op": "receive",
+                                            "args": [
+                                              {
+                                                "op": "channel",
+                                                "args": [],
+                                                "value": 1
+                                              }
+                                            ]
+                                          }
+                                        ]
+                                      },
+                                      {
+                                        "op": "photosynthesize",
+                                        "args": []
+                                      }
+                                    ]
+                                  }
+                                ]
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "nodes": 31,
+      "bytecode": "L0: nop\nL1: scan r0 -1 360\nL2: peek r0 r0 shield\nL3: color r0\nL4: mem_ready r0 3\nL5: jnz r0 L8\nL6: sense r0 rotation\nL7: mem_init 3 r0\nL8: photosynthesize r0\nL9: eat r0\nL10: sense r0 energy\nL11: move r0\nL12: mov r0 0\nL13: jz r0 L16\nL14: photosynthesize r0\nL15: jmp L18\nL16: bud r0\nL17: mem_save 8 r0\nL18: gradient r0 r1\nL19: storage_gradient r0 r1 r0\nL20: mov r0 r1\nL21: mem_save 1 r0\nL22: mov r0 0\nL23: jz r0 L27\nL24: receive r0 r1 1\nL25: store r0 r0\nL26: jmp L28\nL27: photosynthesize r0\nL28: wait 0\nL29: jmp L0",
+      "substrate": "tree"
+    }
+  ],
+  "note": "Observation for inspection, not an exact world-restart snapshot. External cells and message senders are not included."
+}

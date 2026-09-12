@@ -6,11 +6,14 @@ struct Cell {
  anchor:vec4f, phen:vec4f,
 }
 struct Activity {marks:vec4u,impact:vec4f}
+struct Intent {req:vec4f,aim:vec4u,msg:vec4f,dest:vec4u,base:vec4u,uptake:vec4f,newLinks:vec4u,misc:vec4u}
 struct View { camera:vec4f, world:vec4f, flags:vec4u, selection:vec4u }
 @group(0) @binding(0) var<storage,read> cells:array<Cell>;
 @group(0) @binding(1) var<storage,read> food:array<vec2f>;
 @group(0) @binding(2) var<uniform> view:View;
 @group(0) @binding(3) var<storage,read> activity:array<Activity>;
+@group(0) @binding(4) var<storage,read> intents:array<Intent>;
+@group(0) @binding(5) var<storage,read> previous:array<Cell>;
 const CORNERS=array<vec2f,6>(vec2f(-1,-1),vec2f(1,-1),vec2f(-1,1),vec2f(-1,1),vec2f(1,-1),vec2f(1,1));
 fn delta(p:vec2f)->vec2f {return p-floor(p/view.world.x+0.5)*view.world.x;}
 fn clip(p:vec2f)->vec4f {return vec4f(p/view.camera.zw*vec2f(2,-2),0,1);}
@@ -75,6 +78,25 @@ struct Vertex { @builtin(position) pos:vec4f, @location(0) uv:vec2f, @location(1
 }
 @fragment fn attackFragment(i:Vertex)->@location(0) vec4f{return i.color;}
 @fragment fn motorFragment(i:Vertex)->@location(0) vec4f{return i.color;}
+// Show completed gifts from the last tick. Incarnation checks prevent a
+// recycled source or recipient slot from inheriting somebody else's arrow.
+@vertex fn giftVertex(@builtin(vertex_index) v:u32,@builtin(instance_index) i:u32)->Vertex {
+ var o:Vertex;o.pos=vec4f(3,3,0,1);
+ let c=cells[i];let intent=intents[i];let j=intent.aim.x;
+ if(c.life.w!=1u||previous[i].life.w!=1u||previous[i].machine.x!=c.machine.x||intent.base.y==0u||j>=arrayLength(&cells)){return o;}
+ let recipient=cells[j];
+ if(recipient.life.w!=1u||previous[j].life.w!=1u||previous[j].machine.x!=recipient.machine.x){return o;}
+ let d=delta(recipient.p.xy-c.p.xy);let lengthD=length(d);
+ if(lengthD<.001){return o;}
+ let direction=d/lengthD;let normal=vec2f(-direction.y,direction.x);
+ let origin=delta(c.p.xy-view.camera.xy);let start=origin+direction*min(4.0,lengthD*.2);
+ let end=origin+d-direction*min(4.0,lengthD*.2);
+ let head=min(lengthD*.25,max(3.0,view.world.z*2));
+ var point=start;
+ switch v {case 1u,2u,4u:{point=end;}case 3u:{point=end-direction*head+normal*head*.55;}case 5u:{point=end-direction*head-normal*head*.55;}default:{}}
+ o.pos=clip(point);o.color=vec4f(.55,1,.42,.5+.5*clamp(f32(intent.base.y)/(4096*10),0,1));return o;
+}
+@fragment fn giftFragment(i:Vertex)->@location(0) vec4f{return i.color;}
 struct FieldVertex { @builtin(position) pos:vec4f, @location(0) world:vec2f }
 @vertex fn fieldVertex(@builtin(vertex_index) v:u32)->FieldVertex {
  var o:FieldVertex; let p=CORNERS[v]; o.pos=vec4f(p,0,1);
@@ -112,6 +134,16 @@ export async function createRenderer(device, canvas, engine, format) {
   const layout = device.createBindGroupLayout({
     entries: [
       {
+        binding: 4,
+        visibility: GPUShaderStage.VERTEX,
+        buffer: { type: "read-only-storage" },
+      },
+      {
+        binding: 5,
+        visibility: GPUShaderStage.VERTEX,
+        buffer: { type: "read-only-storage" },
+      },
+      {
         binding: 3,
         visibility: GPUShaderStage.VERTEX,
         buffer: { type: "read-only-storage" },
@@ -137,7 +169,7 @@ export async function createRenderer(device, canvas, engine, format) {
     bindGroupLayouts: [layout],
   });
   const pipelines = await Promise.all(
-    ["field", "link", "cell", "attack", "motor"].map((name) =>
+    ["field", "link", "cell", "attack", "motor", "gift"].map((name) =>
       device.createRenderPipelineAsync({
         layout: pipelineLayout,
         vertex: { module, entryPoint: name + "Vertex" },
@@ -163,14 +195,14 @@ export async function createRenderer(device, canvas, engine, format) {
           ],
         },
         primitive: {
-          topology: ["link", "attack", "motor"].includes(name)
+          topology: ["link", "attack", "motor", "gift"].includes(name)
             ? "line-list"
             : "triangle-list",
         },
       }),
     ),
   );
-  const groups = engine.buffers.state.map((buffer) =>
+  const groups = engine.buffers.state.map((buffer, index) =>
     device.createBindGroup({
       layout,
       entries: [
@@ -178,6 +210,8 @@ export async function createRenderer(device, canvas, engine, format) {
         { binding: 1, resource: { buffer: engine.buffers.food } },
         { binding: 2, resource: { buffer: uniform } },
         { binding: 3, resource: { buffer: engine.buffers.activity } },
+        { binding: 4, resource: { buffer: engine.buffers.intents } },
+        { binding: 5, resource: { buffer: engine.buffers.state[1 - index] } },
       ],
     }),
   );
@@ -247,6 +281,8 @@ export async function createRenderer(device, canvas, engine, format) {
         pass.draw(2, engine.cfg.capacity);
         pass.setPipeline(pipelines[4]);
         pass.draw(2, engine.cfg.capacity);
+        pass.setPipeline(pipelines[5]);
+        pass.draw(6, engine.cfg.capacity);
       }
       pass.setPipeline(pipelines[2]);
       pass.draw(6, engine.cfg.capacity);

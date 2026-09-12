@@ -1,0 +1,1021 @@
+{
+  "seconds": 0,
+  "world": 4096,
+  "colonies": [
+    {
+      "selection": "largest",
+      "size": 1,
+      "speed": 0,
+      "cells": [
+        {
+          "slot": 0,
+          "incarnation": 1,
+          "genomeSlot": 0,
+          "x": 1398.68603515625,
+          "y": 579.851318359375,
+          "vx": 0,
+          "vy": 0,
+          "heading": 0.9476893544197083,
+          "energy": 24,
+          "storage": 24,
+          "temperature": 20,
+          "hue": 132.4351806640625,
+          "ageTicks": 0,
+          "generation": 0,
+          "parent": 0,
+          "pc": 0,
+          "sleep": 0,
+          "registers": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "signal": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "mail": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "links": [],
+          "memory": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "birthResult": 0,
+          "initializedStateMask": 0
+        }
+      ]
+    }
+  ],
+  "genomes": [
+    {
+      "slot": 0,
+      "length": 5,
+      "serial": 1,
+      "founder": 1,
+      "depth": 0,
+      "parent": 0,
+      "bornTick": 0,
+      "secondParent": 0,
+      "score": 0,
+      "source": "(color-set (target-shield (self)))",
+      "tree": {
+        "op": "color-set",
+        "args": [
+          {
+            "op": "target-shield",
+            "args": [
+              {
+                "op": "self",
+                "args": []
+              }
+            ]
+          }
+        ]
+      },
+      "nodes": 3,
+      "bytecode": "L0: sense r0 id\nL1: peek r0 r0 shield\nL2: color r0\nL3: wait 0\nL4: jmp L0",
+      "substrate": "tree"
+    },
+    {
+      "slot": 1,
+      "length": 21,
+      "serial": 2,
+      "founder": 2,
+      "depth": 0,
+      "parent": 0,
+      "bornTick": 0,
+      "secondParent": 0,
+      "score": 0,
+      "source": "(seq\n  (give\n    (nearest-cell)\n    (target-color (nearest-corpse))\n  )\n  (tag-set (target-bearing (bond c3)))\n  (tag-set (storage))\n  (split)\n  (shield\n    (target-temperature\n      (let ((local5 (color)))\n        (scan-color (crowding) (linked_storage))\n      )\n    )\n  )\n  (photosynthesize)\n)",
+      "tree": {
+        "op": "seq",
+        "args": [
+          {
+            "op": "give",
+            "args": [
+              {
+                "op": "nearest-cell",
+                "args": []
+              },
+              {
+                "op": "target-color",
+                "args": [
+                  {
+                    "op": "nearest-corpse",
+                    "args": []
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "op": "seq",
+            "args": [
+              {
+                "op": "tag-set",
+                "args": [
+                  {
+                    "op": "target-bearing",
+                    "args": [
+                      {
+                        "op": "bond",
+                        "args": [
+                          {
+                            "op": "channel",
+                            "args": [],
+                            "value": 3
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "op": "seq",
+                "args": [
+                  {
+                    "op": "tag-set",
+                    "args": [
+                      {
+                        "op": "storage",
+                        "args": []
+                      }
+                    ]
+                  },
+                  {
+                    "op": "seq",
+                    "args": [
+                      {
+                        "op": "split",
+                        "args": []
+                      },
+                      {
+                        "op": "seq",
+                        "args": [
+                          {
+                            "op": "shield",
+                            "args": [
+                              {
+                                "op": "target-temperature",
+                                "args": [
+                                  {
+                                    "op": "let",
+                                    "args": [
+                                      {
+                                        "op": "slot",
+                                        "args": [],
+                                        "value": 5
+                                      },
+                                      {
+                                        "op": "color",
+                                        "args": []
+                                      },
+                                      {
+                                        "op": "scan-color",
+                                        "args": [
+                                          {
+                                            "op": "crowding",
+                                            "args": []
+                                          },
+                                          {
+                                            "op": "linked_storage",
+                                            "args": []
+                                          }
+                                        ]
+                                      }
+                                    ]
+                                  }
+                                ]
+                              }
+                            ]
+                          },
+                          {
+                            "op": "photosynthesize",
+                            "args": []
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "nodes": 25,
+      "bytecode": "L0: scan r0 -1 360\nL1: scan_corpse r1 360\nL2: peek r1 r1 color\nL3: give r0 r1\nL4: bond r0 3\nL5: peek r0 r0 bearing\nL6: tag r0\nL7: sense r0 storage\nL8: tag r0\nL9: split r0\nL10: mem_save 8 r0\nL11: sense r0 color\nL12: mem_save 5 r0\nL13: sense r0 crowding\nL14: sense r1 linked_storage\nL15: scan_color r0 r0 r1\nL16: peek r0 r0 temperature\nL17: shield r0\nL18: photosynthesize r0\nL19: wait 0\nL20: jmp L0",
+      "substrate": "tree"
+    },
+    {
+      "slot": 2,
+      "length": 6,
+      "serial": 3,
+      "founder": 3,
+      "depth": 0,
+      "parent": 0,
+      "bornTick": 0,
+      "secondParent": 0,
+      "score": 0,
+      "source": "(seq (tag-set (storage)) (color-set (energy)))",
+      "tree": {
+        "op": "seq",
+        "args": [
+          {
+            "op": "tag-set",
+            "args": [
+              {
+                "op": "storage",
+                "args": []
+              }
+            ]
+          },
+          {
+            "op": "color-set",
+            "args": [
+              {
+                "op": "energy",
+                "args": []
+              }
+            ]
+          }
+        ]
+      },
+      "nodes": 5,
+      "bytecode": "L0: sense r0 storage\nL1: tag r0\nL2: sense r0 energy\nL3: color r0\nL4: wait 0\nL5: jmp L0",
+      "substrate": "tree"
+    },
+    {
+      "slot": 3,
+      "length": 13,
+      "serial": 4,
+      "founder": 4,
+      "depth": 0,
+      "parent": 0,
+      "bornTick": 0,
+      "secondParent": 0,
+      "score": 0,
+      "source": "(link\n  (scan-color\n    (sunlight)\n    (target-tag\n      (if (and false false) (none) (nearest-corpse))\n    )\n  )\n)",
+      "tree": {
+        "op": "link",
+        "args": [
+          {
+            "op": "scan-color",
+            "args": [
+              {
+                "op": "sunlight",
+                "args": []
+              },
+              {
+                "op": "target-tag",
+                "args": [
+                  {
+                    "op": "if",
+                    "args": [
+                      {
+                        "op": "and",
+                        "args": [
+                          {
+                            "op": "bool",
+                            "args": [],
+                            "value": 0
+                          },
+                          {
+                            "op": "bool",
+                            "args": [],
+                            "value": 0
+                          }
+                        ]
+                      },
+                      {
+                        "op": "none",
+                        "args": []
+                      },
+                      {
+                        "op": "nearest-corpse",
+                        "args": []
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "nodes": 10,
+      "bytecode": "L0: sense r0 sunlight\nL1: mov r1 0\nL2: jz r1 L4\nL3: mov r1 0\nL4: jz r1 L7\nL5: mov r1 0\nL6: jmp L8\nL7: scan_corpse r1 360\nL8: peek r1 r1 tag\nL9: scan_color r0 r0 r1\nL10: link r0\nL11: wait 0\nL12: jmp L0",
+      "substrate": "tree"
+    },
+    {
+      "slot": 4,
+      "length": 12,
+      "serial": 5,
+      "founder": 5,
+      "depth": 0,
+      "parent": 0,
+      "bornTick": 0,
+      "secondParent": 0,
+      "score": 0,
+      "source": "(seq\n  (give\n    (scan-color\n      60\n      (target-temperature (nearest-cell))\n    )\n    (target-shield (self))\n  )\n  (eat)\n  (nop)\n  (photosynthesize)\n)",
+      "tree": {
+        "op": "seq",
+        "args": [
+          {
+            "op": "give",
+            "args": [
+              {
+                "op": "scan-color",
+                "args": [
+                  {
+                    "op": "number",
+                    "args": [],
+                    "value": 60
+                  },
+                  {
+                    "op": "target-temperature",
+                    "args": [
+                      {
+                        "op": "nearest-cell",
+                        "args": []
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "op": "target-shield",
+                "args": [
+                  {
+                    "op": "self",
+                    "args": []
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "op": "seq",
+            "args": [
+              {
+                "op": "eat",
+                "args": []
+              },
+              {
+                "op": "seq",
+                "args": [
+                  {
+                    "op": "nop",
+                    "args": []
+                  },
+                  {
+                    "op": "photosynthesize",
+                    "args": []
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "nodes": 13,
+      "bytecode": "L0: mov r0 60\nL1: scan r1 -1 360\nL2: peek r1 r1 temperature\nL3: scan_color r0 r0 r1\nL4: sense r1 id\nL5: peek r1 r1 shield\nL6: give r0 r1\nL7: eat r0\nL8: nop\nL9: photosynthesize r0\nL10: wait 0\nL11: jmp L0",
+      "substrate": "tree"
+    },
+    {
+      "slot": 5,
+      "length": 22,
+      "serial": 6,
+      "founder": 6,
+      "depth": 0,
+      "parent": 0,
+      "bornTick": 0,
+      "secondParent": 0,
+      "score": 0,
+      "source": "(seq\n  (wait\n    (state ((state3 (color)))\n      (crowding)\n    )\n  )\n  (attack (self) (bonds))\n  (give (bond c2) (listen c0))\n  (do\n    (emit c2 (generation))\n    (contract (storage-bearing (birth-result)))\n  )\n  (attack (nearest-corpse) (color))\n)",
+      "tree": {
+        "op": "seq",
+        "args": [
+          {
+            "op": "wait",
+            "args": [
+              {
+                "op": "state",
+                "args": [
+                  {
+                    "op": "slot",
+                    "args": [],
+                    "value": 3
+                  },
+                  {
+                    "op": "color",
+                    "args": []
+                  },
+                  {
+                    "op": "crowding",
+                    "args": []
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "op": "seq",
+            "args": [
+              {
+                "op": "attack",
+                "args": [
+                  {
+                    "op": "self",
+                    "args": []
+                  },
+                  {
+                    "op": "bonds",
+                    "args": []
+                  }
+                ]
+              },
+              {
+                "op": "seq",
+                "args": [
+                  {
+                    "op": "give",
+                    "args": [
+                      {
+                        "op": "bond",
+                        "args": [
+                          {
+                            "op": "channel",
+                            "args": [],
+                            "value": 2
+                          }
+                        ]
+                      },
+                      {
+                        "op": "listen",
+                        "args": [
+                          {
+                            "op": "channel",
+                            "args": [],
+                            "value": 0
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "op": "seq",
+                    "args": [
+                      {
+                        "op": "do",
+                        "args": [
+                          {
+                            "op": "emit",
+                            "args": [
+                              {
+                                "op": "channel",
+                                "args": [],
+                                "value": 2
+                              },
+                              {
+                                "op": "generation",
+                                "args": []
+                              }
+                            ]
+                          },
+                          {
+                            "op": "contract",
+                            "args": [
+                              {
+                                "op": "storage-bearing",
+                                "args": [
+                                  {
+                                    "op": "birth-result",
+                                    "args": []
+                                  }
+                                ]
+                              }
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "op": "attack",
+                        "args": [
+                          {
+                            "op": "nearest-corpse",
+                            "args": []
+                          },
+                          {
+                            "op": "color",
+                            "args": []
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "nodes": 27,
+      "bytecode": "L0: mem_ready r0 3\nL1: jnz r0 L4\nL2: sense r0 color\nL3: mem_init 3 r0\nL4: sense r0 crowding\nL5: wait r0\nL6: sense r0 id\nL7: sense r1 bonds\nL8: attack r0 r1\nL9: bond r0 2\nL10: listen r1 0\nL11: give r0 r1\nL12: sense r0 generation\nL13: emit 2 r0\nL14: mem_load r0 8\nL15: storage_gradient r0 r1 r0\nL16: contract r0\nL17: scan_corpse r0 360\nL18: sense r1 color\nL19: attack r0 r1\nL20: wait 0\nL21: jmp L0",
+      "substrate": "tree"
+    },
+    {
+      "slot": 6,
+      "length": 24,
+      "serial": 7,
+      "founder": 7,
+      "depth": 0,
+      "parent": 0,
+      "bornTick": 0,
+      "secondParent": 0,
+      "score": 0,
+      "source": "(seq\n  (set m0 (target-temperature (nearest-cell)))\n  (tag-set (max (temperature) (linked_storage)))\n  (state ((state0 1))\n    (photosynthesize)\n  )\n  (contract (color))\n  (let ((local6 (storage)))\n    (color-set (temperature))\n  )\n  (give\n    (nearest-cell)\n    (target-temperature (nearest-cell))\n  )\n)",
+      "tree": {
+        "op": "seq",
+        "args": [
+          {
+            "op": "set",
+            "args": [
+              {
+                "op": "slot",
+                "args": [],
+                "value": 0
+              },
+              {
+                "op": "target-temperature",
+                "args": [
+                  {
+                    "op": "nearest-cell",
+                    "args": []
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "op": "seq",
+            "args": [
+              {
+                "op": "tag-set",
+                "args": [
+                  {
+                    "op": "max",
+                    "args": [
+                      {
+                        "op": "temperature",
+                        "args": []
+                      },
+                      {
+                        "op": "linked_storage",
+                        "args": []
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "op": "seq",
+                "args": [
+                  {
+                    "op": "state",
+                    "args": [
+                      {
+                        "op": "slot",
+                        "args": [],
+                        "value": 0
+                      },
+                      {
+                        "op": "number",
+                        "args": [],
+                        "value": 1
+                      },
+                      {
+                        "op": "photosynthesize",
+                        "args": []
+                      }
+                    ]
+                  },
+                  {
+                    "op": "seq",
+                    "args": [
+                      {
+                        "op": "contract",
+                        "args": [
+                          {
+                            "op": "color",
+                            "args": []
+                          }
+                        ]
+                      },
+                      {
+                        "op": "seq",
+                        "args": [
+                          {
+                            "op": "let",
+                            "args": [
+                              {
+                                "op": "slot",
+                                "args": [],
+                                "value": 6
+                              },
+                              {
+                                "op": "storage",
+                                "args": []
+                              },
+                              {
+                                "op": "color-set",
+                                "args": [
+                                  {
+                                    "op": "temperature",
+                                    "args": []
+                                  }
+                                ]
+                              }
+                            ]
+                          },
+                          {
+                            "op": "give",
+                            "args": [
+                              {
+                                "op": "nearest-cell",
+                                "args": []
+                              },
+                              {
+                                "op": "target-temperature",
+                                "args": [
+                                  {
+                                    "op": "nearest-cell",
+                                    "args": []
+                                  }
+                                ]
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "nodes": 28,
+      "bytecode": "L0: scan r0 -1 360\nL1: peek r0 r0 temperature\nL2: mem_save 0 r0\nL3: sense r0 temperature\nL4: sense r1 linked_storage\nL5: max r0 r1\nL6: tag r0\nL7: mem_ready r0 0\nL8: jnz r0 L11\nL9: mov r0 1\nL10: mem_init 0 r0\nL11: photosynthesize r0\nL12: sense r0 color\nL13: contract r0\nL14: sense r0 storage\nL15: mem_save 6 r0\nL16: sense r0 temperature\nL17: color r0\nL18: scan r0 -1 360\nL19: scan r1 -1 360\nL20: peek r1 r1 temperature\nL21: give r0 r1\nL22: wait 0\nL23: jmp L0",
+      "substrate": "tree"
+    },
+    {
+      "slot": 7,
+      "length": 12,
+      "serial": 8,
+      "founder": 8,
+      "depth": 0,
+      "parent": 0,
+      "bornTick": 0,
+      "secondParent": 0,
+      "score": 0,
+      "source": "(seq\n  (bud)\n  (color-set (linked_temperature))\n  (nop)\n  (link (none))\n  (give (nearest-cell) (generation))\n)",
+      "tree": {
+        "op": "seq",
+        "args": [
+          {
+            "op": "bud",
+            "args": []
+          },
+          {
+            "op": "seq",
+            "args": [
+              {
+                "op": "color-set",
+                "args": [
+                  {
+                    "op": "linked_temperature",
+                    "args": []
+                  }
+                ]
+              },
+              {
+                "op": "seq",
+                "args": [
+                  {
+                    "op": "nop",
+                    "args": []
+                  },
+                  {
+                    "op": "seq",
+                    "args": [
+                      {
+                        "op": "link",
+                        "args": [
+                          {
+                            "op": "none",
+                            "args": []
+                          }
+                        ]
+                      },
+                      {
+                        "op": "give",
+                        "args": [
+                          {
+                            "op": "nearest-cell",
+                            "args": []
+                          },
+                          {
+                            "op": "generation",
+                            "args": []
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "nodes": 13,
+      "bytecode": "L0: bud r0\nL1: mem_save 8 r0\nL2: sense r0 linked_temperature\nL3: color r0\nL4: nop\nL5: mov r0 0\nL6: link r0\nL7: scan r0 -1 360\nL8: sense r1 generation\nL9: give r0 r1\nL10: wait 0\nL11: jmp L0",
+      "substrate": "tree"
+    },
+    {
+      "slot": 8,
+      "length": 12,
+      "serial": 9,
+      "founder": 9,
+      "depth": 0,
+      "parent": 0,
+      "bornTick": 0,
+      "secondParent": 0,
+      "score": 0,
+      "source": "(seq\n  (nop)\n  (emit c1 (target-temperature (self)))\n  (color-set (target-energy (self)))\n  (nop)\n  (bud)\n)",
+      "tree": {
+        "op": "seq",
+        "args": [
+          {
+            "op": "nop",
+            "args": []
+          },
+          {
+            "op": "seq",
+            "args": [
+              {
+                "op": "emit",
+                "args": [
+                  {
+                    "op": "channel",
+                    "args": [],
+                    "value": 1
+                  },
+                  {
+                    "op": "target-temperature",
+                    "args": [
+                      {
+                        "op": "self",
+                        "args": []
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "op": "seq",
+                "args": [
+                  {
+                    "op": "color-set",
+                    "args": [
+                      {
+                        "op": "target-energy",
+                        "args": [
+                          {
+                            "op": "self",
+                            "args": []
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "op": "seq",
+                    "args": [
+                      {
+                        "op": "nop",
+                        "args": []
+                      },
+                      {
+                        "op": "bud",
+                        "args": []
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "nodes": 14,
+      "bytecode": "L0: nop\nL1: sense r0 id\nL2: peek r0 r0 temperature\nL3: emit 1 r0\nL4: sense r0 id\nL5: peek r0 r0 energy\nL6: color r0\nL7: nop\nL8: bud r0\nL9: mem_save 8 r0\nL10: wait 0\nL11: jmp L0",
+      "substrate": "tree"
+    },
+    {
+      "slot": 9,
+      "length": 19,
+      "serial": 10,
+      "founder": 10,
+      "depth": 0,
+      "parent": 0,
+      "bornTick": 0,
+      "secondParent": 0,
+      "score": 0,
+      "source": "(seq\n  (store (* (bonds) (temperature)))\n  (give (self) (linked_storage))\n  (attack\n    (do (split) (none))\n    (target-storage (nearest-corpse))\n  )\n  (unlink (nearest-corpse))\n  (bud)\n)",
+      "tree": {
+        "op": "seq",
+        "args": [
+          {
+            "op": "store",
+            "args": [
+              {
+                "op": "*",
+                "args": [
+                  {
+                    "op": "bonds",
+                    "args": []
+                  },
+                  {
+                    "op": "temperature",
+                    "args": []
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "op": "seq",
+            "args": [
+              {
+                "op": "give",
+                "args": [
+                  {
+                    "op": "self",
+                    "args": []
+                  },
+                  {
+                    "op": "linked_storage",
+                    "args": []
+                  }
+                ]
+              },
+              {
+                "op": "seq",
+                "args": [
+                  {
+                    "op": "attack",
+                    "args": [
+                      {
+                        "op": "do",
+                        "args": [
+                          {
+                            "op": "split",
+                            "args": []
+                          },
+                          {
+                            "op": "none",
+                            "args": []
+                          }
+                        ]
+                      },
+                      {
+                        "op": "target-storage",
+                        "args": [
+                          {
+                            "op": "nearest-corpse",
+                            "args": []
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "op": "seq",
+                    "args": [
+                      {
+                        "op": "unlink",
+                        "args": [
+                          {
+                            "op": "nearest-corpse",
+                            "args": []
+                          }
+                        ]
+                      },
+                      {
+                        "op": "bud",
+                        "args": []
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "nodes": 20,
+      "bytecode": "L0: sense r0 bonds\nL1: sense r1 temperature\nL2: mul r0 r1\nL3: store r0 r0\nL4: sense r0 id\nL5: sense r1 linked_storage\nL6: give r0 r1\nL7: split r0\nL8: mem_save 8 r0\nL9: mov r0 0\nL10: scan_corpse r1 360\nL11: peek r1 r1 storage\nL12: attack r0 r1\nL13: scan_corpse r0 360\nL14: unlink r0\nL15: bud r0\nL16: mem_save 8 r0\nL17: wait 0\nL18: jmp L0",
+      "substrate": "tree"
+    },
+    {
+      "slot": 10,
+      "length": 7,
+      "serial": 11,
+      "founder": 11,
+      "depth": 0,
+      "parent": 0,
+      "bornTick": 0,
+      "secondParent": 0,
+      "score": 0,
+      "source": "(seq\n  (mobilize (storage-bearing (sunlight-bearing)))\n  (wait (crowding))\n)",
+      "tree": {
+        "op": "seq",
+        "args": [
+          {
+            "op": "mobilize",
+            "args": [
+              {
+                "op": "storage-bearing",
+                "args": [
+                  {
+                    "op": "sunlight-bearing",
+                    "args": []
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "op": "wait",
+            "args": [
+              {
+                "op": "crowding",
+                "args": []
+              }
+            ]
+          }
+        ]
+      },
+      "nodes": 6,
+      "bytecode": "L0: gradient r0 r1\nL1: storage_gradient r0 r1 r0\nL2: mobilize r0 r0\nL3: sense r0 crowding\nL4: wait r0\nL5: wait 0\nL6: jmp L0",
+      "substrate": "tree"
+    },
+    {
+      "slot": 11,
+      "length": 4,
+      "serial": 12,
+      "founder": 12,
+      "depth": 0,
+      "parent": 0,
+      "bornTick": 0,
+      "secondParent": 0,
+      "score": 0,
+      "source": "(wait (birth-result))",
+      "tree": {
+        "op": "wait",
+        "args": [
+          {
+            "op": "birth-result",
+            "args": []
+          }
+        ]
+      },
+      "nodes": 2,
+      "bytecode": "L0: mem_load r0 8\nL1: wait r0\nL2: wait 0\nL3: jmp L0",
+      "substrate": "tree"
+    }
+  ],
+  "note": "Observation for inspection, not an exact world-restart snapshot. External cells and message senders are not included."
+}

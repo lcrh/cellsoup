@@ -1,6 +1,7 @@
 import { create, globals } from "webgpu";
-import { mkdir, writeFile } from "node:fs/promises";
+import { mkdir, writeFile, rename } from "node:fs/promises";
 import { auditMemory } from "./tree-memory-audit.mjs";
+import { observeColonies } from "./colony-observation.mjs";
 import { createLifeEngine, describeGenome } from "../web/gpu/engine.js";
 const args = Object.fromEntries(
   process.argv.slice(2).map((a) => {
@@ -242,7 +243,8 @@ for (let second = 0; second <= seconds; second++) {
   }
   if (second % sample === 0 || second === seconds) {
     const counters = await engine.counters(),
-      analysis = analyze(await engine.state());
+      stateBuffer = await engine.state(),
+      analysis = analyze(stateBuffer);
     if (counters.living !== analysis.living)
       throw Error("Population counter mismatch");
     if (
@@ -262,6 +264,54 @@ for (let second = 0; second <= seconds; second++) {
       throw Error("Immigration continued after closure");
     records.push(record);
     console.log(JSON.stringify(record));
+    // Preserve population observations even if a long GPU run stops early.
+    const colonies = observeColonies(stateBuffer, engine.cfg.side * 32);
+    const slots = new Set(record.leaders.map(([slot]) => slot));
+    for (const body of colonies)
+      for (const cell of body.cells ?? []) slots.add(cell.genomeSlot);
+    const genomes = [];
+    for (const slot of slots)
+      genomes.push({ slot, ...(await engine.genome(slot)) });
+    if (engine.cfg.treePrograms && colonies.some((body) => body.cells)) {
+      const memory = await engine.treeMemory();
+      for (const body of colonies)
+        for (const cell of body.cells ?? []) {
+          cell.memory = [...memory.slice(cell.slot * 12, cell.slot * 12 + 8)];
+          cell.birthResult = memory[cell.slot * 12 + 8];
+          cell.initializedStateMask = memory[cell.slot * 12 + 9];
+        }
+    }
+    await writeFile(
+      `${out}/observation-${second}.json`,
+      JSON.stringify(
+        {
+          seconds: second,
+          world: engine.cfg.side * 32,
+          colonies,
+          genomes,
+          note: "Observation for inspection, not an exact world-restart snapshot. External cells and message senders are not included.",
+        },
+        null,
+        2,
+      ) + "\n",
+    );
+    await writeFile(
+      `${out}/progress.tmp.json`,
+      JSON.stringify(
+        {
+          config: initialConfig,
+          finalConfig: engine.cfg,
+          closure,
+          kernel: engine.fingerprint,
+          genomeSampler: engine.genomeSampler,
+          records,
+          complete: false,
+        },
+        null,
+        2,
+      ) + "\n",
+    );
+    await rename(`${out}/progress.tmp.json`, `${out}/progress.json`);
   }
   if (second < seconds) {
     const start = performance.now();
@@ -340,6 +390,23 @@ await writeFile(
     )
     .join("\n\n") + "\n",
 );
+await writeFile(
+  `${out}/progress.tmp.json`,
+  JSON.stringify(
+    {
+      config: initialConfig,
+      finalConfig: engine.cfg,
+      closure,
+      kernel: engine.fingerprint,
+      genomeSampler: engine.genomeSampler,
+      records,
+      complete: true,
+    },
+    null,
+    2,
+  ) + "\n",
+);
+await rename(`${out}/progress.tmp.json`, `${out}/progress.json`);
 console.log(
   `Saved ${out}; ${computeMs.toFixed(1)} ms compute for ${seconds} simulated seconds`,
 );

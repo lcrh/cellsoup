@@ -109,3 +109,5 @@ trial summary in `research/results/typed-arrivals.json` for current evidence.
 ## Memory-use experiments
 
 The [memory and variation experiments](experiments/README.md) record scoped-variable generation, smaller mutations, a larger computation budget, and isolated read-ablation probes. These experiments distinguish syntax from behavior and ecological persistence from continued evolution. They do not change the published sampler.
+
+The [continuous evolution experiments](continuous-evolution.md) retain ongoing variation and include a controlled energy-sharing assay of a captured colony.
