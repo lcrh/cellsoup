@@ -6,11 +6,11 @@ Apply one at a time to a disposable checkout of that commit. The research tools
 and saved results in this directory's parent can also be copied into that
 checkout. Each patch modifies only the tree sampler and its recorded version.
 
-* `bound-memory.patch` adds in-scope variables as grammar choices for numeric
+- `bound-memory.patch` adds in-scope variables as grammar choices for numeric
   reads and memory addresses. The scope reaches a binding's body and replacement
   mutations inside it, but not its initializer. Reads still lower to the same
   two-node memory expression. No ecological action is guaranteed.
-* `local-mutation.patch` attempts a local edit in 50% of mutation attempts,
+- `local-mutation.patch` attempts a local edit in 50% of mutation attempts,
   compatible-subtree extraction in 10%, and subtree regrowth in 40%. Local edits
   preserve children: change a same-signature operation, perturb a constant, or
   change a memory/channel address. Rejected attempts are retried, so accepted
@@ -85,8 +85,7 @@ alone is a measure of emergent structured complexity.
 A second follow-up keeps the control sampler and raises `--budget=64`, from 24
 instructions per tick. Longer programs otherwise spread an evaluation over
 several ticks, potentially reducing the frequency of their photosynthesis calls.
-The budget-64 runs finish with 420, 20, and 778 living cells for seeds 42, 97, and
-321. Seed 42 retains four moving groups, the largest with 93 cells; the other
+The budget-64 runs finish with 420, 20, and 778 living cells for seeds 42, 97, and 321. Seed 42 retains four moving groups, the largest with 93 cells; the other
 seeds retain zero and one moving group. These results do not support changing
 the default. Raw runs are `../runs/memory-budget64-*`; summaries are appended to
 `../results/memory-evolution.json`. The UI already exposes this parameter.
@@ -107,3 +106,43 @@ alone cannot establish increasing structured complexity.
 ```sh
 node research/gpu-life-run.mjs --capacity=32768 --initial=8192 --seconds=3600 --sample=300 --floor=0 --seed=42 --out=research/runs/continuous-memory-control-42
 ```
+
+## Conditional insertion (separate continuous-world experiment)
+
+`guard-mutation.patch` targets commit
+`d519b1936941bbde9de493472ec2811c98da3a8e`. Apply it alone to a disposable checkout.
+It changes the host sampler only; GPU physics and bytecode execution are unchanged.
+Half of mutation calls first attempt to wrap a randomly selected Action subtree
+in `(if random-predicate old-action (nop))`, with branch orientation randomized.
+The predicate comes from the existing typed grammar, including effectful expressions.
+The old subtree remains intact in one branch. There is no preferred ecological
+action or predicate, and no guaranteed preservation of execution or timing.
+
+Insertion needs at least three free nodes and must fit the existing 32-node,
+16-depth, 8-temporary, and 64-instruction limits. If insertion fails, the ordinary
+mutation operator runs. Division remains an exact genome copy. Random founding
+programs are identical to control for all 8,192 samples in each of three seeds.
+
+In 10,000 independent mutations of the previously observed giving genome, the
+variant produced 5,019 exact conditional insertions, versus zero in control.
+Of those, 4,650 had a nonliteral predicate; this does not imply a variable predicate.
+One tested kinship of the gift recipient, but its branch orientation **gave only
+to non-kin**. This is a reachability result, not discovery of an adaptive defense.
+See [raw checks](../results/tree-guard-reachability.json).
+
+The dedicated checks verify parent immutability, exact recovery of the old tree
+when the inserted conditional is removed, bounds, explicit insertion failure,
+and fallback mutation. The variant also passes 77 Node tests and 51 GPU lifecycle
+checks. The three continuous trials keep eight arrivals per second for a full
+hour and disable only population-floor replenishment. This retains evolutionary
+variation throughout the comparison, unlike the earlier closure experiment.
+
+```sh
+# In a disposable checkout of the stated commit:
+git apply research/experiments/guard-mutation.patch
+node research/gpu-life-run.mjs --capacity=32768 --initial=8192 --seconds=3600 --sample=300 --floor=0 --seed=42 --out=research/runs/continuous-guard-42
+# Also run seeds 97 and 321 with distinct output directories.
+```
+
+The patch is experimental; the published default is unchanged. Results and
+interpretation are in [the comparison](../guard-evolution.md).

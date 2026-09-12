@@ -1,0 +1,61 @@
+--- a/web/gpu/trees.js
++++ b/web/gpu/trees.js
+@@ -620,7 +620,7 @@
+   }
+   throw Error("Could not sample bounded tree");
+ }
+-export function mutateTree(tree, rng = Math.random) {
++function mutateSubtree(tree, rng = Math.random) {
+   checkTree(tree);
+   const original = printTree(tree),
+     count = checkTree(tree).count;
+@@ -680,6 +680,38 @@
+   throw Error("Could not produce a bounded mutation");
+ }
+
++// Research variant: add a random condition without rebuilding an existing
++// action. No ecological predicate or action is preferred. The original subtree
++// survives in one branch; the other branch does nothing. Failure is explicit.
++export function guardTree(tree, rng = Math.random) {
++  compileTree(tree);
++  const spare = MAX_TREE_NODES - checkTree(tree).count;
++  if (spare < 3) return { tree: clone(tree), guarded: false, path: null };
++  const choices = subtrees(tree).filter((s) => s.type === "Action");
++  for (let attempt = 0; attempt < 64; attempt++) {
++    const selected = choices[Math.floor(rng() * choices.length)];
++    const predicate = grow("Bool", spare - 2, 6, rng);
++    const branch = rng() < 0.5 ? 1 : 2;
++    const args = [predicate, node("nop"), node("nop")];
++    args[branch] = selected.tree;
++    const changed = replaceSubtree(tree, selected.path, node("if", args));
++    try {
++      compileTree(changed);
++      return { tree: changed, guarded: true, path: selected.path, branch };
++    } catch (error) {
++      if (!/limit|temporaries|64 instructions/.test(error.message)) throw error;
++    }
++  }
++  return { tree: clone(tree), guarded: false, path: null };
++}
++export function mutateTree(tree, rng = Math.random) {
++  if (rng() < 0.5) {
++    const result = guardTree(tree, rng);
++    if (result.guarded) return result.tree;
++  }
++  return mutateSubtree(tree, rng);
++}
++
+ export function decodeTreeBytecode(buffer) {
+   return disassemble(buffer, TREE_VM_OPS, GPU_SENSORS, GPU_FIELDS);
+ }
+--- a/web/gpu/engine.js
++++ b/web/gpu/engine.js
+@@ -461,7 +461,7 @@
+     cfg,
+     fingerprint,
+     genomeSampler: cfg.treePrograms
+-      ? "typed-sequences-state-v2"
++      ? "typed-sequences-guard-mutation-v3"
+       : "assembly-v1",
+     buffers: { state, scratch, genomes, archive, food, intents, activity },
+     get tick() {

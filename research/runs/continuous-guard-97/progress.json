@@ -1,0 +1,1279 @@
+{
+  "config": {
+    "treePrograms": 1,
+    "crossover": 0.25,
+    "capacity": 32768,
+    "genomeCapacity": 8192,
+    "side": 128,
+    "sources": 1,
+    "initial": 8192,
+    "seed": 97,
+    "budget": 24,
+    "floor": 0,
+    "rate": 8,
+    "share": 0.5,
+    "mutation": 0.8,
+    "seedEnergy": 24,
+    "seedStorage": 24,
+    "upkeep": 0.5,
+    "ambientTemperature": 20,
+    "sunlightHeating": 1,
+    "activityHeating": 0.12,
+    "cooling": 0.2,
+    "thermalExchange": 0.12,
+    "crowdInsulation": 1,
+    "safeTemperature": 28,
+    "heatDamage": 0.5,
+    "energyDecay": 0.05,
+    "divisionCost": 12,
+    "minimumBirthEnergy": 12,
+    "exchange": 0.12,
+    "shieldUpkeep": 0.72,
+    "cpuCost": 0.00005,
+    "moveCost": 0.004,
+    "turnCost": 0.0001,
+    "linkCost": 0.5,
+    "contractCost": 0.08,
+    "attackCost": 0.08,
+    "attackDamageCost": 0.2,
+    "emitCost": 0.01,
+    "sendCost": 0.01,
+    "jitter": 12,
+    "archiveAge": 60,
+    "archiveHarvest": 120,
+    "archiveOffspring": 8,
+    "archiveEnabled": 1,
+    "solarRate": 4,
+    "sunContrast": 2,
+    "cloudCover": 0.5,
+    "cloudOpacity": 0.95,
+    "cloudScale": 1200,
+    "cloudSpeed": 12,
+    "cloudMorph": 180,
+    "solarEnabled": 1,
+    "corpseEnergy": 8,
+    "corpseLifetime": 900,
+    "eatCost": 0.04,
+    "storageCapacity": 400
+  },
+  "finalConfig": {
+    "treePrograms": 1,
+    "crossover": 0.25,
+    "capacity": 32768,
+    "genomeCapacity": 8192,
+    "side": 128,
+    "sources": 1,
+    "initial": 8192,
+    "seed": 97,
+    "budget": 24,
+    "floor": 0,
+    "rate": 8,
+    "share": 0.5,
+    "mutation": 0.8,
+    "seedEnergy": 24,
+    "seedStorage": 24,
+    "upkeep": 0.5,
+    "ambientTemperature": 20,
+    "sunlightHeating": 1,
+    "activityHeating": 0.12,
+    "cooling": 0.2,
+    "thermalExchange": 0.12,
+    "crowdInsulation": 1,
+    "safeTemperature": 28,
+    "heatDamage": 0.5,
+    "energyDecay": 0.05,
+    "divisionCost": 12,
+    "minimumBirthEnergy": 12,
+    "exchange": 0.12,
+    "shieldUpkeep": 0.72,
+    "cpuCost": 0.00005,
+    "moveCost": 0.004,
+    "turnCost": 0.0001,
+    "linkCost": 0.5,
+    "contractCost": 0.08,
+    "attackCost": 0.08,
+    "attackDamageCost": 0.2,
+    "emitCost": 0.01,
+    "sendCost": 0.01,
+    "jitter": 12,
+    "archiveAge": 60,
+    "archiveHarvest": 120,
+    "archiveOffspring": 8,
+    "archiveEnabled": 1,
+    "solarRate": 4,
+    "sunContrast": 2,
+    "cloudCover": 0.5,
+    "cloudOpacity": 0.95,
+    "cloudScale": 1200,
+    "cloudSpeed": 12,
+    "cloudMorph": 180,
+    "solarEnabled": 1,
+    "corpseEnergy": 8,
+    "corpseLifetime": 900,
+    "eatCost": 0.04,
+    "storageCapacity": 400
+  },
+  "closure": null,
+  "kernel": "1262903f53f31df9a4be32dc75065f1a30703ece0c9b8423a06b7859f9865e4e",
+  "genomeSampler": "typed-sequences-guard-mutation-v3",
+  "records": [
+    {
+      "seconds": 0,
+      "tick": 0,
+      "living": 8192,
+      "corpses": 0,
+      "kills": 0,
+      "attacks": 0,
+      "eaten": 0,
+      "moves": 0,
+      "photosynthesis": 0,
+      "attackDamage": 0,
+      "free": 0,
+      "birthAttempts": 0,
+      "archive": 0,
+      "births": 0,
+      "deaths": 0,
+      "randomArrivals": 8192,
+      "sampledArrivals": 0,
+      "mutations": 0,
+      "crossovers": 0,
+      "bornInWorld": 0,
+      "livingArrivals": 8192,
+      "energy": 196608,
+      "reserves": 196608,
+      "mature": 0,
+      "meanTemperature": 20,
+      "maxTemperature": 20,
+      "overheated": 0,
+      "meanAge": 0,
+      "livingMaxGeneration": 0,
+      "bodies": 8192,
+      "largestBody": 1,
+      "linkedCells": 0,
+      "movingBodies": 0,
+      "movingBodyCells": 0,
+      "largestMovingBody": 0,
+      "variants": 8192,
+      "leaders": [
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          1
+        ],
+        [
+          3,
+          1
+        ],
+        [
+          4,
+          1
+        ],
+        [
+          5,
+          1
+        ],
+        [
+          6,
+          1
+        ],
+        [
+          7,
+          1
+        ],
+        [
+          8,
+          1
+        ],
+        [
+          9,
+          1
+        ],
+        [
+          10,
+          1
+        ],
+        [
+          11,
+          1
+        ]
+      ],
+      "computeMs": 0
+    },
+    {
+      "seconds": 300,
+      "tick": 18000,
+      "living": 761,
+      "corpses": 444,
+      "kills": 171,
+      "attacks": 4613,
+      "eaten": 350318.9296875,
+      "moves": 6839487,
+      "photosynthesis": 128003.998046875,
+      "attackDamage": 3598.377685546875,
+      "free": 31571,
+      "birthAttempts": 0,
+      "archive": 20,
+      "births": 6402,
+      "deaths": 16233,
+      "randomArrivals": 9600,
+      "sampledArrivals": 992,
+      "mutations": 809,
+      "crossovers": 245,
+      "bornInWorld": 296,
+      "livingArrivals": 465,
+      "energy": 10179.34228515625,
+      "reserves": 10397.265380859375,
+      "mature": 329,
+      "meanTemperature": 22.934149989004048,
+      "maxTemperature": 27.15365219116211,
+      "overheated": 0,
+      "meanAge": 89.03337713534823,
+      "livingMaxGeneration": 29,
+      "bodies": 707,
+      "largestBody": 7,
+      "linkedCells": 91,
+      "movingBodies": 3,
+      "movingBodyCells": 17,
+      "largestMovingBody": 7,
+      "variants": 492,
+      "leaders": [
+        [
+          6934,
+          130
+        ],
+        [
+          3377,
+          11
+        ],
+        [
+          2330,
+          10
+        ],
+        [
+          153,
+          8
+        ],
+        [
+          3495,
+          8
+        ],
+        [
+          2503,
+          6
+        ],
+        [
+          2464,
+          6
+        ],
+        [
+          2389,
+          6
+        ],
+        [
+          2340,
+          5
+        ],
+        [
+          3369,
+          5
+        ],
+        [
+          2408,
+          5
+        ],
+        [
+          3502,
+          5
+        ]
+      ],
+      "computeMs": 8040.646075000005
+    },
+    {
+      "seconds": 600,
+      "tick": 36000,
+      "living": 1391,
+      "corpses": 251,
+      "kills": 279,
+      "attacks": 5599,
+      "eaten": 433421.6647949219,
+      "moves": 14739949,
+      "photosynthesis": 512524.60595703125,
+      "attackDamage": 5282.791015625,
+      "free": 31134,
+      "birthAttempts": 0,
+      "archive": 21,
+      "births": 7999,
+      "deaths": 19600,
+      "randomArrivals": 10779,
+      "sampledArrivals": 2213,
+      "mutations": 1785,
+      "crossovers": 560,
+      "bornInWorld": 748,
+      "livingArrivals": 643,
+      "energy": 19608.5400390625,
+      "reserves": 15211.0419921875,
+      "mature": 863,
+      "meanTemperature": 23.338032443432564,
+      "maxTemperature": 30.542583465576172,
+      "overheated": 26,
+      "meanAge": 157.2873352504195,
+      "livingMaxGeneration": 31,
+      "bodies": 1313,
+      "largestBody": 14,
+      "linkedCells": 128,
+      "movingBodies": 5,
+      "movingBodyCells": 32,
+      "largestMovingBody": 14,
+      "variants": 680,
+      "leaders": [
+        [
+          6934,
+          289
+        ],
+        [
+          2464,
+          38
+        ],
+        [
+          1926,
+          25
+        ],
+        [
+          2873,
+          24
+        ],
+        [
+          2389,
+          23
+        ],
+        [
+          3378,
+          22
+        ],
+        [
+          441,
+          20
+        ],
+        [
+          2340,
+          20
+        ],
+        [
+          2408,
+          16
+        ],
+        [
+          917,
+          14
+        ],
+        [
+          3514,
+          14
+        ],
+        [
+          2358,
+          14
+        ]
+      ],
+      "computeMs": 15289.89154500001
+    },
+    {
+      "seconds": 900,
+      "tick": 54000,
+      "living": 1216,
+      "corpses": 477,
+      "kills": 355,
+      "attacks": 6708,
+      "eaten": 530664.1572265625,
+      "moves": 21216494,
+      "photosynthesis": 1054277.1750488281,
+      "attackDamage": 6619.591552734375,
+      "free": 31081,
+      "birthAttempts": 0,
+      "archive": 22,
+      "births": 10512,
+      "deaths": 24688,
+      "randomArrivals": 11971,
+      "sampledArrivals": 3421,
+      "mutations": 2731,
+      "crossovers": 850,
+      "bornInWorld": 817,
+      "livingArrivals": 399,
+      "energy": 13214.540771484375,
+      "reserves": 9927.2373046875,
+      "mature": 748,
+      "meanTemperature": 22.360650045307057,
+      "maxTemperature": 30.663291931152344,
+      "overheated": 16,
+      "meanAge": 129.34488760964913,
+      "livingMaxGeneration": 32,
+      "bodies": 1187,
+      "largestBody": 4,
+      "linkedCells": 55,
+      "movingBodies": 0,
+      "movingBodyCells": 0,
+      "largestMovingBody": 0,
+      "variants": 443,
+      "leaders": [
+        [
+          2422,
+          160
+        ],
+        [
+          1926,
+          85
+        ],
+        [
+          6934,
+          70
+        ],
+        [
+          910,
+          55
+        ],
+        [
+          1928,
+          44
+        ],
+        [
+          2440,
+          39
+        ],
+        [
+          2421,
+          33
+        ],
+        [
+          2865,
+          31
+        ],
+        [
+          1929,
+          26
+        ],
+        [
+          2464,
+          19
+        ],
+        [
+          2339,
+          16
+        ],
+        [
+          1937,
+          15
+        ]
+      ],
+      "computeMs": 24195.05679300001
+    },
+    {
+      "seconds": 1200,
+      "tick": 72000,
+      "living": 2495,
+      "corpses": 85,
+      "kills": 396,
+      "attacks": 7217,
+      "eaten": 614073.3530273438,
+      "moves": 30027333,
+      "photosynthesis": 1549430.9538574219,
+      "attackDamage": 7430.177490234375,
+      "free": 30196,
+      "birthAttempts": 0,
+      "archive": 22,
+      "births": 12618,
+      "deaths": 27915,
+      "randomArrivals": 13206,
+      "sampledArrivals": 4586,
+      "mutations": 3696,
+      "crossovers": 1135,
+      "bornInWorld": 1888,
+      "livingArrivals": 607,
+      "energy": 37552.684326171875,
+      "reserves": 14989.9814453125,
+      "mature": 1784,
+      "meanTemperature": 23.13118529386654,
+      "maxTemperature": 30.262609481811523,
+      "overheated": 6,
+      "meanAge": 157.5699599198396,
+      "livingMaxGeneration": 17,
+      "bodies": 2354,
+      "largestBody": 45,
+      "linkedCells": 172,
+      "movingBodies": 4,
+      "movingBodyCells": 63,
+      "largestMovingBody": 45,
+      "variants": 626,
+      "leaders": [
+        [
+          2422,
+          880
+        ],
+        [
+          910,
+          167
+        ],
+        [
+          1929,
+          99
+        ],
+        [
+          940,
+          77
+        ],
+        [
+          3382,
+          50
+        ],
+        [
+          1810,
+          49
+        ],
+        [
+          2395,
+          45
+        ],
+        [
+          3502,
+          45
+        ],
+        [
+          3362,
+          42
+        ],
+        [
+          2440,
+          38
+        ],
+        [
+          2332,
+          36
+        ],
+        [
+          2421,
+          33
+        ]
+      ],
+      "computeMs": 32157.630090000002
+    },
+    {
+      "seconds": 1500,
+      "tick": 90000,
+      "living": 10499,
+      "corpses": 70,
+      "kills": 526,
+      "attacks": 9186,
+      "eaten": 719426.8452148438,
+      "moves": 65440314,
+      "photosynthesis": 4728117.013916016,
+      "attackDamage": 10621.98486328125,
+      "free": 22207,
+      "birthAttempts": 0,
+      "archive": 25,
+      "births": 24518,
+      "deaths": 34211,
+      "randomArrivals": 14407,
+      "sampledArrivals": 5785,
+      "mutations": 4632,
+      "crossovers": 1464,
+      "bornInWorld": 9800,
+      "livingArrivals": 699,
+      "energy": 190028.84399414062,
+      "reserves": 17360.255126953125,
+      "mature": 6727,
+      "meanTemperature": 25.025556974540905,
+      "maxTemperature": 38.33808135986328,
+      "overheated": 1693,
+      "meanAge": 136.73540654665547,
+      "livingMaxGeneration": 23,
+      "bodies": 9413,
+      "largestBody": 76,
+      "linkedCells": 1239,
+      "movingBodies": 70,
+      "movingBodyCells": 979,
+      "largestMovingBody": 76,
+      "variants": 739,
+      "leaders": [
+        [
+          2422,
+          3342
+        ],
+        [
+          2494,
+          643
+        ],
+        [
+          940,
+          533
+        ],
+        [
+          910,
+          517
+        ],
+        [
+          1929,
+          283
+        ],
+        [
+          1810,
+          283
+        ],
+        [
+          3381,
+          229
+        ],
+        [
+          3382,
+          196
+        ],
+        [
+          3502,
+          178
+        ],
+        [
+          3362,
+          171
+        ],
+        [
+          2406,
+          169
+        ],
+        [
+          2395,
+          165
+        ]
+      ],
+      "computeMs": 48319.794762000005
+    },
+    {
+      "seconds": 1800,
+      "tick": 108000,
+      "living": 15804,
+      "corpses": 52,
+      "kills": 689,
+      "attacks": 11214,
+      "eaten": 877357.5358886719,
+      "moves": 124565490,
+      "photosynthesis": 10069841.818115234,
+      "attackDamage": 13316.457763671875,
+      "free": 16924,
+      "birthAttempts": 4,
+      "archive": 25,
+      "births": 39819,
+      "deaths": 46607,
+      "randomArrivals": 15628,
+      "sampledArrivals": 6964,
+      "mutations": 5568,
+      "crossovers": 1773,
+      "bornInWorld": 15211,
+      "livingArrivals": 593,
+      "energy": 308370.685546875,
+      "reserves": 14535.541259765625,
+      "mature": 9224,
+      "meanTemperature": 26.544086734846072,
+      "maxTemperature": 39.07179260253906,
+      "overheated": 5659,
+      "meanAge": 164.65220197418432,
+      "livingMaxGeneration": 26,
+      "bodies": 14534,
+      "largestBody": 45,
+      "linkedCells": 1506,
+      "movingBodies": 99,
+      "movingBodyCells": 1132,
+      "largestMovingBody": 45,
+      "variants": 674,
+      "leaders": [
+        [
+          2422,
+          5038
+        ],
+        [
+          2494,
+          1569
+        ],
+        [
+          910,
+          741
+        ],
+        [
+          940,
+          602
+        ],
+        [
+          1810,
+          391
+        ],
+        [
+          1929,
+          361
+        ],
+        [
+          2312,
+          356
+        ],
+        [
+          3381,
+          292
+        ],
+        [
+          3382,
+          286
+        ],
+        [
+          2395,
+          271
+        ],
+        [
+          3553,
+          258
+        ],
+        [
+          3556,
+          229
+        ]
+      ],
+      "computeMs": 77448.15326400001
+    },
+    {
+      "seconds": 2100,
+      "tick": 126000,
+      "living": 8935,
+      "corpses": 80,
+      "kills": 883,
+      "attacks": 12997,
+      "eaten": 1132401.1652832031,
+      "moves": 183055532,
+      "photosynthesis": 16052026.481689453,
+      "attackDamage": 16216.386962890625,
+      "free": 23764,
+      "birthAttempts": 3,
+      "archive": 25,
+      "births": 55220,
+      "deaths": 71277,
+      "randomArrivals": 16841,
+      "sampledArrivals": 8151,
+      "mutations": 6545,
+      "crossovers": 2050,
+      "bornInWorld": 8453,
+      "livingArrivals": 482,
+      "energy": 176000.41430664062,
+      "reserves": 11492.8359375,
+      "mature": 7381,
+      "meanTemperature": 24.884046060810824,
+      "maxTemperature": 33.68524169921875,
+      "overheated": 974,
+      "meanAge": 218.7173139339675,
+      "livingMaxGeneration": 24,
+      "bodies": 8618,
+      "largestBody": 48,
+      "linkedCells": 432,
+      "movingBodies": 19,
+      "movingBodyCells": 187,
+      "largestMovingBody": 48,
+      "variants": 561,
+      "leaders": [
+        [
+          2422,
+          1693
+        ],
+        [
+          910,
+          1187
+        ],
+        [
+          1942,
+          897
+        ],
+        [
+          940,
+          288
+        ],
+        [
+          2429,
+          267
+        ],
+        [
+          2452,
+          219
+        ],
+        [
+          1809,
+          185
+        ],
+        [
+          937,
+          176
+        ],
+        [
+          2397,
+          149
+        ],
+        [
+          3426,
+          144
+        ],
+        [
+          3501,
+          133
+        ],
+        [
+          1810,
+          125
+        ]
+      ],
+      "computeMs": 105977.31513099995
+    },
+    {
+      "seconds": 2400,
+      "tick": 144000,
+      "living": 32747,
+      "corpses": 21,
+      "kills": 1000,
+      "attacks": 14252,
+      "eaten": 1326202.7299804688,
+      "moves": 316105631,
+      "photosynthesis": 36179578.87182617,
+      "attackDamage": 19072.46484375,
+      "free": 0,
+      "birthAttempts": 1280,
+      "archive": 25,
+      "births": 97553,
+      "deaths": 91109,
+      "randomArrivals": 17528,
+      "sampledArrivals": 8775,
+      "mutations": 7029,
+      "crossovers": 2202,
+      "bornInWorld": 32409,
+      "livingArrivals": 338,
+      "energy": 677848.87890625,
+      "reserves": 8284.088623046875,
+      "mature": 28414,
+      "meanTemperature": 26.40918517266353,
+      "maxTemperature": 36.8052864074707,
+      "overheated": 10309,
+      "meanAge": 211.12559623782482,
+      "livingMaxGeneration": 27,
+      "bodies": 32424,
+      "largestBody": 16,
+      "linkedCells": 480,
+      "movingBodies": 32,
+      "movingBodyCells": 199,
+      "largestMovingBody": 16,
+      "variants": 451,
+      "leaders": [
+        [
+          2422,
+          11082
+        ],
+        [
+          2868,
+          1792
+        ],
+        [
+          910,
+          1481
+        ],
+        [
+          1942,
+          1308
+        ],
+        [
+          2397,
+          984
+        ],
+        [
+          940,
+          957
+        ],
+        [
+          1809,
+          768
+        ],
+        [
+          3501,
+          742
+        ],
+        [
+          1810,
+          705
+        ],
+        [
+          911,
+          691
+        ],
+        [
+          1929,
+          621
+        ],
+        [
+          3436,
+          472
+        ]
+      ],
+      "computeMs": 153893.17255799996
+    },
+    {
+      "seconds": 2700,
+      "tick": 162000,
+      "living": 23564,
+      "corpses": 41,
+      "kills": 1121,
+      "attacks": 15460,
+      "eaten": 1596474.8491210938,
+      "moves": 451330033,
+      "photosynthesis": 46663080.75341797,
+      "attackDamage": 20749.15576171875,
+      "free": 9173,
+      "birthAttempts": 2,
+      "archive": 25,
+      "births": 114682,
+      "deaths": 119563,
+      "randomArrivals": 18585,
+      "sampledArrivals": 9860,
+      "mutations": 7882,
+      "crossovers": 2460,
+      "bornInWorld": 22959,
+      "livingArrivals": 605,
+      "energy": 411038.2834472656,
+      "reserves": 14791.888427734375,
+      "mature": 17954,
+      "meanTemperature": 24.98400848714388,
+      "maxTemperature": 33.7313117980957,
+      "overheated": 2794,
+      "meanAge": 283.81756634414205,
+      "livingMaxGeneration": 30,
+      "bodies": 23294,
+      "largestBody": 15,
+      "linkedCells": 405,
+      "movingBodies": 33,
+      "movingBodyCells": 181,
+      "largestMovingBody": 15,
+      "variants": 731,
+      "leaders": [
+        [
+          2422,
+          7768
+        ],
+        [
+          2397,
+          2459
+        ],
+        [
+          910,
+          1213
+        ],
+        [
+          1809,
+          1130
+        ],
+        [
+          2868,
+          1069
+        ],
+        [
+          3386,
+          1044
+        ],
+        [
+          940,
+          576
+        ],
+        [
+          3501,
+          531
+        ],
+        [
+          3426,
+          359
+        ],
+        [
+          937,
+          336
+        ],
+        [
+          1810,
+          334
+        ],
+        [
+          1019,
+          333
+        ]
+      ],
+      "computeMs": 196056.65789999993
+    },
+    {
+      "seconds": 3000,
+      "tick": 180000,
+      "living": 24212,
+      "corpses": 101,
+      "kills": 1149,
+      "attacks": 15880,
+      "eaten": 1801379.0554199219,
+      "moves": 622650559,
+      "photosynthesis": 60252572.395996094,
+      "attackDamage": 21408.465087890625,
+      "free": 8462,
+      "birthAttempts": 0,
+      "archive": 26,
+      "births": 134837,
+      "deaths": 140626,
+      "randomArrivals": 19365,
+      "sampledArrivals": 10636,
+      "mutations": 8508,
+      "crossovers": 2655,
+      "bornInWorld": 23619,
+      "livingArrivals": 593,
+      "energy": 282279.0339355469,
+      "reserves": 14320.19970703125,
+      "mature": 23130,
+      "meanTemperature": 23.61021829994576,
+      "maxTemperature": 30.44070816040039,
+      "overheated": 179,
+      "meanAge": 361.9948503496898,
+      "livingMaxGeneration": 32,
+      "bodies": 23987,
+      "largestBody": 20,
+      "linkedCells": 324,
+      "movingBodies": 28,
+      "movingBodyCells": 164,
+      "largestMovingBody": 20,
+      "variants": 728,
+      "leaders": [
+        [
+          2422,
+          9940
+        ],
+        [
+          3386,
+          1525
+        ],
+        [
+          1809,
+          1159
+        ],
+        [
+          2868,
+          894
+        ],
+        [
+          2397,
+          743
+        ],
+        [
+          2494,
+          661
+        ],
+        [
+          1019,
+          519
+        ],
+        [
+          940,
+          468
+        ],
+        [
+          2870,
+          357
+        ],
+        [
+          1810,
+          337
+        ],
+        [
+          3501,
+          319
+        ],
+        [
+          1920,
+          310
+        ]
+      ],
+      "computeMs": 243683.6552569999
+    },
+    {
+      "seconds": 3300,
+      "tick": 198000,
+      "living": 22326,
+      "corpses": 50,
+      "kills": 1250,
+      "attacks": 17086,
+      "eaten": 1992770.3352050781,
+      "moves": 690803824,
+      "photosynthesis": 66469794.77270508,
+      "attackDamage": 23477.772216796875,
+      "free": 10404,
+      "birthAttempts": 4,
+      "archive": 26,
+      "births": 147875,
+      "deaths": 157950,
+      "randomArrivals": 20557,
+      "sampledArrivals": 11844,
+      "mutations": 9486,
+      "crossovers": 2941,
+      "bornInWorld": 21644,
+      "livingArrivals": 682,
+      "energy": 413443.20654296875,
+      "reserves": 16648.333984375,
+      "mature": 13751,
+      "meanTemperature": 25.27303920381227,
+      "maxTemperature": 37.852970123291016,
+      "overheated": 3805,
+      "meanAge": 337.0344493714363,
+      "livingMaxGeneration": 32,
+      "bodies": 21918,
+      "largestBody": 47,
+      "linkedCells": 510,
+      "movingBodies": 34,
+      "movingBodyCells": 342,
+      "largestMovingBody": 47,
+      "variants": 790,
+      "leaders": [
+        [
+          2422,
+          7707
+        ],
+        [
+          3386,
+          1541
+        ],
+        [
+          2397,
+          1343
+        ],
+        [
+          1019,
+          1187
+        ],
+        [
+          1809,
+          1182
+        ],
+        [
+          2868,
+          876
+        ],
+        [
+          2870,
+          550
+        ],
+        [
+          2449,
+          512
+        ],
+        [
+          2494,
+          436
+        ],
+        [
+          3426,
+          351
+        ],
+        [
+          2391,
+          317
+        ],
+        [
+          940,
+          316
+        ]
+      ],
+      "computeMs": 273984.00554599974
+    },
+    {
+      "seconds": 3600,
+      "tick": 216000,
+      "living": 24201,
+      "corpses": 77,
+      "kills": 1421,
+      "attacks": 20319,
+      "eaten": 2258975.939453125,
+      "moves": 824999359,
+      "photosynthesis": 75487197.22851562,
+      "attackDamage": 26913.2548828125,
+      "free": 8501,
+      "birthAttempts": 3,
+      "archive": 26,
+      "births": 173378,
+      "deaths": 183978,
+      "randomArrivals": 21730,
+      "sampledArrivals": 13071,
+      "mutations": 10496,
+      "crossovers": 3266,
+      "bornInWorld": 23643,
+      "livingArrivals": 558,
+      "energy": 486848.1584472656,
+      "reserves": 13928.040771484375,
+      "mature": 15948,
+      "meanTemperature": 26.27238059368002,
+      "maxTemperature": 36.6143913269043,
+      "overheated": 7275,
+      "meanAge": 177.7816791317168,
+      "livingMaxGeneration": 36,
+      "bodies": 24147,
+      "largestBody": 8,
+      "linkedCells": 79,
+      "movingBodies": 11,
+      "movingBodyCells": 49,
+      "largestMovingBody": 8,
+      "variants": 646,
+      "leaders": [
+        [
+          2422,
+          15693
+        ],
+        [
+          2391,
+          647
+        ],
+        [
+          2310,
+          621
+        ],
+        [
+          3382,
+          620
+        ],
+        [
+          1865,
+          555
+        ],
+        [
+          1920,
+          464
+        ],
+        [
+          2494,
+          384
+        ],
+        [
+          2868,
+          328
+        ],
+        [
+          940,
+          311
+        ],
+        [
+          2354,
+          302
+        ],
+        [
+          3496,
+          275
+        ],
+        [
+          2314,
+          253
+        ]
+      ],
+      "computeMs": 304680.0554539997
+    }
+  ],
+  "complete": true
+}

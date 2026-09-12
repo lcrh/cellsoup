@@ -1,0 +1,2188 @@
+{
+  "seconds": 300,
+  "world": 4096,
+  "colonies": [
+    {
+      "selection": "largest",
+      "size": 7,
+      "speed": 6.3905889958412505,
+      "cells": [
+        {
+          "slot": 238,
+          "incarnation": 11871,
+          "genomeSlot": 3377,
+          "x": 2771.2958984375,
+          "y": 1790.83349609375,
+          "vx": 2.8180553913116455,
+          "vy": 9.780879020690918,
+          "heading": 0.4331425726413727,
+          "energy": 10.386474609375,
+          "storage": 0.431640625,
+          "temperature": 23.990873336791992,
+          "hue": 242.9312744140625,
+          "ageTicks": 14604,
+          "generation": 16,
+          "parent": 11727,
+          "pc": 23,
+          "sleep": 0,
+          "registers": [
+            0,
+            5,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "signal": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "mail": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "linkSlots": [
+            4992,
+            null,
+            null,
+            null
+          ],
+          "links": [
+            4992
+          ],
+          "anchors": [
+            0.5182979702949524,
+            0,
+            0,
+            0
+          ],
+          "rest": 1,
+          "memory": [
+            0,
+            0,
+            -1,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "birthResult": -1,
+          "initializedStateMask": 128
+        },
+        {
+          "slot": 4992,
+          "incarnation": 11727,
+          "genomeSlot": 3377,
+          "x": 2794.57080078125,
+          "y": 1784.85693359375,
+          "vx": -3.3591792583465576,
+          "vy": 15.706533432006836,
+          "heading": 0.4821535646915436,
+          "energy": 11.13134765625,
+          "storage": 0.429931640625,
+          "temperature": 23.99198341369629,
+          "hue": 242.9312744140625,
+          "ageTicks": 14677,
+          "generation": 15,
+          "parent": 11340,
+          "pc": 18,
+          "sleep": 0,
+          "registers": [
+            -1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "signal": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "mail": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "linkSlots": [
+            2459,
+            238,
+            null,
+            null
+          ],
+          "links": [
+            2459,
+            238
+          ],
+          "anchors": [
+            0.48791295289993286,
+            0,
+            0,
+            0
+          ],
+          "rest": 1,
+          "memory": [
+            0,
+            0,
+            -1,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "birthResult": -1,
+          "initializedStateMask": 128
+        },
+        {
+          "slot": 2459,
+          "incarnation": 11340,
+          "genomeSlot": 3377,
+          "x": 2824.640869140625,
+          "y": 1780.939208984375,
+          "vx": 0.8486706018447876,
+          "vy": 1.9458597898483276,
+          "heading": 0.4653448760509491,
+          "energy": 10.3994140625,
+          "storage": 0.4287109375,
+          "temperature": 23.96647071838379,
+          "hue": 242.9312744140625,
+          "ageTicks": 14862,
+          "generation": 14,
+          "parent": 11212,
+          "pc": 23,
+          "sleep": 0,
+          "registers": [
+            0,
+            5,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "signal": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "mail": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "linkSlots": [
+            1449,
+            4992,
+            2065,
+            null
+          ],
+          "links": [
+            1449,
+            4992,
+            2065
+          ],
+          "anchors": [
+            0.5105242133140564,
+            0,
+            0,
+            0
+          ],
+          "rest": 1,
+          "memory": [
+            0,
+            0,
+            -1,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "birthResult": -1,
+          "initializedStateMask": 128
+        },
+        {
+          "slot": 1449,
+          "incarnation": 11212,
+          "genomeSlot": 3377,
+          "x": 2851.16015625,
+          "y": 1773.277587890625,
+          "vx": -0.2454184740781784,
+          "vy": 7.407018661499023,
+          "heading": 0.20869071781635284,
+          "energy": 10.68994140625,
+          "storage": 0.4306640625,
+          "temperature": 23.96613883972168,
+          "hue": 242.9312744140625,
+          "ageTicks": 14937,
+          "generation": 13,
+          "parent": 11168,
+          "pc": 18,
+          "sleep": 0,
+          "registers": [
+            -1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "signal": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "mail": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "linkSlots": [
+            null,
+            2459,
+            null,
+            2963
+          ],
+          "links": [
+            2459,
+            2963
+          ],
+          "anchors": [
+            0.5137719511985779,
+            0,
+            0,
+            0
+          ],
+          "rest": 1,
+          "memory": [
+            0,
+            0,
+            -1,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "birthResult": -1,
+          "initializedStateMask": 128
+        },
+        {
+          "slot": 2065,
+          "incarnation": 12621,
+          "genomeSlot": 3377,
+          "x": 2842.89306640625,
+          "y": 1781.3507080078125,
+          "vx": -0.01828143186867237,
+          "vy": 4.09105110168457,
+          "heading": 0.9929640889167786,
+          "energy": 10.66552734375,
+          "storage": 0.427001953125,
+          "temperature": 23.968212127685547,
+          "hue": 242.9312744140625,
+          "ageTicks": 14227,
+          "generation": 15,
+          "parent": 11340,
+          "pc": 18,
+          "sleep": 0,
+          "registers": [
+            -1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "signal": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "mail": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "linkSlots": [
+            2459,
+            null,
+            null,
+            null
+          ],
+          "links": [
+            2459
+          ],
+          "anchors": [
+            0.5021274089813232,
+            0,
+            0,
+            0
+          ],
+          "rest": 1,
+          "memory": [
+            0,
+            0,
+            -1,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "birthResult": -1,
+          "initializedStateMask": 128
+        },
+        {
+          "slot": 2963,
+          "incarnation": 12490,
+          "genomeSlot": 3377,
+          "x": 2875.72705078125,
+          "y": 1760.2611083984375,
+          "vx": -3.2434277534484863,
+          "vy": 6.3953986167907715,
+          "heading": 0.9011695981025696,
+          "energy": 10.669921875,
+          "storage": 0.4287109375,
+          "temperature": 23.957544326782227,
+          "hue": 242.9312744140625,
+          "ageTicks": 14284,
+          "generation": 14,
+          "parent": 11212,
+          "pc": 23,
+          "sleep": 0,
+          "registers": [
+            0,
+            5,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "signal": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "mail": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "linkSlots": [
+            1449,
+            2661,
+            null,
+            null
+          ],
+          "links": [
+            1449,
+            2661
+          ],
+          "anchors": [
+            0.5123138427734375,
+            0,
+            0,
+            0
+          ],
+          "rest": 1,
+          "memory": [
+            0,
+            0,
+            -1,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "birthResult": -1,
+          "initializedStateMask": 128
+        },
+        {
+          "slot": 2661,
+          "incarnation": 12660,
+          "genomeSlot": 3377,
+          "x": 2897.26416015625,
+          "y": 1747.8419189453125,
+          "vx": -6.349296569824219,
+          "vy": -1.6236435174942017,
+          "heading": 0.9033347964286804,
+          "energy": 10.5732421875,
+          "storage": 0.427001953125,
+          "temperature": 23.93975830078125,
+          "hue": 242.9312744140625,
+          "ageTicks": 14213,
+          "generation": 15,
+          "parent": 12490,
+          "pc": 18,
+          "sleep": 0,
+          "registers": [
+            -1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "signal": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "mail": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "linkSlots": [
+            2963,
+            null,
+            null,
+            null
+          ],
+          "links": [
+            2963
+          ],
+          "anchors": [
+            0.5189441442489624,
+            0,
+            0,
+            0
+          ],
+          "rest": 1,
+          "memory": [
+            0,
+            0,
+            -1,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "birthResult": -1,
+          "initializedStateMask": 128
+        }
+      ]
+    }
+  ],
+  "genomes": [
+    {
+      "slot": 6934,
+      "length": 32,
+      "serial": 6935,
+      "founder": 6935,
+      "depth": 0,
+      "parent": 0,
+      "bornTick": 0,
+      "secondParent": 0,
+      "score": 0,
+      "source": "(seq\n  (if true (photosynthesize) (nop))\n  (move (color))\n  (set m2 (sunlight))\n  (nop)\n  (unlink\n    (do\n      (eat)\n      (state ((state6 (tag)))\n        (nearest-cell)\n      )\n    )\n  )\n  (let ((local3 (min (sunlight-slope) (rotation))))\n    (if (kin (nearest-corpse)) (bud) (split))\n  )\n)",
+      "tree": {
+        "op": "seq",
+        "args": [
+          {
+            "op": "if",
+            "args": [
+              {
+                "op": "bool",
+                "args": [],
+                "value": 1
+              },
+              {
+                "op": "photosynthesize",
+                "args": []
+              },
+              {
+                "op": "nop",
+                "args": []
+              }
+            ]
+          },
+          {
+            "op": "seq",
+            "args": [
+              {
+                "op": "move",
+                "args": [
+                  {
+                    "op": "color",
+                    "args": []
+                  }
+                ]
+              },
+              {
+                "op": "seq",
+                "args": [
+                  {
+                    "op": "set",
+                    "args": [
+                      {
+                        "op": "slot",
+                        "args": [],
+                        "value": 2
+                      },
+                      {
+                        "op": "sunlight",
+                        "args": []
+                      }
+                    ]
+                  },
+                  {
+                    "op": "seq",
+                    "args": [
+                      {
+                        "op": "nop",
+                        "args": []
+                      },
+                      {
+                        "op": "seq",
+                        "args": [
+                          {
+                            "op": "unlink",
+                            "args": [
+                              {
+                                "op": "do",
+                                "args": [
+                                  {
+                                    "op": "eat",
+                                    "args": []
+                                  },
+                                  {
+                                    "op": "state",
+                                    "args": [
+                                      {
+                                        "op": "slot",
+                                        "args": [],
+                                        "value": 6
+                                      },
+                                      {
+                                        "op": "tag",
+                                        "args": []
+                                      },
+                                      {
+                                        "op": "nearest-cell",
+                                        "args": []
+                                      }
+                                    ]
+                                  }
+                                ]
+                              }
+                            ]
+                          },
+                          {
+                            "op": "let",
+                            "args": [
+                              {
+                                "op": "slot",
+                                "args": [],
+                                "value": 3
+                              },
+                              {
+                                "op": "min",
+                                "args": [
+                                  {
+                                    "op": "sunlight-slope",
+                                    "args": []
+                                  },
+                                  {
+                                    "op": "rotation",
+                                    "args": []
+                                  }
+                                ]
+                              },
+                              {
+                                "op": "if",
+                                "args": [
+                                  {
+                                    "op": "kin",
+                                    "args": [
+                                      {
+                                        "op": "nearest-corpse",
+                                        "args": []
+                                      }
+                                    ]
+                                  },
+                                  {
+                                    "op": "bud",
+                                    "args": []
+                                  },
+                                  {
+                                    "op": "split",
+                                    "args": []
+                                  }
+                                ]
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "nodes": 32,
+      "bytecode": "L0: mov r0 1\nL1: jz r0 L4\nL2: photosynthesize r0\nL3: jmp L5\nL4: nop\nL5: sense r0 color\nL6: move r0\nL7: sense r0 sunlight\nL8: mem_save 2 r0\nL9: nop\nL10: eat r0\nL11: mem_ready r0 6\nL12: jnz r0 L15\nL13: sense r0 tag\nL14: mem_init 6 r0\nL15: scan r0 -1 360\nL16: unlink r0\nL17: gradient r0 r1\nL18: mov r0 r1\nL19: sense r1 rotation\nL20: min r0 r1\nL21: mem_save 3 r0\nL22: scan_corpse r0 360\nL23: peek r0 r0 kin\nL24: jz r0 L28\nL25: bud r0\nL26: mem_save 8 r0\nL27: jmp L30\nL28: split r0\nL29: mem_save 8 r0\nL30: wait 0\nL31: jmp L0",
+      "substrate": "tree"
+    },
+    {
+      "slot": 3377,
+      "length": 24,
+      "serial": 3378,
+      "founder": 3378,
+      "depth": 0,
+      "parent": 0,
+      "bornTick": 0,
+      "secondParent": 0,
+      "score": 0,
+      "source": "(seq\n  (do (eat) (photosynthesize))\n  (give (self) (target-temperature (none)))\n  (unlink (self))\n  (state ((state7 (bonds)))\n    (move (bonds))\n  )\n  (set m2 (do (nop) (birth-result)))\n  (attack (do (bud) (nearest-corpse)) 5)\n)",
+      "tree": {
+        "op": "seq",
+        "args": [
+          {
+            "op": "do",
+            "args": [
+              {
+                "op": "eat",
+                "args": []
+              },
+              {
+                "op": "photosynthesize",
+                "args": []
+              }
+            ]
+          },
+          {
+            "op": "seq",
+            "args": [
+              {
+                "op": "give",
+                "args": [
+                  {
+                    "op": "self",
+                    "args": []
+                  },
+                  {
+                    "op": "target-temperature",
+                    "args": [
+                      {
+                        "op": "none",
+                        "args": []
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "op": "seq",
+                "args": [
+                  {
+                    "op": "unlink",
+                    "args": [
+                      {
+                        "op": "self",
+                        "args": []
+                      }
+                    ]
+                  },
+                  {
+                    "op": "seq",
+                    "args": [
+                      {
+                        "op": "state",
+                        "args": [
+                          {
+                            "op": "slot",
+                            "args": [],
+                            "value": 7
+                          },
+                          {
+                            "op": "bonds",
+                            "args": []
+                          },
+                          {
+                            "op": "move",
+                            "args": [
+                              {
+                                "op": "bonds",
+                                "args": []
+                              }
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "op": "seq",
+                        "args": [
+                          {
+                            "op": "set",
+                            "args": [
+                              {
+                                "op": "slot",
+                                "args": [],
+                                "value": 2
+                              },
+                              {
+                                "op": "do",
+                                "args": [
+                                  {
+                                    "op": "nop",
+                                    "args": []
+                                  },
+                                  {
+                                    "op": "birth-result",
+                                    "args": []
+                                  }
+                                ]
+                              }
+                            ]
+                          },
+                          {
+                            "op": "attack",
+                            "args": [
+                              {
+                                "op": "do",
+                                "args": [
+                                  {
+                                    "op": "bud",
+                                    "args": []
+                                  },
+                                  {
+                                    "op": "nearest-corpse",
+                                    "args": []
+                                  }
+                                ]
+                              },
+                              {
+                                "op": "number",
+                                "args": [],
+                                "value": 5
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "nodes": 29,
+      "bytecode": "L0: eat r0\nL1: photosynthesize r0\nL2: sense r0 id\nL3: mov r1 0\nL4: peek r1 r1 temperature\nL5: give r0 r1\nL6: sense r0 id\nL7: unlink r0\nL8: mem_ready r0 7\nL9: jnz r0 L12\nL10: sense r0 bonds\nL11: mem_init 7 r0\nL12: sense r0 bonds\nL13: move r0\nL14: nop\nL15: mem_load r0 8\nL16: mem_save 2 r0\nL17: bud r0\nL18: mem_save 8 r0\nL19: scan_corpse r0 360\nL20: mov r1 5\nL21: attack r0 r1\nL22: wait 0\nL23: jmp L0",
+      "substrate": "tree"
+    },
+    {
+      "slot": 2330,
+      "length": 16,
+      "serial": 8790,
+      "founder": 5183,
+      "depth": 1,
+      "parent": 5183,
+      "bornTick": 4500,
+      "secondParent": 0,
+      "score": 0,
+      "source": "(seq\n  (state ((state4 (rotation)))\n    (eat)\n  )\n  (photosynthesize)\n  (mobilize (target-color (scan-color 2 (crowding))))\n  (split)\n  (photosynthesize)\n)",
+      "tree": {
+        "op": "seq",
+        "args": [
+          {
+            "op": "state",
+            "args": [
+              {
+                "op": "slot",
+                "args": [],
+                "value": 4
+              },
+              {
+                "op": "rotation",
+                "args": []
+              },
+              {
+                "op": "eat",
+                "args": []
+              }
+            ]
+          },
+          {
+            "op": "seq",
+            "args": [
+              {
+                "op": "photosynthesize",
+                "args": []
+              },
+              {
+                "op": "seq",
+                "args": [
+                  {
+                    "op": "mobilize",
+                    "args": [
+                      {
+                        "op": "target-color",
+                        "args": [
+                          {
+                            "op": "scan-color",
+                            "args": [
+                              {
+                                "op": "number",
+                                "args": [],
+                                "value": 2
+                              },
+                              {
+                                "op": "crowding",
+                                "args": []
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "op": "seq",
+                    "args": [
+                      {
+                        "op": "split",
+                        "args": []
+                      },
+                      {
+                        "op": "photosynthesize",
+                        "args": []
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "nodes": 16,
+      "bytecode": "L0: mem_ready r0 4\nL1: jnz r0 L4\nL2: sense r0 rotation\nL3: mem_init 4 r0\nL4: eat r0\nL5: photosynthesize r0\nL6: mov r0 2\nL7: sense r1 crowding\nL8: scan_color r0 r0 r1\nL9: peek r0 r0 color\nL10: mobilize r0 r0\nL11: split r0\nL12: mem_save 8 r0\nL13: photosynthesize r0\nL14: wait 0\nL15: jmp L0",
+      "substrate": "tree"
+    },
+    {
+      "slot": 153,
+      "length": 15,
+      "serial": 154,
+      "founder": 154,
+      "depth": 0,
+      "parent": 0,
+      "bornTick": 0,
+      "secondParent": 0,
+      "score": 0,
+      "source": "(seq\n  (give (self) (generation))\n  (give (nearest-corpse) (crowding))\n  (photosynthesize)\n  (do (move (sunlight-bearing)) (bud))\n  (nop)\n  (eat)\n)",
+      "tree": {
+        "op": "seq",
+        "args": [
+          {
+            "op": "give",
+            "args": [
+              {
+                "op": "self",
+                "args": []
+              },
+              {
+                "op": "generation",
+                "args": []
+              }
+            ]
+          },
+          {
+            "op": "seq",
+            "args": [
+              {
+                "op": "give",
+                "args": [
+                  {
+                    "op": "nearest-corpse",
+                    "args": []
+                  },
+                  {
+                    "op": "crowding",
+                    "args": []
+                  }
+                ]
+              },
+              {
+                "op": "seq",
+                "args": [
+                  {
+                    "op": "photosynthesize",
+                    "args": []
+                  },
+                  {
+                    "op": "seq",
+                    "args": [
+                      {
+                        "op": "do",
+                        "args": [
+                          {
+                            "op": "move",
+                            "args": [
+                              {
+                                "op": "sunlight-bearing",
+                                "args": []
+                              }
+                            ]
+                          },
+                          {
+                            "op": "bud",
+                            "args": []
+                          }
+                        ]
+                      },
+                      {
+                        "op": "seq",
+                        "args": [
+                          {
+                            "op": "nop",
+                            "args": []
+                          },
+                          {
+                            "op": "eat",
+                            "args": []
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "nodes": 18,
+      "bytecode": "L0: sense r0 id\nL1: sense r1 generation\nL2: give r0 r1\nL3: scan_corpse r0 360\nL4: sense r1 crowding\nL5: give r0 r1\nL6: photosynthesize r0\nL7: gradient r0 r1\nL8: move r0\nL9: bud r0\nL10: mem_save 8 r0\nL11: nop\nL12: eat r0\nL13: wait 0\nL14: jmp L0",
+      "substrate": "tree"
+    },
+    {
+      "slot": 3495,
+      "length": 32,
+      "serial": 9184,
+      "founder": 6935,
+      "depth": 0,
+      "parent": 6935,
+      "bornTick": 7440,
+      "secondParent": 0,
+      "score": 0,
+      "source": "(seq\n  (if true (photosynthesize) (nop))\n  (move (color))\n  (set m2 (sunlight))\n  (nop)\n  (unlink\n    (do\n      (eat)\n      (state ((state6 (tag)))\n        (nearest-cell)\n      )\n    )\n  )\n  (let ((local3 (min (sunlight-slope) (rotation))))\n    (if (kin (nearest-corpse)) (bud) (split))\n  )\n)",
+      "tree": {
+        "op": "seq",
+        "args": [
+          {
+            "op": "if",
+            "args": [
+              {
+                "op": "bool",
+                "args": [],
+                "value": 1
+              },
+              {
+                "op": "photosynthesize",
+                "args": []
+              },
+              {
+                "op": "nop",
+                "args": []
+              }
+            ]
+          },
+          {
+            "op": "seq",
+            "args": [
+              {
+                "op": "move",
+                "args": [
+                  {
+                    "op": "color",
+                    "args": []
+                  }
+                ]
+              },
+              {
+                "op": "seq",
+                "args": [
+                  {
+                    "op": "set",
+                    "args": [
+                      {
+                        "op": "slot",
+                        "args": [],
+                        "value": 2
+                      },
+                      {
+                        "op": "sunlight",
+                        "args": []
+                      }
+                    ]
+                  },
+                  {
+                    "op": "seq",
+                    "args": [
+                      {
+                        "op": "nop",
+                        "args": []
+                      },
+                      {
+                        "op": "seq",
+                        "args": [
+                          {
+                            "op": "unlink",
+                            "args": [
+                              {
+                                "op": "do",
+                                "args": [
+                                  {
+                                    "op": "eat",
+                                    "args": []
+                                  },
+                                  {
+                                    "op": "state",
+                                    "args": [
+                                      {
+                                        "op": "slot",
+                                        "args": [],
+                                        "value": 6
+                                      },
+                                      {
+                                        "op": "tag",
+                                        "args": []
+                                      },
+                                      {
+                                        "op": "nearest-cell",
+                                        "args": []
+                                      }
+                                    ]
+                                  }
+                                ]
+                              }
+                            ]
+                          },
+                          {
+                            "op": "let",
+                            "args": [
+                              {
+                                "op": "slot",
+                                "args": [],
+                                "value": 3
+                              },
+                              {
+                                "op": "min",
+                                "args": [
+                                  {
+                                    "op": "sunlight-slope",
+                                    "args": []
+                                  },
+                                  {
+                                    "op": "rotation",
+                                    "args": []
+                                  }
+                                ]
+                              },
+                              {
+                                "op": "if",
+                                "args": [
+                                  {
+                                    "op": "kin",
+                                    "args": [
+                                      {
+                                        "op": "nearest-corpse",
+                                        "args": []
+                                      }
+                                    ]
+                                  },
+                                  {
+                                    "op": "bud",
+                                    "args": []
+                                  },
+                                  {
+                                    "op": "split",
+                                    "args": []
+                                  }
+                                ]
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "nodes": 32,
+      "bytecode": "L0: mov r0 1\nL1: jz r0 L4\nL2: photosynthesize r0\nL3: jmp L5\nL4: nop\nL5: sense r0 color\nL6: move r0\nL7: sense r0 sunlight\nL8: mem_save 2 r0\nL9: nop\nL10: eat r0\nL11: mem_ready r0 6\nL12: jnz r0 L15\nL13: sense r0 tag\nL14: mem_init 6 r0\nL15: scan r0 -1 360\nL16: unlink r0\nL17: gradient r0 r1\nL18: mov r0 r1\nL19: sense r1 rotation\nL20: min r0 r1\nL21: mem_save 3 r0\nL22: scan_corpse r0 360\nL23: peek r0 r0 kin\nL24: jz r0 L28\nL25: bud r0\nL26: mem_save 8 r0\nL27: jmp L30\nL28: split r0\nL29: mem_save 8 r0\nL30: wait 0\nL31: jmp L0",
+      "substrate": "tree"
+    },
+    {
+      "slot": 2503,
+      "length": 26,
+      "serial": 9320,
+      "founder": 6935,
+      "depth": 1,
+      "parent": 6935,
+      "bornTick": 8460,
+      "secondParent": 623,
+      "score": 0,
+      "source": "(seq\n  (if true (photosynthesize) (nop))\n  (move (color))\n  (unlink (none))\n  (nop)\n  (unlink\n    (do\n      (eat)\n      (state ((state6 (tag)))\n        (nearest-cell)\n      )\n    )\n  )\n  (let ((local3 (min (sunlight-slope) (rotation))))\n    (split)\n  )\n)",
+      "tree": {
+        "op": "seq",
+        "args": [
+          {
+            "op": "if",
+            "args": [
+              {
+                "op": "bool",
+                "args": [],
+                "value": 1
+              },
+              {
+                "op": "photosynthesize",
+                "args": []
+              },
+              {
+                "op": "nop",
+                "args": []
+              }
+            ]
+          },
+          {
+            "op": "seq",
+            "args": [
+              {
+                "op": "move",
+                "args": [
+                  {
+                    "op": "color",
+                    "args": []
+                  }
+                ]
+              },
+              {
+                "op": "seq",
+                "args": [
+                  {
+                    "op": "unlink",
+                    "args": [
+                      {
+                        "op": "none",
+                        "args": []
+                      }
+                    ]
+                  },
+                  {
+                    "op": "seq",
+                    "args": [
+                      {
+                        "op": "nop",
+                        "args": []
+                      },
+                      {
+                        "op": "seq",
+                        "args": [
+                          {
+                            "op": "unlink",
+                            "args": [
+                              {
+                                "op": "do",
+                                "args": [
+                                  {
+                                    "op": "eat",
+                                    "args": []
+                                  },
+                                  {
+                                    "op": "state",
+                                    "args": [
+                                      {
+                                        "op": "slot",
+                                        "args": [],
+                                        "value": 6
+                                      },
+                                      {
+                                        "op": "tag",
+                                        "args": []
+                                      },
+                                      {
+                                        "op": "nearest-cell",
+                                        "args": []
+                                      }
+                                    ]
+                                  }
+                                ]
+                              }
+                            ]
+                          },
+                          {
+                            "op": "let",
+                            "args": [
+                              {
+                                "op": "slot",
+                                "args": [],
+                                "value": 3
+                              },
+                              {
+                                "op": "min",
+                                "args": [
+                                  {
+                                    "op": "sunlight-slope",
+                                    "args": []
+                                  },
+                                  {
+                                    "op": "rotation",
+                                    "args": []
+                                  }
+                                ]
+                              },
+                              {
+                                "op": "split",
+                                "args": []
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "nodes": 27,
+      "bytecode": "L0: mov r0 1\nL1: jz r0 L4\nL2: photosynthesize r0\nL3: jmp L5\nL4: nop\nL5: sense r0 color\nL6: move r0\nL7: mov r0 0\nL8: unlink r0\nL9: nop\nL10: eat r0\nL11: mem_ready r0 6\nL12: jnz r0 L15\nL13: sense r0 tag\nL14: mem_init 6 r0\nL15: scan r0 -1 360\nL16: unlink r0\nL17: gradient r0 r1\nL18: mov r0 r1\nL19: sense r1 rotation\nL20: min r0 r1\nL21: mem_save 3 r0\nL22: split r0\nL23: mem_save 8 r0\nL24: wait 0\nL25: jmp L0",
+      "substrate": "tree"
+    },
+    {
+      "slot": 2464,
+      "length": 32,
+      "serial": 10015,
+      "founder": 6935,
+      "depth": 0,
+      "parent": 6935,
+      "bornTick": 13680,
+      "secondParent": 0,
+      "score": 0,
+      "source": "(seq\n  (if true (photosynthesize) (nop))\n  (move (color))\n  (set m2 (sunlight))\n  (nop)\n  (unlink\n    (do\n      (eat)\n      (state ((state6 (tag)))\n        (nearest-cell)\n      )\n    )\n  )\n  (let ((local3 (min (sunlight-slope) (rotation))))\n    (if (kin (nearest-corpse)) (bud) (split))\n  )\n)",
+      "tree": {
+        "op": "seq",
+        "args": [
+          {
+            "op": "if",
+            "args": [
+              {
+                "op": "bool",
+                "args": [],
+                "value": 1
+              },
+              {
+                "op": "photosynthesize",
+                "args": []
+              },
+              {
+                "op": "nop",
+                "args": []
+              }
+            ]
+          },
+          {
+            "op": "seq",
+            "args": [
+              {
+                "op": "move",
+                "args": [
+                  {
+                    "op": "color",
+                    "args": []
+                  }
+                ]
+              },
+              {
+                "op": "seq",
+                "args": [
+                  {
+                    "op": "set",
+                    "args": [
+                      {
+                        "op": "slot",
+                        "args": [],
+                        "value": 2
+                      },
+                      {
+                        "op": "sunlight",
+                        "args": []
+                      }
+                    ]
+                  },
+                  {
+                    "op": "seq",
+                    "args": [
+                      {
+                        "op": "nop",
+                        "args": []
+                      },
+                      {
+                        "op": "seq",
+                        "args": [
+                          {
+                            "op": "unlink",
+                            "args": [
+                              {
+                                "op": "do",
+                                "args": [
+                                  {
+                                    "op": "eat",
+                                    "args": []
+                                  },
+                                  {
+                                    "op": "state",
+                                    "args": [
+                                      {
+                                        "op": "slot",
+                                        "args": [],
+                                        "value": 6
+                                      },
+                                      {
+                                        "op": "tag",
+                                        "args": []
+                                      },
+                                      {
+                                        "op": "nearest-cell",
+                                        "args": []
+                                      }
+                                    ]
+                                  }
+                                ]
+                              }
+                            ]
+                          },
+                          {
+                            "op": "let",
+                            "args": [
+                              {
+                                "op": "slot",
+                                "args": [],
+                                "value": 3
+                              },
+                              {
+                                "op": "min",
+                                "args": [
+                                  {
+                                    "op": "sunlight-slope",
+                                    "args": []
+                                  },
+                                  {
+                                    "op": "rotation",
+                                    "args": []
+                                  }
+                                ]
+                              },
+                              {
+                                "op": "if",
+                                "args": [
+                                  {
+                                    "op": "kin",
+                                    "args": [
+                                      {
+                                        "op": "nearest-corpse",
+                                        "args": []
+                                      }
+                                    ]
+                                  },
+                                  {
+                                    "op": "bud",
+                                    "args": []
+                                  },
+                                  {
+                                    "op": "split",
+                                    "args": []
+                                  }
+                                ]
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "nodes": 32,
+      "bytecode": "L0: mov r0 1\nL1: jz r0 L4\nL2: photosynthesize r0\nL3: jmp L5\nL4: nop\nL5: sense r0 color\nL6: move r0\nL7: sense r0 sunlight\nL8: mem_save 2 r0\nL9: nop\nL10: eat r0\nL11: mem_ready r0 6\nL12: jnz r0 L15\nL13: sense r0 tag\nL14: mem_init 6 r0\nL15: scan r0 -1 360\nL16: unlink r0\nL17: gradient r0 r1\nL18: mov r0 r1\nL19: sense r1 rotation\nL20: min r0 r1\nL21: mem_save 3 r0\nL22: scan_corpse r0 360\nL23: peek r0 r0 kin\nL24: jz r0 L28\nL25: bud r0\nL26: mem_save 8 r0\nL27: jmp L30\nL28: split r0\nL29: mem_save 8 r0\nL30: wait 0\nL31: jmp L0",
+      "substrate": "tree"
+    },
+    {
+      "slot": 2389,
+      "length": 32,
+      "serial": 10074,
+      "founder": 6935,
+      "depth": 1,
+      "parent": 6935,
+      "bornTick": 14160,
+      "secondParent": 0,
+      "score": 0,
+      "source": "(seq\n  (if true (photosynthesize) (nop))\n  (move (color))\n  (set m6 (sunlight))\n  (nop)\n  (unlink\n    (do\n      (eat)\n      (state ((state6 (tag)))\n        (nearest-cell)\n      )\n    )\n  )\n  (let ((local3 (min (sunlight-slope) (rotation))))\n    (if (kin (nearest-corpse)) (bud) (split))\n  )\n)",
+      "tree": {
+        "op": "seq",
+        "args": [
+          {
+            "op": "if",
+            "args": [
+              {
+                "op": "bool",
+                "args": [],
+                "value": 1
+              },
+              {
+                "op": "photosynthesize",
+                "args": []
+              },
+              {
+                "op": "nop",
+                "args": []
+              }
+            ]
+          },
+          {
+            "op": "seq",
+            "args": [
+              {
+                "op": "move",
+                "args": [
+                  {
+                    "op": "color",
+                    "args": []
+                  }
+                ]
+              },
+              {
+                "op": "seq",
+                "args": [
+                  {
+                    "op": "set",
+                    "args": [
+                      {
+                        "op": "slot",
+                        "args": [],
+                        "value": 6
+                      },
+                      {
+                        "op": "sunlight",
+                        "args": []
+                      }
+                    ]
+                  },
+                  {
+                    "op": "seq",
+                    "args": [
+                      {
+                        "op": "nop",
+                        "args": []
+                      },
+                      {
+                        "op": "seq",
+                        "args": [
+                          {
+                            "op": "unlink",
+                            "args": [
+                              {
+                                "op": "do",
+                                "args": [
+                                  {
+                                    "op": "eat",
+                                    "args": []
+                                  },
+                                  {
+                                    "op": "state",
+                                    "args": [
+                                      {
+                                        "op": "slot",
+                                        "args": [],
+                                        "value": 6
+                                      },
+                                      {
+                                        "op": "tag",
+                                        "args": []
+                                      },
+                                      {
+                                        "op": "nearest-cell",
+                                        "args": []
+                                      }
+                                    ]
+                                  }
+                                ]
+                              }
+                            ]
+                          },
+                          {
+                            "op": "let",
+                            "args": [
+                              {
+                                "op": "slot",
+                                "args": [],
+                                "value": 3
+                              },
+                              {
+                                "op": "min",
+                                "args": [
+                                  {
+                                    "op": "sunlight-slope",
+                                    "args": []
+                                  },
+                                  {
+                                    "op": "rotation",
+                                    "args": []
+                                  }
+                                ]
+                              },
+                              {
+                                "op": "if",
+                                "args": [
+                                  {
+                                    "op": "kin",
+                                    "args": [
+                                      {
+                                        "op": "nearest-corpse",
+                                        "args": []
+                                      }
+                                    ]
+                                  },
+                                  {
+                                    "op": "bud",
+                                    "args": []
+                                  },
+                                  {
+                                    "op": "split",
+                                    "args": []
+                                  }
+                                ]
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "nodes": 32,
+      "bytecode": "L0: mov r0 1\nL1: jz r0 L4\nL2: photosynthesize r0\nL3: jmp L5\nL4: nop\nL5: sense r0 color\nL6: move r0\nL7: sense r0 sunlight\nL8: mem_save 6 r0\nL9: nop\nL10: eat r0\nL11: mem_ready r0 6\nL12: jnz r0 L15\nL13: sense r0 tag\nL14: mem_init 6 r0\nL15: scan r0 -1 360\nL16: unlink r0\nL17: gradient r0 r1\nL18: mov r0 r1\nL19: sense r1 rotation\nL20: min r0 r1\nL21: mem_save 3 r0\nL22: scan_corpse r0 360\nL23: peek r0 r0 kin\nL24: jz r0 L28\nL25: bud r0\nL26: mem_save 8 r0\nL27: jmp L30\nL28: split r0\nL29: mem_save 8 r0\nL30: wait 0\nL31: jmp L0",
+      "substrate": "tree"
+    },
+    {
+      "slot": 2340,
+      "length": 32,
+      "serial": 9805,
+      "founder": 6935,
+      "depth": 1,
+      "parent": 6935,
+      "bornTick": 12120,
+      "secondParent": 0,
+      "score": 0,
+      "source": "(seq\n  (if true (photosynthesize) (nop))\n  (move (color))\n  (set m1 (sunlight))\n  (nop)\n  (unlink\n    (do\n      (eat)\n      (state ((state6 (tag)))\n        (nearest-cell)\n      )\n    )\n  )\n  (let ((local3 (min (sunlight-slope) (rotation))))\n    (if (kin (nearest-corpse)) (bud) (split))\n  )\n)",
+      "tree": {
+        "op": "seq",
+        "args": [
+          {
+            "op": "if",
+            "args": [
+              {
+                "op": "bool",
+                "args": [],
+                "value": 1
+              },
+              {
+                "op": "photosynthesize",
+                "args": []
+              },
+              {
+                "op": "nop",
+                "args": []
+              }
+            ]
+          },
+          {
+            "op": "seq",
+            "args": [
+              {
+                "op": "move",
+                "args": [
+                  {
+                    "op": "color",
+                    "args": []
+                  }
+                ]
+              },
+              {
+                "op": "seq",
+                "args": [
+                  {
+                    "op": "set",
+                    "args": [
+                      {
+                        "op": "slot",
+                        "args": [],
+                        "value": 1
+                      },
+                      {
+                        "op": "sunlight",
+                        "args": []
+                      }
+                    ]
+                  },
+                  {
+                    "op": "seq",
+                    "args": [
+                      {
+                        "op": "nop",
+                        "args": []
+                      },
+                      {
+                        "op": "seq",
+                        "args": [
+                          {
+                            "op": "unlink",
+                            "args": [
+                              {
+                                "op": "do",
+                                "args": [
+                                  {
+                                    "op": "eat",
+                                    "args": []
+                                  },
+                                  {
+                                    "op": "state",
+                                    "args": [
+                                      {
+                                        "op": "slot",
+                                        "args": [],
+                                        "value": 6
+                                      },
+                                      {
+                                        "op": "tag",
+                                        "args": []
+                                      },
+                                      {
+                                        "op": "nearest-cell",
+                                        "args": []
+                                      }
+                                    ]
+                                  }
+                                ]
+                              }
+                            ]
+                          },
+                          {
+                            "op": "let",
+                            "args": [
+                              {
+                                "op": "slot",
+                                "args": [],
+                                "value": 3
+                              },
+                              {
+                                "op": "min",
+                                "args": [
+                                  {
+                                    "op": "sunlight-slope",
+                                    "args": []
+                                  },
+                                  {
+                                    "op": "rotation",
+                                    "args": []
+                                  }
+                                ]
+                              },
+                              {
+                                "op": "if",
+                                "args": [
+                                  {
+                                    "op": "kin",
+                                    "args": [
+                                      {
+                                        "op": "nearest-corpse",
+                                        "args": []
+                                      }
+                                    ]
+                                  },
+                                  {
+                                    "op": "bud",
+                                    "args": []
+                                  },
+                                  {
+                                    "op": "split",
+                                    "args": []
+                                  }
+                                ]
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "nodes": 32,
+      "bytecode": "L0: mov r0 1\nL1: jz r0 L4\nL2: photosynthesize r0\nL3: jmp L5\nL4: nop\nL5: sense r0 color\nL6: move r0\nL7: sense r0 sunlight\nL8: mem_save 1 r0\nL9: nop\nL10: eat r0\nL11: mem_ready r0 6\nL12: jnz r0 L15\nL13: sense r0 tag\nL14: mem_init 6 r0\nL15: scan r0 -1 360\nL16: unlink r0\nL17: gradient r0 r1\nL18: mov r0 r1\nL19: sense r1 rotation\nL20: min r0 r1\nL21: mem_save 3 r0\nL22: scan_corpse r0 360\nL23: peek r0 r0 kin\nL24: jz r0 L28\nL25: bud r0\nL26: mem_save 8 r0\nL27: jmp L30\nL28: split r0\nL29: mem_save 8 r0\nL30: wait 0\nL31: jmp L0",
+      "substrate": "tree"
+    },
+    {
+      "slot": 3369,
+      "length": 32,
+      "serial": 9796,
+      "founder": 6935,
+      "depth": 1,
+      "parent": 6935,
+      "bornTick": 12060,
+      "secondParent": 0,
+      "score": 0,
+      "source": "(seq\n  (if true (photosynthesize) (nop))\n  (move (color))\n  (move (rotation))\n  (nop)\n  (unlink\n    (do\n      (eat)\n      (state ((state6 (tag)))\n        (nearest-cell)\n      )\n    )\n  )\n  (let ((local3 (min (sunlight-slope) (rotation))))\n    (if (kin (nearest-corpse)) (bud) (split))\n  )\n)",
+      "tree": {
+        "op": "seq",
+        "args": [
+          {
+            "op": "if",
+            "args": [
+              {
+                "op": "bool",
+                "args": [],
+                "value": 1
+              },
+              {
+                "op": "photosynthesize",
+                "args": []
+              },
+              {
+                "op": "nop",
+                "args": []
+              }
+            ]
+          },
+          {
+            "op": "seq",
+            "args": [
+              {
+                "op": "move",
+                "args": [
+                  {
+                    "op": "color",
+                    "args": []
+                  }
+                ]
+              },
+              {
+                "op": "seq",
+                "args": [
+                  {
+                    "op": "move",
+                    "args": [
+                      {
+                        "op": "rotation",
+                        "args": []
+                      }
+                    ]
+                  },
+                  {
+                    "op": "seq",
+                    "args": [
+                      {
+                        "op": "nop",
+                        "args": []
+                      },
+                      {
+                        "op": "seq",
+                        "args": [
+                          {
+                            "op": "unlink",
+                            "args": [
+                              {
+                                "op": "do",
+                                "args": [
+                                  {
+                                    "op": "eat",
+                                    "args": []
+                                  },
+                                  {
+                                    "op": "state",
+                                    "args": [
+                                      {
+                                        "op": "slot",
+                                        "args": [],
+                                        "value": 6
+                                      },
+                                      {
+                                        "op": "tag",
+                                        "args": []
+                                      },
+                                      {
+                                        "op": "nearest-cell",
+                                        "args": []
+                                      }
+                                    ]
+                                  }
+                                ]
+                              }
+                            ]
+                          },
+                          {
+                            "op": "let",
+                            "args": [
+                              {
+                                "op": "slot",
+                                "args": [],
+                                "value": 3
+                              },
+                              {
+                                "op": "min",
+                                "args": [
+                                  {
+                                    "op": "sunlight-slope",
+                                    "args": []
+                                  },
+                                  {
+                                    "op": "rotation",
+                                    "args": []
+                                  }
+                                ]
+                              },
+                              {
+                                "op": "if",
+                                "args": [
+                                  {
+                                    "op": "kin",
+                                    "args": [
+                                      {
+                                        "op": "nearest-corpse",
+                                        "args": []
+                                      }
+                                    ]
+                                  },
+                                  {
+                                    "op": "bud",
+                                    "args": []
+                                  },
+                                  {
+                                    "op": "split",
+                                    "args": []
+                                  }
+                                ]
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "nodes": 31,
+      "bytecode": "L0: mov r0 1\nL1: jz r0 L4\nL2: photosynthesize r0\nL3: jmp L5\nL4: nop\nL5: sense r0 color\nL6: move r0\nL7: sense r0 rotation\nL8: move r0\nL9: nop\nL10: eat r0\nL11: mem_ready r0 6\nL12: jnz r0 L15\nL13: sense r0 tag\nL14: mem_init 6 r0\nL15: scan r0 -1 360\nL16: unlink r0\nL17: gradient r0 r1\nL18: mov r0 r1\nL19: sense r1 rotation\nL20: min r0 r1\nL21: mem_save 3 r0\nL22: scan_corpse r0 360\nL23: peek r0 r0 kin\nL24: jz r0 L28\nL25: bud r0\nL26: mem_save 8 r0\nL27: jmp L30\nL28: split r0\nL29: mem_save 8 r0\nL30: wait 0\nL31: jmp L0",
+      "substrate": "tree"
+    },
+    {
+      "slot": 2408,
+      "length": 28,
+      "serial": 9957,
+      "founder": 6935,
+      "depth": 1,
+      "parent": 6935,
+      "bornTick": 13260,
+      "secondParent": 0,
+      "score": 0,
+      "source": "(seq\n  (if true (photosynthesize) (nop))\n  (move (color))\n  (set m2 (sunlight))\n  (nop)\n  (unlink (do (eat) (nearest-cell)))\n  (let ((local3 (min (sunlight-slope) (rotation))))\n    (if (kin (nearest-corpse)) (bud) (split))\n  )\n)",
+      "tree": {
+        "op": "seq",
+        "args": [
+          {
+            "op": "if",
+            "args": [
+              {
+                "op": "bool",
+                "args": [],
+                "value": 1
+              },
+              {
+                "op": "photosynthesize",
+                "args": []
+              },
+              {
+                "op": "nop",
+                "args": []
+              }
+            ]
+          },
+          {
+            "op": "seq",
+            "args": [
+              {
+                "op": "move",
+                "args": [
+                  {
+                    "op": "color",
+                    "args": []
+                  }
+                ]
+              },
+              {
+                "op": "seq",
+                "args": [
+                  {
+                    "op": "set",
+                    "args": [
+                      {
+                        "op": "slot",
+                        "args": [],
+                        "value": 2
+                      },
+                      {
+                        "op": "sunlight",
+                        "args": []
+                      }
+                    ]
+                  },
+                  {
+                    "op": "seq",
+                    "args": [
+                      {
+                        "op": "nop",
+                        "args": []
+                      },
+                      {
+                        "op": "seq",
+                        "args": [
+                          {
+                            "op": "unlink",
+                            "args": [
+                              {
+                                "op": "do",
+                                "args": [
+                                  {
+                                    "op": "eat",
+                                    "args": []
+                                  },
+                                  {
+                                    "op": "nearest-cell",
+                                    "args": []
+                                  }
+                                ]
+                              }
+                            ]
+                          },
+                          {
+                            "op": "let",
+                            "args": [
+                              {
+                                "op": "slot",
+                                "args": [],
+                                "value": 3
+                              },
+                              {
+                                "op": "min",
+                                "args": [
+                                  {
+                                    "op": "sunlight-slope",
+                                    "args": []
+                                  },
+                                  {
+                                    "op": "rotation",
+                                    "args": []
+                                  }
+                                ]
+                              },
+                              {
+                                "op": "if",
+                                "args": [
+                                  {
+                                    "op": "kin",
+                                    "args": [
+                                      {
+                                        "op": "nearest-corpse",
+                                        "args": []
+                                      }
+                                    ]
+                                  },
+                                  {
+                                    "op": "bud",
+                                    "args": []
+                                  },
+                                  {
+                                    "op": "split",
+                                    "args": []
+                                  }
+                                ]
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "nodes": 29,
+      "bytecode": "L0: mov r0 1\nL1: jz r0 L4\nL2: photosynthesize r0\nL3: jmp L5\nL4: nop\nL5: sense r0 color\nL6: move r0\nL7: sense r0 sunlight\nL8: mem_save 2 r0\nL9: nop\nL10: eat r0\nL11: scan r0 -1 360\nL12: unlink r0\nL13: gradient r0 r1\nL14: mov r0 r1\nL15: sense r1 rotation\nL16: min r0 r1\nL17: mem_save 3 r0\nL18: scan_corpse r0 360\nL19: peek r0 r0 kin\nL20: jz r0 L24\nL21: bud r0\nL22: mem_save 8 r0\nL23: jmp L26\nL24: split r0\nL25: mem_save 8 r0\nL26: wait 0\nL27: jmp L0",
+      "substrate": "tree"
+    },
+    {
+      "slot": 3502,
+      "length": 15,
+      "serial": 9006,
+      "founder": 154,
+      "depth": 0,
+      "parent": 154,
+      "bornTick": 6120,
+      "secondParent": 0,
+      "score": 0,
+      "source": "(seq\n  (give (self) (generation))\n  (give (nearest-corpse) (crowding))\n  (photosynthesize)\n  (do (move (sunlight-bearing)) (bud))\n  (nop)\n  (eat)\n)",
+      "tree": {
+        "op": "seq",
+        "args": [
+          {
+            "op": "give",
+            "args": [
+              {
+                "op": "self",
+                "args": []
+              },
+              {
+                "op": "generation",
+                "args": []
+              }
+            ]
+          },
+          {
+            "op": "seq",
+            "args": [
+              {
+                "op": "give",
+                "args": [
+                  {
+                    "op": "nearest-corpse",
+                    "args": []
+                  },
+                  {
+                    "op": "crowding",
+                    "args": []
+                  }
+                ]
+              },
+              {
+                "op": "seq",
+                "args": [
+                  {
+                    "op": "photosynthesize",
+                    "args": []
+                  },
+                  {
+                    "op": "seq",
+                    "args": [
+                      {
+                        "op": "do",
+                        "args": [
+                          {
+                            "op": "move",
+                            "args": [
+                              {
+                                "op": "sunlight-bearing",
+                                "args": []
+                              }
+                            ]
+                          },
+                          {
+                            "op": "bud",
+                            "args": []
+                          }
+                        ]
+                      },
+                      {
+                        "op": "seq",
+                        "args": [
+                          {
+                            "op": "nop",
+                            "args": []
+                          },
+                          {
+                            "op": "eat",
+                            "args": []
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "nodes": 18,
+      "bytecode": "L0: sense r0 id\nL1: sense r1 generation\nL2: give r0 r1\nL3: scan_corpse r0 360\nL4: sense r1 crowding\nL5: give r0 r1\nL6: photosynthesize r0\nL7: gradient r0 r1\nL8: move r0\nL9: bud r0\nL10: mem_save 8 r0\nL11: nop\nL12: eat r0\nL13: wait 0\nL14: jmp L0",
+      "substrate": "tree"
+    }
+  ],
+  "note": "Observation for inspection, not an exact world-restart snapshot. External cells and message senders are not included."
+}

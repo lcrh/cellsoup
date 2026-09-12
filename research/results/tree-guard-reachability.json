@@ -1,0 +1,51 @@
+{
+  "modules": {
+    "control": "3e1964dae3d3251f9158d10d36d2857b10e2e1ba720c9cef6877aa1fe0dbcd1c",
+    "guard": "6a8e842463309a1abced777ae6bbd94ae753e584efdce6f2dcd40eb6799c9b51"
+  },
+  "sourceGenome": 15333,
+  "seed": 731,
+  "samples": 10000,
+  "founderChecks": [
+    {
+      "seed": 42,
+      "rngSeed": 1935289651,
+      "count": 8192,
+      "sha256": "60e1ef6f680ee726e8557bf2ae32366ff5bb3fcef4bb677f3251026f8174d067"
+    },
+    {
+      "seed": 97,
+      "rngSeed": 1935289720,
+      "count": 8192,
+      "sha256": "a42b2fccf0ca9df9600770382c80b9a2a9ce00af6d11c330b719b01793104c41"
+    },
+    {
+      "seed": 321,
+      "rngSeed": 1935289432,
+      "count": 8192,
+      "sha256": "e8a9e295fe5cce168e46928ea30a5753cb13dc3a50011f785c73294605c2bb61"
+    }
+  ],
+  "mutation": {
+    "control": {
+      "exactInsertions": 0,
+      "nonliteralPredicates": 0,
+      "kinOnGiftRecipient": 0,
+      "examples": []
+    },
+    "guard": {
+      "exactInsertions": 5019,
+      "nonliteralPredicates": 4650,
+      "kinOnGiftRecipient": 1,
+      "examples": [
+        "(seq (if (kin (bond c2)) (nop) (give (bond c2) (bonds))) (seq (photosynthesize) (do (state m0 (temperature) (seq (eat) (seq (move (- (generation) (temperature))) (bud)))) (photosynthesize))))"
+      ]
+    }
+  },
+  "scope": "Syntax reachability only. Insertion retains an action subtree in one branch with nop in the other; it need not preserve timing, execution, or fitness. Predicates use the full existing typed grammar and may have effects. No authored program is inserted into evolutionary worlds.",
+  "contractChecks": {
+    "samples": 1000,
+    "successes": 858,
+    "declined": 142
+  }
+}
