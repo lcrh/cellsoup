@@ -1,0 +1,408 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="theme-color" content="#0b171b" />
+    <title>Cell Soup — GPU ecology</title>
+    <link rel="stylesheet" href="./gpu/style.css" />
+  </head>
+  <body>
+    <header>
+      <a class="brand" href="./">◉ <strong>cell soup</strong></a
+      ><span class="edition"
+        >GPU ecology <span class="badge">experimental</span></span
+      ><a class="classic" href="./">Classic laboratory ↗</a>
+    </header>
+    <main>
+      <section class="laboratory" aria-label="Simulation">
+        <div class="toolbar">
+          <button id="pause" disabled>Pause</button
+          ><button id="step" disabled title="Advance one tick">Step</button>
+          <label
+            >Speed
+            <select id="speed">
+              <option value="1">1×</option>
+              <option value="8">8×</option>
+              <option value="max" selected>Max</option>
+            </select></label
+          >
+          <span class="toolbar-spacer"></span
+          ><button id="find" disabled>Find colony</button
+          ><button id="fit" disabled>Whole soup</button>
+        </div>
+        <div class="viewport">
+          <canvas
+            id="world"
+            tabindex="0"
+            aria-label="Cells in a moving nutrient field. Drag to pan, scroll to zoom, and click a cell to inspect it."
+          ></canvas>
+          <div id="notice" role="status">Preparing the GPU habitat…</div>
+          <div class="view-key">
+            <span><i class="cyan"></i>Nutrient A</span
+            ><span><i class="amber"></i>Nutrient B</span
+            ><span id="scale">—</span>
+          </div>
+          <div class="gesture">
+            Scroll to zoom · drag to pan · click to inspect
+          </div>
+        </div>
+        <div class="metrics" aria-label="Population statistics">
+          <div><strong id="living">—</strong><span>living cells</span></div>
+          <div>
+            <strong id="elapsed">0:00</strong><span>simulated time</span>
+          </div>
+          <div><strong id="throughput">—</strong><span>actual speed</span></div>
+          <div><strong id="births">—</strong><span>divisions</span></div>
+          <div>
+            <strong id="mutations">—</strong><span>resampling mutations</span>
+          </div>
+          <div>
+            <strong id="archive">—</strong><span>archived lineages</span>
+          </div>
+        </div>
+        <div class="view-controls">
+          <label
+            >Cell color
+            <select id="color">
+              <option value="0">Biological hue</option>
+              <option value="1">Enzyme allocation</option>
+              <option value="2">Energy</option>
+            </select></label
+          ><label><input id="food" type="checkbox" checked /> Food</label
+          ><label><input id="links" type="checkbox" checked /> Links</label
+          ><span id="render-note">Max advances 24 ticks between drawings.</span>
+        </div>
+        <div class="history">
+          <canvas id="history" aria-label="Living population over time"></canvas
+          ><span>Population history <span id="history-range"></span></span>
+        </div>
+      </section>
+      <aside>
+        <section class="inspector">
+          <div class="section-heading">
+            <h1>Life, from random code</h1>
+            <span class="dot"></span>
+          </div>
+          <p>
+            Every cell runs its own assembly genome. Food powers movement,
+            division, predation and signaling. New random genomes enter
+            continuously; successful lineages return with mutations.
+          </p>
+          <div class="selection-heading">
+            <h2>Under the lens</h2>
+            <label><input id="follow" type="checkbox" checked /> Follow</label>
+          </div>
+          <p id="selection-hint">
+            Choose <strong>Find colony</strong> to zoom into the largest
+            connected body, or click any cell.
+          </p>
+          <div id="selection" hidden>
+            <div class="selected-stats">
+              <div><b id="body-size">—</b><span>connected cells</span></div>
+              <div><b id="cell-energy">—</b><span>cell energy</span></div>
+              <div><b id="cell-age">—</b><span>cell age</span></div>
+            </div>
+            <p id="cell-detail"></p>
+            <div class="enzyme-meter" title="Selected cell's enzyme allocation">
+              <div id="enzyme-fill"></div>
+            </div>
+            <div class="meter-label">
+              <span>B specialist</span><span>A specialist</span>
+            </div>
+            <div class="genome-heading">
+              <strong id="genome-name">Genome</strong
+              ><button id="export">Save genome</button>
+            </div>
+            <p id="genome-detail"></p>
+            <pre id="source" tabindex="0"></pre>
+          </div>
+        </section>
+        <details open>
+          <summary>Habitat & evolution</summary>
+          <div class="settings">
+            <p class="hint">Changes below apply when you start a new soup.</p>
+            <label
+              >Population capacity
+              <select id="capacity">
+                <option value="32768">32,768</option>
+                <option value="131072" selected>131,072</option>
+                <option value="262144">262,144</option>
+              </select></label
+            >
+            <label
+              >Random seed
+              <input
+                id="seed"
+                type="number"
+                min="0"
+                max="4294967295"
+                step="1"
+                value="42"
+            /></label>
+            <label
+              >Newcomers / simulated second
+              <input id="rate" type="number" min="0" max="262144" value="32"
+            /></label>
+            <label
+              >Population floor
+              <input id="floor" type="number" min="0" max="262144" value="2048"
+            /></label>
+            <label for="share"
+              >Archive share <output for="share">50%</output
+              ><input
+                id="share"
+                type="range"
+                min="0"
+                max="1"
+                step="0.05"
+                value="0.5"
+            /></label>
+            <label for="mutation"
+              >Resampling mutation <output for="mutation">80%</output
+              ><input
+                id="mutation"
+                type="range"
+                min="0"
+                max="1"
+                step="0.05"
+                value="0.8"
+            /></label>
+            <p class="hint">
+              Division copies the genome exactly. Mutation acts on reintroduced
+              archive genomes. The floor adds extra newcomers; the capacity is a
+              hard safety limit.
+            </p>
+            <label
+              >Food supply
+              <input
+                id="foodRate"
+                type="number"
+                min="0"
+                max="10"
+                step="0.1"
+                value="1"
+            /></label>
+            <label
+              >Newcomer energy
+              <input
+                id="seedEnergy"
+                type="number"
+                min="1"
+                max="200"
+                step="1"
+                value="24"
+            /></label>
+            <label
+              >Basic upkeep / second
+              <input
+                id="upkeep"
+                type="number"
+                min="0"
+                max="20"
+                step="0.05"
+                value="0.5"
+            /></label>
+            <label
+              >Instruction cost
+              <input
+                id="cpuCost"
+                type="number"
+                min="0"
+                max="1"
+                step="0.0005"
+                value="0.0005"
+            /></label>
+            <label
+              >Division cost
+              <input
+                id="divisionCost"
+                type="number"
+                min="0"
+                max="150"
+                step="1"
+                value="12"
+            /></label>
+            <label
+              >Nutrient exchange / tick
+              <input
+                id="exchange"
+                type="number"
+                min="0"
+                max="0.25"
+                step="0.01"
+                value="0.12"
+            /></label>
+            <details>
+              <summary>Motion, food & action costs</summary>
+              <label
+                >Instructions / tick<input
+                  id="budget"
+                  type="number"
+                  value="24"
+                  min="0"
+                  max="128"
+                  step="1" /></label
+              ><label
+                >Daughter heading jitter (degrees)<input
+                  id="jitter"
+                  type="number"
+                  value="12"
+                  min="0"
+                  max="180"
+                  step="1" /></label
+              ><label
+                >Forward / backward cost<input
+                  id="moveCost"
+                  type="number"
+                  value="0.04"
+                  min="0"
+                  max="10"
+                  step="0.01" /></label
+              ><label
+                >Turn cost / degree<input
+                  id="turnCost"
+                  type="number"
+                  value="0.001"
+                  min="0"
+                  max="1"
+                  step="0.001" /></label
+              ><label
+                >Link attempt cost<input
+                  id="linkCost"
+                  type="number"
+                  value="0.5"
+                  min="0"
+                  max="20"
+                  step="0.1" /></label
+              ><label
+                >Contraction cost<input
+                  id="contractCost"
+                  type="number"
+                  value="0.08"
+                  min="0"
+                  max="10"
+                  step="0.01" /></label
+              ><label
+                >Theft attempt cost<input
+                  id="stealCost"
+                  type="number"
+                  value="0.08"
+                  min="0"
+                  max="10"
+                  step="0.01" /></label
+              ><label
+                >Signal cost<input
+                  id="emitCost"
+                  type="number"
+                  value="0.01"
+                  min="0"
+                  max="10"
+                  step="0.01" /></label
+              ><label
+                >Linked message cost<input
+                  id="sendCost"
+                  type="number"
+                  value="0.01"
+                  min="0"
+                  max="10"
+                  step="0.01" /></label
+              ><label
+                >Shield upkeep / second<input
+                  id="shieldUpkeep"
+                  type="number"
+                  value="0.72"
+                  min="0"
+                  max="20"
+                  step="0.01" /></label
+              ><label
+                >Food wander memory (seconds)<input
+                  id="foodMemory"
+                  type="number"
+                  value="20"
+                  min="1"
+                  max="120"
+                  step="1"
+              /></label>
+            </details>
+            <button id="restart" class="primary" disabled>
+              Start new soup
+            </button>
+          </div>
+        </details>
+        <details>
+          <summary>How this ecology works</summary>
+          <div class="explanation">
+            <p>
+              Cells need <b>both nutrients</b> to make energy. They can
+              specialize in absorbing A or B; spring links pass nutrients
+              between neighbors. Giving energy is an explicit, fractional
+              transfer.
+            </p>
+            <p>
+              Food sources wander with a tendency to return toward their home.
+              Upkeep can kill a cell even in food if intake cannot cover its
+              costs. Voluntary spending preserves a small energy reserve; theft
+              can still kill.
+            </p>
+            <p>
+              The archive selects for survival, harvested food and offspring. It
+              does not reward forming links. A connected group is a colony, not
+              automatically a cooperative organism.
+            </p>
+            <p>
+              The GPU runs the complete lifecycle, including programs, spring
+              physics, finite food, birth, death and selection. Rendering uses
+              the same GPU memory. Max skips drawings, never physics steps.
+            </p>
+            <p>
+              This experimental model has four links per cell and genomes of at
+              most 64 instructions. Genome mutations change an instruction or
+              operand. GPU scheduling makes runs with the same seed vary.
+            </p>
+          </div>
+        </details>
+        <details>
+          <summary>Assembly reference</summary>
+          <div class="reference">
+            <p>
+              Eight registers: <code>r0…r7</code>. Labels, signed numbers and
+              register operands. Sensors and movement are relative to the cell.
+              Target handles identify current cell slots and can be reused after
+              death.
+            </p>
+            <div id="reference"></div>
+          </div>
+        </details>
+        <footer>
+          Browser WebGPU required ·
+          <a href="./">Open the classic WASM laboratory</a>
+        </footer>
+      </aside>
+    </main>
+    <dialog id="export-dialog" aria-labelledby="export-title">
+      <div class="section-heading">
+        <h2 id="export-title">Save genome</h2>
+        <button id="close-export">Close</button>
+      </div>
+      <p>
+        This saves the observed program and experiment settings, not the entire
+        living habitat. Copy the JSON if your browser does not support
+        downloads.
+      </p>
+      <textarea
+        id="export-data"
+        aria-label="Genome JSON"
+        readonly
+        rows="14"
+        spellcheck="false"
+      ></textarea>
+      <div class="export-actions">
+        <button id="copy-export">Copy JSON</button
+        ><a id="download-export" download>Download JSON</a
+        ><span id="export-status" role="status"></span>
+      </div>
+    </dialog>
+    <script type="module" src="./gpu/app.js"></script>
+  </body>
+</html>

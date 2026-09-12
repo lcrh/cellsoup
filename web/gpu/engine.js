@@ -333,6 +333,13 @@ export async function createLifeEngine(device, options = {}) {
     async state() {
       return read(state[parity]);
     },
+    async genome(slot) {
+      if (!Number.isInteger(slot) || slot < 0 || slot >= g)
+        throw Error("Invalid genome slot");
+      return describeGenome(
+        await read(genomes, slot * GENOME_BYTES, GENOME_BYTES),
+      );
+    },
     async field() {
       return new Float32Array(await read(food, t * 8 * (tick % 2), t * 8));
     },

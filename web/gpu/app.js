@@ -1,0 +1,565 @@
+import { createLifeEngine } from "./engine.js";
+import { createRenderer } from "./renderer.js";
+import { GPU_OPS, GPU_SENSORS } from "./language.js";
+import {
+  snapshot,
+  bodyAt,
+  largestBody,
+  bodyBounds,
+  nearest,
+  stride,
+} from "./observe.js";
+
+const $ = (id) => document.getElementById(id);
+const canvas = $("world"),
+  camera = { x: 4096, y: 4096, width: 8192, height: 8192 };
+const numericSettings = [
+  "seed",
+  "rate",
+  "floor",
+  "share",
+  "mutation",
+  "foodRate",
+  "seedEnergy",
+  "upkeep",
+  "cpuCost",
+  "divisionCost",
+  "exchange",
+  "budget",
+  "jitter",
+  "moveCost",
+  "turnCost",
+  "linkCost",
+  "contractCost",
+  "stealCost",
+  "emitCost",
+  "sendCost",
+  "shieldUpkeep",
+  "foodMemory",
+];
+let device,
+  engine,
+  renderer,
+  paused = false,
+  busy = true,
+  failed = false;
+let pendingReset = false,
+  pendingStep = false,
+  pendingFind = false,
+  pendingPick = null;
+let selection = null,
+  selectedGenome = null,
+  snap = null,
+  members = [],
+  lastSnapshot = 0,
+  lastMetrics = 0;
+let previousTime = performance.now(),
+  carry = 0,
+  speedTick = 0,
+  speedTime = 0,
+  history = [];
+const formatNumber = (n) => Math.round(n).toLocaleString();
+const time = (seconds) =>
+  `${Math.floor(seconds / 60)}:${String(Math.floor(seconds % 60)).padStart(2, "0")}`;
+function notice(message, error = false) {
+  $("notice").textContent = message;
+  $("notice").hidden = !message;
+  $("notice").classList.toggle("error", error);
+}
+function fail(error) {
+  failed = true;
+  paused = true;
+  busy = false;
+  console.error(error);
+  notice(
+    `${error.message || error} Open the classic laboratory using the link above.`,
+    true,
+  );
+  $("pause").disabled = true;
+  $("step").disabled = true;
+  $("find").disabled = true;
+  $("restart").disabled = false;
+}
+function controls(enabled) {
+  for (const id of ["pause", "step", "find", "fit", "restart"])
+    $(id).disabled = !enabled;
+  $("step").disabled = !enabled || !paused;
+  $("pause").textContent = paused ? "Resume" : "Pause";
+}
+function options() {
+  const capacity = Number($("capacity").value);
+  const cfg = {
+    capacity,
+    genomeCapacity: capacity / 4,
+    initial: capacity / 4,
+    side: Math.ceil(Math.sqrt(capacity / 2)),
+    sources: Math.ceil(capacity / 4096),
+  };
+  for (const id of numericSettings) {
+    const input = $(id);
+    if (!input.checkValidity())
+      throw Error(
+        `Check the value for ${input.parentElement.firstChild.textContent.trim()}.`,
+      );
+    cfg[id] = Number(input.value);
+  }
+  if (cfg.floor > capacity || cfg.rate > capacity)
+    throw Error("Population floor and newcomer rate must not exceed capacity.");
+  return cfg;
+}
+function fitWorld() {
+  camera.x = engine.cfg.side * 16;
+  camera.y = camera.x;
+  camera.width = engine.cfg.side * 32;
+  camera.overview = true;
+  $("follow").checked = false;
+}
+async function start() {
+  // Validate before discarding an existing habitat.
+  const cfg = options();
+  busy = true;
+  controls(false);
+  notice("Preparing the GPU habitat…");
+  if (!device || failed) {
+    if (!navigator.gpu) throw Error("WebGPU is unavailable in this browser.");
+    const adapter = await navigator.gpu.requestAdapter({
+      powerPreference: "high-performance",
+    });
+    if (!adapter) throw Error("No WebGPU adapter is available.");
+    device = await adapter.requestDevice();
+    const activeDevice = device;
+    device.addEventListener("uncapturederror", (event) => {
+      if (device === activeDevice) fail(event.error);
+    });
+    device.lost.then((info) => {
+      if (device === activeDevice && info.reason !== "destroyed")
+        fail(
+          Error("The GPU connection was lost. Start a new soup to reconnect."),
+        );
+    });
+  }
+  renderer?.destroy();
+  engine?.destroy();
+  renderer = null;
+  engine = null;
+  engine = await createLifeEngine(device, cfg);
+  renderer = await createRenderer(
+    device,
+    canvas,
+    engine,
+    navigator.gpu.getPreferredCanvasFormat(),
+  );
+  failed = false;
+  paused = false;
+  selection = null;
+  selectedGenome = null;
+  snap = null;
+  members = [];
+  history = [];
+  carry = 0;
+  pendingPick = null;
+  pendingFind = false;
+  pendingStep = false;
+  $("selection").hidden = true;
+  $("selection-hint").textContent =
+    "Find colony zooms into the largest connected body. Colonies emerge as cells divide and connect.";
+  fitWorld();
+  $("follow").checked = true;
+  lastMetrics = 0;
+  lastSnapshot = 0;
+  speedTime = performance.now();
+  speedTick = 0;
+  previousTime = speedTime;
+  busy = false;
+  controls(true);
+  notice("");
+}
+function selectSlot(slot, fit = false) {
+  if (slot < 0) {
+    notice("No cell at that point. Zoom in or use Find colony.");
+    return;
+  }
+  const k = slot * stride;
+  selection = { slot, identity: snap.u[k + 24] };
+  camera.overview = false;
+  selectedGenome = null;
+  $("export").disabled = true;
+  $("source").textContent = "Reading genome…";
+  $("selection").hidden = false;
+  $("selection-hint").textContent =
+    "Live observation; connected cells may divide, separate or die.";
+  $("follow").checked = true;
+  updateSelection(fit);
+  notice("");
+}
+function updateSelection(fit = false) {
+  if (!selection || !snap) return;
+  if (
+    !snap.u[selection.slot * stride + 31] ||
+    snap.u[selection.slot * stride + 24] !== selection.identity
+  ) {
+    const survivor = members.find(
+      (m) =>
+        snap.u[m.slot * stride + 31] &&
+        snap.u[m.slot * stride + 24] === m.identity,
+    );
+    if (survivor) {
+      selection = survivor;
+      selectedGenome = null;
+      $("source").textContent = "Reading descendant genome…";
+      $("export").disabled = true;
+    } else {
+      selection = null;
+      members = [];
+      selectedGenome = null;
+      $("selection").hidden = true;
+      $("selection-hint").textContent =
+        "The observed cells died. Find colony to follow another body.";
+      return;
+    }
+  }
+  const { slot } = selection,
+    k = slot * stride,
+    body = bodyAt(snap, slot),
+    bounds = bodyBounds(snap, body);
+  members = body.map((slot) => ({
+    slot,
+    identity: snap.u[slot * stride + 24],
+  }));
+  if ($("follow").checked && bounds) {
+    camera.x = bounds.x;
+    camera.y = bounds.y;
+    if (fit) {
+      const aspect = canvas.clientWidth / Math.max(1, canvas.clientHeight);
+      camera.width = Math.max(
+        160,
+        bounds.width * 1.5,
+        bounds.height * aspect * 1.5,
+      );
+    }
+  }
+  $("body-size").textContent = body.length;
+  $("cell-energy").textContent = (snap.f[k + 4] / 4096).toFixed(1);
+  $("cell-age").textContent = time(snap.u[k + 28] / 60);
+  $("cell-detail").textContent =
+    `Cell ${selection.identity} · generation ${snap.u[k + 29]} · reserves A ${snap.f[k + 38].toFixed(1)} / B ${snap.f[k + 39].toFixed(1)} · instruction ${snap.u[k + 26] + 1}`;
+  $("enzyme-fill").style.width = `${snap.f[k + 37] * 100}%`;
+}
+async function readSelectedGenome() {
+  if (!selection) return;
+  const slot = snap.u[selection.slot * stride + 25];
+  if (selectedGenome?.slot === slot) return;
+  const gene = await engine.genome(slot);
+  if (!gene) return;
+  selectedGenome = { ...gene, slot };
+  $("genome-name").textContent = `Genome ${gene.serial}`;
+  $("genome-detail").textContent =
+    `Founder ${gene.founder} · ${gene.depth} resampling mutations along ancestry · ${gene.length} instructions`;
+  $("source").textContent = gene.source;
+  $("export").disabled = false;
+}
+async function observe(now) {
+  const needSnapshot =
+    pendingFind || pendingPick || (selection && now - lastSnapshot > 1000);
+  if (needSnapshot) {
+    snap = snapshot(await engine.state(), engine.cfg.side * 32);
+    lastSnapshot = now;
+  }
+  if (pendingFind) {
+    pendingFind = false;
+    const body = largestBody(snap);
+    if (body.length) {
+      selectSlot(body[0], true);
+      if (body.length === 1)
+        notice(
+          "No connected colony yet. Following a living cell; try again after divisions.",
+        );
+    } else
+      notice(
+        "No living cells yet. Newcomers arrive once per simulated second.",
+      );
+  }
+  if (pendingPick) {
+    const { x, y, radius } = pendingPick;
+    pendingPick = null;
+    selectSlot(nearest(snap, x, y, radius));
+  }
+  if (needSnapshot) {
+    updateSelection();
+    await readSelectedGenome();
+  }
+  if (now - lastMetrics > 1000) {
+    const c = await engine.counters();
+    $("living").textContent = formatNumber(c.living);
+    $("elapsed").textContent = time(engine.tick / 60);
+    $("births").textContent = formatNumber(c.births);
+    $("mutations").textContent = formatNumber(c.mutations);
+    $("archive").textContent = c.archive;
+    const actual = (engine.tick - speedTick) / 60 / ((now - speedTime) / 1000);
+    $("throughput").textContent = paused ? "Paused" : `${actual.toFixed(1)}×`;
+    speedTime = now;
+    speedTick = engine.tick;
+    lastMetrics = now;
+    if (history.at(-1)?.tick !== engine.tick) {
+      history.push({ tick: engine.tick, living: c.living });
+      if (history.length > 480) history.shift();
+    }
+    drawHistory();
+  }
+}
+function drawHistory() {
+  const canvas = $("history"),
+    r = canvas.getBoundingClientRect(),
+    dpr = Math.min(devicePixelRatio || 1, 2);
+  canvas.width = Math.max(1, Math.round(r.width * dpr));
+  canvas.height = Math.max(1, Math.round(r.height * dpr));
+  const ctx = canvas.getContext("2d");
+  ctx.scale(dpr, dpr);
+  if (history.length < 2) return;
+  const max = Math.max(1, ...history.map((p) => p.living)) * 1.2,
+    first = history[0].tick,
+    span = Math.max(1, history.at(-1).tick - first);
+  ctx.beginPath();
+  history.forEach((p, i) => {
+    const x = ((p.tick - first) / span) * r.width,
+      y = r.height - 4 - (p.living / max) * (r.height - 18);
+    i ? ctx.lineTo(x, y) : ctx.moveTo(x, y);
+  });
+  ctx.strokeStyle = "#9abf91";
+  ctx.lineWidth = 1.3;
+  ctx.stroke();
+  $("history-range").textContent =
+    `· ${time(first / 60)}–${time(history.at(-1).tick / 60)}`;
+}
+async function frame(now) {
+  try {
+    if (pendingReset) {
+      pendingReset = false;
+      try {
+        await start();
+      } catch (error) {
+        if (engine && renderer && !failed) {
+          busy = false;
+          controls(true);
+          notice(error.message, true);
+        } else throw error;
+      }
+    }
+    if (engine && renderer && !busy && !failed) {
+      const dt = Math.min(0.2, (now - previousTime) / 1000);
+      previousTime = now;
+      let ticks = 0;
+      if (pendingStep) {
+        pendingStep = false;
+        ticks = 1;
+      } else if (!paused) {
+        if ($("speed").value === "max") ticks = 24;
+        else {
+          carry += dt * 60 * Number($("speed").value);
+          ticks = Math.min(24, Math.floor(carry));
+          carry -= ticks;
+          carry = Math.min(carry, 24);
+        }
+      }
+      if (ticks) await engine.step(ticks);
+      await observe(performance.now());
+      renderer.draw(camera, {
+        food: $("food").checked,
+        links: $("links").checked,
+        color: Number($("color").value),
+        slot: selection?.slot,
+        identity: selection?.identity,
+      });
+      $("scale").textContent = `${formatNumber(camera.width)} units across`;
+    } else previousTime = now;
+  } catch (error) {
+    fail(error);
+  }
+  requestAnimationFrame(frame);
+}
+$("pause").onclick = () => {
+  paused = !paused;
+  carry = 0;
+  controls(true);
+  speedTime = performance.now();
+  speedTick = engine.tick;
+  $("throughput").textContent = paused ? "Paused" : "—";
+};
+$("step").onclick = () => {
+  if (paused) pendingStep = true;
+};
+$("restart").onclick = () => {
+  pendingReset = true;
+};
+$("find").onclick = () => {
+  pendingFind = true;
+};
+$("fit").onclick = () => {
+  fitWorld();
+  notice("");
+};
+$("speed").onchange = () => {
+  carry = 0;
+  $("render-note").textContent =
+    $("speed").value === "max"
+      ? "Max advances 24 ticks between drawings."
+      : "Every physics tick is simulated.";
+};
+$("capacity").onchange = () => {
+  const n = Number($("capacity").value);
+  $("rate").value = Math.max(1, n / 4096);
+  $("floor").value = n / 64;
+};
+for (const id of ["share", "mutation"])
+  $(id).oninput = () => {
+    document.querySelector(`output[for="${id}"]`).textContent =
+      `${Math.round(Number($(id).value) * 100)}%`;
+  };
+let exportURL = null;
+$("export").onclick = () => {
+  if (!selectedGenome) return;
+  const { slot, ...genome } = selectedGenome;
+  const json = JSON.stringify(
+    {
+      model: "cellsoup-gpu-1",
+      observedTick: engine.tick,
+      config: engine.cfg,
+      kernel: engine.fingerprint,
+      genome,
+    },
+    null,
+    2,
+  );
+  if (exportURL) URL.revokeObjectURL(exportURL);
+  exportURL = URL.createObjectURL(
+    new Blob([json], { type: "application/json" }),
+  );
+  $("export-data").value = json;
+  $("download-export").href = exportURL;
+  $("download-export").download = `cellsoup-genome-${genome.serial}.json`;
+  $("export-status").textContent = "";
+  $("export-dialog").showModal();
+};
+$("close-export").onclick = () => $("export-dialog").close();
+$("export-dialog").addEventListener("close", () => {
+  if (exportURL) URL.revokeObjectURL(exportURL);
+  exportURL = null;
+});
+$("copy-export").onclick = async () => {
+  try {
+    await navigator.clipboard.writeText($("export-data").value);
+    $("export-status").textContent = "Copied.";
+  } catch {
+    $("export-data").focus();
+    $("export-data").select();
+    $("export-status").textContent =
+      "Text selected. Use your browser’s Copy command.";
+  }
+};
+
+let pointer = null;
+canvas.addEventListener("pointerdown", (event) => {
+  if (!engine || busy) return;
+  pointer = {
+    id: event.pointerId,
+    x: event.clientX,
+    y: event.clientY,
+    startX: event.clientX,
+    startY: event.clientY,
+    moved: false,
+  };
+  canvas.setPointerCapture(event.pointerId);
+});
+canvas.addEventListener("pointermove", (event) => {
+  if (!pointer || event.pointerId !== pointer.id) return;
+  const dx = event.clientX - pointer.x,
+    dy = event.clientY - pointer.y;
+  if (
+    Math.hypot(event.clientX - pointer.startX, event.clientY - pointer.startY) >
+    4
+  )
+    pointer.moved = true;
+  if (pointer.moved) {
+    camera.overview = false;
+    camera.x -= (dx * camera.width) / canvas.clientWidth;
+    camera.y -= (dy * camera.width) / canvas.clientWidth;
+    $("follow").checked = false;
+  }
+  pointer.x = event.clientX;
+  pointer.y = event.clientY;
+});
+canvas.addEventListener("pointerup", (event) => {
+  if (!pointer || event.pointerId !== pointer.id) return;
+  if (!pointer.moved) {
+    const r = canvas.getBoundingClientRect();
+    pendingPick = {
+      x:
+        camera.x +
+        ((event.clientX - r.left - r.width / 2) * camera.width) / r.width,
+      y:
+        camera.y +
+        ((event.clientY - r.top - r.height / 2) * camera.width) / r.width,
+      radius: Math.max(8, (camera.width / r.width) * 12),
+    };
+  }
+  pointer = null;
+});
+canvas.addEventListener("pointercancel", () => {
+  pointer = null;
+});
+canvas.addEventListener(
+  "wheel",
+  (event) => {
+    if (!engine || busy) return;
+    event.preventDefault();
+    const r = canvas.getBoundingClientRect(),
+      old = camera.width;
+    camera.overview = false;
+    camera.width = Math.min(
+      engine.cfg.side *
+        32 *
+        Math.max(1, canvas.clientWidth / canvas.clientHeight),
+      Math.max(80, old * Math.exp(event.deltaY * 0.0015)),
+    );
+    if (!$("follow").checked) {
+      camera.x +=
+        ((event.clientX - r.left - r.width / 2) / r.width) *
+        (old - camera.width);
+      camera.y +=
+        ((event.clientY - r.top - r.height / 2) / r.width) *
+        (old - camera.width);
+    }
+  },
+  { passive: false },
+);
+canvas.addEventListener("keydown", (event) => {
+  if (event.code === "Space" && !$("pause").disabled) {
+    event.preventDefault();
+    $("pause").click();
+  }
+});
+// The classic grammar shares opcodes, but the GPU model has distinct costs/limits.
+const overrides = {
+  split:
+    "Detached division: 0 parent, 1 child, −1 failure. Requires division cost + 40 energy. Division yields this tick.",
+  bud: "Connected division, with the same return values and energy threshold as split. Four links maximum.",
+  link: "Try to link to a target within 24 units; four links maximum. A paid attempt may lose under contention.",
+  bond: "Read linked neighbor handle in slot 0–3; 0 if empty.",
+  give: "Give a fraction 0–1 of remaining energy to a target within 18. Keeps one energy quantum; transfers respect recipient capacity.",
+  sense: `Read a sensor: ${GPU_SENSORS.join(", ")}.`,
+};
+const dl = document.createElement("dl");
+for (const [op, args, description] of GPU_OPS) {
+  const dt = document.createElement("dt"),
+    dd = document.createElement("dd");
+  dt.textContent = `${op} ${args}`;
+  dd.textContent = overrides[op] || description;
+  dl.append(dt, dd);
+}
+$("reference").append(dl);
+try {
+  await start();
+} catch (error) {
+  fail(error);
+}
+requestAnimationFrame(frame);

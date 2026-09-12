@@ -1,10 +1,22 @@
 # Cell Soup
 
-**[Live simulator](https://lcrh.github.io/cellsoup/)** · [Language reference](docs/language.md)
+**[GPU ecology](https://lcrh.github.io/cellsoup/gpu.html)** · [Classic laboratory](https://lcrh.github.io/cellsoup/) · [Language reference](docs/language.md)
 
 An autonomously evolving artificial-life laboratory inspired by [Turing Soup](https://github.com/lcrh/turingsoup). Small physical cells execute assembly genomes. Food, metabolism, division, spring bonds, communication, and targeted predation connect those programs to a shared ecology.
 
-## Run
+## Large-population GPU ecology
+
+Open **[GPU ecology](https://lcrh.github.io/cellsoup/gpu.html)** (locally `/gpu.html`) for the experimental full-GPU simulation. It supports **262,144 cell slots and 65,536 resident genomes**, versus 16,384 cells in the classic engine. The browser runs programs, physics, finite food, birth/death, predation and archive selection on WebGPU. Rendering reads the same GPU buffers; Max draws once per 24 complete physics ticks.
+
+The default starts with 32,768 independent random founders in 131,072 slots. Two complementary nutrients and gradual enzyme specialization make resource exchange through physical bonds useful. The new model keeps relative sensing/motion, linked communication, fractional gifts, configurable energy costs and exact genome copies at division. Mutation remains concentrated in archived reintroductions. It does not seed designed organisms or give an explicit fitness reward for forming colonies.
+
+Use **Find colony**, **Follow**, and the **Enzyme allocation** color view to watch connected bodies. Click cells to inspect their programs, ancestry, stores and age; save a genome as JSON. Pause/step, population history and adjustable habitat/evolution settings are included. Settings take effect when starting a new soup. Unsupported browsers can open the classic WASM laboratory.
+
+On an M4 Pro, ten simulated minutes with roughly 40,000 living cells took 60–63 seconds of headless compute; the interactive default ran at approximately 8× real time during browser verification. A 262,144-slot test starting with 65,536 founders ran about 5.6× real time. These are measured configurations, **not a guarantee of sustaining 262,144 living cells**. Dense colonies and hardware affect throughput.
+
+Random runs produced growing and fragmenting colonies (up to 50 connected cells at a sampled point), persistent lineages and successful solitary strategies. Mixed nutrient specialists appeared in some runs, but evolved cooperation has **not** been established. [GPU model, limitations and measurements](docs/gpu-model.md) · [Headless experiments](research/README.md).
+
+## Run the classic laboratory
 
 The compiled WebAssembly engine is included. No npm dependencies or build step are needed to try it:
 
@@ -18,7 +30,7 @@ The default dish starts with 512 independently random programs. A steady trickle
 
 Max playback runs the worker as fast as possible while drawing only after the chosen number of simulation ticks. World controls also include separate energy costs, daughter heading jitter, and food wandering/amount variability. Baseline upkeep is 2 energy/second, so an idle, unfed cell lasts roughly 35 seconds. Voluntary spending retains 0.001 energy; unaffordable instructions/actions are skipped and unaffordable shields switch off. `give id fraction` donates a fraction of current energy (0–1), capped by receiver capacity and the donor reserve. Food drops follow correlated Ornstein–Uhlenbeck motion and amount fluctuations. The optional ReLU relay shows how linked cells can compute weighted activations with ordinary assembly.
 
-## What is implemented
+## Classic model features
 
 - A bounded register machine: eight float registers, labels, arithmetic, conditionals, sleeping, 40 instructions, and at most 256 instructions per genome.
 - Two fork primitives: `split r0` detaches the daughter; `bud r0` connects it with a spring. Both resume after the fork with 0 in the parent, 1 in the daughter, or -1 on failure.
@@ -66,6 +78,8 @@ PORT=8001 node scripts/serve.mjs --dist
 - `web/worker.js` — fixed-step scheduling, simulation commands, bounded snapshot handoff
 - `web/renderer.js` — GPU cell discs, spring lines, diffuse food texture
 - `web/app.js` — controls, editor, inspector, graphs, mouse/touch interaction
+- `web/gpu/` and `web/gpu.html` — full WebGPU engine, ecology, direct renderer and observation UI
+- `research/` — headless assays, GPU checks and measured autonomous runs
 - `web/presets.js` — optional example organisms and a linked ReLU relay
 - `tests/` — behavior tests against compiled WASM and worker, repeatable benchmark
 
@@ -75,7 +89,7 @@ Fresh random programs contain 8–64 well-typed instructions sampled from all 40
 
 The archive holds up to 128 variant genomes that have produced at least three direct offspring and still have living members ten seconds after introduction. Reservoir sampling retains a uniform sample of all variants that have qualified; arrivals sample retained entries uniformly. Reintroduced cells start with fresh state and energy, with no copied bonds or body structure. Reset clears the archive. This is an explicit reproduction-based sampling rule, not a guarantee of increasing complexity. See the language reference for identity, mutation, and resource accounting.
 
-Physics and VM execution run on the CPU via WASM; rendering runs on the GPU. The measured benchmark processes 16,384 cells in 3.25 ms per tick on an Apple M4 Pro, excluding rendering. Dense local clusters can be expensive; this is not a universal frame-rate guarantee.
+In the classic laboratory, physics and VM execution run on the CPU via WASM; rendering runs on the GPU. The measured benchmark processes 16,384 cells in 3.25 ms per tick on an Apple M4 Pro, excluding rendering. Dense local clusters can be expensive; this is not a universal frame-rate guarantee.
 
 MIT licensed; see [LICENSE](LICENSE).
 

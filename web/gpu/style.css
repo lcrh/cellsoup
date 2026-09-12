@@ -1,0 +1,633 @@
+:root {
+  color-scheme: dark;
+  font-family:
+    Inter,
+    ui-sans-serif,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif;
+  color: #dce8e5;
+  background: #0b171b;
+  font-size: 14px;
+}
+* {
+  box-sizing: border-box;
+}
+body {
+  margin: 0;
+}
+a {
+  color: #9fdccc;
+  text-decoration: none;
+}
+a:hover {
+  text-decoration: underline;
+}
+header {
+  height: 66px;
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  border-bottom: 1px solid #2b3d40;
+  padding: 0 26px;
+}
+.brand {
+  font-size: 23px;
+  letter-spacing: -0.7px;
+  color: #e9f4ef;
+}
+.brand strong {
+  font-weight: 600;
+}
+.edition {
+  color: #9caeac;
+  font-size: 13px;
+}
+.badge {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  border: 1px solid #456258;
+  padding: 4px 7px;
+  border-radius: 4px;
+  margin-left: 8px;
+  color: #a9c6b6;
+}
+.classic {
+  margin-left: auto;
+  font-size: 12px;
+}
+main {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 350px;
+  min-height: calc(100vh - 66px);
+}
+.laboratory {
+  min-width: 0;
+  padding: 18px;
+  position: sticky;
+  top: 0;
+  height: calc(100vh - 66px);
+  display: flex;
+  flex-direction: column;
+}
+button,
+select,
+input {
+  font: inherit;
+}
+button,
+select,
+input[type="number"] {
+  border: 1px solid #3b5052;
+  background: #14272c;
+  color: #dbe9e5;
+  border-radius: 6px;
+  padding: 7px 10px;
+  min-height: 34px;
+}
+button {
+  cursor: pointer;
+  white-space: nowrap;
+}
+button:hover {
+  background: #254039;
+  border-color: #6eaa94;
+}
+button:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+.primary,
+#pause {
+  background: #afd9a8;
+  color: #14271e;
+  border-color: #afd9a8;
+  font-weight: 600;
+}
+.toolbar {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin-bottom: 12px;
+}
+.toolbar label,
+.view-controls label {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  color: #aebdb8;
+  font-size: 12px;
+}
+.toolbar-spacer {
+  flex: 1;
+}
+.viewport {
+  position: relative;
+  min-height: 240px;
+  flex: 1;
+  border: 1px solid #2b4246;
+  border-radius: 10px;
+  overflow: hidden;
+  background: #071014;
+}
+#world {
+  display: block;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  inset: 0;
+  touch-action: none;
+  cursor: crosshair;
+}
+#notice {
+  position: absolute;
+  top: 18px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #13282ee8;
+  border: 1px solid #466164;
+  border-radius: 7px;
+  padding: 11px 16px;
+  max-width: 90%;
+  width: max-content;
+  font-size: 12px;
+  pointer-events: none;
+}
+#notice.error {
+  color: #ffc5aa;
+  pointer-events: auto;
+}
+.view-key {
+  position: absolute;
+  left: 16px;
+  bottom: 15px;
+  display: flex;
+  gap: 16px;
+  color: #95aeab;
+  font-size: 10px;
+  align-items: center;
+  pointer-events: none;
+}
+.view-key span {
+  display: flex;
+  gap: 5px;
+  align-items: center;
+}
+.view-key i {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+}
+.cyan {
+  background: #53c5c8;
+}
+.amber {
+  background: #d6a156;
+}
+.gesture {
+  position: absolute;
+  top: 13px;
+  left: 15px;
+  color: #849d9b;
+  font-size: 10px;
+  pointer-events: none;
+}
+.metrics {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  padding: 18px 2px 14px;
+  gap: 9px;
+}
+.metrics strong {
+  display: block;
+  font-variant-numeric: tabular-nums;
+  font-size: 21px;
+  font-weight: 500;
+  letter-spacing: -0.5px;
+}
+.metrics span {
+  color: #869e9c;
+  font-size: 10px;
+  display: block;
+  margin-top: 4px;
+}
+.view-controls {
+  display: flex;
+  align-items: center;
+  gap: 17px;
+  border-top: 1px solid #273b3e;
+  padding: 11px 0;
+}
+.view-controls select {
+  font-size: 11px;
+  padding: 4px 7px;
+  min-height: 29px;
+}
+.view-controls input {
+  accent-color: #afd9a8;
+}
+#render-note {
+  margin-left: auto;
+  font-size: 10px;
+  color: #7f9897;
+}
+.history {
+  position: relative;
+  height: 72px;
+  border-top: 1px solid #273b3e;
+}
+.history canvas {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+.history > span {
+  position: absolute;
+  top: 8px;
+  left: 3px;
+  color: #88a2a0;
+  font-size: 10px;
+}
+aside {
+  border-left: 1px solid #2b3d40;
+  background: #102026;
+  padding: 22px 22px 12px;
+  overflow-wrap: anywhere;
+}
+h1 {
+  font-size: 18px;
+  letter-spacing: -0.3px;
+  margin: 0;
+  font-weight: 550;
+}
+h2 {
+  font-size: 12px;
+  font-weight: 600;
+  margin: 0;
+}
+.section-heading,
+.selection-heading,
+.genome-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.dot {
+  width: 6px;
+  height: 6px;
+  background: #abd797;
+  border-radius: 50%;
+}
+p {
+  font-size: 12px;
+  color: #9fb4b1;
+  line-height: 1.7;
+  margin: 12px 0 17px;
+}
+.selection-heading {
+  padding-top: 17px;
+  border-top: 1px solid #2d4346;
+  margin-top: 23px;
+}
+.selection-heading label {
+  font-size: 11px;
+  color: #a1b5b0;
+}
+.selection-heading input {
+  accent-color: #afd9a8;
+}
+.selected-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 7px;
+  margin-top: 18px;
+}
+.selected-stats b {
+  display: block;
+  font-size: 21px;
+  font-weight: 500;
+}
+.selected-stats span {
+  display: block;
+  font-size: 10px;
+  color: #91aaa6;
+  margin-top: 4px;
+}
+#cell-detail,
+#genome-detail {
+  font-size: 10px;
+  margin: 12px 0;
+}
+.enzyme-meter {
+  height: 5px;
+  border-radius: 3px;
+  background: #dc9a53;
+  overflow: hidden;
+}
+.enzyme-meter div {
+  height: 100%;
+  width: 50%;
+  background: #4cc9ca;
+  float: right;
+}
+.meter-label {
+  display: flex;
+  justify-content: space-between;
+  font-size: 9px;
+  color: #8da7a4;
+  margin-top: 5px;
+}
+.genome-heading {
+  margin-top: 22px;
+  font-size: 12px;
+}
+.genome-heading button {
+  font-size: 10px;
+  min-height: 28px;
+  padding: 4px 7px;
+}
+pre {
+  font:
+    11px/1.65 ui-monospace,
+    SFMono-Regular,
+    Menlo,
+    monospace;
+  max-height: 250px;
+  overflow: auto;
+  padding: 12px;
+  background: #0a191e;
+  border: 1px solid #294147;
+  border-radius: 5px;
+  color: #bdd8be;
+  white-space: pre;
+}
+details {
+  border-top: 1px solid #2c4246;
+  margin-top: 20px;
+  padding-top: 16px;
+}
+summary {
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.settings > label {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+  font-size: 11px;
+  color: #abc0bb;
+  margin: 12px 0;
+}
+.settings input[type="number"] {
+  width: 90px;
+  font-size: 11px;
+  padding: 5px 7px;
+  min-height: 29px;
+}
+.settings select {
+  font-size: 11px;
+  min-height: 29px;
+  padding: 5px 7px;
+}
+.settings input[type="range"] {
+  width: 100%;
+  accent-color: #afd9a8;
+}
+.settings output {
+  color: #d1e5d7;
+}
+.hint {
+  font-size: 10px;
+  color: #839e9b;
+  line-height: 1.7;
+  margin: 12px 0;
+}
+.settings .primary {
+  width: 100%;
+  margin-top: 10px;
+}
+.reference code {
+  font-size: 11px;
+  color: #c6dfb8;
+}
+.reference dl {
+  font-size: 11px;
+}
+.reference dt {
+  color: #c6dfb8;
+  margin-top: 15px;
+  font-family: ui-monospace, monospace;
+}
+.reference dd {
+  color: #8fa9a4;
+  line-height: 1.6;
+  margin: 5px 0;
+}
+.reference p,
+.explanation p {
+  font-size: 11px;
+}
+footer {
+  font-size: 10px;
+  color: #7d9694;
+  line-height: 1.8;
+  margin-top: 24px;
+  padding-top: 14px;
+  border-top: 1px solid #2c4246;
+}
+:focus-visible {
+  outline: 2px solid #bfe49b;
+  outline-offset: 3px;
+}
+[hidden] {
+  display: none !important;
+}
+@media (min-width: 1600px) {
+  main {
+    grid-template-columns: minmax(0, 1fr) 390px;
+  }
+  aside {
+    padding: 26px 28px;
+  }
+  .metrics strong {
+    font-size: 26px;
+  }
+}
+@media (max-width: 1050px) {
+  main {
+    grid-template-columns: minmax(0, 1fr) 300px;
+  }
+  aside {
+    padding: 20px 16px;
+  }
+  .laboratory {
+    padding: 12px;
+  }
+  .toolbar {
+    gap: 5px;
+  }
+  .toolbar button {
+    font-size: 11px;
+    padding: 6px 8px;
+  }
+  .toolbar select {
+    font-size: 11px;
+    padding: 6px;
+  }
+  .metrics {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+  }
+  #render-note {
+    display: none;
+  }
+  .view-controls {
+    gap: 10px;
+  }
+  .edition {
+    font-size: 11px;
+  }
+  .badge {
+    display: none;
+  }
+}
+@media (max-width: 760px) {
+  header {
+    height: 55px;
+    padding: 0 15px;
+    gap: 12px;
+  }
+  .brand {
+    font-size: 20px;
+  }
+  .edition {
+    font-size: 10px;
+  }
+  .classic {
+    font-size: 10px;
+  }
+  main {
+    display: block;
+  }
+  .laboratory {
+    position: relative;
+    height: 76vh;
+    min-height: 520px;
+    padding: 12px;
+  }
+  .viewport {
+    min-height: 230px;
+  }
+  aside {
+    border-left: 0;
+    border-top: 1px solid #2b3d40;
+    padding: 23px 20px;
+  }
+  .metrics {
+    grid-template-columns: repeat(3, 1fr);
+    padding: 12px 2px;
+    gap: 8px;
+  }
+  .metrics strong {
+    font-size: 20px;
+  }
+  .metrics span {
+    font-size: 9px;
+  }
+  .history {
+    height: 45px;
+  }
+  .toolbar {
+    gap: 5px;
+  }
+  .toolbar label {
+    font-size: 10px;
+    gap: 4px;
+  }
+  .view-key {
+    gap: 10px;
+  }
+  .gesture {
+    font-size: 9px;
+  }
+  .badge {
+    display: none;
+  }
+}
+
+.settings details > label {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  font-size: 11px;
+  color: #abc0bb;
+  margin: 12px 0;
+}
+@media (max-width: 760px) {
+  .toolbar {
+    display: grid;
+    grid-template-columns: auto auto 1fr;
+    gap: 6px;
+  }
+  .toolbar-spacer {
+    display: none;
+  }
+  .toolbar label {
+    justify-content: flex-end;
+  }
+  .toolbar #find {
+    grid-column: 1 / 3;
+  }
+  .toolbar #fit {
+    grid-column: 3;
+  }
+  .toolbar button {
+    font-size: 11px;
+  }
+}
+
+dialog {
+  max-width: min(620px, calc(100vw - 30px));
+  width: 620px;
+  border: 1px solid #466164;
+  border-radius: 10px;
+  padding: 22px;
+  background: #102026;
+  color: #dce8e5;
+}
+dialog::backdrop {
+  background: #0009;
+}
+dialog h2 {
+  font-size: 16px;
+}
+dialog textarea {
+  width: 100%;
+  resize: vertical;
+  font:
+    11px/1.6 ui-monospace,
+    monospace;
+  background: #0a191e;
+  color: #bdd8be;
+  border: 1px solid #3b5052;
+  padding: 12px;
+  border-radius: 5px;
+}
+.export-actions {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-top: 14px;
+  font-size: 12px;
+}
+.export-actions span {
+  font-size: 11px;
+  color: #9eb6ac;
+}
