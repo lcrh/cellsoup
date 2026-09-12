@@ -1,0 +1,414 @@
+{
+  "scope": "Manual immigration reservations, crossovers, shared mutation ancestry, and automatic capture/admission; authored fixtures validate mechanisms only and never seed evolution.",
+  "checks": [
+    {
+      "name": "arrival reservation at birth boundary",
+      "rate": 2,
+      "before": {
+        "tick": 60,
+        "living": 2,
+        "corpses": 0,
+        "kills": 0,
+        "attacks": 0,
+        "eaten": 0,
+        "moves": 0,
+        "photosynthesis": 0,
+        "attackDamage": 0,
+        "free": 2,
+        "birthAttempts": 1,
+        "archive": 2,
+        "births": 0,
+        "deaths": 0,
+        "randomArrivals": 2,
+        "sampledArrivals": 0,
+        "mutations": 0,
+        "crossovers": 0,
+        "raw": [
+          60,
+          2,
+          2,
+          1,
+          6,
+          2,
+          0,
+          0,
+          2,
+          0,
+          0,
+          6,
+          3,
+          0,
+          0,
+          0,
+          2,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "after": {
+        "tick": 60,
+        "living": 4,
+        "corpses": 0,
+        "kills": 0,
+        "attacks": 0,
+        "eaten": 0,
+        "moves": 0,
+        "photosynthesis": 0,
+        "attackDamage": 0,
+        "free": 0,
+        "birthAttempts": 1,
+        "archive": 2,
+        "births": 0,
+        "deaths": 0,
+        "randomArrivals": 4,
+        "sampledArrivals": 0,
+        "mutations": 0,
+        "crossovers": 0,
+        "raw": [
+          60,
+          4,
+          0,
+          1,
+          5,
+          2,
+          0,
+          0,
+          4,
+          0,
+          0,
+          8,
+          4,
+          0,
+          0,
+          0,
+          2,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "name": "arrival reservation at birth boundary",
+      "rate": 0,
+      "before": {
+        "tick": 60,
+        "living": 3,
+        "corpses": 0,
+        "kills": 0,
+        "attacks": 0,
+        "eaten": 0,
+        "moves": 0,
+        "photosynthesis": 0,
+        "attackDamage": 0,
+        "free": 2,
+        "birthAttempts": 1,
+        "archive": 2,
+        "births": 1,
+        "deaths": 0,
+        "randomArrivals": 2,
+        "sampledArrivals": 0,
+        "mutations": 0,
+        "crossovers": 0,
+        "raw": [
+          60,
+          3,
+          2,
+          1,
+          6,
+          2,
+          1,
+          0,
+          2,
+          0,
+          0,
+          7,
+          3,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "after": {
+        "tick": 60,
+        "living": 3,
+        "corpses": 0,
+        "kills": 0,
+        "attacks": 0,
+        "eaten": 0,
+        "moves": 0,
+        "photosynthesis": 0,
+        "attackDamage": 0,
+        "free": 2,
+        "birthAttempts": 1,
+        "archive": 2,
+        "births": 1,
+        "deaths": 0,
+        "randomArrivals": 2,
+        "sampledArrivals": 0,
+        "mutations": 0,
+        "crossovers": 0,
+        "raw": [
+          60,
+          3,
+          2,
+          1,
+          6,
+          2,
+          1,
+          0,
+          2,
+          0,
+          0,
+          7,
+          3,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "name": "crossover/mutation provenance and automatic structural archive",
+      "admitted": {
+        "admitted": 3,
+        "cellSlots": [
+          2,
+          3,
+          4
+        ],
+        "genomeSlots": [
+          2,
+          3
+        ],
+        "serials": [
+          3,
+          4
+        ],
+        "mutations": 1,
+        "crossovers": 2
+      },
+      "inserted": {
+        "admitted": 2,
+        "cellSlots": [
+          5,
+          6
+        ],
+        "genomeSlots": [
+          4
+        ],
+        "serials": [
+          5
+        ],
+        "mutations": 0,
+        "crossovers": 0
+      },
+      "archive": [
+        {
+          "id": 1,
+          "lineage": 1,
+          "tick": 120,
+          "root": 2,
+          "observation": {
+            "world": 256,
+            "colonies": [
+              {
+                "cells": [
+                  {
+                    "slot": 2,
+                    "genomeSlot": 2,
+                    "x": 102.56741333007812,
+                    "y": 100,
+                    "heading": 0,
+                    "rest": 1,
+                    "anchors": [
+                      0,
+                      0,
+                      0,
+                      0
+                    ],
+                    "linkSlots": [
+                      3,
+                      null,
+                      null,
+                      null
+                    ]
+                  },
+                  {
+                    "slot": 3,
+                    "genomeSlot": 2,
+                    "x": 115.43258666992188,
+                    "y": 100,
+                    "heading": 0,
+                    "rest": 1,
+                    "anchors": [
+                      0,
+                      0,
+                      0,
+                      0
+                    ],
+                    "linkSlots": [
+                      2,
+                      null,
+                      null,
+                      null
+                    ]
+                  }
+                ],
+                "size": 2
+              }
+            ],
+            "genomes": [
+              {
+                "slot": 2,
+                "length": 5,
+                "serial": 3,
+                "founder": 1,
+                "depth": 0,
+                "parent": 1,
+                "bornTick": 60,
+                "secondParent": 2,
+                "score": 0,
+                "source": "(seq (photosynthesize) (wait 0))",
+                "tree": {
+                  "op": "seq",
+                  "args": [
+                    {
+                      "op": "photosynthesize",
+                      "args": []
+                    },
+                    {
+                      "op": "wait",
+                      "args": [
+                        {
+                          "op": "number",
+                          "args": [],
+                          "value": 0
+                        }
+                      ]
+                    }
+                  ]
+                },
+                "nodes": 4,
+                "bytecode": "L0: photosynthesize r0\nL1: mov r0 0\nL2: wait r0\nL3: wait 0\nL4: jmp L0",
+                "substrate": "tree"
+              }
+            ]
+          },
+          "size": 2
+        }
+      ],
+      "counters": {
+        "tick": 122,
+        "living": 7,
+        "corpses": 0,
+        "kills": 0,
+        "attacks": 0,
+        "eaten": 0,
+        "moves": 92,
+        "photosynthesis": 0,
+        "attackDamage": 0,
+        "free": 5,
+        "birthAttempts": 0,
+        "archive": 2,
+        "births": 0,
+        "deaths": 0,
+        "randomArrivals": 2,
+        "sampledArrivals": 5,
+        "mutations": 1,
+        "crossovers": 2,
+        "raw": [
+          122,
+          7,
+          5,
+          0,
+          0,
+          2,
+          0,
+          0,
+          2,
+          5,
+          1,
+          18,
+          6,
+          0,
+          0,
+          0,
+          0,
+          92,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          2,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    }
+  ]
+}

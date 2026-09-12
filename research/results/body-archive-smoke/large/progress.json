@@ -1,0 +1,420 @@
+{
+  "config": {
+    "treePrograms": 1,
+    "manualArrivals": 1,
+    "crossover": 0.25,
+    "capacity": 32768,
+    "genomeCapacity": 8192,
+    "side": 128,
+    "sources": 1,
+    "initial": 8192,
+    "seed": 42,
+    "budget": 24,
+    "floor": 0,
+    "rate": 8,
+    "share": 0.5,
+    "mutation": 0.8,
+    "seedEnergy": 24,
+    "seedStorage": 24,
+    "upkeep": 0.5,
+    "ambientTemperature": 20,
+    "sunlightHeating": 1,
+    "activityHeating": 0.12,
+    "cooling": 0.2,
+    "thermalExchange": 0.12,
+    "crowdInsulation": 1,
+    "safeTemperature": 28,
+    "heatDamage": 0.5,
+    "energyDecay": 0.05,
+    "divisionCost": 12,
+    "minimumBirthEnergy": 12,
+    "exchange": 0.12,
+    "shieldUpkeep": 0.72,
+    "cpuCost": 0.00005,
+    "moveCost": 0.004,
+    "turnCost": 0.0001,
+    "linkCost": 0.5,
+    "contractCost": 0.08,
+    "attackCost": 0.08,
+    "attackDamageCost": 0.2,
+    "emitCost": 0.01,
+    "sendCost": 0.01,
+    "jitter": 12,
+    "archiveAge": 60,
+    "archiveHarvest": 120,
+    "archiveOffspring": 8,
+    "archiveEnabled": 1,
+    "executionTrace": 0,
+    "solarRate": 4,
+    "sunContrast": 2,
+    "cloudCover": 0.5,
+    "cloudOpacity": 0.95,
+    "cloudScale": 1200,
+    "cloudSpeed": 12,
+    "cloudMorph": 180,
+    "solarEnabled": 1,
+    "corpseEnergy": 8,
+    "corpseLifetime": 900,
+    "eatCost": 0.04,
+    "storageCapacity": 400
+  },
+  "policy": {
+    "maxCells": 8,
+    "capacity": 128,
+    "captureBudget": 4,
+    "minimumAge": 60,
+    "captureSeconds": 5,
+    "bodyShare": 0.5,
+    "archiveShare": 0.5,
+    "mutation": 0.8,
+    "crossover": 0.25,
+    "connected": true,
+    "closeAt": 120
+  },
+  "kernel": "c11c260bcb095d3162b299dbac6a768125b31f813263437e2ed79ef9151f4ca4",
+  "sourceHashes": {
+    "web/gpu/engine.js": "c17bf14dc64e912a743cd70e726599c31cb24c0ba23838a32a993a1067b86aef",
+    "web/gpu/trees.js": "3e1964dae3d3251f9158d10d36d2857b10e2e1ba720c9cef6877aa1fe0dbcd1c",
+    "web/gpu/shader.js": "5a92cc7ec19fc121e37c6ca9bdb2a03aa544085edee10481275e968b98aaf68b",
+    "research/body-archive.mjs": "bf93fa7e854590665dbcff9045fc4d19a78eebaae21b178a773de3c0b41d84d0",
+    "research/body-world-run.mjs": "6f0c8be45913c5eec0c7b34d72dd59b262bf6e0edde2354ae070dd150e065f3c",
+    "research/life-state-analysis.mjs": "0ec60f8ba5d6095848093ab4051eefe2a84a4d955475cef54197af04a20a8de2"
+  },
+  "records": [
+    {
+      "seconds": 0,
+      "tick": 0,
+      "living": 8192,
+      "corpses": 0,
+      "kills": 0,
+      "attacks": 0,
+      "eaten": 0,
+      "moves": 0,
+      "photosynthesis": 0,
+      "attackDamage": 0,
+      "free": 0,
+      "birthAttempts": 0,
+      "archive": 0,
+      "births": 0,
+      "deaths": 0,
+      "randomArrivals": 8192,
+      "sampledArrivals": 0,
+      "mutations": 0,
+      "crossovers": 0,
+      "bornInWorld": 0,
+      "livingArrivals": 8192,
+      "energy": 196608,
+      "reserves": 196608,
+      "mature": 0,
+      "meanTemperature": 20,
+      "maxTemperature": 20,
+      "overheated": 0,
+      "meanAge": 0,
+      "livingMaxGeneration": 0,
+      "bodies": 8192,
+      "largestBody": 1,
+      "linkedCells": 0,
+      "movingBodies": 0,
+      "movingBodyCells": 0,
+      "largestMovingBody": 0,
+      "variants": 8192,
+      "leaders": [
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          1
+        ],
+        [
+          3,
+          1
+        ],
+        [
+          4,
+          1
+        ],
+        [
+          5,
+          1
+        ],
+        [
+          6,
+          1
+        ],
+        [
+          7,
+          1
+        ],
+        [
+          8,
+          1
+        ],
+        [
+          9,
+          1
+        ],
+        [
+          10,
+          1
+        ],
+        [
+          11,
+          1
+        ]
+      ],
+      "recentThrustWindowTicks": 60,
+      "recentThrustCells": 0,
+      "movingBodiesWithRecentThrust": 0,
+      "movingBodyCellsWithRecentThrust": 0,
+      "largestMovingBodyWithRecentThrust": 0,
+      "movingBodiesWithoutRecentThrust": 0,
+      "bodyArchive": 0,
+      "totals": {
+        "admitted": 0,
+        "bodyBatches": 0,
+        "bodyCells": 0,
+        "individualCells": 0,
+        "capacityMisses": 0,
+        "energy": 0,
+        "storage": 0,
+        "captures": 0,
+        "computeMs": 0,
+        "samplingMs": 0
+      }
+    },
+    {
+      "seconds": 60,
+      "tick": 3600,
+      "living": 3345,
+      "corpses": 3436,
+      "kills": 176,
+      "attacks": 4469,
+      "eaten": 149877.38671875,
+      "moves": 2043769,
+      "photosynthesis": 107402.90600585938,
+      "attackDamage": 3894.8544921875,
+      "free": 25987,
+      "birthAttempts": 2,
+      "archive": 23,
+      "births": 3172,
+      "deaths": 8499,
+      "randomArrivals": 8668,
+      "sampledArrivals": 4,
+      "mutations": 3,
+      "crossovers": 1,
+      "bornInWorld": 2178,
+      "livingArrivals": 1167,
+      "energy": 44616.14501953125,
+      "reserves": 28107.788330078125,
+      "mature": 973,
+      "meanTemperature": 23.87960971039685,
+      "maxTemperature": 33.852333068847656,
+      "overheated": 106,
+      "meanAge": 29.4450423517688,
+      "livingMaxGeneration": 34,
+      "bodies": 3103,
+      "largestBody": 28,
+      "linkedCells": 312,
+      "movingBodies": 21,
+      "movingBodyCells": 187,
+      "largestMovingBody": 28,
+      "variants": 1195,
+      "leaders": [
+        [
+          3342,
+          770
+        ],
+        [
+          5071,
+          201
+        ],
+        [
+          5924,
+          175
+        ],
+        [
+          952,
+          171
+        ],
+        [
+          180,
+          131
+        ],
+        [
+          1652,
+          123
+        ],
+        [
+          7238,
+          100
+        ],
+        [
+          2812,
+          71
+        ],
+        [
+          3503,
+          51
+        ],
+        [
+          1870,
+          40
+        ],
+        [
+          4506,
+          39
+        ],
+        [
+          619,
+          28
+        ]
+      ],
+      "recentThrustWindowTicks": 60,
+      "recentThrustCells": 2174,
+      "movingBodiesWithRecentThrust": 21,
+      "movingBodyCellsWithRecentThrust": 187,
+      "largestMovingBodyWithRecentThrust": 28,
+      "movingBodiesWithoutRecentThrust": 0,
+      "bodyArchive": 4,
+      "totals": {
+        "admitted": 480,
+        "bodyBatches": 0,
+        "bodyCells": 0,
+        "individualCells": 480,
+        "capacityMisses": 0,
+        "energy": 11520,
+        "storage": 11520,
+        "captures": 4,
+        "computeMs": 6056.876500999999,
+        "samplingMs": 743.5120439999995
+      }
+    },
+    {
+      "seconds": 120,
+      "tick": 7200,
+      "living": 2168,
+      "corpses": 499,
+      "kills": 266,
+      "attacks": 5522,
+      "eaten": 291307.77490234375,
+      "moves": 6152010,
+      "photosynthesis": 205526.64770507812,
+      "attackDamage": 5322.389892578125,
+      "free": 30101,
+      "birthAttempts": 1,
+      "archive": 27,
+      "births": 5913,
+      "deaths": 12897,
+      "randomArrivals": 8814,
+      "sampledArrivals": 338,
+      "mutations": 157,
+      "crossovers": 50,
+      "bornInWorld": 1392,
+      "livingArrivals": 776,
+      "energy": 24412.569580078125,
+      "reserves": 17717.204833984375,
+      "mature": 806,
+      "meanTemperature": 22.952515799181047,
+      "maxTemperature": 31.466650009155273,
+      "overheated": 16,
+      "meanAge": 57.90052275522754,
+      "livingMaxGeneration": 47,
+      "bodies": 1965,
+      "largestBody": 17,
+      "linkedCells": 251,
+      "movingBodies": 17,
+      "movingBodyCells": 140,
+      "largestMovingBody": 17,
+      "variants": 730,
+      "leaders": [
+        [
+          1652,
+          498
+        ],
+        [
+          3342,
+          327
+        ],
+        [
+          5924,
+          89
+        ],
+        [
+          7238,
+          45
+        ],
+        [
+          18,
+          38
+        ],
+        [
+          92,
+          32
+        ],
+        [
+          27,
+          31
+        ],
+        [
+          4506,
+          30
+        ],
+        [
+          7657,
+          26
+        ],
+        [
+          159,
+          26
+        ],
+        [
+          2812,
+          24
+        ],
+        [
+          131,
+          22
+        ]
+      ],
+      "recentThrustWindowTicks": 60,
+      "recentThrustCells": 1424,
+      "movingBodiesWithRecentThrust": 15,
+      "movingBodyCellsWithRecentThrust": 128,
+      "largestMovingBodyWithRecentThrust": 17,
+      "movingBodiesWithoutRecentThrust": 2,
+      "bodyArchive": 8,
+      "totals": {
+        "admitted": 960,
+        "bodyBatches": 29,
+        "bodyCells": 182,
+        "individualCells": 778,
+        "capacityMisses": 0,
+        "energy": 23040,
+        "storage": 23040,
+        "captures": 39,
+        "computeMs": 12985.591880000005,
+        "samplingMs": 1549.824462999995
+      }
+    }
+  ],
+  "totals": {
+    "admitted": 960,
+    "bodyBatches": 29,
+    "bodyCells": 182,
+    "individualCells": 778,
+    "capacityMisses": 0,
+    "energy": 23040,
+    "storage": 23040,
+    "captures": 39,
+    "computeMs": 12985.591880000005,
+    "samplingMs": 1549.824462999995
+  },
+  "closure": null,
+  "complete": true
+}

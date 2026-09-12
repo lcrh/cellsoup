@@ -1,0 +1,265 @@
+{
+  "scope": "Autonomous scheduling and conservation check, not evidence of an evolutionary benefit. GPU slot allocation is nondeterministic: matching seeds do not imply byte-identical trajectories. Compare submitted inputs separately from slot IDs and subsequent ecology.",
+  "firstBodySecond": 75,
+  "precedingPlansIdentical": 74,
+  "firstBodyProgramsAndNonLinkCellStateIdentical": true,
+  "firstAllocationDifference": 1,
+  "runs": [
+    {
+      "condition": "connected",
+      "totals": {
+        "admitted": 420,
+        "bodyBatches": 15,
+        "bodyCells": 108,
+        "individualCells": 312,
+        "capacityMisses": 300,
+        "energy": 10080,
+        "storage": 10080,
+        "captures": 6,
+        "computeMs": 5535.972339000002,
+        "samplingMs": 275.77428800000155
+      },
+      "closure": {
+        "second": 90,
+        "arrivals": 548,
+        "living": 333,
+        "births": 168
+      },
+      "final": {
+        "seconds": 120,
+        "tick": 7200,
+        "living": 278,
+        "corpses": 88,
+        "kills": 5,
+        "attacks": 75,
+        "eaten": 9779.364990234375,
+        "moves": 81946,
+        "photosynthesis": 23240.402587890625,
+        "attackDamage": 171.03271484375,
+        "free": 146,
+        "birthAttempts": 0,
+        "archive": 4,
+        "births": 194,
+        "deaths": 464,
+        "randomArrivals": 410,
+        "sampledArrivals": 138,
+        "mutations": 36,
+        "crossovers": 10,
+        "bornInWorld": 114,
+        "livingArrivals": 164,
+        "energy": 2879.0185546875,
+        "reserves": 2708.475830078125,
+        "mature": 96,
+        "meanTemperature": 24.706515085782936,
+        "maxTemperature": 31.644641876220703,
+        "overheated": 9,
+        "meanAge": 55.43782973621104,
+        "livingMaxGeneration": 16,
+        "bodies": 132,
+        "largestBody": 32,
+        "linkedCells": 164,
+        "movingBodies": 2,
+        "movingBodyCells": 19,
+        "largestMovingBody": 10,
+        "variants": 99,
+        "leaders": [
+          [
+            95,
+            42
+          ],
+          [
+            28,
+            25
+          ],
+          [
+            88,
+            16
+          ],
+          [
+            1,
+            12
+          ],
+          [
+            55,
+            10
+          ],
+          [
+            11,
+            9
+          ],
+          [
+            40,
+            9
+          ],
+          [
+            3,
+            9
+          ],
+          [
+            41,
+            8
+          ],
+          [
+            50,
+            8
+          ],
+          [
+            29,
+            8
+          ],
+          [
+            43,
+            8
+          ]
+        ],
+        "recentThrustWindowTicks": 60,
+        "recentThrustCells": 48,
+        "movingBodiesWithRecentThrust": 1,
+        "movingBodyCellsWithRecentThrust": 10,
+        "largestMovingBodyWithRecentThrust": 10,
+        "movingBodiesWithoutRecentThrust": 1,
+        "bodyArchive": 2,
+        "totals": {
+          "admitted": 420,
+          "bodyBatches": 15,
+          "bodyCells": 108,
+          "individualCells": 312,
+          "capacityMisses": 300,
+          "energy": 10080,
+          "storage": 10080,
+          "captures": 6,
+          "computeMs": 5535.972339000002,
+          "samplingMs": 275.77428800000155
+        }
+      }
+    },
+    {
+      "condition": "unlinked",
+      "totals": {
+        "admitted": 419,
+        "bodyBatches": 15,
+        "bodyCells": 108,
+        "individualCells": 311,
+        "capacityMisses": 301,
+        "energy": 10056,
+        "storage": 10056,
+        "captures": 6,
+        "computeMs": 4876.498749000001,
+        "samplingMs": 300.60558500000127
+      },
+      "closure": {
+        "second": 90,
+        "arrivals": 547,
+        "living": 339,
+        "births": 173
+      },
+      "final": {
+        "seconds": 120,
+        "tick": 7200,
+        "living": 281,
+        "corpses": 94,
+        "kills": 5,
+        "attacks": 75,
+        "eaten": 9633.863037109375,
+        "moves": 80688,
+        "photosynthesis": 23476.056884765625,
+        "attackDamage": 171.03271484375,
+        "free": 137,
+        "birthAttempts": 0,
+        "archive": 4,
+        "births": 197,
+        "deaths": 463,
+        "randomArrivals": 409,
+        "sampledArrivals": 138,
+        "mutations": 36,
+        "crossovers": 10,
+        "bornInWorld": 117,
+        "livingArrivals": 164,
+        "energy": 2561.622314453125,
+        "reserves": 2797.113037109375,
+        "mature": 95,
+        "meanTemperature": 24.34382596813487,
+        "maxTemperature": 28.85361099243164,
+        "overheated": 4,
+        "meanAge": 55.991874258600234,
+        "livingMaxGeneration": 13,
+        "bodies": 190,
+        "largestBody": 33,
+        "linkedCells": 122,
+        "movingBodies": 0,
+        "movingBodyCells": 0,
+        "largestMovingBody": 0,
+        "variants": 100,
+        "leaders": [
+          [
+            28,
+            34
+          ],
+          [
+            95,
+            33
+          ],
+          [
+            55,
+            12
+          ],
+          [
+            88,
+            12
+          ],
+          [
+            1,
+            11
+          ],
+          [
+            40,
+            10
+          ],
+          [
+            29,
+            9
+          ],
+          [
+            3,
+            9
+          ],
+          [
+            41,
+            8
+          ],
+          [
+            11,
+            8
+          ],
+          [
+            43,
+            8
+          ],
+          [
+            50,
+            8
+          ]
+        ],
+        "recentThrustWindowTicks": 60,
+        "recentThrustCells": 39,
+        "movingBodiesWithRecentThrust": 0,
+        "movingBodyCellsWithRecentThrust": 0,
+        "largestMovingBodyWithRecentThrust": 0,
+        "movingBodiesWithoutRecentThrust": 0,
+        "bodyArchive": 2,
+        "totals": {
+          "admitted": 419,
+          "bodyBatches": 15,
+          "bodyCells": 108,
+          "individualCells": 311,
+          "capacityMisses": 301,
+          "energy": 10056,
+          "storage": 10056,
+          "captures": 6,
+          "computeMs": 4876.498749000001,
+          "samplingMs": 300.60558500000127
+        }
+      }
+    }
+  ]
+}
