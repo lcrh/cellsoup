@@ -1,6 +1,6 @@
 # Cell Soup
 
-**[GPU ecology](https://lcrh.github.io/cellsoup/gpu.html)** · [Classic laboratory](https://lcrh.github.io/cellsoup/) · [Language reference](docs/language.md)
+**[Cell Soup](https://lcrh.github.io/cellsoup/)** · [Classic laboratory](https://lcrh.github.io/cellsoup/classic.html) · [Language reference](docs/language.md)
 
 An autonomously evolving artificial-life laboratory inspired by [Turing Soup](https://github.com/lcrh/turingsoup). Small physical cells execute programmable genomes. Food, metabolism, division, spring bonds, communication, and targeted predation connect those programs to a shared ecology.
 
@@ -26,7 +26,7 @@ The compiled WebAssembly engine is included. No npm dependencies or build step a
 npm start
 ```
 
-Open **http://localhost:8000**. Node 20 or newer is required for the development scripts. The application itself runs entirely in the browser.
+Open **http://localhost:8000/classic.html**. Node 20 or newer is required for the development scripts. The application itself runs entirely in the browser.
 
 The default dish starts with 512 independently random programs. A steady trickle of 8 arrivals per second, plus extra replenishment below 2,048 cells, draws either fresh random genomes or genomes from an archive of past reproductive successes. Resampled arrivals mutate at 80% by default; ordinary division has 0% mutation. Both rates and the random/archive mixture are independent controls. Authored organisms remain optional editor examples and reset scenarios. Pause or single-step, inspect a cell, paint food, and seed an edited genome into the running world. Select a variant in Evolution to zoom to a living representative. The Inspector highlights its connected body and reports total body energy; use Focus body or Follow organism to keep it in view across the wrapping world. Scroll to zoom and drag to pan. The World panel controls the instruction budget, population limit, food arrival, mutation, and reset scenario. Space pauses when focus is outside an editing control.
 
@@ -65,7 +65,7 @@ Set `CLANG` and `WASM_LD` if the compiler and linker are installed elsewhere. `n
 
 ## GitHub Pages
 
-The included `.github/workflows/pages.yml` builds and tests on pushes to `main`, then publishes `dist/` using GitHub Pages Actions. After creating the GitHub remote and pushing, choose **Settings → Pages → Build and deployment → Source: GitHub Actions**. This repository is prepared for that flow; a local checkout alone does not create a hosted GitHub repository or live Pages URL.
+The included `.github/workflows/pages.yml` builds and tests on pushes to `main`, then publishes `dist/` using GitHub Pages Actions. After creating the GitHub remote and pushing, choose **Settings → Pages → Build and deployment → Source: GitHub Actions**. The main site opens the current GPU simulator; `/gpu.html` remains an equivalent entry point and `/classic.html` preserves the original WASM laboratory. Builds show the application version in the header, publish `build.json` with the commit and asset fingerprint, and use a versioned asset directory for the complete module graph, including workers.
 
 All asset URLs are relative, so project pages such as `/cellsoup/` work. No backend, service worker, SharedArrayBuffer, cross-origin isolation headers, CDN scripts, or external fonts are required. To verify the packaged output locally:
 
