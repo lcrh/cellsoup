@@ -98,6 +98,29 @@ await test("fractional gifts conserve energy and retain a reserve", async () => 
   assert.equal(c[1].energy, 87.5);
   e.destroy();
 });
+await test("gifts use reciprocal links while attacks retain their contact range", async () => {
+  for (const [program, links, back, distance, received] of [
+    ["give 2 0.25", [2, 0, 0, 0], [1, 0, 0, 0], 40, 17.5],
+    ["give 2 0.25", [0, 0, 0, 0], [0, 0, 0, 0], 40, 0],
+    ["give 2 0.25", [2, 0, 0, 0], [0, 0, 0, 0], 40, 0],
+    ["give 2 0.25", [2, 0, 0, 0], [1, 0, 0, 0], 66, 0],
+    ["unlink 2\ngive 2 0.25", [2, 0, 0, 0], [1, 0, 0, 0], 40, 0],
+    ["attack 2 3", [2, 0, 0, 0], [1, 0, 0, 0], 40, 0],
+  ]) {
+    const e = await setup(
+      [program + "\nwait 1000", "wait 1000"],
+      [
+        { x: 100, y: 100, links },
+        { genome: 1, x: 100 + distance, y: 100, links: back },
+      ],
+    );
+    await e.step();
+    const c = await state(e);
+    assert.equal(c[1].energy, 70 + received);
+    assert.equal(c[0].energy + c[1].energy, 140);
+    e.destroy();
+  }
+});
 await test("oversubscribed gifts respect recipient capacity exactly", async () => {
   const seeds = [
     { genome: 1, energy: 199, x: 100, y: 100 },

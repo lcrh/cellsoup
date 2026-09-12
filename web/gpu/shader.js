@@ -702,7 +702,9 @@ fn sunlightAt(p:vec2f)->f32 {
         }
         case 25u,26u: {
           let j=slot(a);
-          if(j!=NONE&&j!=i&&length(delta(old[j].p.xy,c.p.xy))<=18.0) {
+          // Gifts can travel through a reciprocal live link, up to its normal
+          // breaking distance. Attacks still require direct proximity.
+          if(j!=NONE&&j!=i&&(length(delta(old[j].p.xy,c.p.xy))<=18.0||(op==26u&&linked(c,j)&&linked(old[j],i)&&length(delta(old[j].p.xy,c.p.xy))<=65.0))) {
             if(op==25u) {
               if(pay(&c,cfg.cost1.y+clamp(b,0.0,3.0)*cfg.metabolism.y)) {
                 action.aim.y=j;

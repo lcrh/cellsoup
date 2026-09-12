@@ -4,7 +4,7 @@ The interactive `/gpu.html` prototype runs program execution, physics, evolution
 
 ## Energy and storage
 
-Usable energy is cell-local and pays upkeep, proportional decay and actions. Reaching zero kills the cell even if storage remains. Storage is stable and diffuses conservatively across reciprocal links. `store result amount` converts usable energy into storage; `mobilize result amount` converts it back. Both return the actual amount converted. Voluntary spending retains a tiny positive energy reserve. Explicit fractional energy gifts remain available.
+Usable energy is cell-local and pays upkeep, proportional decay and actions. Reaching zero kills the cell even if storage remains. Storage is stable and diffuses conservatively across reciprocal links. `store result amount` converts usable energy into storage; `mobilize result amount` converts it back. Both return the actual amount converted. Voluntary spending retains a tiny positive energy reserve. Explicit fractional energy gifts can reach a living target within 18 units, or travel through a reciprocal spring link up to its 65-unit breaking distance. Gifts remain limited by recipient capacity and the donor reserve; attacks still require proximity within 18 units.
 
 Sunlight and energy expenditure heat cells. Cells cool toward ambient temperature, with nearby living cells reducing their cooling rate. Linked cells exchange temperature using the previous tick's values, so exposed cells can conduct heat away from a crowded body. There is no direct crowding energy penalty. Above the configurable safe temperature, heat stress drains usable energy and can kill. Conversion between usable energy and reserves does not itself generate heat. The inspector and temperature view show cell temperature; `sense result temperature`, `sense result linked_temperature` (neighbor mean, zero if none), and `peek result target temperature` expose it to programs. `sense result crowding` reads the local, distance-weighted living-neighbor density.
 
@@ -47,12 +47,12 @@ Keeping peak photosynthesis at 4, the new defaults lower movement cost from 0.04
 
 Each trial starts with 8,192 random founders in 32,768 slots. Steady arrivals and replenishment stop at 300 seconds; the trial continues to 900 seconds.
 
-| Configuration / seed | Living at closure | Living 10 min later | Births after closure | Moving bodies at end |
-| --- | ---: | ---: | ---: | ---: |
-| thermal-control-42 | 520 | 0 | 138 | 0 |
-| affordable-motion-42 | 3,318 | 10,516 | 24,135 | 1,054 |
-| affordable-motion-97 | 1,277 | 8,078 | 17,509 | 511 |
-| affordable-motion-321 | 9,326 | 6,204 | 11,567 | 12 |
+| Configuration / seed  | Living at closure | Living 10 min later | Births after closure | Moving bodies at end |
+| --------------------- | ----------------: | ------------------: | -------------------: | -------------------: |
+| thermal-control-42    |               520 |                   0 |                  138 |                    0 |
+| affordable-motion-42  |             3,318 |              10,516 |               24,135 |                1,054 |
+| affordable-motion-97  |             1,277 |               8,078 |               17,509 |                  511 |
+| affordable-motion-321 |             9,326 |               6,204 |               11,567 |                   12 |
 
 All three lower-cost trials retained reproducing populations without further newcomers. Most subsequent harvested energy came from sunlight. Moving bodies are connected groups of at least four cells with mean velocity above 2 units/sec, not proof of coordinated navigation or cooperation. The dominant lineage in seed 42 was an unmutated random founder; selection favored its moving, budding, photosynthetic program. Predation remained sparse. These short trials establish a useful ecological improvement, not open-ended evolution.
 

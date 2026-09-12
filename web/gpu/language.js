@@ -13,7 +13,13 @@ export const GPU_OPS = [
             "r r",
             "Sunlight gradient: relative bearing in degrees, then strength (light change per world unit). Zero when flat.",
           ]
-        : op,
+        : op[0] === "give"
+          ? [
+              "give",
+              "v v",
+              "Give a fraction (0–1) of current energy to a living target within 18 units, or through a reciprocal link up to its 65-unit breaking distance. Limited by receiver capacity and a tiny donor reserve.",
+            ]
+          : op,
   ),
   [
     "photosynthesize",
