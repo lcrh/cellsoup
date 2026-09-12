@@ -1,0 +1,461 @@
+{
+  "scope": "Final survivors in six completed operation-mutation worlds. Counts are syntax and an overapproximate slot-dependency graph, not evidence of execution, useful history or communication. State initialization is excluded from recurrent write edges; let and set are included. Reads inside RHS effects can add false-positive edges. Physical state and registers are not covered.",
+  "worlds": [
+    {
+      "condition": "control",
+      "seed": 42,
+      "path": "continuous-point-control-42/run.json.gz",
+      "counts": {
+        "genotypes": 528,
+        "withReads": 62,
+        "withReceive": 100,
+        "withSend": 46,
+        "withReadAndWriteToSameSlot": 5,
+        "withDirectSelfDependency": 1
+      }
+    },
+    {
+      "condition": "control",
+      "seed": 97,
+      "path": "continuous-point-control-97/run.json.gz",
+      "counts": {
+        "genotypes": 260,
+        "withReads": 42,
+        "withReceive": 10,
+        "withSend": 54,
+        "withReadAndWriteToSameSlot": 10,
+        "withDirectSelfDependency": 0
+      }
+    },
+    {
+      "condition": "control",
+      "seed": 321,
+      "path": "continuous-point-control-321/run.json.gz",
+      "counts": {
+        "genotypes": 609,
+        "withReads": 66,
+        "withReceive": 19,
+        "withSend": 29,
+        "withReadAndWriteToSameSlot": 13,
+        "withDirectSelfDependency": 2
+      }
+    },
+    {
+      "condition": "mutation",
+      "seed": 42,
+      "path": "continuous-point-mutation-42/run.json.gz",
+      "counts": {
+        "genotypes": 678,
+        "withReads": 23,
+        "withReceive": 42,
+        "withSend": 49,
+        "withReadAndWriteToSameSlot": 0,
+        "withDirectSelfDependency": 0
+      }
+    },
+    {
+      "condition": "mutation",
+      "seed": 97,
+      "path": "continuous-point-mutation-97/run.json.gz",
+      "counts": {
+        "genotypes": 502,
+        "withReads": 45,
+        "withReceive": 25,
+        "withSend": 93,
+        "withReadAndWriteToSameSlot": 3,
+        "withDirectSelfDependency": 1
+      }
+    },
+    {
+      "condition": "mutation",
+      "seed": 321,
+      "path": "continuous-point-mutation-321/run.json.gz",
+      "counts": {
+        "genotypes": 807,
+        "withReads": 100,
+        "withReceive": 41,
+        "withSend": 90,
+        "withReadAndWriteToSameSlot": 48,
+        "withDirectSelfDependency": 0
+      }
+    }
+  ],
+  "selfDependent": [
+    {
+      "condition": "control",
+      "seed": 42,
+      "serial": 35261,
+      "living": 1,
+      "edges": [
+        {
+          "from": 3,
+          "to": 3,
+          "identity": false
+        }
+      ],
+      "source": "(seq\n  (let ((local3 (target-distance (none))))\n    (nop)\n  )\n  (seq (eat) (photosynthesize))\n  (give\n    (let ((local3 (random (memory m3))))\n      (none)\n    )\n    (linked_temperature)\n  )\n)",
+      "tree": {
+        "op": "seq",
+        "args": [
+          {
+            "op": "let",
+            "args": [
+              {
+                "op": "slot",
+                "args": [],
+                "value": 3
+              },
+              {
+                "op": "target-distance",
+                "args": [
+                  {
+                    "op": "none",
+                    "args": []
+                  }
+                ]
+              },
+              {
+                "op": "nop",
+                "args": []
+              }
+            ]
+          },
+          {
+            "op": "seq",
+            "args": [
+              {
+                "op": "seq",
+                "args": [
+                  {
+                    "op": "eat",
+                    "args": []
+                  },
+                  {
+                    "op": "photosynthesize",
+                    "args": []
+                  }
+                ]
+              },
+              {
+                "op": "give",
+                "args": [
+                  {
+                    "op": "let",
+                    "args": [
+                      {
+                        "op": "slot",
+                        "args": [],
+                        "value": 3
+                      },
+                      {
+                        "op": "random",
+                        "args": [
+                          {
+                            "op": "memory",
+                            "args": [
+                              {
+                                "op": "slot",
+                                "args": [],
+                                "value": 3
+                              }
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "op": "none",
+                        "args": []
+                      }
+                    ]
+                  },
+                  {
+                    "op": "linked_temperature",
+                    "args": []
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "condition": "control",
+      "seed": 321,
+      "serial": 32395,
+      "living": 9,
+      "edges": [
+        {
+          "from": 6,
+          "to": 6,
+          "identity": true
+        }
+      ],
+      "source": "(seq\n  (color-set 10)\n  (photosynthesize)\n  (set m6 (memory m6))\n  (split)\n  (link (self))\n  (photosynthesize)\n)",
+      "tree": {
+        "op": "seq",
+        "args": [
+          {
+            "op": "color-set",
+            "args": [
+              {
+                "op": "number",
+                "args": [],
+                "value": 10
+              }
+            ]
+          },
+          {
+            "op": "seq",
+            "args": [
+              {
+                "op": "photosynthesize",
+                "args": []
+              },
+              {
+                "op": "seq",
+                "args": [
+                  {
+                    "op": "set",
+                    "args": [
+                      {
+                        "op": "slot",
+                        "args": [],
+                        "value": 6
+                      },
+                      {
+                        "op": "memory",
+                        "args": [
+                          {
+                            "op": "slot",
+                            "args": [],
+                            "value": 6
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "op": "seq",
+                    "args": [
+                      {
+                        "op": "split",
+                        "args": []
+                      },
+                      {
+                        "op": "seq",
+                        "args": [
+                          {
+                            "op": "link",
+                            "args": [
+                              {
+                                "op": "self",
+                                "args": []
+                              }
+                            ]
+                          },
+                          {
+                            "op": "photosynthesize",
+                            "args": []
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "condition": "control",
+      "seed": 321,
+      "serial": 32401,
+      "living": 1,
+      "edges": [
+        {
+          "from": 1,
+          "to": 1,
+          "identity": true
+        }
+      ],
+      "source": "(seq\n  (move (target-shield (self)))\n  (mobilize (temperature))\n  (color-set (storage))\n  (photosynthesize)\n  (set m1 (memory m1))\n)",
+      "tree": {
+        "op": "seq",
+        "args": [
+          {
+            "op": "move",
+            "args": [
+              {
+                "op": "target-shield",
+                "args": [
+                  {
+                    "op": "self",
+                    "args": []
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "op": "seq",
+            "args": [
+              {
+                "op": "mobilize",
+                "args": [
+                  {
+                    "op": "temperature",
+                    "args": []
+                  }
+                ]
+              },
+              {
+                "op": "seq",
+                "args": [
+                  {
+                    "op": "color-set",
+                    "args": [
+                      {
+                        "op": "storage",
+                        "args": []
+                      }
+                    ]
+                  },
+                  {
+                    "op": "seq",
+                    "args": [
+                      {
+                        "op": "photosynthesize",
+                        "args": []
+                      },
+                      {
+                        "op": "set",
+                        "args": [
+                          {
+                            "op": "slot",
+                            "args": [],
+                            "value": 1
+                          },
+                          {
+                            "op": "memory",
+                            "args": [
+                              {
+                                "op": "slot",
+                                "args": [],
+                                "value": 1
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "condition": "mutation",
+      "seed": 97,
+      "serial": 31362,
+      "living": 29,
+      "edges": [
+        {
+          "from": 2,
+          "to": 2,
+          "identity": true
+        }
+      ],
+      "source": "(seq\n  (seq (photosynthesize) (set m2 (memory m2)))\n  (mobilize (crowding))\n  (split)\n  (send (self) c3 (generation))\n  (photosynthesize)\n)",
+      "tree": {
+        "op": "seq",
+        "args": [
+          {
+            "op": "seq",
+            "args": [
+              {
+                "op": "photosynthesize",
+                "args": []
+              },
+              {
+                "op": "set",
+                "args": [
+                  {
+                    "op": "slot",
+                    "args": [],
+                    "value": 2
+                  },
+                  {
+                    "op": "memory",
+                    "args": [
+                      {
+                        "op": "slot",
+                        "args": [],
+                        "value": 2
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "op": "seq",
+            "args": [
+              {
+                "op": "mobilize",
+                "args": [
+                  {
+                    "op": "crowding",
+                    "args": []
+                  }
+                ]
+              },
+              {
+                "op": "seq",
+                "args": [
+                  {
+                    "op": "split",
+                    "args": []
+                  },
+                  {
+                    "op": "seq",
+                    "args": [
+                      {
+                        "op": "send",
+                        "args": [
+                          {
+                            "op": "self",
+                            "args": []
+                          },
+                          {
+                            "op": "channel",
+                            "args": [],
+                            "value": 3
+                          },
+                          {
+                            "op": "generation",
+                            "args": []
+                          }
+                        ]
+                      },
+                      {
+                        "op": "photosynthesize",
+                        "args": []
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -111,3 +111,9 @@ obvious forward/backward controller establishes well. A separate
 [compiler-cadence experiment](experiments/implicit-wait.md) removes an implicit
 pause that blocks simple photosynthetic reproduction; matched evolutionary
 worlds are in progress and the default compiler is unchanged.
+
+A separate [temporal-expression experiment](experiments/temporal-expressions.md)
+adds generic previous-value, difference and smoothing expressions through archive
+mutation while keeping all initial founders identical. Its calibrated history
+intervention preserves current input and instruction timing. Evolutionary trials
+are in progress; no usefulness claim follows from the new primitives themselves.

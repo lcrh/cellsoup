@@ -1,0 +1,172 @@
+--- a/web/gpu/trees.js
++++ b/web/gpu/trees.js
+@@ -94,6 +94,10 @@
+   entry("state", "Any", ["Memory", "Number", "Any"]),
+   entry("let", "Any", ["Memory", "Number", "Any"]),
+   entry("do", "Any", ["Action", "Any"]),
++  // Append to preserve existing serialized node IDs.
++  entry("lag", "Number", ["Number"]),
++  entry("delta", "Number", ["Number"]),
++  entry("smooth", "Number", ["Number", "Number"]),
+ ];
+ const byName = new Map(TREE_SCHEMA.map((s, i) => [s.name, { ...s, id: i }]));
+ const node = (op, args = [], value) =>
+@@ -344,6 +348,28 @@
+ export function compileTree(tree) {
+   if (typeof tree === "string") tree = parseTree(tree);
+   checkTree(tree);
++  // Each syntactic occurrence owns its history even when an API caller reused
++  // an AST object. The input remains untouched.
++  const copyOccurrence = t => ({...t, args:t.args.map(copyOccurrence)});
++  tree = copyOccurrence(tree);
++  const occupied = new Set();
++  function explicitSlots(t) {
++    if (t.op === "slot") occupied.add(t.value);
++    t.args.forEach(explicitSlots);
++  }
++  explicitSlots(tree);
++  const temporalSlots = new Map(), statefulSlots = [];
++  function allocateTemporal(t, path = []) {
++    if (["lag", "delta", "smooth"].includes(t.op)) {
++      let slot = 0;
++      while (occupied.has(slot)) slot++;
++      if (slot >= TREE_MEMORY_SLOTS) throw Error("Tree memory limit exceeded");
++      occupied.add(slot); temporalSlots.set(t, slot);
++      statefulSlots.push({op:t.op, slot, path});
++    }
++    t.args.forEach((child, index) => allocateTemporal(child, [...path, index]));
++  }
++  allocateTemporal(tree);
+   const lines = [];
+   let next = 0,
+     label = 0;
+@@ -435,6 +461,29 @@
+         );
+       next = start + 1;
+       return a;
++    }
++    if (op === "smooth") {
++      const fraction = expr(t.args[0]), value = expr(t.args[1]), previous = reserve();
++      const slot = temporalSlots.get(t);
++      emit("max", reg(fraction), 0);
++      emit("min", reg(fraction), 1);
++      emit("mem_load", reg(previous), slot);
++      emit("sub", reg(value), reg(previous));
++      emit("mul", reg(value), reg(fraction));
++      emit("add", reg(previous), reg(value));
++      emit("mem_save", slot, reg(previous));
++      emit("mov", reg(fraction), reg(previous));
++      next = start + 1;
++      return fraction;
++    }
++    if (op === "lag" || op === "delta") {
++      const value = expr(t.args[0]), previous = reserve();
++      const slot = temporalSlots.get(t);
++      emit("mem_load", reg(previous), slot);
++      emit("mem_save", slot, reg(value));
++      emit(op === "lag" ? "mov" : "sub", reg(value), reg(previous));
++      next = start + 1;
++      return value;
+     }
+     if (op === "abs" || op === "random") {
+       const r = expr(t.args[0]);
+@@ -548,7 +597,7 @@
+     throw Error(e.message + "\n" + printTree(tree) + "\n" + source);
+   }
+   if (code.length > 64) throw Error("Compiled tree exceeds 64 instructions");
+-  return { ...code, source, tree: clone(tree) };
++  return { ...code, source, tree: clone(tree), statefulSlots };
+ }
+ export function treeRng(seed) {
+   let x = seed >>> 0;
+@@ -563,12 +612,13 @@
+ const constants = [
+   -1, 0, 0.1, 0.25, 0.5, 0.75, 1, 2, 3, 5, 10, 25, 60, 90, 120, 360,
+ ];
+-function grow(type, budget, depth, rng) {
++function grow(type, budget, depth, rng, allowTemporal = true) {
+   const options = TREE_SCHEMA.filter(
+     (s) =>
+       (s.result === type ||
+         (["if", "state", "let", "do"].includes(s.name) &&
+           !["Memory", "Channel"].includes(type))) &&
++      (allowTemporal || !["lag", "delta", "smooth"].includes(s.name)) &&
+       s.args.length < budget &&
+       (depth > 1 || s.args.length === 0),
+   );
+@@ -588,7 +638,7 @@
+     const spare = remaining - (s.args.length - i - 1);
+     const allowance =
+       i === s.args.length - 1 ? spare : 1 + Math.floor(rng() * spare);
+-    const t = grow(child === "Any" ? type : child, allowance, depth - 1, rng);
++    const t = grow(child === "Any" ? type : child, allowance, depth - 1, rng, allowTemporal);
+     remaining -= checkTree(t, null).count;
+     return t;
+   });
+@@ -605,7 +655,7 @@
+     for (let k = 0; k < count; k++) {
+       const left = count - k;
+       const allowance = Math.max(1, Math.floor(remaining / left));
+-      const action = grow("Action", allowance, 6, rng);
++      const action = grow("Action", allowance, 6, rng, false);
+       actions.push(action);
+       remaining -= checkTree(action, null).count;
+     }
+--- a/web/gpu/engine.js
++++ b/web/gpu/engine.js
+@@ -465,7 +465,7 @@
+     cfg,
+     fingerprint,
+     genomeSampler: cfg.treePrograms
+-      ? "typed-sequences-state-v2"
++      ? "typed-sequences-state-temporal-mutations-v1"
+       : "assembly-v1",
+     buffers: { state, scratch, genomes, archive, food, intents, activity },
+     get tick() {
+--- /dev/null
++++ b/tests/temporal-expressions.test.mjs
+@@ -0,0 +1,44 @@
++import test from 'node:test';
++import assert from 'node:assert/strict';
++import {createHash} from 'node:crypto';
++import {parseTree,compileTree,packTree,unpackTree,printTree,formatTree,randomTree,mutateTree,treeRng} from '../web/gpu/trees.js';
++const hasTemporal=t=>['lag','delta','smooth'].includes(t.op)||t.args.some(hasTemporal);
++test('temporal expressions remain typed, serializable and private from explicit memory',()=>{
++ for(const source of ['(move (lag (sunlight)))','(move (delta (lag (sunlight))))','(move (smooth 0.25 (temperature)))','(seq (set m0 7) (move (lag (memory m0))))']){
++  const t=parseTree(source),before=JSON.stringify(t),code=compileTree(t),packed=packTree(t);
++  assert.equal(JSON.stringify(t),before);assert.deepEqual(unpackTree(packed.data,packed.count),t);assert.equal(printTree(parseTree(formatTree(t))),printTree(t));
++  const slots=code.statefulSlots.map(s=>s.slot);assert.equal(new Set(slots).size,slots.length);assert.ok(slots.every(s=>s>=0&&s<8));
++ }
++ assert.deepEqual(compileTree('(seq (set m0 7) (move (lag (memory m0))))').statefulSlots.map(s=>s.slot),[1]);
++ assert.throws(()=>parseTree('(move (lag true))'),/Type mismatch/);
++ assert.throws(()=>parseTree('(move (smooth (self) 1))'),/Type mismatch/);
++});
++test('every syntactic occurrence has its own history even with a shared AST object',()=>{
++ const shared=parseTree('(move (lag (tag)))').args[0];
++ const t={op:'seq',args:[{op:'move',args:[shared]},{op:'turn',args:[shared]}]};
++ const code=compileTree(t);assert.equal(t.args[0].args[0],t.args[1].args[0]);
++ assert.equal(code.statefulSlots.length,2);assert.notEqual(code.statefulSlots[0].slot,code.statefulSlots[1].slot);
++});
++test('temporal storage obeys the shared eight-slot bound',()=>{
++ const nest=(count,input)=>Array.from({length:count}).reduce(s=>`(lag ${s})`,input);
++ assert.equal(compileTree(`(move ${nest(8,'1')})`).statefulSlots.length,8);
++ assert.throws(()=>compileTree(`(move ${nest(9,'1')})`),/memory limit/);
++ assert.throws(()=>compileTree(`(move ${nest(8,'(memory m0)')})`),/memory limit/);
++});
++test('1000 random founders retain baseline trees, bytecode and packed node IDs',()=>{
++ const rng=treeRng(904),treeHash=createHash('sha256'),codeHash=createHash('sha256'),packedHash=createHash('sha256');
++ for(let i=0;i<1000;i++){
++  const tree=randomTree(rng);assert.equal(hasTemporal(tree),false);
++  treeHash.update(JSON.stringify(tree)+'\n');codeHash.update(compileTree(tree).source+'\n');packedHash.update(new Uint8Array(packTree(tree).data.buffer));
++ }
++ assert.equal(treeHash.digest('hex'),'31ba18bc2f759a386134e76d3f98558386e5fd333189707bfbe07dac31e9d3b0');
++ assert.equal(codeHash.digest('hex'),'b969f48e3c6dd873b1afbcc9c346d72cf213c955ce7a7c05d66be5e5bc1d8f5c');
++ assert.equal(packedHash.digest('hex'),'9f7d5b2db88266de18dcce9ba33f5ac6c8093b4ee811d17406169f764ced3a3f');
++});
++test('ordinary mutation can introduce each temporal expression without editing its parent',()=>{
++ const tree=parseTree('(seq (photosynthesize) (move (storage)) (split) (photosynthesize))'),before=JSON.stringify(tree),rng=treeRng(831);
++ const found=new Set();
++ function visit(t){if(['lag','delta','smooth'].includes(t.op))found.add(t.op);t.args.forEach(visit);}
++ for(let i=0;i<2000;i++){const mutant=mutateTree(tree,rng);compileTree(mutant);visit(mutant);}
++ assert.equal(JSON.stringify(tree),before);assert.deepEqual([...found].sort(),['delta','lag','smooth']);
++});

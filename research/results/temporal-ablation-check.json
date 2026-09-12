@@ -1,0 +1,868 @@
+{
+  "scope": "The history intervention retains input reads, explicit memory, instruction count and CPU cost. Two past cue sequences end at the same current cue. Controls isolate computational memory from body inertia and ecological effects. The linear predictor is an authored calibration, not evolved intelligence.",
+  "checks": [
+    {
+      "expression": "(tag)",
+      "stateful": false,
+      "positive": {
+        "source": "(set m7 (tag))",
+        "config": {
+          "treePrograms": 1,
+          "crossover": 0.25,
+          "capacity": 2,
+          "genomeCapacity": 2,
+          "side": 8,
+          "sources": 1,
+          "initial": 0,
+          "seed": 42,
+          "budget": 24,
+          "floor": 0,
+          "rate": 0,
+          "share": 0.5,
+          "mutation": 0.8,
+          "seedEnergy": 24,
+          "seedStorage": 24,
+          "upkeep": 0,
+          "ambientTemperature": 20,
+          "sunlightHeating": 0,
+          "activityHeating": 0,
+          "cooling": 0.2,
+          "thermalExchange": 0.12,
+          "crowdInsulation": 1,
+          "safeTemperature": 28,
+          "heatDamage": 0,
+          "energyDecay": 0,
+          "divisionCost": 12,
+          "minimumBirthEnergy": 12,
+          "exchange": 0.12,
+          "shieldUpkeep": 0.72,
+          "cpuCost": 0,
+          "moveCost": 0.004,
+          "turnCost": 0.0001,
+          "linkCost": 0.5,
+          "contractCost": 0.08,
+          "attackCost": 0.08,
+          "attackDamageCost": 0.2,
+          "emitCost": 0.01,
+          "sendCost": 0.01,
+          "jitter": 12,
+          "archiveAge": 60,
+          "archiveHarvest": 120,
+          "archiveOffspring": 8,
+          "archiveEnabled": 0,
+          "executionTrace": 0,
+          "solarRate": 4,
+          "sunContrast": 2,
+          "cloudCover": 0.5,
+          "cloudOpacity": 0.95,
+          "cloudScale": 1200,
+          "cloudSpeed": 12,
+          "cloudMorph": 180,
+          "solarEnabled": 0,
+          "corpseEnergy": 8,
+          "corpseLifetime": 900,
+          "eatCost": 0.04,
+          "storageCapacity": 400
+        },
+        "kernel": "f6344c67d907d3f01cb1165e1b3947031aa2ceba6a15a096c8a49aef5c6c2839",
+        "original": "ROOT:\nsense r0 tag\nmem_save 7 r0\nwait 0\njmp ROOT",
+        "changed": "ROOT:\nsense r0 tag\nmem_save 7 r0\nwait 0\njmp ROOT",
+        "replacements": [],
+        "rows": [
+          {
+            "cue": 2,
+            "intact": 2,
+            "instantaneous": 2
+          },
+          {
+            "cue": 2,
+            "intact": 2,
+            "instantaneous": 2
+          },
+          {
+            "cue": 2,
+            "intact": 2,
+            "instantaneous": 2
+          },
+          {
+            "cue": 0,
+            "intact": 0,
+            "instantaneous": 0
+          }
+        ]
+      },
+      "negative": {
+        "source": "(set m7 (tag))",
+        "config": {
+          "treePrograms": 1,
+          "crossover": 0.25,
+          "capacity": 2,
+          "genomeCapacity": 2,
+          "side": 8,
+          "sources": 1,
+          "initial": 0,
+          "seed": 42,
+          "budget": 24,
+          "floor": 0,
+          "rate": 0,
+          "share": 0.5,
+          "mutation": 0.8,
+          "seedEnergy": 24,
+          "seedStorage": 24,
+          "upkeep": 0,
+          "ambientTemperature": 20,
+          "sunlightHeating": 0,
+          "activityHeating": 0,
+          "cooling": 0.2,
+          "thermalExchange": 0.12,
+          "crowdInsulation": 1,
+          "safeTemperature": 28,
+          "heatDamage": 0,
+          "energyDecay": 0,
+          "divisionCost": 12,
+          "minimumBirthEnergy": 12,
+          "exchange": 0.12,
+          "shieldUpkeep": 0.72,
+          "cpuCost": 0,
+          "moveCost": 0.004,
+          "turnCost": 0.0001,
+          "linkCost": 0.5,
+          "contractCost": 0.08,
+          "attackCost": 0.08,
+          "attackDamageCost": 0.2,
+          "emitCost": 0.01,
+          "sendCost": 0.01,
+          "jitter": 12,
+          "archiveAge": 60,
+          "archiveHarvest": 120,
+          "archiveOffspring": 8,
+          "archiveEnabled": 0,
+          "executionTrace": 0,
+          "solarRate": 4,
+          "sunContrast": 2,
+          "cloudCover": 0.5,
+          "cloudOpacity": 0.95,
+          "cloudScale": 1200,
+          "cloudSpeed": 12,
+          "cloudMorph": 180,
+          "solarEnabled": 0,
+          "corpseEnergy": 8,
+          "corpseLifetime": 900,
+          "eatCost": 0.04,
+          "storageCapacity": 400
+        },
+        "kernel": "f6344c67d907d3f01cb1165e1b3947031aa2ceba6a15a096c8a49aef5c6c2839",
+        "original": "ROOT:\nsense r0 tag\nmem_save 7 r0\nwait 0\njmp ROOT",
+        "changed": "ROOT:\nsense r0 tag\nmem_save 7 r0\nwait 0\njmp ROOT",
+        "replacements": [],
+        "rows": [
+          {
+            "cue": -2,
+            "intact": -2,
+            "instantaneous": -2
+          },
+          {
+            "cue": -2,
+            "intact": -2,
+            "instantaneous": -2
+          },
+          {
+            "cue": -2,
+            "intact": -2,
+            "instantaneous": -2
+          },
+          {
+            "cue": 0,
+            "intact": 0,
+            "instantaneous": 0
+          }
+        ]
+      }
+    },
+    {
+      "expression": "(lag (tag))",
+      "stateful": true,
+      "positive": {
+        "source": "(set m7 (lag (tag)))",
+        "config": {
+          "treePrograms": 1,
+          "crossover": 0.25,
+          "capacity": 2,
+          "genomeCapacity": 2,
+          "side": 8,
+          "sources": 1,
+          "initial": 0,
+          "seed": 42,
+          "budget": 24,
+          "floor": 0,
+          "rate": 0,
+          "share": 0.5,
+          "mutation": 0.8,
+          "seedEnergy": 24,
+          "seedStorage": 24,
+          "upkeep": 0,
+          "ambientTemperature": 20,
+          "sunlightHeating": 0,
+          "activityHeating": 0,
+          "cooling": 0.2,
+          "thermalExchange": 0.12,
+          "crowdInsulation": 1,
+          "safeTemperature": 28,
+          "heatDamage": 0,
+          "energyDecay": 0,
+          "divisionCost": 12,
+          "minimumBirthEnergy": 12,
+          "exchange": 0.12,
+          "shieldUpkeep": 0.72,
+          "cpuCost": 0,
+          "moveCost": 0.004,
+          "turnCost": 0.0001,
+          "linkCost": 0.5,
+          "contractCost": 0.08,
+          "attackCost": 0.08,
+          "attackDamageCost": 0.2,
+          "emitCost": 0.01,
+          "sendCost": 0.01,
+          "jitter": 12,
+          "archiveAge": 60,
+          "archiveHarvest": 120,
+          "archiveOffspring": 8,
+          "archiveEnabled": 0,
+          "executionTrace": 0,
+          "solarRate": 4,
+          "sunContrast": 2,
+          "cloudCover": 0.5,
+          "cloudOpacity": 0.95,
+          "cloudScale": 1200,
+          "cloudSpeed": 12,
+          "cloudMorph": 180,
+          "solarEnabled": 0,
+          "corpseEnergy": 8,
+          "corpseLifetime": 900,
+          "eatCost": 0.04,
+          "storageCapacity": 400
+        },
+        "kernel": "f6344c67d907d3f01cb1165e1b3947031aa2ceba6a15a096c8a49aef5c6c2839",
+        "original": "ROOT:\nsense r0 tag\nmem_load r1 0\nmem_save 0 r0\nmov r0 r1\nmem_save 7 r0\nwait 0\njmp ROOT",
+        "changed": "ROOT:\nsense r0 tag\nmov r1 r0\nmem_save 0 r0\nmov r0 r1\nmem_save 7 r0\nwait 0\njmp ROOT",
+        "replacements": [
+          {
+            "slot": 0,
+            "op": "lag",
+            "before": "mem_load r1 0",
+            "after": "mov r1 r0"
+          }
+        ],
+        "rows": [
+          {
+            "cue": 2,
+            "intact": 0,
+            "instantaneous": 2
+          },
+          {
+            "cue": 2,
+            "intact": 2,
+            "instantaneous": 2
+          },
+          {
+            "cue": 2,
+            "intact": 2,
+            "instantaneous": 2
+          },
+          {
+            "cue": 0,
+            "intact": 2,
+            "instantaneous": 0
+          }
+        ]
+      },
+      "negative": {
+        "source": "(set m7 (lag (tag)))",
+        "config": {
+          "treePrograms": 1,
+          "crossover": 0.25,
+          "capacity": 2,
+          "genomeCapacity": 2,
+          "side": 8,
+          "sources": 1,
+          "initial": 0,
+          "seed": 42,
+          "budget": 24,
+          "floor": 0,
+          "rate": 0,
+          "share": 0.5,
+          "mutation": 0.8,
+          "seedEnergy": 24,
+          "seedStorage": 24,
+          "upkeep": 0,
+          "ambientTemperature": 20,
+          "sunlightHeating": 0,
+          "activityHeating": 0,
+          "cooling": 0.2,
+          "thermalExchange": 0.12,
+          "crowdInsulation": 1,
+          "safeTemperature": 28,
+          "heatDamage": 0,
+          "energyDecay": 0,
+          "divisionCost": 12,
+          "minimumBirthEnergy": 12,
+          "exchange": 0.12,
+          "shieldUpkeep": 0.72,
+          "cpuCost": 0,
+          "moveCost": 0.004,
+          "turnCost": 0.0001,
+          "linkCost": 0.5,
+          "contractCost": 0.08,
+          "attackCost": 0.08,
+          "attackDamageCost": 0.2,
+          "emitCost": 0.01,
+          "sendCost": 0.01,
+          "jitter": 12,
+          "archiveAge": 60,
+          "archiveHarvest": 120,
+          "archiveOffspring": 8,
+          "archiveEnabled": 0,
+          "executionTrace": 0,
+          "solarRate": 4,
+          "sunContrast": 2,
+          "cloudCover": 0.5,
+          "cloudOpacity": 0.95,
+          "cloudScale": 1200,
+          "cloudSpeed": 12,
+          "cloudMorph": 180,
+          "solarEnabled": 0,
+          "corpseEnergy": 8,
+          "corpseLifetime": 900,
+          "eatCost": 0.04,
+          "storageCapacity": 400
+        },
+        "kernel": "f6344c67d907d3f01cb1165e1b3947031aa2ceba6a15a096c8a49aef5c6c2839",
+        "original": "ROOT:\nsense r0 tag\nmem_load r1 0\nmem_save 0 r0\nmov r0 r1\nmem_save 7 r0\nwait 0\njmp ROOT",
+        "changed": "ROOT:\nsense r0 tag\nmov r1 r0\nmem_save 0 r0\nmov r0 r1\nmem_save 7 r0\nwait 0\njmp ROOT",
+        "replacements": [
+          {
+            "slot": 0,
+            "op": "lag",
+            "before": "mem_load r1 0",
+            "after": "mov r1 r0"
+          }
+        ],
+        "rows": [
+          {
+            "cue": -2,
+            "intact": 0,
+            "instantaneous": -2
+          },
+          {
+            "cue": -2,
+            "intact": -2,
+            "instantaneous": -2
+          },
+          {
+            "cue": -2,
+            "intact": -2,
+            "instantaneous": -2
+          },
+          {
+            "cue": 0,
+            "intact": -2,
+            "instantaneous": 0
+          }
+        ]
+      }
+    },
+    {
+      "expression": "(delta (tag))",
+      "stateful": true,
+      "positive": {
+        "source": "(set m7 (delta (tag)))",
+        "config": {
+          "treePrograms": 1,
+          "crossover": 0.25,
+          "capacity": 2,
+          "genomeCapacity": 2,
+          "side": 8,
+          "sources": 1,
+          "initial": 0,
+          "seed": 42,
+          "budget": 24,
+          "floor": 0,
+          "rate": 0,
+          "share": 0.5,
+          "mutation": 0.8,
+          "seedEnergy": 24,
+          "seedStorage": 24,
+          "upkeep": 0,
+          "ambientTemperature": 20,
+          "sunlightHeating": 0,
+          "activityHeating": 0,
+          "cooling": 0.2,
+          "thermalExchange": 0.12,
+          "crowdInsulation": 1,
+          "safeTemperature": 28,
+          "heatDamage": 0,
+          "energyDecay": 0,
+          "divisionCost": 12,
+          "minimumBirthEnergy": 12,
+          "exchange": 0.12,
+          "shieldUpkeep": 0.72,
+          "cpuCost": 0,
+          "moveCost": 0.004,
+          "turnCost": 0.0001,
+          "linkCost": 0.5,
+          "contractCost": 0.08,
+          "attackCost": 0.08,
+          "attackDamageCost": 0.2,
+          "emitCost": 0.01,
+          "sendCost": 0.01,
+          "jitter": 12,
+          "archiveAge": 60,
+          "archiveHarvest": 120,
+          "archiveOffspring": 8,
+          "archiveEnabled": 0,
+          "executionTrace": 0,
+          "solarRate": 4,
+          "sunContrast": 2,
+          "cloudCover": 0.5,
+          "cloudOpacity": 0.95,
+          "cloudScale": 1200,
+          "cloudSpeed": 12,
+          "cloudMorph": 180,
+          "solarEnabled": 0,
+          "corpseEnergy": 8,
+          "corpseLifetime": 900,
+          "eatCost": 0.04,
+          "storageCapacity": 400
+        },
+        "kernel": "f6344c67d907d3f01cb1165e1b3947031aa2ceba6a15a096c8a49aef5c6c2839",
+        "original": "ROOT:\nsense r0 tag\nmem_load r1 0\nmem_save 0 r0\nsub r0 r1\nmem_save 7 r0\nwait 0\njmp ROOT",
+        "changed": "ROOT:\nsense r0 tag\nmov r1 r0\nmem_save 0 r0\nsub r0 r1\nmem_save 7 r0\nwait 0\njmp ROOT",
+        "replacements": [
+          {
+            "slot": 0,
+            "op": "delta",
+            "before": "mem_load r1 0",
+            "after": "mov r1 r0"
+          }
+        ],
+        "rows": [
+          {
+            "cue": 2,
+            "intact": 2,
+            "instantaneous": 0
+          },
+          {
+            "cue": 2,
+            "intact": 0,
+            "instantaneous": 0
+          },
+          {
+            "cue": 2,
+            "intact": 0,
+            "instantaneous": 0
+          },
+          {
+            "cue": 0,
+            "intact": -2,
+            "instantaneous": 0
+          }
+        ]
+      },
+      "negative": {
+        "source": "(set m7 (delta (tag)))",
+        "config": {
+          "treePrograms": 1,
+          "crossover": 0.25,
+          "capacity": 2,
+          "genomeCapacity": 2,
+          "side": 8,
+          "sources": 1,
+          "initial": 0,
+          "seed": 42,
+          "budget": 24,
+          "floor": 0,
+          "rate": 0,
+          "share": 0.5,
+          "mutation": 0.8,
+          "seedEnergy": 24,
+          "seedStorage": 24,
+          "upkeep": 0,
+          "ambientTemperature": 20,
+          "sunlightHeating": 0,
+          "activityHeating": 0,
+          "cooling": 0.2,
+          "thermalExchange": 0.12,
+          "crowdInsulation": 1,
+          "safeTemperature": 28,
+          "heatDamage": 0,
+          "energyDecay": 0,
+          "divisionCost": 12,
+          "minimumBirthEnergy": 12,
+          "exchange": 0.12,
+          "shieldUpkeep": 0.72,
+          "cpuCost": 0,
+          "moveCost": 0.004,
+          "turnCost": 0.0001,
+          "linkCost": 0.5,
+          "contractCost": 0.08,
+          "attackCost": 0.08,
+          "attackDamageCost": 0.2,
+          "emitCost": 0.01,
+          "sendCost": 0.01,
+          "jitter": 12,
+          "archiveAge": 60,
+          "archiveHarvest": 120,
+          "archiveOffspring": 8,
+          "archiveEnabled": 0,
+          "executionTrace": 0,
+          "solarRate": 4,
+          "sunContrast": 2,
+          "cloudCover": 0.5,
+          "cloudOpacity": 0.95,
+          "cloudScale": 1200,
+          "cloudSpeed": 12,
+          "cloudMorph": 180,
+          "solarEnabled": 0,
+          "corpseEnergy": 8,
+          "corpseLifetime": 900,
+          "eatCost": 0.04,
+          "storageCapacity": 400
+        },
+        "kernel": "f6344c67d907d3f01cb1165e1b3947031aa2ceba6a15a096c8a49aef5c6c2839",
+        "original": "ROOT:\nsense r0 tag\nmem_load r1 0\nmem_save 0 r0\nsub r0 r1\nmem_save 7 r0\nwait 0\njmp ROOT",
+        "changed": "ROOT:\nsense r0 tag\nmov r1 r0\nmem_save 0 r0\nsub r0 r1\nmem_save 7 r0\nwait 0\njmp ROOT",
+        "replacements": [
+          {
+            "slot": 0,
+            "op": "delta",
+            "before": "mem_load r1 0",
+            "after": "mov r1 r0"
+          }
+        ],
+        "rows": [
+          {
+            "cue": -2,
+            "intact": -2,
+            "instantaneous": 0
+          },
+          {
+            "cue": -2,
+            "intact": 0,
+            "instantaneous": 0
+          },
+          {
+            "cue": -2,
+            "intact": 0,
+            "instantaneous": 0
+          },
+          {
+            "cue": 0,
+            "intact": 2,
+            "instantaneous": 0
+          }
+        ]
+      }
+    },
+    {
+      "expression": "(smooth 0.25 (tag))",
+      "stateful": true,
+      "positive": {
+        "source": "(set m7 (smooth 0.25 (tag)))",
+        "config": {
+          "treePrograms": 1,
+          "crossover": 0.25,
+          "capacity": 2,
+          "genomeCapacity": 2,
+          "side": 8,
+          "sources": 1,
+          "initial": 0,
+          "seed": 42,
+          "budget": 24,
+          "floor": 0,
+          "rate": 0,
+          "share": 0.5,
+          "mutation": 0.8,
+          "seedEnergy": 24,
+          "seedStorage": 24,
+          "upkeep": 0,
+          "ambientTemperature": 20,
+          "sunlightHeating": 0,
+          "activityHeating": 0,
+          "cooling": 0.2,
+          "thermalExchange": 0.12,
+          "crowdInsulation": 1,
+          "safeTemperature": 28,
+          "heatDamage": 0,
+          "energyDecay": 0,
+          "divisionCost": 12,
+          "minimumBirthEnergy": 12,
+          "exchange": 0.12,
+          "shieldUpkeep": 0.72,
+          "cpuCost": 0,
+          "moveCost": 0.004,
+          "turnCost": 0.0001,
+          "linkCost": 0.5,
+          "contractCost": 0.08,
+          "attackCost": 0.08,
+          "attackDamageCost": 0.2,
+          "emitCost": 0.01,
+          "sendCost": 0.01,
+          "jitter": 12,
+          "archiveAge": 60,
+          "archiveHarvest": 120,
+          "archiveOffspring": 8,
+          "archiveEnabled": 0,
+          "executionTrace": 0,
+          "solarRate": 4,
+          "sunContrast": 2,
+          "cloudCover": 0.5,
+          "cloudOpacity": 0.95,
+          "cloudScale": 1200,
+          "cloudSpeed": 12,
+          "cloudMorph": 180,
+          "solarEnabled": 0,
+          "corpseEnergy": 8,
+          "corpseLifetime": 900,
+          "eatCost": 0.04,
+          "storageCapacity": 400
+        },
+        "kernel": "f6344c67d907d3f01cb1165e1b3947031aa2ceba6a15a096c8a49aef5c6c2839",
+        "original": "ROOT:\nmov r0 0.25\nsense r1 tag\nmax r0 0\nmin r0 1\nmem_load r2 0\nsub r1 r2\nmul r1 r0\nadd r2 r1\nmem_save 0 r2\nmov r0 r2\nmem_save 7 r0\nwait 0\njmp ROOT",
+        "changed": "ROOT:\nmov r0 0.25\nsense r1 tag\nmax r0 0\nmin r0 1\nmov r2 r1\nsub r1 r2\nmul r1 r0\nadd r2 r1\nmem_save 0 r2\nmov r0 r2\nmem_save 7 r0\nwait 0\njmp ROOT",
+        "replacements": [
+          {
+            "slot": 0,
+            "op": "smooth",
+            "before": "mem_load r2 0",
+            "after": "mov r2 r1"
+          }
+        ],
+        "rows": [
+          {
+            "cue": 2,
+            "intact": 0.5,
+            "instantaneous": 2
+          },
+          {
+            "cue": 2,
+            "intact": 0.875,
+            "instantaneous": 2
+          },
+          {
+            "cue": 2,
+            "intact": 1.15625,
+            "instantaneous": 2
+          },
+          {
+            "cue": 0,
+            "intact": 0.8671875,
+            "instantaneous": 0
+          }
+        ]
+      },
+      "negative": {
+        "source": "(set m7 (smooth 0.25 (tag)))",
+        "config": {
+          "treePrograms": 1,
+          "crossover": 0.25,
+          "capacity": 2,
+          "genomeCapacity": 2,
+          "side": 8,
+          "sources": 1,
+          "initial": 0,
+          "seed": 42,
+          "budget": 24,
+          "floor": 0,
+          "rate": 0,
+          "share": 0.5,
+          "mutation": 0.8,
+          "seedEnergy": 24,
+          "seedStorage": 24,
+          "upkeep": 0,
+          "ambientTemperature": 20,
+          "sunlightHeating": 0,
+          "activityHeating": 0,
+          "cooling": 0.2,
+          "thermalExchange": 0.12,
+          "crowdInsulation": 1,
+          "safeTemperature": 28,
+          "heatDamage": 0,
+          "energyDecay": 0,
+          "divisionCost": 12,
+          "minimumBirthEnergy": 12,
+          "exchange": 0.12,
+          "shieldUpkeep": 0.72,
+          "cpuCost": 0,
+          "moveCost": 0.004,
+          "turnCost": 0.0001,
+          "linkCost": 0.5,
+          "contractCost": 0.08,
+          "attackCost": 0.08,
+          "attackDamageCost": 0.2,
+          "emitCost": 0.01,
+          "sendCost": 0.01,
+          "jitter": 12,
+          "archiveAge": 60,
+          "archiveHarvest": 120,
+          "archiveOffspring": 8,
+          "archiveEnabled": 0,
+          "executionTrace": 0,
+          "solarRate": 4,
+          "sunContrast": 2,
+          "cloudCover": 0.5,
+          "cloudOpacity": 0.95,
+          "cloudScale": 1200,
+          "cloudSpeed": 12,
+          "cloudMorph": 180,
+          "solarEnabled": 0,
+          "corpseEnergy": 8,
+          "corpseLifetime": 900,
+          "eatCost": 0.04,
+          "storageCapacity": 400
+        },
+        "kernel": "f6344c67d907d3f01cb1165e1b3947031aa2ceba6a15a096c8a49aef5c6c2839",
+        "original": "ROOT:\nmov r0 0.25\nsense r1 tag\nmax r0 0\nmin r0 1\nmem_load r2 0\nsub r1 r2\nmul r1 r0\nadd r2 r1\nmem_save 0 r2\nmov r0 r2\nmem_save 7 r0\nwait 0\njmp ROOT",
+        "changed": "ROOT:\nmov r0 0.25\nsense r1 tag\nmax r0 0\nmin r0 1\nmov r2 r1\nsub r1 r2\nmul r1 r0\nadd r2 r1\nmem_save 0 r2\nmov r0 r2\nmem_save 7 r0\nwait 0\njmp ROOT",
+        "replacements": [
+          {
+            "slot": 0,
+            "op": "smooth",
+            "before": "mem_load r2 0",
+            "after": "mov r2 r1"
+          }
+        ],
+        "rows": [
+          {
+            "cue": -2,
+            "intact": -0.5,
+            "instantaneous": -2
+          },
+          {
+            "cue": -2,
+            "intact": -0.875,
+            "instantaneous": -2
+          },
+          {
+            "cue": -2,
+            "intact": -1.15625,
+            "instantaneous": -2
+          },
+          {
+            "cue": 0,
+            "intact": -0.8671875,
+            "instantaneous": 0
+          }
+        ]
+      }
+    }
+  ],
+  "prediction": {
+    "source": "(set m7 (- (* 2 (tag)) (lag (tag))))",
+    "config": {
+      "treePrograms": 1,
+      "crossover": 0.25,
+      "capacity": 2,
+      "genomeCapacity": 2,
+      "side": 8,
+      "sources": 1,
+      "initial": 0,
+      "seed": 42,
+      "budget": 24,
+      "floor": 0,
+      "rate": 0,
+      "share": 0.5,
+      "mutation": 0.8,
+      "seedEnergy": 24,
+      "seedStorage": 24,
+      "upkeep": 0,
+      "ambientTemperature": 20,
+      "sunlightHeating": 0,
+      "activityHeating": 0,
+      "cooling": 0.2,
+      "thermalExchange": 0.12,
+      "crowdInsulation": 1,
+      "safeTemperature": 28,
+      "heatDamage": 0,
+      "energyDecay": 0,
+      "divisionCost": 12,
+      "minimumBirthEnergy": 12,
+      "exchange": 0.12,
+      "shieldUpkeep": 0.72,
+      "cpuCost": 0,
+      "moveCost": 0.004,
+      "turnCost": 0.0001,
+      "linkCost": 0.5,
+      "contractCost": 0.08,
+      "attackCost": 0.08,
+      "attackDamageCost": 0.2,
+      "emitCost": 0.01,
+      "sendCost": 0.01,
+      "jitter": 12,
+      "archiveAge": 60,
+      "archiveHarvest": 120,
+      "archiveOffspring": 8,
+      "archiveEnabled": 0,
+      "executionTrace": 0,
+      "solarRate": 4,
+      "sunContrast": 2,
+      "cloudCover": 0.5,
+      "cloudOpacity": 0.95,
+      "cloudScale": 1200,
+      "cloudSpeed": 12,
+      "cloudMorph": 180,
+      "solarEnabled": 0,
+      "corpseEnergy": 8,
+      "corpseLifetime": 900,
+      "eatCost": 0.04,
+      "storageCapacity": 400
+    },
+    "kernel": "f6344c67d907d3f01cb1165e1b3947031aa2ceba6a15a096c8a49aef5c6c2839",
+    "original": "ROOT:\nmov r0 2\nsense r1 tag\nmul r0 r1\nsense r1 tag\nmem_load r2 0\nmem_save 0 r1\nmov r1 r2\nsub r0 r1\nmem_save 7 r0\nwait 0\njmp ROOT",
+    "changed": "ROOT:\nmov r0 2\nsense r1 tag\nmul r0 r1\nsense r1 tag\nmov r2 r1\nmem_save 0 r1\nmov r1 r2\nsub r0 r1\nmem_save 7 r0\nwait 0\njmp ROOT",
+    "replacements": [
+      {
+        "slot": 0,
+        "op": "lag",
+        "before": "mem_load r2 0",
+        "after": "mov r2 r1"
+      }
+    ],
+    "rows": [
+      {
+        "cue": 0,
+        "intact": 0,
+        "instantaneous": 0
+      },
+      {
+        "cue": 1,
+        "intact": 2,
+        "instantaneous": 1
+      },
+      {
+        "cue": 2,
+        "intact": 3,
+        "instantaneous": 2
+      },
+      {
+        "cue": 3,
+        "intact": 4,
+        "instantaneous": 3
+      },
+      {
+        "cue": 4,
+        "intact": 5,
+        "instantaneous": 4
+      },
+      {
+        "cue": 5,
+        "intact": 6,
+        "instantaneous": 5
+      }
+    ],
+    "mse": {
+      "intact": 0,
+      "instantaneous": 1
+    }
+  },
+  "complete": true
+}
