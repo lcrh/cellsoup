@@ -1,0 +1,175 @@
+--- a/web/gpu/trees.js
++++ b/web/gpu/trees.js
+@@ -4,12 +4,20 @@
+ export const TYPES = ["Number", "Bool", "Cell", "Memory", "Channel", "Action"];
+ export const MAX_TREE_NODES = 32;
+ export const TREE_MEMORY_SLOTS = 8;
++// Experimental: founders retain the baseline vocabulary; mutations may add
++// persistent communication through reciprocal links. False is the paired control.
++const MUTATE_LINKED_SIGNALS = true;
+ export const TREE_VM_OPS = [
+   ...GPU_OPS,
+   ["mem_load", "r v", "Read persistent tree memory."],
+   ["mem_save", "v v", "Write persistent tree memory."],
+   ["mem_ready", "r v", "Test whether a state binding has been initialized."],
+   ["mem_init", "v v", "Initialize state once per cell; inherited on division."],
++  [
++    "linked_listen",
++    "r v",
++    "Mean previous-tick signal of live reciprocal neighbors on a channel; zero without neighbors. Does not consume signals.",
++  ],
+ ];
+ const entry = (name, result, args = []) => ({ name, result, args });
+ export const TREE_SCHEMA = [
+@@ -94,6 +102,8 @@
+   entry("state", "Any", ["Memory", "Number", "Any"]),
+   entry("let", "Any", ["Memory", "Number", "Any"]),
+   entry("do", "Any", ["Action", "Any"]),
++  entry("linked-signal", "Number", ["Channel"]),
++  entry("couple", "Number", ["Channel", "Number"]),
+ ];
+ const byName = new Map(TREE_SCHEMA.map((s, i) => [s.name, { ...s, id: i }]));
+ const node = (op, args = [], value) =>
+@@ -464,6 +474,12 @@
+       next = start + 1;
+       return r;
+     }
++    if (op === "couple") {
++      const r = expr(t.args[1]);
++      emit("emit", t.args[0].value, reg(r));
++      emit("linked_listen", reg(r), t.args[0].value);
++      return r;
++    }
+     const r = reserve();
+     if (op === "number" || op === "bool") emit("mov", reg(r), t.value);
+     else if (op === "memory" || op === "birth-result")
+@@ -474,6 +490,8 @@
+     else if (op === "nearest-corpse") emit("scan_corpse", reg(r), 360);
+     else if (op === "bond") emit("bond", reg(r), t.args[0].value);
+     else if (op === "listen") emit("listen", reg(r), t.args[0].value);
++    else if (op === "linked-signal")
++      emit("linked_listen", reg(r), t.args[0].value);
+     else if (op === "receive") {
+       reserve();
+       emit("receive", reg(r), reg(r + 1), t.args[0].value);
+@@ -563,9 +581,10 @@
+ const constants = [
+   -1, 0, 0.1, 0.25, 0.5, 0.75, 1, 2, 3, 5, 10, 25, 60, 90, 120, 360,
+ ];
+-function grow(type, budget, depth, rng) {
++function grow(type, budget, depth, rng, linkedSignals = MUTATE_LINKED_SIGNALS) {
+   const options = TREE_SCHEMA.filter(
+     (s) =>
++      (linkedSignals || !["linked-signal", "couple"].includes(s.name)) &&
+       (s.result === type ||
+         (["if", "state", "let", "do"].includes(s.name) &&
+           !["Memory", "Channel"].includes(type))) &&
+@@ -588,7 +607,13 @@
+     const spare = remaining - (s.args.length - i - 1);
+     const allowance =
+       i === s.args.length - 1 ? spare : 1 + Math.floor(rng() * spare);
+-    const t = grow(child === "Any" ? type : child, allowance, depth - 1, rng);
++    const t = grow(
++      child === "Any" ? type : child,
++      allowance,
++      depth - 1,
++      rng,
++      linkedSignals,
++    );
+     remaining -= checkTree(t, null).count;
+     return t;
+   });
+@@ -605,7 +630,7 @@
+     for (let k = 0; k < count; k++) {
+       const left = count - k;
+       const allowance = Math.max(1, Math.floor(remaining / left));
+-      const action = grow("Action", allowance, 6, rng);
++      const action = grow("Action", allowance, 6, rng, false);
+       actions.push(action);
+       remaining -= checkTree(action, null).count;
+     }
+--- a/web/gpu/shader.js
++++ b/web/gpu/shader.js
+@@ -846,7 +846,15 @@
+         }
+ ${
+   treePrograms
+-    ? `        case 46u:{
++    ? `        case 50u:{
++          var sum=0.0;var count=0u;
++          for(var k=0u;k<4u;k++){
++            let j=liveLink(i,k);
++            if(j!=NONE){sum+=old[j].signal[u32(clamp(b,0.0,3.0))];count++;}
++          }
++          c.r[d]=sum/f32(max(1u,count));
++        }
++        case 46u:{
+           c.r[d]=0;
+           if(b>=0&&b<9&&b==floor(b)){let slot=u32(b);c.r[d]=s.treeMemory[i*3u+slot/4u][slot%4u];}
+         }
+--- a/web/gpu/engine.js
++++ b/web/gpu/engine.js
+@@ -465,7 +465,7 @@
+     cfg,
+     fingerprint,
+     genomeSampler: cfg.treePrograms
+-      ? "typed-sequences-state-v2"
++      ? "typed-sequences-state-linked-signals-mutations-v1"
+       : "assembly-v1",
+     buffers: { state, scratch, genomes, archive, food, intents, activity },
+     get tick() {
+--- /dev/null
++++ b/tests/linked-signals.test.mjs
+@@ -0,0 +1,52 @@
++import test from "node:test";
++import assert from "node:assert/strict";
++import {
++  parseTree,
++  compileTree,
++  packTree,
++  unpackTree,
++  printTree,
++  mutateTree,
++  randomTree,
++  treeRng,
++  TREE_VM_OPS,
++} from "../web/gpu/trees.js";
++test("linked expressions keep channel types, old opcodes and serialization", () => {
++  assert.equal(
++    TREE_VM_OPS.findIndex((o) => o[0] === "mem_load"),
++    46,
++  );
++  assert.equal(
++    TREE_VM_OPS.findIndex((o) => o[0] === "linked_listen"),
++    50,
++  );
++  assert.throws(() => parseTree("(move (couple 0 1))"), /Type mismatch/);
++  assert.throws(() => parseTree("(move (linked-signal m0))"), /Type mismatch/);
++  const tree = parseTree("(move (couple c2 (+ (linked-signal c1) 1)))"),
++    code = compileTree(tree),
++    packed = packTree(tree);
++  assert.match(code.source, /linked_listen r0 1/);
++  assert.match(code.source, /emit 2 r0\nlinked_listen r0 2\nmove r0/);
++  assert.equal(
++    printTree(unpackTree(packed.data, packed.count)),
++    printTree(tree),
++  );
++});
++test("linked forms arrive through mutation, not initial random programs", () => {
++  const rng = treeRng(904),
++    founders = Array.from({ length: 1000 }, () => randomTree(rng));
++  const ops = (t) => [t.op, ...t.args.flatMap(ops)];
++  assert.ok(
++    founders.every(
++      (t) => !ops(t).some((op) => ["couple", "linked-signal"].includes(op)),
++    ),
++  );
++  const parent = parseTree("(seq (photosynthesize) (move 1) (bud))"),
++    before = printTree(parent),
++    seen = new Set();
++  for (let i = 0; i < 4000; i++)
++    for (const op of ops(mutateTree(parent, rng))) seen.add(op);
++  assert.ok(seen.has("couple"));
++  assert.ok(seen.has("linked-signal"));
++  assert.equal(printTree(parent), before);
++});

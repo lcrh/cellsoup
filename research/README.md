@@ -121,3 +121,8 @@ are complete and show mixed group-movement outcomes across three seeds.
 An [observed crowding-response program](crowding-history.md)
 uses history causally, but thirty ecological controls show why deleting history
 alone would overstate its advantage over simpler movement.
+
+The [linked-signal experiment](experiments/linked-signals.md) now tests a generic
+way to publish a value and read the mean signal from linked neighbors. A controlled
+recurrent circuit passes GPU checks; autonomous evolutionary trials are running
+with exactly matched random founders. The calibration is not an evolved behavior.

@@ -1,0 +1,21 @@
+{
+  "scope": "Paired control reproduces 3000 production random-founder and mutation draws, including compiled source. Experimental control and variant use identical shader source bytes. This is sampler calibration, not a guarantee of bit-identical GPU ecological histories.",
+  "pairs": 3000,
+  "seed": 1749,
+  "drawSha256": "19cad1148158fc0e83471fd596d96bc5ae9cf67dea25c330f39545fb4112b3dd",
+  "shaderFileSha256": "57a2d75c06c0ede5ba563ad9dac8b2e6c6884d1ee4b2bc1e75e66b4abbfbfd45",
+  "files": {
+    "trees.js": {
+      "variant": "440f8b3eac0a3179571c33c7b884293ef62de7c37a6767878324b0e1d253f6b1",
+      "control": "109690e6ebec7f34e6921f2547bb940920f72457698f0185e9299e46a939d07b"
+    },
+    "shader.js": {
+      "variant": "57a2d75c06c0ede5ba563ad9dac8b2e6c6884d1ee4b2bc1e75e66b4abbfbfd45",
+      "control": "57a2d75c06c0ede5ba563ad9dac8b2e6c6884d1ee4b2bc1e75e66b4abbfbfd45"
+    },
+    "engine.js": {
+      "variant": "ac11bbda9b1047a98643ecaeb5b62140dc1317c17d12dae37fdbb4c2181a42ef",
+      "control": "dc11aa41941c6d0cfcc4323195f684635522681256dc866427b1b4ba18f3eb8b"
+    }
+  }
+}

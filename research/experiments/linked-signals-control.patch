@@ -1,0 +1,43 @@
+--- a/web/gpu/trees.js
++++ b/web/gpu/trees.js
+@@ -6,7 +6,7 @@
+ export const TREE_MEMORY_SLOTS = 8;
+ // Experimental: founders retain the baseline vocabulary; mutations may add
+ // persistent communication through reciprocal links. False is the paired control.
+-const MUTATE_LINKED_SIGNALS = true;
++const MUTATE_LINKED_SIGNALS = false;
+ export const TREE_VM_OPS = [
+   ...GPU_OPS,
+   ["mem_load", "r v", "Read persistent tree memory."],
+--- a/web/gpu/engine.js
++++ b/web/gpu/engine.js
+@@ -465,7 +465,7 @@
+     cfg,
+     fingerprint,
+     genomeSampler: cfg.treePrograms
+-      ? "typed-sequences-state-linked-signals-mutations-v1"
++      ? "typed-sequences-state-linked-signals-control-v1"
+       : "assembly-v1",
+     buffers: { state, scratch, genomes, archive, food, intents, activity },
+     get tick() {
+--- a/tests/linked-signals.test.mjs
++++ b/tests/linked-signals.test.mjs
+@@ -32,7 +32,7 @@
+     printTree(tree),
+   );
+ });
+-test("linked forms arrive through mutation, not initial random programs", () => {
++test("paired control excludes linked forms from mutations and founders", () => {
+   const rng = treeRng(904),
+     founders = Array.from({ length: 1000 }, () => randomTree(rng));
+   const ops = (t) => [t.op, ...t.args.flatMap(ops)];
+@@ -46,7 +46,7 @@
+     seen = new Set();
+   for (let i = 0; i < 4000; i++)
+     for (const op of ops(mutateTree(parent, rng))) seen.add(op);
+-  assert.ok(seen.has("couple"));
+-  assert.ok(seen.has("linked-signal"));
++  assert.ok(!seen.has("couple"));
++  assert.ok(!seen.has("linked-signal"));
+   assert.equal(printTree(parent), before);
+ });

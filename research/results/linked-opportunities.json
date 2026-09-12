@@ -1,0 +1,2733 @@
+{
+  "scope": "Final surviving syntax in nine completed worlds. A matching send/receive channel inside one genome is an opportunity for a clonal body, not evidence of executed communication. Different genotypes can communicate without such a match; dead branches and unused values can create matches without function. Counts must not be optimized as a complexity measure.",
+  "worlds": [
+    {
+      "name": "continuous-cadence-control-321",
+      "path": "research/results/cadence-worlds/continuous-cadence-control-321/run.json.gz",
+      "sha256": "7a578fb71a145d499711170a2e2c26a10747b3d42344addf9efc8c98092b4de3",
+      "config": {
+        "treePrograms": 1,
+        "crossover": 0.25,
+        "capacity": 32768,
+        "genomeCapacity": 8192,
+        "side": 128,
+        "sources": 1,
+        "initial": 8192,
+        "seed": 321,
+        "budget": 24,
+        "floor": 0,
+        "rate": 8,
+        "share": 0.5,
+        "mutation": 0.8,
+        "seedEnergy": 24,
+        "seedStorage": 24,
+        "upkeep": 0.5,
+        "ambientTemperature": 20,
+        "sunlightHeating": 1,
+        "activityHeating": 0.12,
+        "cooling": 0.2,
+        "thermalExchange": 0.12,
+        "crowdInsulation": 1,
+        "safeTemperature": 28,
+        "heatDamage": 0.5,
+        "energyDecay": 0.05,
+        "divisionCost": 12,
+        "minimumBirthEnergy": 12,
+        "exchange": 0.12,
+        "shieldUpkeep": 0.72,
+        "cpuCost": 0.00005,
+        "moveCost": 0.004,
+        "turnCost": 0.0001,
+        "linkCost": 0.5,
+        "contractCost": 0.08,
+        "attackCost": 0.08,
+        "attackDamageCost": 0.2,
+        "emitCost": 0.01,
+        "sendCost": 0.01,
+        "jitter": 12,
+        "archiveAge": 60,
+        "archiveHarvest": 120,
+        "archiveOffspring": 8,
+        "archiveEnabled": 1,
+        "executionTrace": 0,
+        "solarRate": 4,
+        "sunContrast": 2,
+        "cloudCover": 0.5,
+        "cloudOpacity": 0.95,
+        "cloudScale": 1200,
+        "cloudSpeed": 12,
+        "cloudMorph": 180,
+        "solarEnabled": 1,
+        "corpseEnergy": 8,
+        "corpseLifetime": 900,
+        "eatCost": 0.04,
+        "storageCapacity": 400
+      },
+      "kernel": "c11c260bcb095d3162b299dbac6a768125b31f813263437e2ed79ef9151f4ca4",
+      "sampler": "typed-sequences-state-v2",
+      "finalLiving": 32765,
+      "counts": {
+        "listenGenotypes": 135,
+        "listenCells": 4256,
+        "sendGenotypes": 49,
+        "sendCells": 846,
+        "receiveGenotypes": 43,
+        "receiveCells": 787,
+        "emitGenotypes": 9,
+        "emitCells": 10
+      },
+      "matchedGenotypes": 0,
+      "matchedCells": 0,
+      "matched": []
+    },
+    {
+      "name": "continuous-cadence-control-42",
+      "path": "research/results/cadence-worlds/continuous-cadence-control-42/run.json.gz",
+      "sha256": "77895d33769c3d64c8a1d73cecd73f9b4075f6141972ca36dd2692ffde661016",
+      "config": {
+        "treePrograms": 1,
+        "crossover": 0.25,
+        "capacity": 32768,
+        "genomeCapacity": 8192,
+        "side": 128,
+        "sources": 1,
+        "initial": 8192,
+        "seed": 42,
+        "budget": 24,
+        "floor": 0,
+        "rate": 8,
+        "share": 0.5,
+        "mutation": 0.8,
+        "seedEnergy": 24,
+        "seedStorage": 24,
+        "upkeep": 0.5,
+        "ambientTemperature": 20,
+        "sunlightHeating": 1,
+        "activityHeating": 0.12,
+        "cooling": 0.2,
+        "thermalExchange": 0.12,
+        "crowdInsulation": 1,
+        "safeTemperature": 28,
+        "heatDamage": 0.5,
+        "energyDecay": 0.05,
+        "divisionCost": 12,
+        "minimumBirthEnergy": 12,
+        "exchange": 0.12,
+        "shieldUpkeep": 0.72,
+        "cpuCost": 0.00005,
+        "moveCost": 0.004,
+        "turnCost": 0.0001,
+        "linkCost": 0.5,
+        "contractCost": 0.08,
+        "attackCost": 0.08,
+        "attackDamageCost": 0.2,
+        "emitCost": 0.01,
+        "sendCost": 0.01,
+        "jitter": 12,
+        "archiveAge": 60,
+        "archiveHarvest": 120,
+        "archiveOffspring": 8,
+        "archiveEnabled": 1,
+        "executionTrace": 0,
+        "solarRate": 4,
+        "sunContrast": 2,
+        "cloudCover": 0.5,
+        "cloudOpacity": 0.95,
+        "cloudScale": 1200,
+        "cloudSpeed": 12,
+        "cloudMorph": 180,
+        "solarEnabled": 1,
+        "corpseEnergy": 8,
+        "corpseLifetime": 900,
+        "eatCost": 0.04,
+        "storageCapacity": 400
+      },
+      "kernel": "c11c260bcb095d3162b299dbac6a768125b31f813263437e2ed79ef9151f4ca4",
+      "sampler": "typed-sequences-state-v2",
+      "finalLiving": 15494,
+      "counts": {
+        "sendGenotypes": 48,
+        "sendCells": 60,
+        "receiveGenotypes": 69,
+        "receiveCells": 169,
+        "emitGenotypes": 37,
+        "emitCells": 41,
+        "listenGenotypes": 30,
+        "listenCells": 59
+      },
+      "matchedGenotypes": 2,
+      "matchedCells": 2,
+      "matched": [
+        {
+          "serial": 28778,
+          "living": 1,
+          "channels": [
+            2
+          ],
+          "tree": {
+            "op": "seq",
+            "args": [
+              {
+                "op": "seq",
+                "args": [
+                  {
+                    "op": "send",
+                    "args": [
+                      {
+                        "op": "nearest-corpse",
+                        "args": []
+                      },
+                      {
+                        "op": "channel",
+                        "args": [],
+                        "value": 2
+                      },
+                      {
+                        "op": "rotation",
+                        "args": []
+                      }
+                    ]
+                  },
+                  {
+                    "op": "send",
+                    "args": [
+                      {
+                        "op": "self",
+                        "args": []
+                      },
+                      {
+                        "op": "channel",
+                        "args": [],
+                        "value": 0
+                      },
+                      {
+                        "op": "crowding",
+                        "args": []
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "op": "seq",
+                "args": [
+                  {
+                    "op": "unlink",
+                    "args": [
+                      {
+                        "op": "let",
+                        "args": [
+                          {
+                            "op": "slot",
+                            "args": [],
+                            "value": 0
+                          },
+                          {
+                            "op": "receive",
+                            "args": [
+                              {
+                                "op": "channel",
+                                "args": [],
+                                "value": 2
+                              }
+                            ]
+                          },
+                          {
+                            "op": "nearest-corpse",
+                            "args": []
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "op": "photosynthesize",
+                    "args": []
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "serial": 35242,
+          "living": 1,
+          "channels": [
+            3
+          ],
+          "tree": {
+            "op": "seq",
+            "args": [
+              {
+                "op": "shield",
+                "args": [
+                  {
+                    "op": "mod",
+                    "args": [
+                      {
+                        "op": "sunlight-slope",
+                        "args": []
+                      },
+                      {
+                        "op": "target-tag",
+                        "args": [
+                          {
+                            "op": "scan",
+                            "args": [
+                              {
+                                "op": "temperature",
+                                "args": []
+                              },
+                              {
+                                "op": "receive",
+                                "args": [
+                                  {
+                                    "op": "channel",
+                                    "args": [],
+                                    "value": 3
+                                  }
+                                ]
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "op": "seq",
+                "args": [
+                  {
+                    "op": "eat",
+                    "args": []
+                  },
+                  {
+                    "op": "seq",
+                    "args": [
+                      {
+                        "op": "send",
+                        "args": [
+                          {
+                            "op": "nearest-cell",
+                            "args": []
+                          },
+                          {
+                            "op": "channel",
+                            "args": [],
+                            "value": 3
+                          },
+                          {
+                            "op": "state",
+                            "args": [
+                              {
+                                "op": "slot",
+                                "args": [],
+                                "value": 1
+                              },
+                              {
+                                "op": "storage",
+                                "args": []
+                              },
+                              {
+                                "op": "receive",
+                                "args": [
+                                  {
+                                    "op": "channel",
+                                    "args": [],
+                                    "value": 0
+                                  }
+                                ]
+                              }
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "op": "seq",
+                        "args": [
+                          {
+                            "op": "color-set",
+                            "args": [
+                              {
+                                "op": "if",
+                                "args": [
+                                  {
+                                    "op": "bool",
+                                    "args": [],
+                                    "value": 1
+                                  },
+                                  {
+                                    "op": "linked_temperature",
+                                    "args": []
+                                  },
+                                  {
+                                    "op": "rotation",
+                                    "args": []
+                                  }
+                                ]
+                              }
+                            ]
+                          },
+                          {
+                            "op": "state",
+                            "args": [
+                              {
+                                "op": "slot",
+                                "args": [],
+                                "value": 3
+                              },
+                              {
+                                "op": "linked_temperature",
+                                "args": []
+                              },
+                              {
+                                "op": "photosynthesize",
+                                "args": []
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "continuous-cadence-control-97",
+      "path": "research/results/cadence-worlds/continuous-cadence-control-97/run.json.gz",
+      "sha256": "d2425ca821f9d319bc471f885095309b51cbadb0002ee940f7b7adb6071567d3",
+      "config": {
+        "treePrograms": 1,
+        "crossover": 0.25,
+        "capacity": 32768,
+        "genomeCapacity": 8192,
+        "side": 128,
+        "sources": 1,
+        "initial": 8192,
+        "seed": 97,
+        "budget": 24,
+        "floor": 0,
+        "rate": 8,
+        "share": 0.5,
+        "mutation": 0.8,
+        "seedEnergy": 24,
+        "seedStorage": 24,
+        "upkeep": 0.5,
+        "ambientTemperature": 20,
+        "sunlightHeating": 1,
+        "activityHeating": 0.12,
+        "cooling": 0.2,
+        "thermalExchange": 0.12,
+        "crowdInsulation": 1,
+        "safeTemperature": 28,
+        "heatDamage": 0.5,
+        "energyDecay": 0.05,
+        "divisionCost": 12,
+        "minimumBirthEnergy": 12,
+        "exchange": 0.12,
+        "shieldUpkeep": 0.72,
+        "cpuCost": 0.00005,
+        "moveCost": 0.004,
+        "turnCost": 0.0001,
+        "linkCost": 0.5,
+        "contractCost": 0.08,
+        "attackCost": 0.08,
+        "attackDamageCost": 0.2,
+        "emitCost": 0.01,
+        "sendCost": 0.01,
+        "jitter": 12,
+        "archiveAge": 60,
+        "archiveHarvest": 120,
+        "archiveOffspring": 8,
+        "archiveEnabled": 1,
+        "executionTrace": 0,
+        "solarRate": 4,
+        "sunContrast": 2,
+        "cloudCover": 0.5,
+        "cloudOpacity": 0.95,
+        "cloudScale": 1200,
+        "cloudSpeed": 12,
+        "cloudMorph": 180,
+        "solarEnabled": 1,
+        "corpseEnergy": 8,
+        "corpseLifetime": 900,
+        "eatCost": 0.04,
+        "storageCapacity": 400
+      },
+      "kernel": "c11c260bcb095d3162b299dbac6a768125b31f813263437e2ed79ef9151f4ca4",
+      "sampler": "typed-sequences-state-v2",
+      "finalLiving": 32506,
+      "counts": {
+        "sendGenotypes": 128,
+        "sendCells": 5788,
+        "receiveGenotypes": 29,
+        "receiveCells": 946,
+        "listenGenotypes": 27,
+        "listenCells": 52,
+        "emitGenotypes": 23,
+        "emitCells": 54
+      },
+      "matchedGenotypes": 3,
+      "matchedCells": 3,
+      "matched": [
+        {
+          "serial": 33497,
+          "living": 1,
+          "channels": [
+            3
+          ],
+          "tree": {
+            "op": "seq",
+            "args": [
+              {
+                "op": "if",
+                "args": [
+                  {
+                    "op": "bool",
+                    "args": [],
+                    "value": 1
+                  },
+                  {
+                    "op": "photosynthesize",
+                    "args": []
+                  },
+                  {
+                    "op": "split",
+                    "args": []
+                  }
+                ]
+              },
+              {
+                "op": "seq",
+                "args": [
+                  {
+                    "op": "if",
+                    "args": [
+                      {
+                        "op": "bool",
+                        "args": [],
+                        "value": 0
+                      },
+                      {
+                        "op": "photosynthesize",
+                        "args": []
+                      },
+                      {
+                        "op": "bud",
+                        "args": []
+                      }
+                    ]
+                  },
+                  {
+                    "op": "seq",
+                    "args": [
+                      {
+                        "op": "bud",
+                        "args": []
+                      },
+                      {
+                        "op": "seq",
+                        "args": [
+                          {
+                            "op": "turn",
+                            "args": [
+                              {
+                                "op": "target-bonds",
+                                "args": [
+                                  {
+                                    "op": "state",
+                                    "args": [
+                                      {
+                                        "op": "slot",
+                                        "args": [],
+                                        "value": 3
+                                      },
+                                      {
+                                        "op": "generation",
+                                        "args": []
+                                      },
+                                      {
+                                        "op": "nearest-cell",
+                                        "args": []
+                                      }
+                                    ]
+                                  }
+                                ]
+                              }
+                            ]
+                          },
+                          {
+                            "op": "seq",
+                            "args": [
+                              {
+                                "op": "bud",
+                                "args": []
+                              },
+                              {
+                                "op": "seq",
+                                "args": [
+                                  {
+                                    "op": "photosynthesize",
+                                    "args": []
+                                  },
+                                  {
+                                    "op": "send",
+                                    "args": [
+                                      {
+                                        "op": "nearest-corpse",
+                                        "args": []
+                                      },
+                                      {
+                                        "op": "channel",
+                                        "args": [],
+                                        "value": 3
+                                      },
+                                      {
+                                        "op": "do",
+                                        "args": [
+                                          {
+                                            "op": "nop",
+                                            "args": []
+                                          },
+                                          {
+                                            "op": "random",
+                                            "args": [
+                                              {
+                                                "op": "receive",
+                                                "args": [
+                                                  {
+                                                    "op": "channel",
+                                                    "args": [],
+                                                    "value": 3
+                                                  }
+                                                ]
+                                              }
+                                            ]
+                                          }
+                                        ]
+                                      }
+                                    ]
+                                  }
+                                ]
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "serial": 31206,
+          "living": 1,
+          "channels": [
+            1
+          ],
+          "tree": {
+            "op": "seq",
+            "args": [
+              {
+                "op": "store",
+                "args": [
+                  {
+                    "op": "memory",
+                    "args": [
+                      {
+                        "op": "slot",
+                        "args": [],
+                        "value": 6
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "op": "seq",
+                "args": [
+                  {
+                    "op": "shield",
+                    "args": [
+                      {
+                        "op": "receive",
+                        "args": [
+                          {
+                            "op": "channel",
+                            "args": [],
+                            "value": 1
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "op": "do",
+                    "args": [
+                      {
+                        "op": "photosynthesize",
+                        "args": []
+                      },
+                      {
+                        "op": "let",
+                        "args": [
+                          {
+                            "op": "slot",
+                            "args": [],
+                            "value": 1
+                          },
+                          {
+                            "op": "color",
+                            "args": []
+                          },
+                          {
+                            "op": "send",
+                            "args": [
+                              {
+                                "op": "self",
+                                "args": []
+                              },
+                              {
+                                "op": "channel",
+                                "args": [],
+                                "value": 1
+                              },
+                              {
+                                "op": "rotation",
+                                "args": []
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "serial": 31060,
+          "living": 1,
+          "channels": [
+            0
+          ],
+          "tree": {
+            "op": "seq",
+            "args": [
+              {
+                "op": "set",
+                "args": [
+                  {
+                    "op": "slot",
+                    "args": [],
+                    "value": 2
+                  },
+                  {
+                    "op": "target-bearing",
+                    "args": [
+                      {
+                        "op": "bond",
+                        "args": [
+                          {
+                            "op": "channel",
+                            "args": [],
+                            "value": 3
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "op": "seq",
+                "args": [
+                  {
+                    "op": "move",
+                    "args": [
+                      {
+                        "op": "crowding",
+                        "args": []
+                      }
+                    ]
+                  },
+                  {
+                    "op": "seq",
+                    "args": [
+                      {
+                        "op": "photosynthesize",
+                        "args": []
+                      },
+                      {
+                        "op": "seq",
+                        "args": [
+                          {
+                            "op": "seq",
+                            "args": [
+                              {
+                                "op": "do",
+                                "args": [
+                                  {
+                                    "op": "eat",
+                                    "args": []
+                                  },
+                                  {
+                                    "op": "send",
+                                    "args": [
+                                      {
+                                        "op": "nearest-corpse",
+                                        "args": []
+                                      },
+                                      {
+                                        "op": "channel",
+                                        "args": [],
+                                        "value": 0
+                                      },
+                                      {
+                                        "op": "crowding",
+                                        "args": []
+                                      }
+                                    ]
+                                  }
+                                ]
+                              },
+                              {
+                                "op": "send",
+                                "args": [
+                                  {
+                                    "op": "scan-color",
+                                    "args": [
+                                      {
+                                        "op": "do",
+                                        "args": [
+                                          {
+                                            "op": "split",
+                                            "args": []
+                                          },
+                                          {
+                                            "op": "target-temperature",
+                                            "args": [
+                                              {
+                                                "op": "none",
+                                                "args": []
+                                              }
+                                            ]
+                                          }
+                                        ]
+                                      },
+                                      {
+                                        "op": "generation",
+                                        "args": []
+                                      }
+                                    ]
+                                  },
+                                  {
+                                    "op": "channel",
+                                    "args": [],
+                                    "value": 1
+                                  },
+                                  {
+                                    "op": "receive",
+                                    "args": [
+                                      {
+                                        "op": "channel",
+                                        "args": [],
+                                        "value": 0
+                                      }
+                                    ]
+                                  }
+                                ]
+                              }
+                            ]
+                          },
+                          {
+                            "op": "photosynthesize",
+                            "args": []
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "continuous-cadence-variant-321",
+      "path": "research/results/cadence-worlds/continuous-cadence-variant-321/run.json.gz",
+      "sha256": "eec649002da49c413650422e6b2cb05ff637234da0fae09fa5a7a6795c57a2b5",
+      "config": {
+        "treePrograms": 1,
+        "crossover": 0.25,
+        "capacity": 32768,
+        "genomeCapacity": 8192,
+        "side": 128,
+        "sources": 1,
+        "initial": 8192,
+        "seed": 321,
+        "budget": 24,
+        "floor": 0,
+        "rate": 8,
+        "share": 0.5,
+        "mutation": 0.8,
+        "seedEnergy": 24,
+        "seedStorage": 24,
+        "upkeep": 0.5,
+        "ambientTemperature": 20,
+        "sunlightHeating": 1,
+        "activityHeating": 0.12,
+        "cooling": 0.2,
+        "thermalExchange": 0.12,
+        "crowdInsulation": 1,
+        "safeTemperature": 28,
+        "heatDamage": 0.5,
+        "energyDecay": 0.05,
+        "divisionCost": 12,
+        "minimumBirthEnergy": 12,
+        "exchange": 0.12,
+        "shieldUpkeep": 0.72,
+        "cpuCost": 0.00005,
+        "moveCost": 0.004,
+        "turnCost": 0.0001,
+        "linkCost": 0.5,
+        "contractCost": 0.08,
+        "attackCost": 0.08,
+        "attackDamageCost": 0.2,
+        "emitCost": 0.01,
+        "sendCost": 0.01,
+        "jitter": 12,
+        "archiveAge": 60,
+        "archiveHarvest": 120,
+        "archiveOffspring": 8,
+        "archiveEnabled": 1,
+        "executionTrace": 0,
+        "solarRate": 4,
+        "sunContrast": 2,
+        "cloudCover": 0.5,
+        "cloudOpacity": 0.95,
+        "cloudScale": 1200,
+        "cloudSpeed": 12,
+        "cloudMorph": 180,
+        "solarEnabled": 1,
+        "corpseEnergy": 8,
+        "corpseLifetime": 900,
+        "eatCost": 0.04,
+        "storageCapacity": 400
+      },
+      "kernel": "c11c260bcb095d3162b299dbac6a768125b31f813263437e2ed79ef9151f4ca4",
+      "sampler": "typed-sequences-state-no-implicit-wait-v1",
+      "finalLiving": 32619,
+      "counts": {
+        "sendGenotypes": 35,
+        "sendCells": 66,
+        "listenGenotypes": 42,
+        "listenCells": 200,
+        "receiveGenotypes": 31,
+        "receiveCells": 96,
+        "emitGenotypes": 6,
+        "emitCells": 6
+      },
+      "matchedGenotypes": 1,
+      "matchedCells": 1,
+      "matched": [
+        {
+          "serial": 22422,
+          "living": 1,
+          "channels": [
+            3
+          ],
+          "tree": {
+            "op": "seq",
+            "args": [
+              {
+                "op": "attack",
+                "args": [
+                  {
+                    "op": "none",
+                    "args": []
+                  },
+                  {
+                    "op": "storage-slope",
+                    "args": [
+                      {
+                        "op": "bonds",
+                        "args": []
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "op": "seq",
+                "args": [
+                  {
+                    "op": "tag-set",
+                    "args": [
+                      {
+                        "op": "storage-bearing",
+                        "args": [
+                          {
+                            "op": "-",
+                            "args": [
+                              {
+                                "op": "sunlight",
+                                "args": []
+                              },
+                              {
+                                "op": "random",
+                                "args": [
+                                  {
+                                    "op": "birth-result",
+                                    "args": []
+                                  }
+                                ]
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "op": "seq",
+                    "args": [
+                      {
+                        "op": "photosynthesize",
+                        "args": []
+                      },
+                      {
+                        "op": "seq",
+                        "args": [
+                          {
+                            "op": "seq",
+                            "args": [
+                              {
+                                "op": "move",
+                                "args": [
+                                  {
+                                    "op": "storage-slope",
+                                    "args": [
+                                      {
+                                        "op": "linked_temperature",
+                                        "args": []
+                                      }
+                                    ]
+                                  }
+                                ]
+                              },
+                              {
+                                "op": "attack",
+                                "args": [
+                                  {
+                                    "op": "self",
+                                    "args": []
+                                  },
+                                  {
+                                    "op": "temperature",
+                                    "args": []
+                                  }
+                                ]
+                              }
+                            ]
+                          },
+                          {
+                            "op": "state",
+                            "args": [
+                              {
+                                "op": "slot",
+                                "args": [],
+                                "value": 6
+                              },
+                              {
+                                "op": "receive",
+                                "args": [
+                                  {
+                                    "op": "channel",
+                                    "args": [],
+                                    "value": 3
+                                  }
+                                ]
+                              },
+                              {
+                                "op": "send",
+                                "args": [
+                                  {
+                                    "op": "none",
+                                    "args": []
+                                  },
+                                  {
+                                    "op": "channel",
+                                    "args": [],
+                                    "value": 3
+                                  },
+                                  {
+                                    "op": "target-bearing",
+                                    "args": [
+                                      {
+                                        "op": "nearest-corpse",
+                                        "args": []
+                                      }
+                                    ]
+                                  }
+                                ]
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "continuous-cadence-variant-42",
+      "path": "research/results/cadence-worlds/continuous-cadence-variant-42/run.json.gz",
+      "sha256": "e3701533a39c0e84ae48d6c52b0dd88630c142477b88d61595ee21253ad992ed",
+      "config": {
+        "treePrograms": 1,
+        "crossover": 0.25,
+        "capacity": 32768,
+        "genomeCapacity": 8192,
+        "side": 128,
+        "sources": 1,
+        "initial": 8192,
+        "seed": 42,
+        "budget": 24,
+        "floor": 0,
+        "rate": 8,
+        "share": 0.5,
+        "mutation": 0.8,
+        "seedEnergy": 24,
+        "seedStorage": 24,
+        "upkeep": 0.5,
+        "ambientTemperature": 20,
+        "sunlightHeating": 1,
+        "activityHeating": 0.12,
+        "cooling": 0.2,
+        "thermalExchange": 0.12,
+        "crowdInsulation": 1,
+        "safeTemperature": 28,
+        "heatDamage": 0.5,
+        "energyDecay": 0.05,
+        "divisionCost": 12,
+        "minimumBirthEnergy": 12,
+        "exchange": 0.12,
+        "shieldUpkeep": 0.72,
+        "cpuCost": 0.00005,
+        "moveCost": 0.004,
+        "turnCost": 0.0001,
+        "linkCost": 0.5,
+        "contractCost": 0.08,
+        "attackCost": 0.08,
+        "attackDamageCost": 0.2,
+        "emitCost": 0.01,
+        "sendCost": 0.01,
+        "jitter": 12,
+        "archiveAge": 60,
+        "archiveHarvest": 120,
+        "archiveOffspring": 8,
+        "archiveEnabled": 1,
+        "executionTrace": 0,
+        "solarRate": 4,
+        "sunContrast": 2,
+        "cloudCover": 0.5,
+        "cloudOpacity": 0.95,
+        "cloudScale": 1200,
+        "cloudSpeed": 12,
+        "cloudMorph": 180,
+        "solarEnabled": 1,
+        "corpseEnergy": 8,
+        "corpseLifetime": 900,
+        "eatCost": 0.04,
+        "storageCapacity": 400
+      },
+      "kernel": "c11c260bcb095d3162b299dbac6a768125b31f813263437e2ed79ef9151f4ca4",
+      "sampler": "typed-sequences-state-no-implicit-wait-v1",
+      "finalLiving": 29716,
+      "counts": {
+        "receiveGenotypes": 152,
+        "receiveCells": 4332,
+        "emitGenotypes": 40,
+        "emitCells": 156,
+        "sendGenotypes": 121,
+        "sendCells": 7711,
+        "listenGenotypes": 117,
+        "listenCells": 3681
+      },
+      "matchedGenotypes": 2,
+      "matchedCells": 2,
+      "matched": [
+        {
+          "serial": 28760,
+          "living": 1,
+          "channels": [
+            3
+          ],
+          "tree": {
+            "op": "seq",
+            "args": [
+              {
+                "op": "store",
+                "args": [
+                  {
+                    "op": "mod",
+                    "args": [
+                      {
+                        "op": "receive",
+                        "args": [
+                          {
+                            "op": "channel",
+                            "args": [],
+                            "value": 3
+                          }
+                        ]
+                      },
+                      {
+                        "op": "age",
+                        "args": []
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "op": "seq",
+                "args": [
+                  {
+                    "op": "tag-set",
+                    "args": [
+                      {
+                        "op": "+",
+                        "args": [
+                          {
+                            "op": "energy",
+                            "args": []
+                          },
+                          {
+                            "op": "storage-bearing",
+                            "args": [
+                              {
+                                "op": "tag",
+                                "args": []
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "op": "seq",
+                    "args": [
+                      {
+                        "op": "tag-set",
+                        "args": [
+                          {
+                            "op": "rotation",
+                            "args": []
+                          }
+                        ]
+                      },
+                      {
+                        "op": "seq",
+                        "args": [
+                          {
+                            "op": "state",
+                            "args": [
+                              {
+                                "op": "slot",
+                                "args": [],
+                                "value": 6
+                              },
+                              {
+                                "op": "sunlight-slope",
+                                "args": []
+                              },
+                              {
+                                "op": "tag-set",
+                                "args": [
+                                  {
+                                    "op": "target-tag",
+                                    "args": [
+                                      {
+                                        "op": "do",
+                                        "args": [
+                                          {
+                                            "op": "photosynthesize",
+                                            "args": []
+                                          },
+                                          {
+                                            "op": "nearest-cell",
+                                            "args": []
+                                          }
+                                        ]
+                                      }
+                                    ]
+                                  }
+                                ]
+                              }
+                            ]
+                          },
+                          {
+                            "op": "send",
+                            "args": [
+                              {
+                                "op": "self",
+                                "args": []
+                              },
+                              {
+                                "op": "channel",
+                                "args": [],
+                                "value": 3
+                              },
+                              {
+                                "op": "target-bonds",
+                                "args": [
+                                  {
+                                    "op": "if",
+                                    "args": [
+                                      {
+                                        "op": "bool",
+                                        "args": [],
+                                        "value": 1
+                                      },
+                                      {
+                                        "op": "self",
+                                        "args": []
+                                      },
+                                      {
+                                        "op": "nearest-corpse",
+                                        "args": []
+                                      }
+                                    ]
+                                  }
+                                ]
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "serial": 30172,
+          "living": 1,
+          "channels": [
+            3
+          ],
+          "tree": {
+            "op": "seq",
+            "args": [
+              {
+                "op": "link",
+                "args": [
+                  {
+                    "op": "do",
+                    "args": [
+                      {
+                        "op": "eat",
+                        "args": []
+                      },
+                      {
+                        "op": "self",
+                        "args": []
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "op": "seq",
+                "args": [
+                  {
+                    "op": "turn",
+                    "args": [
+                      {
+                        "op": "receive",
+                        "args": [
+                          {
+                            "op": "channel",
+                            "args": [],
+                            "value": 3
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "op": "seq",
+                    "args": [
+                      {
+                        "op": "state",
+                        "args": [
+                          {
+                            "op": "slot",
+                            "args": [],
+                            "value": 3
+                          },
+                          {
+                            "op": "+",
+                            "args": [
+                              {
+                                "op": "temperature",
+                                "args": []
+                              },
+                              {
+                                "op": "sunlight-slope",
+                                "args": []
+                              }
+                            ]
+                          },
+                          {
+                            "op": "turn",
+                            "args": [
+                              {
+                                "op": "linked_storage",
+                                "args": []
+                              }
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "op": "seq",
+                        "args": [
+                          {
+                            "op": "send",
+                            "args": [
+                              {
+                                "op": "none",
+                                "args": []
+                              },
+                              {
+                                "op": "channel",
+                                "args": [],
+                                "value": 3
+                              },
+                              {
+                                "op": "if",
+                                "args": [
+                                  {
+                                    "op": "bool",
+                                    "args": [],
+                                    "value": 0
+                                  },
+                                  {
+                                    "op": "color",
+                                    "args": []
+                                  },
+                                  {
+                                    "op": "tag",
+                                    "args": []
+                                  }
+                                ]
+                              }
+                            ]
+                          },
+                          {
+                            "op": "seq",
+                            "args": [
+                              {
+                                "op": "wait",
+                                "args": [
+                                  {
+                                    "op": "+",
+                                    "args": [
+                                      {
+                                        "op": "generation",
+                                        "args": []
+                                      },
+                                      {
+                                        "op": "crowding",
+                                        "args": []
+                                      }
+                                    ]
+                                  }
+                                ]
+                              },
+                              {
+                                "op": "nop",
+                                "args": []
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "continuous-cadence-variant-97",
+      "path": "research/results/cadence-worlds/continuous-cadence-variant-97/run.json.gz",
+      "sha256": "e5ae3d76635da05d9451e292583587e3b3a9b0e791789e4a20afb88994251621",
+      "config": {
+        "treePrograms": 1,
+        "crossover": 0.25,
+        "capacity": 32768,
+        "genomeCapacity": 8192,
+        "side": 128,
+        "sources": 1,
+        "initial": 8192,
+        "seed": 97,
+        "budget": 24,
+        "floor": 0,
+        "rate": 8,
+        "share": 0.5,
+        "mutation": 0.8,
+        "seedEnergy": 24,
+        "seedStorage": 24,
+        "upkeep": 0.5,
+        "ambientTemperature": 20,
+        "sunlightHeating": 1,
+        "activityHeating": 0.12,
+        "cooling": 0.2,
+        "thermalExchange": 0.12,
+        "crowdInsulation": 1,
+        "safeTemperature": 28,
+        "heatDamage": 0.5,
+        "energyDecay": 0.05,
+        "divisionCost": 12,
+        "minimumBirthEnergy": 12,
+        "exchange": 0.12,
+        "shieldUpkeep": 0.72,
+        "cpuCost": 0.00005,
+        "moveCost": 0.004,
+        "turnCost": 0.0001,
+        "linkCost": 0.5,
+        "contractCost": 0.08,
+        "attackCost": 0.08,
+        "attackDamageCost": 0.2,
+        "emitCost": 0.01,
+        "sendCost": 0.01,
+        "jitter": 12,
+        "archiveAge": 60,
+        "archiveHarvest": 120,
+        "archiveOffspring": 8,
+        "archiveEnabled": 1,
+        "executionTrace": 0,
+        "solarRate": 4,
+        "sunContrast": 2,
+        "cloudCover": 0.5,
+        "cloudOpacity": 0.95,
+        "cloudScale": 1200,
+        "cloudSpeed": 12,
+        "cloudMorph": 180,
+        "solarEnabled": 1,
+        "corpseEnergy": 8,
+        "corpseLifetime": 900,
+        "eatCost": 0.04,
+        "storageCapacity": 400
+      },
+      "kernel": "c11c260bcb095d3162b299dbac6a768125b31f813263437e2ed79ef9151f4ca4",
+      "sampler": "typed-sequences-state-no-implicit-wait-v1",
+      "finalLiving": 22790,
+      "counts": {
+        "sendGenotypes": 116,
+        "sendCells": 504,
+        "emitGenotypes": 24,
+        "emitCells": 53,
+        "receiveGenotypes": 91,
+        "receiveCells": 2839,
+        "listenGenotypes": 45,
+        "listenCells": 266
+      },
+      "matchedGenotypes": 6,
+      "matchedCells": 50,
+      "matched": [
+        {
+          "serial": 30720,
+          "living": 19,
+          "channels": [
+            0
+          ],
+          "tree": {
+            "op": "seq",
+            "args": [
+              {
+                "op": "photosynthesize",
+                "args": []
+              },
+              {
+                "op": "seq",
+                "args": [
+                  {
+                    "op": "send",
+                    "args": [
+                      {
+                        "op": "let",
+                        "args": [
+                          {
+                            "op": "slot",
+                            "args": [],
+                            "value": 5
+                          },
+                          {
+                            "op": "color",
+                            "args": []
+                          },
+                          {
+                            "op": "none",
+                            "args": []
+                          }
+                        ]
+                      },
+                      {
+                        "op": "channel",
+                        "args": [],
+                        "value": 0
+                      },
+                      {
+                        "op": "receive",
+                        "args": [
+                          {
+                            "op": "channel",
+                            "args": [],
+                            "value": 0
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "op": "seq",
+                    "args": [
+                      {
+                        "op": "nop",
+                        "args": []
+                      },
+                      {
+                        "op": "seq",
+                        "args": [
+                          {
+                            "op": "split",
+                            "args": []
+                          },
+                          {
+                            "op": "color-set",
+                            "args": [
+                              {
+                                "op": "target-temperature",
+                                "args": [
+                                  {
+                                    "op": "self",
+                                    "args": []
+                                  }
+                                ]
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "serial": 32851,
+          "living": 6,
+          "channels": [
+            0
+          ],
+          "tree": {
+            "op": "seq",
+            "args": [
+              {
+                "op": "photosynthesize",
+                "args": []
+              },
+              {
+                "op": "seq",
+                "args": [
+                  {
+                    "op": "send",
+                    "args": [
+                      {
+                        "op": "let",
+                        "args": [
+                          {
+                            "op": "slot",
+                            "args": [],
+                            "value": 5
+                          },
+                          {
+                            "op": "color",
+                            "args": []
+                          },
+                          {
+                            "op": "none",
+                            "args": []
+                          }
+                        ]
+                      },
+                      {
+                        "op": "channel",
+                        "args": [],
+                        "value": 0
+                      },
+                      {
+                        "op": "receive",
+                        "args": [
+                          {
+                            "op": "channel",
+                            "args": [],
+                            "value": 0
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "op": "seq",
+                    "args": [
+                      {
+                        "op": "nop",
+                        "args": []
+                      },
+                      {
+                        "op": "seq",
+                        "args": [
+                          {
+                            "op": "split",
+                            "args": []
+                          },
+                          {
+                            "op": "color-set",
+                            "args": [
+                              {
+                                "op": "target-temperature",
+                                "args": [
+                                  {
+                                    "op": "self",
+                                    "args": []
+                                  }
+                                ]
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "serial": 30408,
+          "living": 15,
+          "channels": [
+            0
+          ],
+          "tree": {
+            "op": "seq",
+            "args": [
+              {
+                "op": "give",
+                "args": [
+                  {
+                    "op": "scan-color",
+                    "args": [
+                      {
+                        "op": "target-energy",
+                        "args": [
+                          {
+                            "op": "nearest-cell",
+                            "args": []
+                          }
+                        ]
+                      },
+                      {
+                        "op": "color",
+                        "args": []
+                      }
+                    ]
+                  },
+                  {
+                    "op": "birth-result",
+                    "args": []
+                  }
+                ]
+              },
+              {
+                "op": "seq",
+                "args": [
+                  {
+                    "op": "store",
+                    "args": [
+                      {
+                        "op": "mod",
+                        "args": [
+                          {
+                            "op": "age",
+                            "args": []
+                          },
+                          {
+                            "op": "abs",
+                            "args": [
+                              {
+                                "op": "rotation",
+                                "args": []
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "op": "seq",
+                    "args": [
+                      {
+                        "op": "photosynthesize",
+                        "args": []
+                      },
+                      {
+                        "op": "seq",
+                        "args": [
+                          {
+                            "op": "send",
+                            "args": [
+                              {
+                                "op": "let",
+                                "args": [
+                                  {
+                                    "op": "slot",
+                                    "args": [],
+                                    "value": 4
+                                  },
+                                  {
+                                    "op": "color",
+                                    "args": []
+                                  },
+                                  {
+                                    "op": "none",
+                                    "args": []
+                                  }
+                                ]
+                              },
+                              {
+                                "op": "channel",
+                                "args": [],
+                                "value": 0
+                              },
+                              {
+                                "op": "receive",
+                                "args": [
+                                  {
+                                    "op": "channel",
+                                    "args": [],
+                                    "value": 0
+                                  }
+                                ]
+                              }
+                            ]
+                          },
+                          {
+                            "op": "seq",
+                            "args": [
+                              {
+                                "op": "nop",
+                                "args": []
+                              },
+                              {
+                                "op": "seq",
+                                "args": [
+                                  {
+                                    "op": "split",
+                                    "args": []
+                                  },
+                                  {
+                                    "op": "color-set",
+                                    "args": [
+                                      {
+                                        "op": "target-temperature",
+                                        "args": [
+                                          {
+                                            "op": "self",
+                                            "args": []
+                                          }
+                                        ]
+                                      }
+                                    ]
+                                  }
+                                ]
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "serial": 31496,
+          "living": 5,
+          "channels": [
+            0
+          ],
+          "tree": {
+            "op": "seq",
+            "args": [
+              {
+                "op": "photosynthesize",
+                "args": []
+              },
+              {
+                "op": "seq",
+                "args": [
+                  {
+                    "op": "send",
+                    "args": [
+                      {
+                        "op": "let",
+                        "args": [
+                          {
+                            "op": "slot",
+                            "args": [],
+                            "value": 4
+                          },
+                          {
+                            "op": "color",
+                            "args": []
+                          },
+                          {
+                            "op": "none",
+                            "args": []
+                          }
+                        ]
+                      },
+                      {
+                        "op": "channel",
+                        "args": [],
+                        "value": 0
+                      },
+                      {
+                        "op": "receive",
+                        "args": [
+                          {
+                            "op": "channel",
+                            "args": [],
+                            "value": 0
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "op": "seq",
+                    "args": [
+                      {
+                        "op": "nop",
+                        "args": []
+                      },
+                      {
+                        "op": "seq",
+                        "args": [
+                          {
+                            "op": "split",
+                            "args": []
+                          },
+                          {
+                            "op": "color-set",
+                            "args": [
+                              {
+                                "op": "color",
+                                "args": []
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "serial": 32876,
+          "living": 1,
+          "channels": [
+            0
+          ],
+          "tree": {
+            "op": "seq",
+            "args": [
+              {
+                "op": "photosynthesize",
+                "args": []
+              },
+              {
+                "op": "seq",
+                "args": [
+                  {
+                    "op": "send",
+                    "args": [
+                      {
+                        "op": "let",
+                        "args": [
+                          {
+                            "op": "slot",
+                            "args": [],
+                            "value": 5
+                          },
+                          {
+                            "op": "color",
+                            "args": []
+                          },
+                          {
+                            "op": "none",
+                            "args": []
+                          }
+                        ]
+                      },
+                      {
+                        "op": "channel",
+                        "args": [],
+                        "value": 0
+                      },
+                      {
+                        "op": "receive",
+                        "args": [
+                          {
+                            "op": "channel",
+                            "args": [],
+                            "value": 0
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "op": "seq",
+                    "args": [
+                      {
+                        "op": "nop",
+                        "args": []
+                      },
+                      {
+                        "op": "seq",
+                        "args": [
+                          {
+                            "op": "split",
+                            "args": []
+                          },
+                          {
+                            "op": "send",
+                            "args": [
+                              {
+                                "op": "scan",
+                                "args": [
+                                  {
+                                    "op": "sunlight-bearing",
+                                    "args": []
+                                  },
+                                  {
+                                    "op": "linked_storage",
+                                    "args": []
+                                  }
+                                ]
+                              },
+                              {
+                                "op": "channel",
+                                "args": [],
+                                "value": 1
+                              },
+                              {
+                                "op": "number",
+                                "args": [],
+                                "value": 90
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "serial": 32581,
+          "living": 4,
+          "channels": [
+            0
+          ],
+          "tree": {
+            "op": "seq",
+            "args": [
+              {
+                "op": "photosynthesize",
+                "args": []
+              },
+              {
+                "op": "seq",
+                "args": [
+                  {
+                    "op": "send",
+                    "args": [
+                      {
+                        "op": "let",
+                        "args": [
+                          {
+                            "op": "slot",
+                            "args": [],
+                            "value": 2
+                          },
+                          {
+                            "op": "color",
+                            "args": []
+                          },
+                          {
+                            "op": "none",
+                            "args": []
+                          }
+                        ]
+                      },
+                      {
+                        "op": "channel",
+                        "args": [],
+                        "value": 0
+                      },
+                      {
+                        "op": "receive",
+                        "args": [
+                          {
+                            "op": "channel",
+                            "args": [],
+                            "value": 0
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "op": "seq",
+                    "args": [
+                      {
+                        "op": "nop",
+                        "args": []
+                      },
+                      {
+                        "op": "seq",
+                        "args": [
+                          {
+                            "op": "split",
+                            "args": []
+                          },
+                          {
+                            "op": "color-set",
+                            "args": [
+                              {
+                                "op": "target-temperature",
+                                "args": [
+                                  {
+                                    "op": "self",
+                                    "args": []
+                                  }
+                                ]
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "continuous-temporal-variant-321",
+      "path": "research/results/temporal-worlds/continuous-temporal-variant-321/run.json.gz",
+      "sha256": "c619db69706d7d50e74ed78550d1653b6fc21eca440d1468ef503711efd97815",
+      "config": {
+        "treePrograms": 1,
+        "crossover": 0.25,
+        "capacity": 32768,
+        "genomeCapacity": 8192,
+        "side": 128,
+        "sources": 1,
+        "initial": 8192,
+        "seed": 321,
+        "budget": 24,
+        "floor": 0,
+        "rate": 8,
+        "share": 0.5,
+        "mutation": 0.8,
+        "seedEnergy": 24,
+        "seedStorage": 24,
+        "upkeep": 0.5,
+        "ambientTemperature": 20,
+        "sunlightHeating": 1,
+        "activityHeating": 0.12,
+        "cooling": 0.2,
+        "thermalExchange": 0.12,
+        "crowdInsulation": 1,
+        "safeTemperature": 28,
+        "heatDamage": 0.5,
+        "energyDecay": 0.05,
+        "divisionCost": 12,
+        "minimumBirthEnergy": 12,
+        "exchange": 0.12,
+        "shieldUpkeep": 0.72,
+        "cpuCost": 0.00005,
+        "moveCost": 0.004,
+        "turnCost": 0.0001,
+        "linkCost": 0.5,
+        "contractCost": 0.08,
+        "attackCost": 0.08,
+        "attackDamageCost": 0.2,
+        "emitCost": 0.01,
+        "sendCost": 0.01,
+        "jitter": 12,
+        "archiveAge": 60,
+        "archiveHarvest": 120,
+        "archiveOffspring": 8,
+        "archiveEnabled": 1,
+        "executionTrace": 0,
+        "solarRate": 4,
+        "sunContrast": 2,
+        "cloudCover": 0.5,
+        "cloudOpacity": 0.95,
+        "cloudScale": 1200,
+        "cloudSpeed": 12,
+        "cloudMorph": 180,
+        "solarEnabled": 1,
+        "corpseEnergy": 8,
+        "corpseLifetime": 900,
+        "eatCost": 0.04,
+        "storageCapacity": 400
+      },
+      "kernel": "c11c260bcb095d3162b299dbac6a768125b31f813263437e2ed79ef9151f4ca4",
+      "sampler": "typed-sequences-state-temporal-mutations-v1",
+      "finalLiving": 32767,
+      "counts": {
+        "receiveGenotypes": 68,
+        "receiveCells": 477,
+        "sendGenotypes": 65,
+        "sendCells": 1572,
+        "listenGenotypes": 50,
+        "listenCells": 954,
+        "emitGenotypes": 12,
+        "emitCells": 21
+      },
+      "matchedGenotypes": 0,
+      "matchedCells": 0,
+      "matched": []
+    },
+    {
+      "name": "continuous-temporal-variant-42",
+      "path": "research/results/temporal-worlds/continuous-temporal-variant-42/run.json.gz",
+      "sha256": "79cd063865ed627b4738755d60e71ba1ac6b1c1f42b5028f872703f77efeeeef",
+      "config": {
+        "treePrograms": 1,
+        "crossover": 0.25,
+        "capacity": 32768,
+        "genomeCapacity": 8192,
+        "side": 128,
+        "sources": 1,
+        "initial": 8192,
+        "seed": 42,
+        "budget": 24,
+        "floor": 0,
+        "rate": 8,
+        "share": 0.5,
+        "mutation": 0.8,
+        "seedEnergy": 24,
+        "seedStorage": 24,
+        "upkeep": 0.5,
+        "ambientTemperature": 20,
+        "sunlightHeating": 1,
+        "activityHeating": 0.12,
+        "cooling": 0.2,
+        "thermalExchange": 0.12,
+        "crowdInsulation": 1,
+        "safeTemperature": 28,
+        "heatDamage": 0.5,
+        "energyDecay": 0.05,
+        "divisionCost": 12,
+        "minimumBirthEnergy": 12,
+        "exchange": 0.12,
+        "shieldUpkeep": 0.72,
+        "cpuCost": 0.00005,
+        "moveCost": 0.004,
+        "turnCost": 0.0001,
+        "linkCost": 0.5,
+        "contractCost": 0.08,
+        "attackCost": 0.08,
+        "attackDamageCost": 0.2,
+        "emitCost": 0.01,
+        "sendCost": 0.01,
+        "jitter": 12,
+        "archiveAge": 60,
+        "archiveHarvest": 120,
+        "archiveOffspring": 8,
+        "archiveEnabled": 1,
+        "executionTrace": 0,
+        "solarRate": 4,
+        "sunContrast": 2,
+        "cloudCover": 0.5,
+        "cloudOpacity": 0.95,
+        "cloudScale": 1200,
+        "cloudSpeed": 12,
+        "cloudMorph": 180,
+        "solarEnabled": 1,
+        "corpseEnergy": 8,
+        "corpseLifetime": 900,
+        "eatCost": 0.04,
+        "storageCapacity": 400
+      },
+      "kernel": "c11c260bcb095d3162b299dbac6a768125b31f813263437e2ed79ef9151f4ca4",
+      "sampler": "typed-sequences-state-temporal-mutations-v1",
+      "finalLiving": 24106,
+      "counts": {
+        "sendGenotypes": 33,
+        "sendCells": 37,
+        "listenGenotypes": 50,
+        "listenCells": 99,
+        "receiveGenotypes": 31,
+        "receiveCells": 46,
+        "emitGenotypes": 27,
+        "emitCells": 28
+      },
+      "matchedGenotypes": 0,
+      "matchedCells": 0,
+      "matched": []
+    },
+    {
+      "name": "continuous-temporal-variant-97",
+      "path": "research/results/temporal-worlds/continuous-temporal-variant-97/run.json.gz",
+      "sha256": "46137a83bccbdf13b2aa5dcae430d2290fb971450f17ba6920f3b75123f0c88e",
+      "config": {
+        "treePrograms": 1,
+        "crossover": 0.25,
+        "capacity": 32768,
+        "genomeCapacity": 8192,
+        "side": 128,
+        "sources": 1,
+        "initial": 8192,
+        "seed": 97,
+        "budget": 24,
+        "floor": 0,
+        "rate": 8,
+        "share": 0.5,
+        "mutation": 0.8,
+        "seedEnergy": 24,
+        "seedStorage": 24,
+        "upkeep": 0.5,
+        "ambientTemperature": 20,
+        "sunlightHeating": 1,
+        "activityHeating": 0.12,
+        "cooling": 0.2,
+        "thermalExchange": 0.12,
+        "crowdInsulation": 1,
+        "safeTemperature": 28,
+        "heatDamage": 0.5,
+        "energyDecay": 0.05,
+        "divisionCost": 12,
+        "minimumBirthEnergy": 12,
+        "exchange": 0.12,
+        "shieldUpkeep": 0.72,
+        "cpuCost": 0.00005,
+        "moveCost": 0.004,
+        "turnCost": 0.0001,
+        "linkCost": 0.5,
+        "contractCost": 0.08,
+        "attackCost": 0.08,
+        "attackDamageCost": 0.2,
+        "emitCost": 0.01,
+        "sendCost": 0.01,
+        "jitter": 12,
+        "archiveAge": 60,
+        "archiveHarvest": 120,
+        "archiveOffspring": 8,
+        "archiveEnabled": 1,
+        "executionTrace": 0,
+        "solarRate": 4,
+        "sunContrast": 2,
+        "cloudCover": 0.5,
+        "cloudOpacity": 0.95,
+        "cloudScale": 1200,
+        "cloudSpeed": 12,
+        "cloudMorph": 180,
+        "solarEnabled": 1,
+        "corpseEnergy": 8,
+        "corpseLifetime": 900,
+        "eatCost": 0.04,
+        "storageCapacity": 400
+      },
+      "kernel": "c11c260bcb095d3162b299dbac6a768125b31f813263437e2ed79ef9151f4ca4",
+      "sampler": "typed-sequences-state-temporal-mutations-v1",
+      "finalLiving": 6492,
+      "counts": {
+        "emitGenotypes": 42,
+        "emitCells": 72,
+        "sendGenotypes": 145,
+        "sendCells": 448,
+        "listenGenotypes": 39,
+        "listenCells": 127,
+        "receiveGenotypes": 37,
+        "receiveCells": 42
+      },
+      "matchedGenotypes": 3,
+      "matchedCells": 3,
+      "matched": [
+        {
+          "serial": 36475,
+          "living": 1,
+          "channels": [
+            2
+          ],
+          "tree": {
+            "op": "seq",
+            "args": [
+              {
+                "op": "color-set",
+                "args": [
+                  {
+                    "op": "number",
+                    "args": [],
+                    "value": 0.5
+                  }
+                ]
+              },
+              {
+                "op": "send",
+                "args": [
+                  {
+                    "op": "do",
+                    "args": [
+                      {
+                        "op": "give",
+                        "args": [
+                          {
+                            "op": "self",
+                            "args": []
+                          },
+                          {
+                            "op": "rotation",
+                            "args": []
+                          }
+                        ]
+                      },
+                      {
+                        "op": "do",
+                        "args": [
+                          {
+                            "op": "photosynthesize",
+                            "args": []
+                          },
+                          {
+                            "op": "let",
+                            "args": [
+                              {
+                                "op": "slot",
+                                "args": [],
+                                "value": 5
+                              },
+                              {
+                                "op": "if",
+                                "args": [
+                                  {
+                                    "op": "bool",
+                                    "args": [],
+                                    "value": 0
+                                  },
+                                  {
+                                    "op": "sunlight-bearing",
+                                    "args": []
+                                  },
+                                  {
+                                    "op": "generation",
+                                    "args": []
+                                  }
+                                ]
+                              },
+                              {
+                                "op": "scan-color",
+                                "args": [
+                                  {
+                                    "op": "crowding",
+                                    "args": []
+                                  },
+                                  {
+                                    "op": "crowding",
+                                    "args": []
+                                  }
+                                ]
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "op": "channel",
+                    "args": [],
+                    "value": 2
+                  },
+                  {
+                    "op": "/",
+                    "args": [
+                      {
+                        "op": "max",
+                        "args": [
+                          {
+                            "op": "storage",
+                            "args": []
+                          },
+                          {
+                            "op": "receive",
+                            "args": [
+                              {
+                                "op": "channel",
+                                "args": [],
+                                "value": 2
+                              }
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "op": "birth-result",
+                        "args": []
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "serial": 36809,
+          "living": 1,
+          "channels": [
+            2
+          ],
+          "tree": {
+            "op": "seq",
+            "args": [
+              {
+                "op": "move",
+                "args": [
+                  {
+                    "op": "do",
+                    "args": [
+                      {
+                        "op": "bud",
+                        "args": []
+                      },
+                      {
+                        "op": "color",
+                        "args": []
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "op": "seq",
+                "args": [
+                  {
+                    "op": "send",
+                    "args": [
+                      {
+                        "op": "nearest-corpse",
+                        "args": []
+                      },
+                      {
+                        "op": "channel",
+                        "args": [],
+                        "value": 2
+                      },
+                      {
+                        "op": "target-shield",
+                        "args": [
+                          {
+                            "op": "nearest-cell",
+                            "args": []
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "op": "wait",
+                    "args": [
+                      {
+                        "op": "receive",
+                        "args": [
+                          {
+                            "op": "channel",
+                            "args": [],
+                            "value": 2
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "serial": 36292,
+          "living": 1,
+          "channels": [
+            0
+          ],
+          "tree": {
+            "op": "seq",
+            "args": [
+              {
+                "op": "link",
+                "args": [
+                  {
+                    "op": "do",
+                    "args": [
+                      {
+                        "op": "photosynthesize",
+                        "args": []
+                      },
+                      {
+                        "op": "self",
+                        "args": []
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "op": "seq",
+                "args": [
+                  {
+                    "op": "color-set",
+                    "args": [
+                      {
+                        "op": "receive",
+                        "args": [
+                          {
+                            "op": "channel",
+                            "args": [],
+                            "value": 0
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "op": "seq",
+                    "args": [
+                      {
+                        "op": "send",
+                        "args": [
+                          {
+                            "op": "none",
+                            "args": []
+                          },
+                          {
+                            "op": "channel",
+                            "args": [],
+                            "value": 0
+                          },
+                          {
+                            "op": "linked_temperature",
+                            "args": []
+                          }
+                        ]
+                      },
+                      {
+                        "op": "mobilize",
+                        "args": [
+                          {
+                            "op": "target-energy",
+                            "args": [
+                              {
+                                "op": "if",
+                                "args": [
+                                  {
+                                    "op": "<",
+                                    "args": [
+                                      {
+                                        "op": "sunlight-slope",
+                                        "args": []
+                                      },
+                                      {
+                                        "op": "age",
+                                        "args": []
+                                      }
+                                    ]
+                                  },
+                                  {
+                                    "op": "none",
+                                    "args": []
+                                  },
+                                  {
+                                    "op": "none",
+                                    "args": []
+                                  }
+                                ]
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}
