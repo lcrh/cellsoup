@@ -32,6 +32,15 @@ export function observeColonies(buffer, world, maxCells = 1024) {
     const members = new Set(body);
     const cells = body.map((slot) => {
       const k = slot * 52;
+      const linkSlots = [...s.u.slice(k + 32, k + 36)].map((handle) =>
+        handle &&
+        members.has(handle - 1) &&
+        [...s.u.slice((handle - 1) * 52 + 32, (handle - 1) * 52 + 36)].includes(
+          slot + 1,
+        )
+          ? handle - 1
+          : null,
+      );
       return {
         slot,
         incarnation: s.u[k + 24],
@@ -53,16 +62,11 @@ export function observeColonies(buffer, world, maxCells = 1024) {
         registers: [...s.f.slice(k + 8, k + 16)],
         signal: [...s.f.slice(k + 16, k + 20)],
         mail: [...s.f.slice(k + 20, k + 24)],
-        links: [...s.u.slice(k + 32, k + 36)]
-          .filter(
-            (x) =>
-              x &&
-              members.has(x - 1) &&
-              [...s.u.slice((x - 1) * 52 + 32, (x - 1) * 52 + 36)].includes(
-                slot + 1,
-              ),
-          )
-          .map((x) => x - 1),
+        // Slot positions matter to (bond cN), including empty holes.
+        linkSlots,
+        links: linkSlots.filter((other) => other !== null),
+        anchors: [...s.f.slice(k + 44, k + 48)],
+        rest: s.f[k + 36],
       };
     });
     result.push({ selection, size: body.length, speed, cells });

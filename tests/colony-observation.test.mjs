@@ -18,6 +18,8 @@ test("colony records preserve periodic coordinates, reciprocal topology and cell
     u[i * 52 + 32] = i + 2;
     u[(i + 1) * 52 + 33] = i + 1;
   }
+  f[3 * 52 + 45] = 0.25;
+  f[3 * 52 + 36] = 16;
   u[34] = 3; // Unilateral extra edge inside the component is not a valid spring.
   u[4 * 52 + 32] = 1; // Nor does a unilateral outside cell belong to the body.
   const bodies = observeColonies(buffer, 100);
@@ -30,6 +32,10 @@ test("colony records preserve periodic coordinates, reciprocal topology and cell
     [98, 8, 18, 28],
   );
   assert.deepEqual(cells[0].links, [1]);
+  assert.deepEqual(cells[0].linkSlots, [1, null, null, null]);
+  assert.deepEqual(cells[3].linkSlots, [null, 2, null, null]);
+  assert.deepEqual(cells[3].anchors, [0, 0.25, 0, 0]);
+  assert.equal(cells[3].rest, 16);
   assert.equal(cells[0].incarnation, 10);
   assert.equal(cells[0].energy, 12);
   assert.equal(cells[0].storage, 7);

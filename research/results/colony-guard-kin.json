@@ -1,0 +1,4378 @@
+{
+  "sourceAssay": "research/results/colony-gift-probe.json",
+  "sourceGenome": {
+    "slot": 902,
+    "length": 18,
+    "serial": 15333,
+    "founder": 13249,
+    "depth": 0,
+    "parent": 13249,
+    "bornTick": 53580,
+    "secondParent": 6046,
+    "score": 0,
+    "source": "(seq\n  (give (bond c2) (bonds))\n  (photosynthesize)\n  (do\n    (state ((state0 (temperature)))\n      (seq\n        (eat)\n        (move (- (generation) (temperature)))\n        (bud)\n      )\n    )\n    (photosynthesize)\n  )\n)",
+    "tree": {
+      "op": "seq",
+      "args": [
+        {
+          "op": "give",
+          "args": [
+            {
+              "op": "bond",
+              "args": [
+                {
+                  "op": "channel",
+                  "args": [],
+                  "value": 2
+                }
+              ]
+            },
+            {
+              "op": "bonds",
+              "args": []
+            }
+          ]
+        },
+        {
+          "op": "seq",
+          "args": [
+            {
+              "op": "photosynthesize",
+              "args": []
+            },
+            {
+              "op": "do",
+              "args": [
+                {
+                  "op": "state",
+                  "args": [
+                    {
+                      "op": "slot",
+                      "args": [],
+                      "value": 0
+                    },
+                    {
+                      "op": "temperature",
+                      "args": []
+                    },
+                    {
+                      "op": "seq",
+                      "args": [
+                        {
+                          "op": "eat",
+                          "args": []
+                        },
+                        {
+                          "op": "seq",
+                          "args": [
+                            {
+                              "op": "move",
+                              "args": [
+                                {
+                                  "op": "-",
+                                  "args": [
+                                    {
+                                      "op": "generation",
+                                      "args": []
+                                    },
+                                    {
+                                      "op": "temperature",
+                                      "args": []
+                                    }
+                                  ]
+                                }
+                              ]
+                            },
+                            {
+                              "op": "bud",
+                              "args": []
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "op": "photosynthesize",
+                  "args": []
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "nodes": 20,
+    "bytecode": "L0: bond r0 2\nL1: sense r1 bonds\nL2: give r0 r1\nL3: photosynthesize r0\nL4: mem_ready r0 0\nL5: jnz r0 L8\nL6: sense r0 temperature\nL7: mem_init 0 r0\nL8: eat r0\nL9: sense r0 generation\nL10: sense r1 temperature\nL11: sub r0 r1\nL12: move r0\nL13: bud r0\nL14: mem_save 8 r0\nL15: photosynthesize r0\nL16: wait 0\nL17: jmp L0",
+    "substrate": "tree"
+  },
+  "guard": "kin",
+  "testedGivingTree": {
+    "op": "seq",
+    "args": [
+      {
+        "op": "if",
+        "args": [
+          {
+            "op": "kin",
+            "args": [
+              {
+                "op": "bond",
+                "args": [
+                  {
+                    "op": "channel",
+                    "args": [],
+                    "value": 2
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "op": "give",
+            "args": [
+              {
+                "op": "bond",
+                "args": [
+                  {
+                    "op": "channel",
+                    "args": [],
+                    "value": 2
+                  }
+                ]
+              },
+              {
+                "op": "bonds",
+                "args": []
+              }
+            ]
+          },
+          {
+            "op": "nop",
+            "args": []
+          }
+        ]
+      },
+      {
+        "op": "seq",
+        "args": [
+          {
+            "op": "photosynthesize",
+            "args": []
+          },
+          {
+            "op": "do",
+            "args": [
+              {
+                "op": "state",
+                "args": [
+                  {
+                    "op": "slot",
+                    "args": [],
+                    "value": 0
+                  },
+                  {
+                    "op": "temperature",
+                    "args": []
+                  },
+                  {
+                    "op": "seq",
+                    "args": [
+                      {
+                        "op": "eat",
+                        "args": []
+                      },
+                      {
+                        "op": "seq",
+                        "args": [
+                          {
+                            "op": "move",
+                            "args": [
+                              {
+                                "op": "-",
+                                "args": [
+                                  {
+                                    "op": "generation",
+                                    "args": []
+                                  },
+                                  {
+                                    "op": "temperature",
+                                    "args": []
+                                  }
+                                ]
+                              }
+                            ]
+                          },
+                          {
+                            "op": "bud",
+                            "args": []
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "op": "photosynthesize",
+                "args": []
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "instructions": {
+    "original": 18,
+    "tested": 23
+  },
+  "nonGivingTree": {
+    "op": "seq",
+    "args": [
+      {
+        "op": "give",
+        "args": [
+          {
+            "op": "bond",
+            "args": [
+              {
+                "op": "channel",
+                "args": [],
+                "value": 2
+              }
+            ]
+          },
+          {
+            "op": "number",
+            "args": [],
+            "value": 0
+          }
+        ]
+      },
+      {
+        "op": "seq",
+        "args": [
+          {
+            "op": "photosynthesize",
+            "args": []
+          },
+          {
+            "op": "do",
+            "args": [
+              {
+                "op": "state",
+                "args": [
+                  {
+                    "op": "slot",
+                    "args": [],
+                    "value": 0
+                  },
+                  {
+                    "op": "temperature",
+                    "args": []
+                  },
+                  {
+                    "op": "seq",
+                    "args": [
+                      {
+                        "op": "eat",
+                        "args": []
+                      },
+                      {
+                        "op": "seq",
+                        "args": [
+                          {
+                            "op": "move",
+                            "args": [
+                              {
+                                "op": "-",
+                                "args": [
+                                  {
+                                    "op": "generation",
+                                    "args": []
+                                  },
+                                  {
+                                    "op": "temperature",
+                                    "args": []
+                                  }
+                                ]
+                              }
+                            ]
+                          },
+                          {
+                            "op": "bud",
+                            "args": []
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "op": "photosynthesize",
+                "args": []
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "scope": "Three seeds per condition, 600 simulated seconds. Four fresh cells in an explicitly constructed star, 24 energy each, zero reserves, normal physics and costs, no arrivals or mutation. c2 of the central cell points to leaf 3. Non-giving differs only in the previously verified gift-fraction expression. Homogeneous controls contain four givers or four non-givers. Mixed cases replace either the targeted leaf or another leaf with a non-giver. Full light is constant one; clouds use the ordinary time-varying model. An optional guard wraps the giving action in an alive or kin condition with a nop alternative; these two guard programs have identical bytecode except for the sensed field. Guards are authored controls, not evolved discoveries. This is a deliberately founded invasion assay, not spontaneous invasion or an exact restart of the observed colony. Kernel allocation can make same-seed repeats differ.",
+  "trials": [
+    {
+      "light": "clouds",
+      "seed": 42,
+      "condition": "giving",
+      "config": {
+        "treePrograms": 1,
+        "crossover": 0.25,
+        "capacity": 4096,
+        "genomeCapacity": 2,
+        "side": 64,
+        "sources": 1,
+        "initial": 0,
+        "seed": 42,
+        "budget": 24,
+        "floor": 0,
+        "rate": 0,
+        "share": 0.5,
+        "mutation": 0.8,
+        "seedEnergy": 24,
+        "seedStorage": 24,
+        "upkeep": 0.5,
+        "ambientTemperature": 20,
+        "sunlightHeating": 1,
+        "activityHeating": 0.12,
+        "cooling": 0.2,
+        "thermalExchange": 0.12,
+        "crowdInsulation": 1,
+        "safeTemperature": 28,
+        "heatDamage": 0.5,
+        "energyDecay": 0.05,
+        "divisionCost": 12,
+        "minimumBirthEnergy": 12,
+        "exchange": 0.12,
+        "shieldUpkeep": 0.72,
+        "cpuCost": 0.00005,
+        "moveCost": 0.004,
+        "turnCost": 0.0001,
+        "linkCost": 0.5,
+        "contractCost": 0.08,
+        "attackCost": 0.08,
+        "attackDamageCost": 0.2,
+        "emitCost": 0.01,
+        "sendCost": 0.01,
+        "jitter": 12,
+        "archiveAge": 60,
+        "archiveHarvest": 120,
+        "archiveOffspring": 8,
+        "archiveEnabled": 0,
+        "solarRate": 4,
+        "sunContrast": 2,
+        "cloudCover": 0.5,
+        "cloudOpacity": 0.95,
+        "cloudScale": 1200,
+        "cloudSpeed": 12,
+        "cloudMorph": 180,
+        "solarEnabled": 1,
+        "corpseEnergy": 8,
+        "corpseLifetime": 900,
+        "eatCost": 0.04,
+        "storageCapacity": 400
+      },
+      "fixture": [
+        {
+          "x": 1024,
+          "y": 1024,
+          "links": [
+            2,
+            3,
+            4,
+            0
+          ],
+          "anchors": [
+            0,
+            0.3333333333333333,
+            0.6666666666666666,
+            0
+          ],
+          "energy": 24,
+          "storage": 0,
+          "heading": 0,
+          "genome": 0
+        },
+        {
+          "x": 1040,
+          "y": 1024,
+          "links": [
+            1,
+            0,
+            0,
+            0
+          ],
+          "anchors": [
+            0.5,
+            0,
+            0,
+            0
+          ],
+          "energy": 24,
+          "storage": 0,
+          "heading": 0,
+          "genome": 0
+        },
+        {
+          "x": 1016,
+          "y": 1037.856406460551,
+          "links": [
+            1,
+            0,
+            0,
+            0
+          ],
+          "anchors": [
+            0.8333333333333333,
+            0,
+            0,
+            0
+          ],
+          "energy": 24,
+          "storage": 0,
+          "heading": 0,
+          "genome": 0
+        },
+        {
+          "x": 1016,
+          "y": 1010.143593539449,
+          "links": [
+            1,
+            0,
+            0,
+            0
+          ],
+          "anchors": [
+            0.16666666666666652,
+            0,
+            0,
+            0
+          ],
+          "energy": 24,
+          "storage": 0,
+          "heading": 0,
+          "genome": 0
+        }
+      ],
+      "kernel": "455ad423bf39b7f559db43a490facd7e262b0e3f4ca765a1c2488fcec4a09f67",
+      "records": [
+        {
+          "seconds": 0,
+          "tick": 0,
+          "living": 4,
+          "corpses": 0,
+          "kills": 0,
+          "attacks": 0,
+          "eaten": 0,
+          "moves": 0,
+          "photosynthesis": 0,
+          "attackDamage": 0,
+          "free": 0,
+          "birthAttempts": 0,
+          "archive": 0,
+          "births": 0,
+          "deaths": 0,
+          "randomArrivals": 4,
+          "sampledArrivals": 0,
+          "mutations": 0,
+          "crossovers": 0,
+          "giving": 4,
+          "nonGiving": 0,
+          "birthsByType": [
+            0,
+            0
+          ],
+          "energy": [
+            96,
+            0
+          ],
+          "thirdLinks": [
+            1,
+            0
+          ],
+          "mixedLinks": 0,
+          "meanLight": [
+            1,
+            null
+          ],
+          "colonies": [
+            {
+              "selection": "largest",
+              "size": 4,
+              "speed": 0,
+              "omitted": "Whole body exceeds observation limit"
+            }
+          ]
+        },
+        {
+          "seconds": 60,
+          "tick": 3600,
+          "living": 15,
+          "corpses": 0,
+          "kills": 0,
+          "attacks": 0,
+          "eaten": 0,
+          "moves": 15951,
+          "photosynthesis": 1053.630859375,
+          "attackDamage": 0,
+          "free": 4081,
+          "birthAttempts": 0,
+          "archive": 0,
+          "births": 11,
+          "deaths": 0,
+          "randomArrivals": 4,
+          "sampledArrivals": 0,
+          "mutations": 0,
+          "crossovers": 0,
+          "giving": 15,
+          "nonGiving": 0,
+          "birthsByType": [
+            11,
+            0
+          ],
+          "energy": [
+            250.436767578125,
+            0
+          ],
+          "thirdLinks": [
+            6,
+            0
+          ],
+          "mixedLinks": 0,
+          "meanLight": [
+            0.45459997455279033,
+            null
+          ],
+          "colonies": [
+            {
+              "selection": "largest",
+              "size": 15,
+              "speed": 14.633330130737308,
+              "omitted": "Whole body exceeds observation limit"
+            }
+          ]
+        },
+        {
+          "seconds": 120,
+          "tick": 7200,
+          "living": 52,
+          "corpses": 0,
+          "kills": 0,
+          "attacks": 0,
+          "eaten": 0,
+          "moves": 71595,
+          "photosynthesis": 6017.5322265625,
+          "attackDamage": 0,
+          "free": 4044,
+          "birthAttempts": 0,
+          "archive": 0,
+          "births": 48,
+          "deaths": 0,
+          "randomArrivals": 4,
+          "sampledArrivals": 0,
+          "mutations": 0,
+          "crossovers": 0,
+          "giving": 52,
+          "nonGiving": 0,
+          "birthsByType": [
+            48,
+            0
+          ],
+          "energy": [
+            1024.691650390625,
+            0
+          ],
+          "thirdLinks": [
+            18,
+            0
+          ],
+          "mixedLinks": 0,
+          "meanLight": [
+            0.7611328558279917,
+            null
+          ],
+          "colonies": [
+            {
+              "selection": "largest",
+              "size": 52,
+              "speed": 7.448631761527829,
+              "omitted": "Whole body exceeds observation limit"
+            }
+          ]
+        },
+        {
+          "seconds": 180,
+          "tick": 10800,
+          "living": 88,
+          "corpses": 0,
+          "kills": 0,
+          "attacks": 0,
+          "eaten": 0,
+          "moves": 194168,
+          "photosynthesis": 17177.83935546875,
+          "attackDamage": 0,
+          "free": 4008,
+          "birthAttempts": 0,
+          "archive": 0,
+          "births": 84,
+          "deaths": 0,
+          "randomArrivals": 4,
+          "sampledArrivals": 0,
+          "mutations": 0,
+          "crossovers": 0,
+          "giving": 88,
+          "nonGiving": 0,
+          "birthsByType": [
+            84,
+            0
+          ],
+          "energy": [
+            2068.546875,
+            0
+          ],
+          "thirdLinks": [
+            29,
+            0
+          ],
+          "mixedLinks": 0,
+          "meanLight": [
+            0.6849078116091815,
+            null
+          ],
+          "colonies": [
+            {
+              "selection": "largest",
+              "size": 88,
+              "speed": 5.401480594800335,
+              "omitted": "Whole body exceeds observation limit"
+            }
+          ]
+        },
+        {
+          "seconds": 240,
+          "tick": 14400,
+          "living": 73,
+          "corpses": 2,
+          "kills": 0,
+          "attacks": 0,
+          "eaten": 119.9912109375,
+          "moves": 339556,
+          "photosynthesis": 23207.421875,
+          "attackDamage": 0,
+          "free": 4021,
+          "birthAttempts": 0,
+          "archive": 0,
+          "births": 86,
+          "deaths": 17,
+          "randomArrivals": 4,
+          "sampledArrivals": 0,
+          "mutations": 0,
+          "crossovers": 0,
+          "giving": 73,
+          "nonGiving": 0,
+          "birthsByType": [
+            86,
+            0
+          ],
+          "energy": [
+            518.16650390625,
+            0
+          ],
+          "thirdLinks": [
+            9,
+            0
+          ],
+          "mixedLinks": 0,
+          "meanLight": [
+            0.17970457734310463,
+            null
+          ],
+          "colonies": [
+            {
+              "selection": "largest",
+              "size": 22,
+              "speed": 4.552051213431607,
+              "omitted": "Whole body exceeds observation limit"
+            }
+          ]
+        },
+        {
+          "seconds": 300,
+          "tick": 18000,
+          "living": 75,
+          "corpses": 4,
+          "kills": 0,
+          "attacks": 0,
+          "eaten": 151.307861328125,
+          "moves": 466818,
+          "photosynthesis": 28591.067138671875,
+          "attackDamage": 0,
+          "free": 4017,
+          "birthAttempts": 0,
+          "archive": 0,
+          "births": 94,
+          "deaths": 23,
+          "randomArrivals": 4,
+          "sampledArrivals": 0,
+          "mutations": 0,
+          "crossovers": 0,
+          "giving": 75,
+          "nonGiving": 0,
+          "birthsByType": [
+            94,
+            0
+          ],
+          "energy": [
+            1250.767578125,
+            0
+          ],
+          "thirdLinks": [
+            6,
+            0
+          ],
+          "mixedLinks": 0,
+          "meanLight": [
+            0.4664649389187495,
+            null
+          ],
+          "colonies": [
+            {
+              "selection": "largest",
+              "size": 13,
+              "speed": 25.671819130496633,
+              "omitted": "Whole body exceeds observation limit"
+            }
+          ]
+        },
+        {
+          "seconds": 360,
+          "tick": 21600,
+          "living": 165,
+          "corpses": 2,
+          "kills": 0,
+          "attacks": 0,
+          "eaten": 173.68310546875,
+          "moves": 667644,
+          "photosynthesis": 44717.17919921875,
+          "attackDamage": 0,
+          "free": 3929,
+          "birthAttempts": 0,
+          "archive": 0,
+          "births": 185,
+          "deaths": 24,
+          "randomArrivals": 4,
+          "sampledArrivals": 0,
+          "mutations": 0,
+          "crossovers": 0,
+          "giving": 165,
+          "nonGiving": 0,
+          "birthsByType": [
+            185,
+            0
+          ],
+          "energy": [
+            3199.227294921875,
+            0
+          ],
+          "thirdLinks": [
+            35,
+            0
+          ],
+          "mixedLinks": 0,
+          "meanLight": [
+            0.6304732040925459,
+            null
+          ],
+          "colonies": [
+            {
+              "selection": "largest",
+              "size": 36,
+              "speed": 27.032958711741003,
+              "omitted": "Whole body exceeds observation limit"
+            }
+          ]
+        },
+        {
+          "seconds": 420,
+          "tick": 25200,
+          "living": 269,
+          "corpses": 2,
+          "kills": 0,
+          "attacks": 0,
+          "eaten": 420.501953125,
+          "moves": 1081025,
+          "photosynthesis": 71026.9287109375,
+          "attackDamage": 0,
+          "free": 3825,
+          "birthAttempts": 0,
+          "archive": 0,
+          "births": 320,
+          "deaths": 55,
+          "randomArrivals": 4,
+          "sampledArrivals": 0,
+          "mutations": 0,
+          "crossovers": 0,
+          "giving": 269,
+          "nonGiving": 0,
+          "birthsByType": [
+            320,
+            0
+          ],
+          "energy": [
+            4027.834228515625,
+            0
+          ],
+          "thirdLinks": [
+            47,
+            0
+          ],
+          "mixedLinks": 0,
+          "meanLight": [
+            0.3321851357596071,
+            null
+          ],
+          "colonies": [
+            {
+              "selection": "largest",
+              "size": 41,
+              "speed": 8.816506847873562,
+              "omitted": "Whole body exceeds observation limit"
+            }
+          ]
+        },
+        {
+          "seconds": 480,
+          "tick": 28800,
+          "living": 194,
+          "corpses": 18,
+          "kills": 0,
+          "attacks": 0,
+          "eaten": 1244.69140625,
+          "moves": 1505289,
+          "photosynthesis": 87644.8466796875,
+          "attackDamage": 0,
+          "free": 3884,
+          "birthAttempts": 0,
+          "archive": 0,
+          "births": 364,
+          "deaths": 174,
+          "randomArrivals": 4,
+          "sampledArrivals": 0,
+          "mutations": 0,
+          "crossovers": 0,
+          "giving": 194,
+          "nonGiving": 0,
+          "birthsByType": [
+            364,
+            0
+          ],
+          "energy": [
+            3024.8505859375,
+            0
+          ],
+          "thirdLinks": [
+            5,
+            0
+          ],
+          "mixedLinks": 0,
+          "meanLight": [
+            0.3666416759189871,
+            null
+          ],
+          "colonies": [
+            {
+              "selection": "largest",
+              "size": 9,
+              "speed": 26.460890909827455,
+              "omitted": "Whole body exceeds observation limit"
+            }
+          ]
+        },
+        {
+          "seconds": 540,
+          "tick": 32400,
+          "living": 159,
+          "corpses": 28,
+          "kills": 0,
+          "attacks": 0,
+          "eaten": 1614.10107421875,
+          "moves": 1830546,
+          "photosynthesis": 100932.84838867188,
+          "attackDamage": 0,
+          "free": 3909,
+          "birthAttempts": 0,
+          "archive": 0,
+          "births": 386,
+          "deaths": 231,
+          "randomArrivals": 4,
+          "sampledArrivals": 0,
+          "mutations": 0,
+          "crossovers": 0,
+          "giving": 159,
+          "nonGiving": 0,
+          "birthsByType": [
+            386,
+            0
+          ],
+          "energy": [
+            2099.380859375,
+            0
+          ],
+          "thirdLinks": [
+            7,
+            0
+          ],
+          "mixedLinks": 0,
+          "meanLight": [
+            0.2783587191886497,
+            null
+          ],
+          "colonies": [
+            {
+              "selection": "largest",
+              "size": 15,
+              "speed": 16.854205156480884,
+              "omitted": "Whole body exceeds observation limit"
+            }
+          ]
+        },
+        {
+          "seconds": 600,
+          "tick": 36000,
+          "living": 160,
+          "corpses": 35,
+          "kills": 0,
+          "attacks": 0,
+          "eaten": 1925.044189453125,
+          "moves": 2112888,
+          "photosynthesis": 112314.00268554688,
+          "attackDamage": 0,
+          "free": 3901,
+          "birthAttempts": 0,
+          "archive": 0,
+          "births": 434,
+          "deaths": 278,
+          "randomArrivals": 4,
+          "sampledArrivals": 0,
+          "mutations": 0,
+          "crossovers": 0,
+          "giving": 160,
+          "nonGiving": 0,
+          "birthsByType": [
+            434,
+            0
+          ],
+          "energy": [
+            1833.512939453125,
+            0
+          ],
+          "thirdLinks": [
+            28,
+            0
+          ],
+          "mixedLinks": 0,
+          "meanLight": [
+            0.29135761288926004,
+            null
+          ],
+          "colonies": [
+            {
+              "selection": "largest",
+              "size": 38,
+              "speed": 15.846316003205166,
+              "omitted": "Whole body exceeds observation limit"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "light": "clouds",
+      "seed": 42,
+      "condition": "recipient-invader",
+      "config": {
+        "treePrograms": 1,
+        "crossover": 0.25,
+        "capacity": 4096,
+        "genomeCapacity": 2,
+        "side": 64,
+        "sources": 1,
+        "initial": 0,
+        "seed": 42,
+        "budget": 24,
+        "floor": 0,
+        "rate": 0,
+        "share": 0.5,
+        "mutation": 0.8,
+        "seedEnergy": 24,
+        "seedStorage": 24,
+        "upkeep": 0.5,
+        "ambientTemperature": 20,
+        "sunlightHeating": 1,
+        "activityHeating": 0.12,
+        "cooling": 0.2,
+        "thermalExchange": 0.12,
+        "crowdInsulation": 1,
+        "safeTemperature": 28,
+        "heatDamage": 0.5,
+        "energyDecay": 0.05,
+        "divisionCost": 12,
+        "minimumBirthEnergy": 12,
+        "exchange": 0.12,
+        "shieldUpkeep": 0.72,
+        "cpuCost": 0.00005,
+        "moveCost": 0.004,
+        "turnCost": 0.0001,
+        "linkCost": 0.5,
+        "contractCost": 0.08,
+        "attackCost": 0.08,
+        "attackDamageCost": 0.2,
+        "emitCost": 0.01,
+        "sendCost": 0.01,
+        "jitter": 12,
+        "archiveAge": 60,
+        "archiveHarvest": 120,
+        "archiveOffspring": 8,
+        "archiveEnabled": 0,
+        "solarRate": 4,
+        "sunContrast": 2,
+        "cloudCover": 0.5,
+        "cloudOpacity": 0.95,
+        "cloudScale": 1200,
+        "cloudSpeed": 12,
+        "cloudMorph": 180,
+        "solarEnabled": 1,
+        "corpseEnergy": 8,
+        "corpseLifetime": 900,
+        "eatCost": 0.04,
+        "storageCapacity": 400
+      },
+      "fixture": [
+        {
+          "x": 1024,
+          "y": 1024,
+          "links": [
+            2,
+            3,
+            4,
+            0
+          ],
+          "anchors": [
+            0,
+            0.3333333333333333,
+            0.6666666666666666,
+            0
+          ],
+          "energy": 24,
+          "storage": 0,
+          "heading": 0,
+          "genome": 0
+        },
+        {
+          "x": 1040,
+          "y": 1024,
+          "links": [
+            1,
+            0,
+            0,
+            0
+          ],
+          "anchors": [
+            0.5,
+            0,
+            0,
+            0
+          ],
+          "energy": 24,
+          "storage": 0,
+          "heading": 0,
+          "genome": 0
+        },
+        {
+          "x": 1016,
+          "y": 1037.856406460551,
+          "links": [
+            1,
+            0,
+            0,
+            0
+          ],
+          "anchors": [
+            0.8333333333333333,
+            0,
+            0,
+            0
+          ],
+          "energy": 24,
+          "storage": 0,
+          "heading": 0,
+          "genome": 0
+        },
+        {
+          "x": 1016,
+          "y": 1010.143593539449,
+          "links": [
+            1,
+            0,
+            0,
+            0
+          ],
+          "anchors": [
+            0.16666666666666652,
+            0,
+            0,
+            0
+          ],
+          "energy": 24,
+          "storage": 0,
+          "heading": 0,
+          "genome": 1
+        }
+      ],
+      "kernel": "455ad423bf39b7f559db43a490facd7e262b0e3f4ca765a1c2488fcec4a09f67",
+      "records": [
+        {
+          "seconds": 0,
+          "tick": 0,
+          "living": 4,
+          "corpses": 0,
+          "kills": 0,
+          "attacks": 0,
+          "eaten": 0,
+          "moves": 0,
+          "photosynthesis": 0,
+          "attackDamage": 0,
+          "free": 0,
+          "birthAttempts": 0,
+          "archive": 0,
+          "births": 0,
+          "deaths": 0,
+          "randomArrivals": 4,
+          "sampledArrivals": 0,
+          "mutations": 0,
+          "crossovers": 0,
+          "giving": 3,
+          "nonGiving": 1,
+          "birthsByType": [
+            0,
+            0
+          ],
+          "energy": [
+            72,
+            24
+          ],
+          "thirdLinks": [
+            1,
+            0
+          ],
+          "mixedLinks": 1,
+          "meanLight": [
+            1,
+            1
+          ],
+          "colonies": [
+            {
+              "selection": "largest",
+              "size": 4,
+              "speed": 0,
+              "omitted": "Whole body exceeds observation limit"
+            }
+          ]
+        },
+        {
+          "seconds": 60,
+          "tick": 3600,
+          "living": 4,
+          "corpses": 0,
+          "kills": 0,
+          "attacks": 0,
+          "eaten": 0,
+          "moves": 7200,
+          "photosynthesis": 448.602783203125,
+          "attackDamage": 0,
+          "free": 4092,
+          "birthAttempts": 0,
+          "archive": 0,
+          "births": 0,
+          "deaths": 0,
+          "randomArrivals": 4,
+          "sampledArrivals": 0,
+          "mutations": 0,
+          "crossovers": 0,
+          "giving": 3,
+          "nonGiving": 1,
+          "birthsByType": [
+            0,
+            0
+          ],
+          "energy": [
+            73.8125,
+            24.776123046875
+          ],
+          "thirdLinks": [
+            1,
+            0
+          ],
+          "mixedLinks": 1,
+          "meanLight": [
+            0.6664091149965922,
+            0.6934003233909607
+          ],
+          "colonies": [
+            {
+              "selection": "largest",
+              "size": 4,
+              "speed": 37.95531368257111,
+              "omitted": "Whole body exceeds observation limit"
+            }
+          ]
+        },
+        {
+          "seconds": 120,
+          "tick": 7200,
+          "living": 4,
+          "corpses": 0,
+          "kills": 0,
+          "attacks": 0,
+          "eaten": 0,
+          "moves": 14400,
+          "photosynthesis": 830.92578125,
+          "attackDamage": 0,
+          "free": 4092,
+          "birthAttempts": 0,
+          "archive": 0,
+          "births": 0,
+          "deaths": 0,
+          "randomArrivals": 4,
+          "sampledArrivals": 0,
+          "mutations": 0,
+          "crossovers": 0,
+          "giving": 3,
+          "nonGiving": 1,
+          "birthsByType": [
+            0,
+            0
+          ],
+          "energy": [
+            58.142333984375,
+            19.75341796875
+          ],
+          "thirdLinks": [
+            1,
+            0
+          ],
+          "mixedLinks": 1,
+          "meanLight": [
+            0.08642051617304485,
+            0.08553969860076904
+          ],
+          "colonies": [
+            {
+              "selection": "largest",
+              "size": 4,
+              "speed": 37.955308914200025,
+              "omitted": "Whole body exceeds observation limit"
+            }
+          ]
+        },
+        {
+          "seconds": 180,
+          "tick": 10800,
+          "living": 4,
+          "corpses": 0,
+          "kills": 0,
+          "attacks": 0,
+          "eaten": 0,
+          "moves": 21600,
+          "photosynthesis": 1237.657958984375,
+          "attackDamage": 0,
+          "free": 4092,
+          "birthAttempts": 0,
+          "archive": 0,
+          "births": 0,
+          "deaths": 0,
+          "randomArrivals": 4,
+          "sampledArrivals": 0,
+          "mutations": 0,
+          "crossovers": 0,
+          "giving": 3,
+          "nonGiving": 1,
+          "birthsByType": [
+            0,
+            0
+          ],
+          "energy": [
+            75.85546875,
+            26.17236328125
+          ],
+          "thirdLinks": [
+            1,
+            0
+          ],
+          "mixedLinks": 1,
+          "meanLight": [
+            0.9496332804361979,
+            0.9482919573783875
+          ],
+          "colonies": [
+            {
+              "selection": "largest",
+              "size": 4,
+              "speed": 37.95532989503247,
+              "omitted": "Whole body exceeds observation limit"
+            }
+          ]
+        },
+        {
+          "seconds": 240,
+          "tick": 14400,
+          "living": 8,
+          "corpses": 0,
+          "kills": 0,
+          "attacks": 0,
+          "eaten": 0,
+          "moves": 35092,
+          "photosynthesis": 1817.826171875,
+          "attackDamage": 0,
+          "free": 4088,
+          "birthAttempts": 0,
+          "archive": 0,
+          "births": 4,
+          "deaths": 0,
+          "randomArrivals": 4,
+          "sampledArrivals": 0,
+          "mutations": 0,
+          "crossovers": 0,
+          "giving": 6,
+          "nonGiving": 2,
+          "birthsByType": [
+            3,
+            1
+          ],
+          "energy": [
+            17.77490234375,
+            5.811767578125
+          ],
+          "thirdLinks": [
+            1,
+            0
+          ],
+          "mixedLinks": 1,
+          "meanLight": [
+            0.15693164865175882,
+            0.15321511030197144
+          ],
+          "colonies": [
+            {
+              "selection": "largest",
+              "size": 8,
+              "speed": 8.319748712554548,
+              "omitted": "Whole body exceeds observation limit"
+            }
+          ]
+        },
+        {
+          "seconds": 300,
+          "tick": 18000,
+          "living": 8,
+          "corpses": 0,
+          "kills": 0,
+          "attacks": 0,
+          "eaten": 0,
+          "moves": 49492,
+          "photosynthesis": 2381.88427734375,
+          "attackDamage": 0,
+          "free": 4088,
+          "birthAttempts": 0,
+          "archive": 0,
+          "births": 4,
+          "deaths": 0,
+          "randomArrivals": 4,
+          "sampledArrivals": 0,
+          "mutations": 0,
+          "crossovers": 0,
+          "giving": 6,
+          "nonGiving": 2,
+          "birthsByType": [
+            3,
+            1
+          ],
+          "energy": [
+            88.396240234375,
+            29.749267578125
+          ],
+          "thirdLinks": [
+            1,
+            0
+          ],
+          "mixedLinks": 1,
+          "meanLight": [
+            0.39249707758426666,
+            0.3985169529914856
+          ],
+          "colonies": [
+            {
+              "selection": "largest",
+              "size": 8,
+              "speed": 28.0214450216534,
+              "omitted": "Whole body exceeds observation limit"
+            }
+          ]
+        },
+        {
+          "seconds": 360,
+          "tick": 21600,
+          "living": 8,
+          "corpses": 0,
+          "kills": 0,
+          "attacks": 0,
+          "eaten": 0,
+          "moves": 63892,
+          "photosynthesis": 3349.32275390625,
+          "attackDamage": 0,
+          "free": 4088,
+          "birthAttempts": 0,
+          "archive": 0,
+          "births": 4,
+          "deaths": 0,
+          "randomArrivals": 4,
+          "sampledArrivals": 0,
+          "mutations": 0,
+          "crossovers": 0,
+          "giving": 6,
+          "nonGiving": 2,
+          "birthsByType": [
+            3,
+            1
+          ],
+          "energy": [
+            188.72607421875,
+            63.031982421875
+          ],
+          "thirdLinks": [
+            1,
+            0
+          ],
+          "mixedLinks": 1,
+          "meanLight": [
+            0.6937881112098694,
+            0.6913775205612183
+          ],
+          "colonies": [
+            {
+              "selection": "largest",
+              "size": 8,
+              "speed": 26.594126260908354,
+              "omitted": "Whole body exceeds observation limit"
+            }
+          ]
+        },
+        {
+          "seconds": 420,
+          "tick": 25200,
+          "living": 8,
+          "corpses": 0,
+          "kills": 0,
+          "attacks": 0,
+          "eaten": 0,
+          "moves": 78292,
+          "photosynthesis": 4086.444091796875,
+          "attackDamage": 0,
+          "free": 4088,
+          "birthAttempts": 0,
+          "archive": 0,
+          "births": 4,
+          "deaths": 0,
+          "randomArrivals": 4,
+          "sampledArrivals": 0,
+          "mutations": 0,
+          "crossovers": 0,
+          "giving": 6,
+          "nonGiving": 2,
+          "birthsByType": [
+            3,
+            1
+          ],
+          "energy": [
+            62.922607421875,
+            20.645751953125
+          ],
+          "thirdLinks": [
+            1,
+            0
+          ],
+          "mixedLinks": 1,
+          "meanLight": [
+            0.13914039979378381,
+            0.13353008031845093
+          ],
+          "colonies": [
+            {
+              "selection": "largest",
+              "size": 8,
+              "speed": 17.08780536532153,
+              "omitted": "Whole body exceeds observation limit"
+            }
+          ]
+        },
+        {
+          "seconds": 480,
+          "tick": 28800,
+          "living": 3,
+          "corpses": 0,
+          "kills": 0,
+          "attacks": 0,
+          "eaten": 39.99853515625,
+          "moves": 87629,
+          "photosynthesis": 4281.61767578125,
+          "attackDamage": 0,
+          "free": 4093,
+          "birthAttempts": 0,
+          "archive": 0,
+          "births": 4,
+          "deaths": 5,
+          "randomArrivals": 4,
+          "sampledArrivals": 0,
+          "mutations": 0,
+          "crossovers": 0,
+          "giving": 3,
+          "nonGiving": 0,
+          "birthsByType": [
+            3,
+            1
+          ],
+          "energy": [
+            38.605712890625,
+            0
+          ],
+          "thirdLinks": [
+            0,
+            0
+          ],
+          "mixedLinks": 0,
+          "meanLight": [
+            0.2513032654921214,
+            null
+          ],
+          "colonies": [
+            {
+              "selection": "largest",
+              "size": 2,
+              "speed": 39.1161073528809,
+              "omitted": "Whole body exceeds observation limit"
+            }
+          ]
+        },
+        {
+          "seconds": 540,
+          "tick": 32400,
+          "living": 3,
+          "corpses": 0,
+          "kills": 0,
+          "attacks": 0,
+          "eaten": 39.99853515625,
+          "moves": 93029,
+          "photosynthesis": 4553.53662109375,
+          "attackDamage": 0,
+          "free": 4093,
+          "birthAttempts": 0,
+          "archive": 0,
+          "births": 4,
+          "deaths": 5,
+          "randomArrivals": 4,
+          "sampledArrivals": 0,
+          "mutations": 0,
+          "crossovers": 0,
+          "giving": 3,
+          "nonGiving": 0,
+          "birthsByType": [
+            3,
+            1
+          ],
+          "energy": [
+            70.3466796875,
+            0
+          ],
+          "thirdLinks": [
+            0,
+            0
+          ],
+          "mixedLinks": 0,
+          "meanLight": [
+            0.42982155332962674,
+            null
+          ],
+          "colonies": [
+            {
+              "selection": "largest",
+              "size": 2,
+              "speed": 39.115531433118704,
+              "omitted": "Whole body exceeds observation limit"
+            }
+          ]
+        },
+        {
+          "seconds": 600,
+          "tick": 36000,
+          "living": 2,
+          "corpses": 1,
+          "kills": 0,
+          "attacks": 0,
+          "eaten": 39.99853515625,
+          "moves": 96715,
+          "photosynthesis": 4774.603271484375,
+          "attackDamage": 0,
+          "free": 4093,
+          "birthAttempts": 0,
+          "archive": 0,
+          "births": 4,
+          "deaths": 6,
+          "randomArrivals": 4,
+          "sampledArrivals": 0,
+          "mutations": 0,
+          "crossovers": 0,
+          "giving": 2,
+          "nonGiving": 0,
+          "birthsByType": [
+            3,
+            1
+          ],
+          "energy": [
+            45.634033203125,
+            0
+          ],
+          "thirdLinks": [
+            0,
+            0
+          ],
+          "mixedLinks": 0,
+          "meanLight": [
+            0.21793918311595917,
+            null
+          ],
+          "colonies": [
+            {
+              "selection": "largest",
+              "size": 2,
+              "speed": 39.115554672432424,
+              "omitted": "Whole body exceeds observation limit"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "light": "clouds",
+      "seed": 97,
+      "condition": "giving",
+      "config": {
+        "treePrograms": 1,
+        "crossover": 0.25,
+        "capacity": 4096,
+        "genomeCapacity": 2,
+        "side": 64,
+        "sources": 1,
+        "initial": 0,
+        "seed": 97,
+        "budget": 24,
+        "floor": 0,
+        "rate": 0,
+        "share": 0.5,
+        "mutation": 0.8,
+        "seedEnergy": 24,
+        "seedStorage": 24,
+        "upkeep": 0.5,
+        "ambientTemperature": 20,
+        "sunlightHeating": 1,
+        "activityHeating": 0.12,
+        "cooling": 0.2,
+        "thermalExchange": 0.12,
+        "crowdInsulation": 1,
+        "safeTemperature": 28,
+        "heatDamage": 0.5,
+        "energyDecay": 0.05,
+        "divisionCost": 12,
+        "minimumBirthEnergy": 12,
+        "exchange": 0.12,
+        "shieldUpkeep": 0.72,
+        "cpuCost": 0.00005,
+        "moveCost": 0.004,
+        "turnCost": 0.0001,
+        "linkCost": 0.5,
+        "contractCost": 0.08,
+        "attackCost": 0.08,
+        "attackDamageCost": 0.2,
+        "emitCost": 0.01,
+        "sendCost": 0.01,
+        "jitter": 12,
+        "archiveAge": 60,
+        "archiveHarvest": 120,
+        "archiveOffspring": 8,
+        "archiveEnabled": 0,
+        "solarRate": 4,
+        "sunContrast": 2,
+        "cloudCover": 0.5,
+        "cloudOpacity": 0.95,
+        "cloudScale": 1200,
+        "cloudSpeed": 12,
+        "cloudMorph": 180,
+        "solarEnabled": 1,
+        "corpseEnergy": 8,
+        "corpseLifetime": 900,
+        "eatCost": 0.04,
+        "storageCapacity": 400
+      },
+      "fixture": [
+        {
+          "x": 1024,
+          "y": 1024,
+          "links": [
+            2,
+            3,
+            4,
+            0
+          ],
+          "anchors": [
+            0,
+            0.3333333333333333,
+            0.6666666666666666,
+            0
+          ],
+          "energy": 24,
+          "storage": 0,
+          "heading": 0,
+          "genome": 0
+        },
+        {
+          "x": 1040,
+          "y": 1024,
+          "links": [
+            1,
+            0,
+            0,
+            0
+          ],
+          "anchors": [
+            0.5,
+            0,
+            0,
+            0
+          ],
+          "energy": 24,
+          "storage": 0,
+          "heading": 0,
+          "genome": 0
+        },
+        {
+          "x": 1016,
+          "y": 1037.856406460551,
+          "links": [
+            1,
+            0,
+            0,
+            0
+          ],
+          "anchors": [
+            0.8333333333333333,
+            0,
+            0,
+            0
+          ],
+          "energy": 24,
+          "storage": 0,
+          "heading": 0,
+          "genome": 0
+        },
+        {
+          "x": 1016,
+          "y": 1010.143593539449,
+          "links": [
+            1,
+            0,
+            0,
+            0
+          ],
+          "anchors": [
+            0.16666666666666652,
+            0,
+            0,
+            0
+          ],
+          "energy": 24,
+          "storage": 0,
+          "heading": 0,
+          "genome": 0
+        }
+      ],
+      "kernel": "455ad423bf39b7f559db43a490facd7e262b0e3f4ca765a1c2488fcec4a09f67",
+      "records": [
+        {
+          "seconds": 0,
+          "tick": 0,
+          "living": 4,
+          "corpses": 0,
+          "kills": 0,
+          "attacks": 0,
+          "eaten": 0,
+          "moves": 0,
+          "photosynthesis": 0,
+          "attackDamage": 0,
+          "free": 0,
+          "birthAttempts": 0,
+          "archive": 0,
+          "births": 0,
+          "deaths": 0,
+          "randomArrivals": 4,
+          "sampledArrivals": 0,
+          "mutations": 0,
+          "crossovers": 0,
+          "giving": 4,
+          "nonGiving": 0,
+          "birthsByType": [
+            0,
+            0
+          ],
+          "energy": [
+            96,
+            0
+          ],
+          "thirdLinks": [
+            1,
+            0
+          ],
+          "mixedLinks": 0,
+          "meanLight": [
+            1,
+            null
+          ],
+          "colonies": [
+            {
+              "selection": "largest",
+              "size": 4,
+              "speed": 0,
+              "omitted": "Whole body exceeds observation limit"
+            }
+          ]
+        },
+        {
+          "seconds": 60,
+          "tick": 3600,
+          "living": 5,
+          "corpses": 0,
+          "kills": 0,
+          "attacks": 0,
+          "eaten": 0,
+          "moves": 8999,
+          "photosynthesis": 407.680908203125,
+          "attackDamage": 0,
+          "free": 4091,
+          "birthAttempts": 0,
+          "archive": 0,
+          "births": 1,
+          "deaths": 0,
+          "randomArrivals": 4,
+          "sampledArrivals": 0,
+          "mutations": 0,
+          "crossovers": 0,
+          "giving": 5,
+          "nonGiving": 0,
+          "birthsByType": [
+            1,
+            0
+          ],
+          "energy": [
+            92.352294921875,
+            0
+          ],
+          "thirdLinks": [
+            1,
+            0
+          ],
+          "mixedLinks": 0,
+          "meanLight": [
+            0.47341358065605166,
+            null
+          ],
+          "colonies": [
+            {
+              "selection": "largest",
+              "size": 5,
+              "speed": 8.641111776626705,
+              "omitted": "Whole body exceeds observation limit"
+            }
+          ]
+        },
+        {
+          "seconds": 120,
+          "tick": 7200,
+          "living": 5,
+          "corpses": 0,
+          "kills": 0,
+          "attacks": 0,
+          "eaten": 23.99853515625,
+          "moves": 20301,
+          "photosynthesis": 884.28662109375,
+          "attackDamage": 0,
+          "free": 4091,
+          "birthAttempts": 0,
+          "archive": 0,
+          "births": 4,
+          "deaths": 3,
+          "randomArrivals": 4,
+          "sampledArrivals": 0,
+          "mutations": 0,
+          "crossovers": 0,
+          "giving": 5,
+          "nonGiving": 0,
+          "birthsByType": [
+            4,
+            0
+          ],
+          "energy": [
+            69.72607421875,
+            0
+          ],
+          "thirdLinks": [
+            0,
+            0
+          ],
+          "mixedLinks": 0,
+          "meanLight": [
+            0.32571313381195066,
+            null
+          ],
+          "colonies": [
+            {
+              "selection": "largest",
+              "size": 1,
+              "speed": 37.95530313337622,
+              "omitted": "Whole body exceeds observation limit"
+            }
+          ]
+        },
+        {
+          "seconds": 180,
+          "tick": 10800,
+          "living": 6,
+          "corpses": 0,
+          "kills": 0,
+          "attacks": 0,
+          "eaten": 23.99853515625,
+          "moves": 29747,
+          "photosynthesis": 1375.587890625,
+          "attackDamage": 0,
+          "free": 4090,
+          "birthAttempts": 0,
+          "archive": 0,
+          "births": 5,
+          "deaths": 3,
+          "randomArrivals": 4,
+          "sampledArrivals": 0,
+          "mutations": 0,
+          "crossovers": 0,
+          "giving": 6,
+          "nonGiving": 0,
+          "birthsByType": [
+            5,
+            0
+          ],
+          "energy": [
+            126.064208984375,
+            0
+          ],
+          "thirdLinks": [
+            0,
+            0
+          ],
+          "mixedLinks": 0,
+          "meanLight": [
+            0.5195225725571314,
+            null
+          ],
+          "colonies": [
+            {
+              "selection": "largest",
+              "size": 2,
+              "speed": 38.832848071955084,
+              "omitted": "Whole body exceeds observation limit"
+            }
+          ]
+        },
+        {
+          "seconds": 240,
+          "tick": 14400,
+          "living": 51,
+          "corpses": 0,
+          "kills": 0,
+          "attacks": 0,
+          "eaten": 23.99853515625,
+          "moves": 68186,
+          "photosynthesis": 5076.66552734375,
+          "attackDamage": 0,
+          "free": 4045,
+          "birthAttempts": 0,
+          "archive": 0,
+          "births": 50,
+          "deaths": 3,
+          "randomArrivals": 4,
+          "sampledArrivals": 0,
+          "mutations": 0,
+          "crossovers": 0,
+          "giving": 51,
+          "nonGiving": 0,
+          "birthsByType": [
+            50,
+            0
+          ],
+          "energy": [
+            744.899658203125,
+            0
+          ],
+          "thirdLinks": [
+            18,
+            0
+          ],
+          "mixedLinks": 0,
+          "meanLight": [
+            0.7429545771549729,
+            null
+          ],
+          "colonies": [
+            {
+              "selection": "largest",
+              "size": 47,
+              "speed": 5.233520909803983,
+              "omitted": "Whole body exceeds observation limit"
+            }
+          ]
+        },
+        {
+          "seconds": 300,
+          "tick": 18000,
+          "living": 106,
+          "corpses": 0,
+          "kills": 0,
+          "attacks": 0,
+          "eaten": 103.994140625,
+          "moves": 190450,
+          "photosynthesis": 15970.51318359375,
+          "attackDamage": 0,
+          "free": 3990,
+          "birthAttempts": 0,
+          "archive": 0,
+          "births": 115,
+          "deaths": 13,
+          "randomArrivals": 4,
+          "sampledArrivals": 0,
+          "mutations": 0,
+          "crossovers": 0,
+          "giving": 106,
+          "nonGiving": 0,
+          "birthsByType": [
+            115,
+            0
+          ],
+          "energy": [
+            2142.4658203125,
+            0
+          ],
+          "thirdLinks": [
+            25,
+            0
+          ],
+          "mixedLinks": 0,
+          "meanLight": [
+            0.5788634380079666,
+            null
+          ],
+          "colonies": [
+            {
+              "selection": "largest",
+              "size": 32,
+              "speed": 19.155159363343007,
+              "omitted": "Whole body exceeds observation limit"
+            }
+          ]
+        },
+        {
+          "seconds": 360,
+          "tick": 21600,
+          "living": 328,
+          "corpses": 0,
+          "kills": 0,
+          "attacks": 0,
+          "eaten": 135.991943359375,
+          "moves": 527913,
+          "photosynthesis": 45083.45556640625,
+          "attackDamage": 0,
+          "free": 3768,
+          "birthAttempts": 0,
+          "archive": 0,
+          "births": 341,
+          "deaths": 17,
+          "randomArrivals": 4,
+          "sampledArrivals": 0,
+          "mutations": 0,
+          "crossovers": 0,
+          "giving": 328,
+          "nonGiving": 0,
+          "birthsByType": [
+            341,
+            0
+          ],
+          "energy": [
+            6036.656005859375,
+            0
+          ],
+          "thirdLinks": [
+            94,
+            0
+          ],
+          "mixedLinks": 0,
+          "meanLight": [
+            0.7476102520779866,
+            null
+          ],
+          "colonies": [
+            {
+              "selection": "largest",
+              "size": 61,
+              "speed": 14.67863740048042,
+              "omitted": "Whole body exceeds observation limit"
+            }
+          ]
+        },
+        {
+          "seconds": 420,
+          "tick": 25200,
+          "living": 710,
+          "corpses": 0,
+          "kills": 0,
+          "attacks": 0,
+          "eaten": 551.962158203125,
+          "moves": 1489555,
+          "photosynthesis": 123406.4072265625,
+          "attackDamage": 0,
+          "free": 3386,
+          "birthAttempts": 0,
+          "archive": 0,
+          "births": 775,
+          "deaths": 69,
+          "randomArrivals": 4,
+          "sampledArrivals": 0,
+          "mutations": 0,
+          "crossovers": 0,
+          "giving": 710,
+          "nonGiving": 0,
+          "birthsByType": [
+            775,
+            0
+          ],
+          "energy": [
+            12895.78125,
+            0
+          ],
+          "thirdLinks": [
+            175,
+            0
+          ],
+          "mixedLinks": 0,
+          "meanLight": [
+            0.5442270259622117,
+            null
+          ],
+          "colonies": [
+            {
+              "selection": "largest",
+              "size": 92,
+              "speed": 20.51968265906977,
+              "omitted": "Whole body exceeds observation limit"
+            }
+          ]
+        },
+        {
+          "seconds": 480,
+          "tick": 28800,
+          "living": 1441,
+          "corpses": 2,
+          "kills": 0,
+          "attacks": 0,
+          "eaten": 1055.926513671875,
+          "moves": 3364306,
+          "photosynthesis": 266386.0700683594,
+          "attackDamage": 0,
+          "free": 2653,
+          "birthAttempts": 0,
+          "archive": 0,
+          "births": 1569,
+          "deaths": 132,
+          "randomArrivals": 4,
+          "sampledArrivals": 0,
+          "mutations": 0,
+          "crossovers": 0,
+          "giving": 1441,
+          "nonGiving": 0,
+          "birthsByType": [
+            1569,
+            0
+          ],
+          "energy": [
+            25416.137939453125,
+            0
+          ],
+          "thirdLinks": [
+            368,
+            0
+          ],
+          "mixedLinks": 0,
+          "meanLight": [
+            0.5470214392537461,
+            null
+          ],
+          "colonies": [
+            {
+              "selection": "largest",
+              "size": 81,
+              "speed": 9.228639075460793,
+              "omitted": "Whole body exceeds observation limit"
+            }
+          ]
+        },
+        {
+          "seconds": 540,
+          "tick": 32400,
+          "living": 2407,
+          "corpses": 2,
+          "kills": 0,
+          "attacks": 0,
+          "eaten": 2855.68212890625,
+          "moves": 6712927,
+          "photosynthesis": 519115.73681640625,
+          "attackDamage": 0,
+          "free": 1687,
+          "birthAttempts": 0,
+          "archive": 0,
+          "births": 2762,
+          "deaths": 359,
+          "randomArrivals": 4,
+          "sampledArrivals": 0,
+          "mutations": 0,
+          "crossovers": 0,
+          "giving": 2407,
+          "nonGiving": 0,
+          "birthsByType": [
+            2762,
+            0
+          ],
+          "energy": [
+            48063.31884765625,
+            0
+          ],
+          "thirdLinks": [
+            533,
+            0
+          ],
+          "mixedLinks": 0,
+          "meanLight": [
+            0.6014414124150568,
+            null
+          ],
+          "colonies": [
+            {
+              "selection": "largest",
+              "size": 101,
+              "speed": 19.16761455935026,
+              "omitted": "Whole body exceeds observation limit"
+            }
+          ]
+        },
+        {
+          "seconds": 600,
+          "tick": 36000,
+          "living": 4095,
+          "corpses": 1,
+          "kills": 0,
+          "attacks": 0,
+          "eaten": 5726.635498046875,
+          "moves": 12648431,
+          "photosynthesis": 1016184.1535644531,
+          "attackDamage": 0,
+          "free": 0,
+          "birthAttempts": 71,
+          "archive": 0,
+          "births": 4808,
+          "deaths": 717,
+          "randomArrivals": 4,
+          "sampledArrivals": 0,
+          "mutations": 0,
+          "crossovers": 0,
+          "giving": 4095,
+          "nonGiving": 0,
+          "birthsByType": [
+            4808,
+            0
+          ],
+          "energy": [
+            82608.388671875,
+            0
+          ],
+          "thirdLinks": [
+            830,
+            0
+          ],
+          "mixedLinks": 0,
+          "meanLight": [
+            0.6439546587630215,
+            null
+          ],
+          "colonies": [
+            {
+              "selection": "largest",
+              "size": 97,
+              "speed": 2.6102107626793187,
+              "omitted": "Whole body exceeds observation limit"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "light": "clouds",
+      "seed": 97,
+      "condition": "recipient-invader",
+      "config": {
+        "treePrograms": 1,
+        "crossover": 0.25,
+        "capacity": 4096,
+        "genomeCapacity": 2,
+        "side": 64,
+        "sources": 1,
+        "initial": 0,
+        "seed": 97,
+        "budget": 24,
+        "floor": 0,
+        "rate": 0,
+        "share": 0.5,
+        "mutation": 0.8,
+        "seedEnergy": 24,
+        "seedStorage": 24,
+        "upkeep": 0.5,
+        "ambientTemperature": 20,
+        "sunlightHeating": 1,
+        "activityHeating": 0.12,
+        "cooling": 0.2,
+        "thermalExchange": 0.12,
+        "crowdInsulation": 1,
+        "safeTemperature": 28,
+        "heatDamage": 0.5,
+        "energyDecay": 0.05,
+        "divisionCost": 12,
+        "minimumBirthEnergy": 12,
+        "exchange": 0.12,
+        "shieldUpkeep": 0.72,
+        "cpuCost": 0.00005,
+        "moveCost": 0.004,
+        "turnCost": 0.0001,
+        "linkCost": 0.5,
+        "contractCost": 0.08,
+        "attackCost": 0.08,
+        "attackDamageCost": 0.2,
+        "emitCost": 0.01,
+        "sendCost": 0.01,
+        "jitter": 12,
+        "archiveAge": 60,
+        "archiveHarvest": 120,
+        "archiveOffspring": 8,
+        "archiveEnabled": 0,
+        "solarRate": 4,
+        "sunContrast": 2,
+        "cloudCover": 0.5,
+        "cloudOpacity": 0.95,
+        "cloudScale": 1200,
+        "cloudSpeed": 12,
+        "cloudMorph": 180,
+        "solarEnabled": 1,
+        "corpseEnergy": 8,
+        "corpseLifetime": 900,
+        "eatCost": 0.04,
+        "storageCapacity": 400
+      },
+      "fixture": [
+        {
+          "x": 1024,
+          "y": 1024,
+          "links": [
+            2,
+            3,
+            4,
+            0
+          ],
+          "anchors": [
+            0,
+            0.3333333333333333,
+            0.6666666666666666,
+            0
+          ],
+          "energy": 24,
+          "storage": 0,
+          "heading": 0,
+          "genome": 0
+        },
+        {
+          "x": 1040,
+          "y": 1024,
+          "links": [
+            1,
+            0,
+            0,
+            0
+          ],
+          "anchors": [
+            0.5,
+            0,
+            0,
+            0
+          ],
+          "energy": 24,
+          "storage": 0,
+          "heading": 0,
+          "genome": 0
+        },
+        {
+          "x": 1016,
+          "y": 1037.856406460551,
+          "links": [
+            1,
+            0,
+            0,
+            0
+          ],
+          "anchors": [
+            0.8333333333333333,
+            0,
+            0,
+            0
+          ],
+          "energy": 24,
+          "storage": 0,
+          "heading": 0,
+          "genome": 0
+        },
+        {
+          "x": 1016,
+          "y": 1010.143593539449,
+          "links": [
+            1,
+            0,
+            0,
+            0
+          ],
+          "anchors": [
+            0.16666666666666652,
+            0,
+            0,
+            0
+          ],
+          "energy": 24,
+          "storage": 0,
+          "heading": 0,
+          "genome": 1
+        }
+      ],
+      "kernel": "455ad423bf39b7f559db43a490facd7e262b0e3f4ca765a1c2488fcec4a09f67",
+      "records": [
+        {
+          "seconds": 0,
+          "tick": 0,
+          "living": 4,
+          "corpses": 0,
+          "kills": 0,
+          "attacks": 0,
+          "eaten": 0,
+          "moves": 0,
+          "photosynthesis": 0,
+          "attackDamage": 0,
+          "free": 0,
+          "birthAttempts": 0,
+          "archive": 0,
+          "births": 0,
+          "deaths": 0,
+          "randomArrivals": 4,
+          "sampledArrivals": 0,
+          "mutations": 0,
+          "crossovers": 0,
+          "giving": 3,
+          "nonGiving": 1,
+          "birthsByType": [
+            0,
+            0
+          ],
+          "energy": [
+            72,
+            24
+          ],
+          "thirdLinks": [
+            1,
+            0
+          ],
+          "mixedLinks": 1,
+          "meanLight": [
+            1,
+            1
+          ],
+          "colonies": [
+            {
+              "selection": "largest",
+              "size": 4,
+              "speed": 0,
+              "omitted": "Whole body exceeds observation limit"
+            }
+          ]
+        },
+        {
+          "seconds": 60,
+          "tick": 3600,
+          "living": 4,
+          "corpses": 0,
+          "kills": 0,
+          "attacks": 0,
+          "eaten": 0,
+          "moves": 7200,
+          "photosynthesis": 315.87646484375,
+          "attackDamage": 0,
+          "free": 4092,
+          "birthAttempts": 0,
+          "archive": 0,
+          "births": 0,
+          "deaths": 0,
+          "randomArrivals": 4,
+          "sampledArrivals": 0,
+          "mutations": 0,
+          "crossovers": 0,
+          "giving": 3,
+          "nonGiving": 1,
+          "birthsByType": [
+            0,
+            0
+          ],
+          "energy": [
+            28.357177734375,
+            7.468017578125
+          ],
+          "thirdLinks": [
+            1,
+            0
+          ],
+          "mixedLinks": 1,
+          "meanLight": [
+            0.20512092610200247,
+            0.19007804989814758
+          ],
+          "colonies": [
+            {
+              "selection": "largest",
+              "size": 4,
+              "speed": 37.95531368257111,
+              "omitted": "Whole body exceeds observation limit"
+            }
+          ]
+        },
+        {
+          "seconds": 120,
+          "tick": 7200,
+          "living": 4,
+          "corpses": 0,
+          "kills": 0,
+          "attacks": 0,
+          "eaten": 0,
+          "moves": 14400,
+          "photosynthesis": 484.082275390625,
+          "attackDamage": 0,
+          "free": 4092,
+          "birthAttempts": 0,
+          "archive": 0,
+          "births": 0,
+          "deaths": 0,
+          "randomArrivals": 4,
+          "sampledArrivals": 0,
+          "mutations": 0,
+          "crossovers": 0,
+          "giving": 3,
+          "nonGiving": 1,
+          "birthsByType": [
+            0,
+            0
+          ],
+          "energy": [
+            15.31005859375,
+            6.2861328125
+          ],
+          "thirdLinks": [
+            1,
+            0
+          ],
+          "mixedLinks": 1,
+          "meanLight": [
+            0.36439700921376544,
+            0.4116396903991699
+          ],
+          "colonies": [
+            {
+              "selection": "largest",
+              "size": 4,
+              "speed": 37.955308914200025,
+              "omitted": "Whole body exceeds observation limit"
+            }
+          ]
+        },
+        {
+          "seconds": 180,
+          "tick": 10800,
+          "living": 8,
+          "corpses": 0,
+          "kills": 0,
+          "attacks": 0,
+          "eaten": 0,
+          "moves": 22802,
+          "photosynthesis": 1106.94384765625,
+          "attackDamage": 0,
+          "free": 4088,
+          "birthAttempts": 0,
+          "archive": 0,
+          "births": 4,
+          "deaths": 0,
+          "randomArrivals": 4,
+          "sampledArrivals": 0,
+          "mutations": 0,
+          "crossovers": 0,
+          "giving": 6,
+          "nonGiving": 2,
+          "birthsByType": [
+            3,
+            1
+          ],
+          "energy": [
+            134.89794921875,
+            49.457275390625
+          ],
+          "thirdLinks": [
+            1,
+            0
+          ],
+          "mixedLinks": 1,
+          "meanLight": [
+            0.6468864977359772,
+            0.6517258882522583
+          ],
+          "colonies": [
+            {
+              "selection": "largest",
+              "size": 8,
+              "speed": 28.00318138904548,
+              "omitted": "Whole body exceeds observation limit"
+            }
+          ]
+        },
+        {
+          "seconds": 240,
+          "tick": 14400,
+          "living": 17,
+          "corpses": 0,
+          "kills": 0,
+          "attacks": 0,
+          "eaten": 0,
+          "moves": 46144,
+          "photosynthesis": 2606.625,
+          "attackDamage": 0,
+          "free": 4079,
+          "birthAttempts": 0,
+          "archive": 0,
+          "births": 13,
+          "deaths": 0,
+          "randomArrivals": 4,
+          "sampledArrivals": 0,
+          "mutations": 0,
+          "crossovers": 0,
+          "giving": 13,
+          "nonGiving": 4,
+          "birthsByType": [
+            10,
+            3
+          ],
+          "energy": [
+            197.139892578125,
+            63.760009765625
+          ],
+          "thirdLinks": [
+            3,
+            1
+          ],
+          "mixedLinks": 1,
+          "meanLight": [
+            0.2682486864236685,
+            0.2679973617196083
+          ],
+          "colonies": [
+            {
+              "selection": "largest",
+              "size": 17,
+              "speed": 28.93789826974315,
+              "omitted": "Whole body exceeds observation limit"
+            }
+          ]
+        },
+        {
+          "seconds": 300,
+          "tick": 18000,
+          "living": 17,
+          "corpses": 0,
+          "kills": 0,
+          "attacks": 0,
+          "eaten": 0,
+          "moves": 76744,
+          "photosynthesis": 3966.60546875,
+          "attackDamage": 0,
+          "free": 4079,
+          "birthAttempts": 0,
+          "archive": 0,
+          "births": 13,
+          "deaths": 0,
+          "randomArrivals": 4,
+          "sampledArrivals": 0,
+          "mutations": 0,
+          "crossovers": 0,
+          "giving": 13,
+          "nonGiving": 4,
+          "birthsByType": [
+            10,
+            3
+          ],
+          "energy": [
+            226.477294921875,
+            73.35546875
+          ],
+          "thirdLinks": [
+            3,
+            1
+          ],
+          "mixedLinks": 1,
+          "meanLight": [
+            0.5978974379025973,
+            0.6424652934074402
+          ],
+          "colonies": [
+            {
+              "selection": "largest",
+              "size": 17,
+              "speed": 26.42786137843369,
+              "omitted": "Whole body exceeds observation limit"
+            }
+          ]
+        },
+        {
+          "seconds": 360,
+          "tick": 21600,
+          "living": 39,
+          "corpses": 0,
+          "kills": 0,
+          "attacks": 0,
+          "eaten": 0,
+          "moves": 131284,
+          "photosynthesis": 8404.55908203125,
+          "attackDamage": 0,
+          "free": 4057,
+          "birthAttempts": 0,
+          "archive": 0,
+          "births": 35,
+          "deaths": 0,
+          "randomArrivals": 4,
+          "sampledArrivals": 0,
+          "mutations": 0,
+          "crossovers": 0,
+          "giving": 35,
+          "nonGiving": 4,
+          "birthsByType": [
+            32,
+            3
+          ],
+          "energy": [
+            694.530517578125,
+            89.306396484375
+          ],
+          "thirdLinks": [
+            13,
+            1
+          ],
+          "mixedLinks": 1,
+          "meanLight": [
+            0.4462942932333265,
+            0.44259417057037354
+          ],
+          "colonies": [
+            {
+              "selection": "largest",
+              "size": 39,
+              "speed": 7.648529986847017,
+              "omitted": "Whole body exceeds observation limit"
+            }
+          ]
+        },
+        {
+          "seconds": 420,
+          "tick": 25200,
+          "living": 43,
+          "corpses": 0,
+          "kills": 0,
+          "attacks": 0,
+          "eaten": 0,
+          "moves": 205861,
+          "photosynthesis": 12021.898681640625,
+          "attackDamage": 0,
+          "free": 4053,
+          "birthAttempts": 0,
+          "archive": 0,
+          "births": 39,
+          "deaths": 0,
+          "randomArrivals": 4,
+          "sampledArrivals": 0,
+          "mutations": 0,
+          "crossovers": 0,
+          "giving": 39,
+          "nonGiving": 4,
+          "birthsByType": [
+            36,
+            3
+          ],
+          "energy": [
+            520.087158203125,
+            55.700927734375
+          ],
+          "thirdLinks": [
+            14,
+            1
+          ],
+          "mixedLinks": 1,
+          "meanLight": [
+            0.29219455749560624,
+            0.28260837495326996
+          ],
+          "colonies": [
+            {
+              "selection": "largest",
+              "size": 43,
+              "speed": 11.286562927505178,
+              "omitted": "Whole body exceeds observation limit"
+            }
+          ]
+        },
+        {
+          "seconds": 480,
+          "tick": 28800,
+          "living": 54,
+          "corpses": 0,
+          "kills": 0,
+          "attacks": 0,
+          "eaten": 0,
+          "moves": 294253,
+          "photosynthesis": 16938.014892578125,
+          "attackDamage": 0,
+          "free": 4042,
+          "birthAttempts": 0,
+          "archive": 0,
+          "births": 50,
+          "deaths": 0,
+          "randomArrivals": 4,
+          "sampledArrivals": 0,
+          "mutations": 0,
+          "crossovers": 0,
+          "giving": 50,
+          "nonGiving": 4,
+          "birthsByType": [
+            47,
+            3
+          ],
+          "energy": [
+            1124.346435546875,
+            96.138427734375
+          ],
+          "thirdLinks": [
+            19,
+            1
+          ],
+          "mixedLinks": 1,
+          "meanLight": [
+            0.5387893354892731,
+            0.5113434940576553
+          ],
+          "colonies": [
+            {
+              "selection": "largest",
+              "size": 54,
+              "speed": 13.169299070568757,
+              "omitted": "Whole body exceeds observation limit"
+            }
+          ]
+        },
+        {
+          "seconds": 540,
+          "tick": 32400,
+          "living": 56,
+          "corpses": 0,
+          "kills": 0,
+          "attacks": 0,
+          "eaten": 7.99951171875,
+          "moves": 392942,
+          "photosynthesis": 22005.90576171875,
+          "attackDamage": 0,
+          "free": 4040,
+          "birthAttempts": 0,
+          "archive": 0,
+          "births": 53,
+          "deaths": 1,
+          "randomArrivals": 4,
+          "sampledArrivals": 0,
+          "mutations": 0,
+          "crossovers": 0,
+          "giving": 52,
+          "nonGiving": 4,
+          "birthsByType": [
+            50,
+            3
+          ],
+          "energy": [
+            699.51953125,
+            55.707275390625
+          ],
+          "thirdLinks": [
+            18,
+            1
+          ],
+          "mixedLinks": 1,
+          "meanLight": [
+            0.29878238760508025,
+            0.34813541173934937
+          ],
+          "colonies": [
+            {
+              "selection": "largest",
+              "size": 53,
+              "speed": 20.83776674333741,
+              "omitted": "Whole body exceeds observation limit"
+            }
+          ]
+        },
+        {
+          "seconds": 600,
+          "tick": 36000,
+          "living": 80,
+          "corpses": 0,
+          "kills": 0,
+          "attacks": 0,
+          "eaten": 7.99951171875,
+          "moves": 506818,
+          "photosynthesis": 31953.669921875,
+          "attackDamage": 0,
+          "free": 4016,
+          "birthAttempts": 0,
+          "archive": 0,
+          "births": 77,
+          "deaths": 1,
+          "randomArrivals": 4,
+          "sampledArrivals": 0,
+          "mutations": 0,
+          "crossovers": 0,
+          "giving": 76,
+          "nonGiving": 4,
+          "birthsByType": [
+            74,
+            3
+          ],
+          "energy": [
+            1768.9560546875,
+            84.798095703125
+          ],
+          "thirdLinks": [
+            28,
+            1
+          ],
+          "mixedLinks": 1,
+          "meanLight": [
+            0.883192162372564,
+            0.9844274371862411
+          ],
+          "colonies": [
+            {
+              "selection": "largest",
+              "size": 63,
+              "speed": 16.64657970638832,
+              "omitted": "Whole body exceeds observation limit"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "light": "clouds",
+      "seed": 321,
+      "condition": "giving",
+      "config": {
+        "treePrograms": 1,
+        "crossover": 0.25,
+        "capacity": 4096,
+        "genomeCapacity": 2,
+        "side": 64,
+        "sources": 1,
+        "initial": 0,
+        "seed": 321,
+        "budget": 24,
+        "floor": 0,
+        "rate": 0,
+        "share": 0.5,
+        "mutation": 0.8,
+        "seedEnergy": 24,
+        "seedStorage": 24,
+        "upkeep": 0.5,
+        "ambientTemperature": 20,
+        "sunlightHeating": 1,
+        "activityHeating": 0.12,
+        "cooling": 0.2,
+        "thermalExchange": 0.12,
+        "crowdInsulation": 1,
+        "safeTemperature": 28,
+        "heatDamage": 0.5,
+        "energyDecay": 0.05,
+        "divisionCost": 12,
+        "minimumBirthEnergy": 12,
+        "exchange": 0.12,
+        "shieldUpkeep": 0.72,
+        "cpuCost": 0.00005,
+        "moveCost": 0.004,
+        "turnCost": 0.0001,
+        "linkCost": 0.5,
+        "contractCost": 0.08,
+        "attackCost": 0.08,
+        "attackDamageCost": 0.2,
+        "emitCost": 0.01,
+        "sendCost": 0.01,
+        "jitter": 12,
+        "archiveAge": 60,
+        "archiveHarvest": 120,
+        "archiveOffspring": 8,
+        "archiveEnabled": 0,
+        "solarRate": 4,
+        "sunContrast": 2,
+        "cloudCover": 0.5,
+        "cloudOpacity": 0.95,
+        "cloudScale": 1200,
+        "cloudSpeed": 12,
+        "cloudMorph": 180,
+        "solarEnabled": 1,
+        "corpseEnergy": 8,
+        "corpseLifetime": 900,
+        "eatCost": 0.04,
+        "storageCapacity": 400
+      },
+      "fixture": [
+        {
+          "x": 1024,
+          "y": 1024,
+          "links": [
+            2,
+            3,
+            4,
+            0
+          ],
+          "anchors": [
+            0,
+            0.3333333333333333,
+            0.6666666666666666,
+            0
+          ],
+          "energy": 24,
+          "storage": 0,
+          "heading": 0,
+          "genome": 0
+        },
+        {
+          "x": 1040,
+          "y": 1024,
+          "links": [
+            1,
+            0,
+            0,
+            0
+          ],
+          "anchors": [
+            0.5,
+            0,
+            0,
+            0
+          ],
+          "energy": 24,
+          "storage": 0,
+          "heading": 0,
+          "genome": 0
+        },
+        {
+          "x": 1016,
+          "y": 1037.856406460551,
+          "links": [
+            1,
+            0,
+            0,
+            0
+          ],
+          "anchors": [
+            0.8333333333333333,
+            0,
+            0,
+            0
+          ],
+          "energy": 24,
+          "storage": 0,
+          "heading": 0,
+          "genome": 0
+        },
+        {
+          "x": 1016,
+          "y": 1010.143593539449,
+          "links": [
+            1,
+            0,
+            0,
+            0
+          ],
+          "anchors": [
+            0.16666666666666652,
+            0,
+            0,
+            0
+          ],
+          "energy": 24,
+          "storage": 0,
+          "heading": 0,
+          "genome": 0
+        }
+      ],
+      "kernel": "455ad423bf39b7f559db43a490facd7e262b0e3f4ca765a1c2488fcec4a09f67",
+      "records": [
+        {
+          "seconds": 0,
+          "tick": 0,
+          "living": 4,
+          "corpses": 0,
+          "kills": 0,
+          "attacks": 0,
+          "eaten": 0,
+          "moves": 0,
+          "photosynthesis": 0,
+          "attackDamage": 0,
+          "free": 0,
+          "birthAttempts": 0,
+          "archive": 0,
+          "births": 0,
+          "deaths": 0,
+          "randomArrivals": 4,
+          "sampledArrivals": 0,
+          "mutations": 0,
+          "crossovers": 0,
+          "giving": 4,
+          "nonGiving": 0,
+          "birthsByType": [
+            0,
+            0
+          ],
+          "energy": [
+            96,
+            0
+          ],
+          "thirdLinks": [
+            1,
+            0
+          ],
+          "mixedLinks": 0,
+          "meanLight": [
+            1,
+            null
+          ],
+          "colonies": [
+            {
+              "selection": "largest",
+              "size": 4,
+              "speed": 0,
+              "omitted": "Whole body exceeds observation limit"
+            }
+          ]
+        },
+        {
+          "seconds": 60,
+          "tick": 3600,
+          "living": 5,
+          "corpses": 0,
+          "kills": 0,
+          "attacks": 0,
+          "eaten": 0,
+          "moves": 8999,
+          "photosynthesis": 350.350341796875,
+          "attackDamage": 0,
+          "free": 4091,
+          "birthAttempts": 0,
+          "archive": 0,
+          "births": 1,
+          "deaths": 0,
+          "randomArrivals": 4,
+          "sampledArrivals": 0,
+          "mutations": 0,
+          "crossovers": 0,
+          "giving": 5,
+          "nonGiving": 0,
+          "birthsByType": [
+            1,
+            0
+          ],
+          "energy": [
+            53.0205078125,
+            0
+          ],
+          "thirdLinks": [
+            1,
+            0
+          ],
+          "mixedLinks": 0,
+          "meanLight": [
+            0.2597887575626373,
+            null
+          ],
+          "colonies": [
+            {
+              "selection": "largest",
+              "size": 5,
+              "speed": 8.641111776626705,
+              "omitted": "Whole body exceeds observation limit"
+            }
+          ]
+        },
+        {
+          "seconds": 120,
+          "tick": 7200,
+          "living": 7,
+          "corpses": 0,
+          "kills": 0,
+          "attacks": 0,
+          "eaten": 0,
+          "moves": 18339,
+          "photosynthesis": 821.60302734375,
+          "attackDamage": 0,
+          "free": 4089,
+          "birthAttempts": 0,
+          "archive": 0,
+          "births": 3,
+          "deaths": 0,
+          "randomArrivals": 4,
+          "sampledArrivals": 0,
+          "mutations": 0,
+          "crossovers": 0,
+          "giving": 7,
+          "nonGiving": 0,
+          "birthsByType": [
+            3,
+            0
+          ],
+          "energy": [
+            101.84814453125,
+            0
+          ],
+          "thirdLinks": [
+            2,
+            0
+          ],
+          "mixedLinks": 0,
+          "meanLight": [
+            0.5193410430635724,
+            null
+          ],
+          "colonies": [
+            {
+              "selection": "largest",
+              "size": 7,
+              "speed": 11.297821545652623,
+              "omitted": "Whole body exceeds observation limit"
+            }
+          ]
+        },
+        {
+          "seconds": 180,
+          "tick": 10800,
+          "living": 10,
+          "corpses": 0,
+          "kills": 0,
+          "attacks": 0,
+          "eaten": 0,
+          "moves": 35477,
+          "photosynthesis": 1697.191650390625,
+          "attackDamage": 0,
+          "free": 4086,
+          "birthAttempts": 0,
+          "archive": 0,
+          "births": 6,
+          "deaths": 0,
+          "randomArrivals": 4,
+          "sampledArrivals": 0,
+          "mutations": 0,
+          "crossovers": 0,
+          "giving": 10,
+          "nonGiving": 0,
+          "birthsByType": [
+            6,
+            0
+          ],
+          "energy": [
+            151.918212890625,
+            0
+          ],
+          "thirdLinks": [
+            4,
+            0
+          ],
+          "mixedLinks": 0,
+          "meanLight": [
+            0.3603124856948853,
+            null
+          ],
+          "colonies": [
+            {
+              "selection": "largest",
+              "size": 10,
+              "speed": 17.332337779021532,
+              "omitted": "Whole body exceeds observation limit"
+            }
+          ]
+        },
+        {
+          "seconds": 240,
+          "tick": 14400,
+          "living": 8,
+          "corpses": 0,
+          "kills": 0,
+          "attacks": 0,
+          "eaten": 15.9990234375,
+          "moves": 52115,
+          "photosynthesis": 2272.906982421875,
+          "attackDamage": 0,
+          "free": 4088,
+          "birthAttempts": 0,
+          "archive": 0,
+          "births": 6,
+          "deaths": 2,
+          "randomArrivals": 4,
+          "sampledArrivals": 0,
+          "mutations": 0,
+          "crossovers": 0,
+          "giving": 8,
+          "nonGiving": 0,
+          "birthsByType": [
+            6,
+            0
+          ],
+          "energy": [
+            76.1142578125,
+            0
+          ],
+          "thirdLinks": [
+            0,
+            0
+          ],
+          "mixedLinks": 0,
+          "meanLight": [
+            0.32996733114123344,
+            null
+          ],
+          "colonies": [
+            {
+              "selection": "largest",
+              "size": 3,
+              "speed": 18.78666382224414,
+              "omitted": "Whole body exceeds observation limit"
+            }
+          ]
+        },
+        {
+          "seconds": 300,
+          "tick": 18000,
+          "living": 6,
+          "corpses": 1,
+          "kills": 0,
+          "attacks": 0,
+          "eaten": 31.997314453125,
+          "moves": 65264,
+          "photosynthesis": 2818.73681640625,
+          "attackDamage": 0,
+          "free": 4089,
+          "birthAttempts": 0,
+          "archive": 0,
+          "births": 7,
+          "deaths": 5,
+          "randomArrivals": 4,
+          "sampledArrivals": 0,
+          "mutations": 0,
+          "crossovers": 0,
+          "giving": 6,
+          "nonGiving": 0,
+          "birthsByType": [
+            7,
+            0
+          ],
+          "energy": [
+            83.420654296875,
+            0
+          ],
+          "thirdLinks": [
+            0,
+            0
+          ],
+          "mixedLinks": 0,
+          "meanLight": [
+            0.38257617006699246,
+            null
+          ],
+          "colonies": [
+            {
+              "selection": "largest",
+              "size": 2,
+              "speed": 39.16370176282483,
+              "omitted": "Whole body exceeds observation limit"
+            }
+          ]
+        },
+        {
+          "seconds": 360,
+          "tick": 21600,
+          "living": 7,
+          "corpses": 1,
+          "kills": 0,
+          "attacks": 0,
+          "eaten": 31.997314453125,
+          "moves": 76269,
+          "photosynthesis": 3545.26171875,
+          "attackDamage": 0,
+          "free": 4088,
+          "birthAttempts": 0,
+          "archive": 0,
+          "births": 8,
+          "deaths": 5,
+          "randomArrivals": 4,
+          "sampledArrivals": 0,
+          "mutations": 0,
+          "crossovers": 0,
+          "giving": 7,
+          "nonGiving": 0,
+          "birthsByType": [
+            8,
+            0
+          ],
+          "energy": [
+            173.687744140625,
+            0
+          ],
+          "thirdLinks": [
+            0,
+            0
+          ],
+          "mixedLinks": 0,
+          "meanLight": [
+            0.4744957291654178,
+            null
+          ],
+          "colonies": [
+            {
+              "selection": "largest",
+              "size": 2,
+              "speed": 38.814218317861936,
+              "omitted": "Whole body exceeds observation limit"
+            }
+          ]
+        },
+        {
+          "seconds": 420,
+          "tick": 25200,
+          "living": 10,
+          "corpses": 1,
+          "kills": 0,
+          "attacks": 0,
+          "eaten": 31.997314453125,
+          "moves": 92683,
+          "photosynthesis": 4526.231201171875,
+          "attackDamage": 0,
+          "free": 4085,
+          "birthAttempts": 0,
+          "archive": 0,
+          "births": 11,
+          "deaths": 5,
+          "randomArrivals": 4,
+          "sampledArrivals": 0,
+          "mutations": 0,
+          "crossovers": 0,
+          "giving": 10,
+          "nonGiving": 0,
+          "birthsByType": [
+            11,
+            0
+          ],
+          "energy": [
+            173.25732421875,
+            0
+          ],
+          "thirdLinks": [
+            0,
+            0
+          ],
+          "mixedLinks": 0,
+          "meanLight": [
+            0.34350903034210206,
+            null
+          ],
+          "colonies": [
+            {
+              "selection": "largest",
+              "size": 4,
+              "speed": 34.190006885247634,
+              "omitted": "Whole body exceeds observation limit"
+            }
+          ]
+        },
+        {
+          "seconds": 480,
+          "tick": 28800,
+          "living": 8,
+          "corpses": 1,
+          "kills": 0,
+          "attacks": 0,
+          "eaten": 63.994873046875,
+          "moves": 112302,
+          "photosynthesis": 5278.66845703125,
+          "attackDamage": 0,
+          "free": 4087,
+          "birthAttempts": 0,
+          "archive": 0,
+          "births": 13,
+          "deaths": 9,
+          "randomArrivals": 4,
+          "sampledArrivals": 0,
+          "mutations": 0,
+          "crossovers": 0,
+          "giving": 8,
+          "nonGiving": 0,
+          "birthsByType": [
+            13,
+            0
+          ],
+          "energy": [
+            116.396484375,
+            0
+          ],
+          "thirdLinks": [
+            0,
+            0
+          ],
+          "mixedLinks": 0,
+          "meanLight": [
+            0.2686608945950866,
+            null
+          ],
+          "colonies": [
+            {
+              "selection": "largest",
+              "size": 4,
+              "speed": 36.523466483492356,
+              "omitted": "Whole body exceeds observation limit"
+            }
+          ]
+        },
+        {
+          "seconds": 540,
+          "tick": 32400,
+          "living": 5,
+          "corpses": 4,
+          "kills": 0,
+          "attacks": 0,
+          "eaten": 63.994873046875,
+          "moves": 124688,
+          "photosynthesis": 5569.980712890625,
+          "attackDamage": 0,
+          "free": 4087,
+          "birthAttempts": 0,
+          "archive": 0,
+          "births": 13,
+          "deaths": 12,
+          "randomArrivals": 4,
+          "sampledArrivals": 0,
+          "mutations": 0,
+          "crossovers": 0,
+          "giving": 5,
+          "nonGiving": 0,
+          "birthsByType": [
+            13,
+            0
+          ],
+          "energy": [
+            8.51416015625,
+            0
+          ],
+          "thirdLinks": [
+            0,
+            0
+          ],
+          "mixedLinks": 0,
+          "meanLight": [
+            0.19133652448654176,
+            null
+          ],
+          "colonies": [
+            {
+              "selection": "largest",
+              "size": 4,
+              "speed": 36.52319045246461,
+              "omitted": "Whole body exceeds observation limit"
+            }
+          ]
+        },
+        {
+          "seconds": 600,
+          "tick": 36000,
+          "living": 5,
+          "corpses": 4,
+          "kills": 0,
+          "attacks": 0,
+          "eaten": 63.994873046875,
+          "moves": 133688,
+          "photosynthesis": 5870.324462890625,
+          "attackDamage": 0,
+          "free": 4087,
+          "birthAttempts": 0,
+          "archive": 0,
+          "births": 13,
+          "deaths": 12,
+          "randomArrivals": 4,
+          "sampledArrivals": 0,
+          "mutations": 0,
+          "crossovers": 0,
+          "giving": 5,
+          "nonGiving": 0,
+          "birthsByType": [
+            13,
+            0
+          ],
+          "energy": [
+            53.0439453125,
+            0
+          ],
+          "thirdLinks": [
+            0,
+            0
+          ],
+          "mixedLinks": 0,
+          "meanLight": [
+            0.38494340777397157,
+            null
+          ],
+          "colonies": [
+            {
+              "selection": "largest",
+              "size": 4,
+              "speed": 36.52386870226434,
+              "omitted": "Whole body exceeds observation limit"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "light": "clouds",
+      "seed": 321,
+      "condition": "recipient-invader",
+      "config": {
+        "treePrograms": 1,
+        "crossover": 0.25,
+        "capacity": 4096,
+        "genomeCapacity": 2,
+        "side": 64,
+        "sources": 1,
+        "initial": 0,
+        "seed": 321,
+        "budget": 24,
+        "floor": 0,
+        "rate": 0,
+        "share": 0.5,
+        "mutation": 0.8,
+        "seedEnergy": 24,
+        "seedStorage": 24,
+        "upkeep": 0.5,
+        "ambientTemperature": 20,
+        "sunlightHeating": 1,
+        "activityHeating": 0.12,
+        "cooling": 0.2,
+        "thermalExchange": 0.12,
+        "crowdInsulation": 1,
+        "safeTemperature": 28,
+        "heatDamage": 0.5,
+        "energyDecay": 0.05,
+        "divisionCost": 12,
+        "minimumBirthEnergy": 12,
+        "exchange": 0.12,
+        "shieldUpkeep": 0.72,
+        "cpuCost": 0.00005,
+        "moveCost": 0.004,
+        "turnCost": 0.0001,
+        "linkCost": 0.5,
+        "contractCost": 0.08,
+        "attackCost": 0.08,
+        "attackDamageCost": 0.2,
+        "emitCost": 0.01,
+        "sendCost": 0.01,
+        "jitter": 12,
+        "archiveAge": 60,
+        "archiveHarvest": 120,
+        "archiveOffspring": 8,
+        "archiveEnabled": 0,
+        "solarRate": 4,
+        "sunContrast": 2,
+        "cloudCover": 0.5,
+        "cloudOpacity": 0.95,
+        "cloudScale": 1200,
+        "cloudSpeed": 12,
+        "cloudMorph": 180,
+        "solarEnabled": 1,
+        "corpseEnergy": 8,
+        "corpseLifetime": 900,
+        "eatCost": 0.04,
+        "storageCapacity": 400
+      },
+      "fixture": [
+        {
+          "x": 1024,
+          "y": 1024,
+          "links": [
+            2,
+            3,
+            4,
+            0
+          ],
+          "anchors": [
+            0,
+            0.3333333333333333,
+            0.6666666666666666,
+            0
+          ],
+          "energy": 24,
+          "storage": 0,
+          "heading": 0,
+          "genome": 0
+        },
+        {
+          "x": 1040,
+          "y": 1024,
+          "links": [
+            1,
+            0,
+            0,
+            0
+          ],
+          "anchors": [
+            0.5,
+            0,
+            0,
+            0
+          ],
+          "energy": 24,
+          "storage": 0,
+          "heading": 0,
+          "genome": 0
+        },
+        {
+          "x": 1016,
+          "y": 1037.856406460551,
+          "links": [
+            1,
+            0,
+            0,
+            0
+          ],
+          "anchors": [
+            0.8333333333333333,
+            0,
+            0,
+            0
+          ],
+          "energy": 24,
+          "storage": 0,
+          "heading": 0,
+          "genome": 0
+        },
+        {
+          "x": 1016,
+          "y": 1010.143593539449,
+          "links": [
+            1,
+            0,
+            0,
+            0
+          ],
+          "anchors": [
+            0.16666666666666652,
+            0,
+            0,
+            0
+          ],
+          "energy": 24,
+          "storage": 0,
+          "heading": 0,
+          "genome": 1
+        }
+      ],
+      "kernel": "455ad423bf39b7f559db43a490facd7e262b0e3f4ca765a1c2488fcec4a09f67",
+      "records": [
+        {
+          "seconds": 0,
+          "tick": 0,
+          "living": 4,
+          "corpses": 0,
+          "kills": 0,
+          "attacks": 0,
+          "eaten": 0,
+          "moves": 0,
+          "photosynthesis": 0,
+          "attackDamage": 0,
+          "free": 0,
+          "birthAttempts": 0,
+          "archive": 0,
+          "births": 0,
+          "deaths": 0,
+          "randomArrivals": 4,
+          "sampledArrivals": 0,
+          "mutations": 0,
+          "crossovers": 0,
+          "giving": 3,
+          "nonGiving": 1,
+          "birthsByType": [
+            0,
+            0
+          ],
+          "energy": [
+            72,
+            24
+          ],
+          "thirdLinks": [
+            1,
+            0
+          ],
+          "mixedLinks": 1,
+          "meanLight": [
+            1,
+            1
+          ],
+          "colonies": [
+            {
+              "selection": "largest",
+              "size": 4,
+              "speed": 0,
+              "omitted": "Whole body exceeds observation limit"
+            }
+          ]
+        },
+        {
+          "seconds": 60,
+          "tick": 3600,
+          "living": 4,
+          "corpses": 0,
+          "kills": 0,
+          "attacks": 0,
+          "eaten": 0,
+          "moves": 7200,
+          "photosynthesis": 334.38525390625,
+          "attackDamage": 0,
+          "free": 4092,
+          "birthAttempts": 0,
+          "archive": 0,
+          "births": 0,
+          "deaths": 0,
+          "randomArrivals": 4,
+          "sampledArrivals": 0,
+          "mutations": 0,
+          "crossovers": 0,
+          "giving": 3,
+          "nonGiving": 1,
+          "birthsByType": [
+            0,
+            0
+          ],
+          "energy": [
+            60.77978515625,
+            21.366455078125
+          ],
+          "thirdLinks": [
+            1,
+            0
+          ],
+          "mixedLinks": 1,
+          "meanLight": [
+            0.5461116035779318,
+            0.5557383894920349
+          ],
+          "colonies": [
+            {
+              "selection": "largest",
+              "size": 4,
+              "speed": 37.95531368257111,
+              "omitted": "Whole body exceeds observation limit"
+            }
+          ]
+        },
+        {
+          "seconds": 120,
+          "tick": 7200,
+          "living": 4,
+          "corpses": 0,
+          "kills": 0,
+          "attacks": 0,
+          "eaten": 0,
+          "moves": 14400,
+          "photosynthesis": 748.242919921875,
+          "attackDamage": 0,
+          "free": 4092,
+          "birthAttempts": 0,
+          "archive": 0,
+          "births": 0,
+          "deaths": 0,
+          "randomArrivals": 4,
+          "sampledArrivals": 0,
+          "mutations": 0,
+          "crossovers": 0,
+          "giving": 3,
+          "nonGiving": 1,
+          "birthsByType": [
+            0,
+            0
+          ],
+          "energy": [
+            68.8125,
+            22.78662109375
+          ],
+          "thirdLinks": [
+            1,
+            0
+          ],
+          "mixedLinks": 1,
+          "meanLight": [
+            0.6583099762598673,
+            0.6723361611366272
+          ],
+          "colonies": [
+            {
+              "selection": "largest",
+              "size": 4,
+              "speed": 37.955308914200025,
+              "omitted": "Whole body exceeds observation limit"
+            }
+          ]
+        },
+        {
+          "seconds": 180,
+          "tick": 10800,
+          "living": 4,
+          "corpses": 0,
+          "kills": 0,
+          "attacks": 0,
+          "eaten": 0,
+          "moves": 21600,
+          "photosynthesis": 1226.77294921875,
+          "attackDamage": 0,
+          "free": 4092,
+          "birthAttempts": 0,
+          "archive": 0,
+          "births": 0,
+          "deaths": 0,
+          "randomArrivals": 4,
+          "sampledArrivals": 0,
+          "mutations": 0,
+          "crossovers": 0,
+          "giving": 3,
+          "nonGiving": 1,
+          "birthsByType": [
+            0,
+            0
+          ],
+          "energy": [
+            91.56591796875,
+            30.446533203125
+          ],
+          "thirdLinks": [
+            1,
+            0
+          ],
+          "mixedLinks": 1,
+          "meanLight": [
+            0.15151802698771158,
+            0.14341381192207336
+          ],
+          "colonies": [
+            {
+              "selection": "largest",
+              "size": 4,
+              "speed": 37.95532989503247,
+              "omitted": "Whole body exceeds observation limit"
+            }
+          ]
+        },
+        {
+          "seconds": 240,
+          "tick": 14400,
+          "living": 8,
+          "corpses": 0,
+          "kills": 0,
+          "attacks": 0,
+          "eaten": 0,
+          "moves": 32280,
+          "photosynthesis": 1887.05029296875,
+          "attackDamage": 0,
+          "free": 4088,
+          "birthAttempts": 0,
+          "archive": 0,
+          "births": 4,
+          "deaths": 0,
+          "randomArrivals": 4,
+          "sampledArrivals": 0,
+          "mutations": 0,
+          "crossovers": 0,
+          "giving": 6,
+          "nonGiving": 2,
+          "birthsByType": [
+            3,
+            1
+          ],
+          "energy": [
+            104.087646484375,
+            35.23388671875
+          ],
+          "thirdLinks": [
+            1,
+            0
+          ],
+          "mixedLinks": 1,
+          "meanLight": [
+            0.21398964524269104,
+            0.24618683755397797
+          ],
+          "colonies": [
+            {
+              "selection": "largest",
+              "size": 8,
+              "speed": 28.25508864458028,
+              "omitted": "Whole body exceeds observation limit"
+            }
+          ]
+        },
+        {
+          "seconds": 300,
+          "tick": 18000,
+          "living": 8,
+          "corpses": 0,
+          "kills": 0,
+          "attacks": 0,
+          "eaten": 0,
+          "moves": 46680,
+          "photosynthesis": 2418.580078125,
+          "attackDamage": 0,
+          "free": 4088,
+          "birthAttempts": 0,
+          "archive": 0,
+          "births": 4,
+          "deaths": 0,
+          "randomArrivals": 4,
+          "sampledArrivals": 0,
+          "mutations": 0,
+          "crossovers": 0,
+          "giving": 6,
+          "nonGiving": 2,
+          "birthsByType": [
+            3,
+            1
+          ],
+          "energy": [
+            43.9853515625,
+            15.91943359375
+          ],
+          "thirdLinks": [
+            1,
+            0
+          ],
+          "mixedLinks": 1,
+          "meanLight": [
+            0.3294650862614314,
+            0.3262147605419159
+          ],
+          "colonies": [
+            {
+              "selection": "largest",
+              "size": 8,
+              "speed": 2.868107789781211,
+              "omitted": "Whole body exceeds observation limit"
+            }
+          ]
+        },
+        {
+          "seconds": 360,
+          "tick": 21600,
+          "living": 8,
+          "corpses": 0,
+          "kills": 0,
+          "attacks": 0,
+          "eaten": 0,
+          "moves": 61080,
+          "photosynthesis": 3302.67333984375,
+          "attackDamage": 0,
+          "free": 4088,
+          "birthAttempts": 0,
+          "archive": 0,
+          "births": 4,
+          "deaths": 0,
+          "randomArrivals": 4,
+          "sampledArrivals": 0,
+          "mutations": 0,
+          "crossovers": 0,
+          "giving": 6,
+          "nonGiving": 2,
+          "birthsByType": [
+            3,
+            1
+          ],
+          "energy": [
+            150.84521484375,
+            50.14404296875
+          ],
+          "thirdLinks": [
+            1,
+            0
+          ],
+          "mixedLinks": 1,
+          "meanLight": [
+            0.3538316339254379,
+            0.34431788325309753
+          ],
+          "colonies": [
+            {
+              "selection": "largest",
+              "size": 8,
+              "speed": 13.733635423765884,
+              "omitted": "Whole body exceeds observation limit"
+            }
+          ]
+        },
+        {
+          "seconds": 420,
+          "tick": 25200,
+          "living": 8,
+          "corpses": 0,
+          "kills": 0,
+          "attacks": 0,
+          "eaten": 0,
+          "moves": 75480,
+          "photosynthesis": 4088.048828125,
+          "attackDamage": 0,
+          "free": 4088,
+          "birthAttempts": 0,
+          "archive": 0,
+          "births": 4,
+          "deaths": 0,
+          "randomArrivals": 4,
+          "sampledArrivals": 0,
+          "mutations": 0,
+          "crossovers": 0,
+          "giving": 6,
+          "nonGiving": 2,
+          "birthsByType": [
+            3,
+            1
+          ],
+          "energy": [
+            175.49755859375,
+            58.437744140625
+          ],
+          "thirdLinks": [
+            1,
+            0
+          ],
+          "mixedLinks": 1,
+          "meanLight": [
+            0.6979483763376871,
+            0.7057870030403137
+          ],
+          "colonies": [
+            {
+              "selection": "largest",
+              "size": 8,
+              "speed": 9.840946627976027,
+              "omitted": "Whole body exceeds observation limit"
+            }
+          ]
+        },
+        {
+          "seconds": 480,
+          "tick": 28800,
+          "living": 8,
+          "corpses": 0,
+          "kills": 0,
+          "attacks": 0,
+          "eaten": 0,
+          "moves": 89880,
+          "photosynthesis": 5041.29931640625,
+          "attackDamage": 0,
+          "free": 4088,
+          "birthAttempts": 0,
+          "archive": 0,
+          "births": 4,
+          "deaths": 0,
+          "randomArrivals": 4,
+          "sampledArrivals": 0,
+          "mutations": 0,
+          "crossovers": 0,
+          "giving": 6,
+          "nonGiving": 2,
+          "birthsByType": [
+            3,
+            1
+          ],
+          "energy": [
+            126.610107421875,
+            40.06982421875
+          ],
+          "thirdLinks": [
+            1,
+            0
+          ],
+          "mixedLinks": 1,
+          "meanLight": [
+            0.3697034766276677,
+            0.34909898042678833
+          ],
+          "colonies": [
+            {
+              "selection": "largest",
+              "size": 8,
+              "speed": 8.861150657001465,
+              "omitted": "Whole body exceeds observation limit"
+            }
+          ]
+        },
+        {
+          "seconds": 540,
+          "tick": 32400,
+          "living": 8,
+          "corpses": 0,
+          "kills": 0,
+          "attacks": 0,
+          "eaten": 0,
+          "moves": 104280,
+          "photosynthesis": 5390.09765625,
+          "attackDamage": 0,
+          "free": 4088,
+          "birthAttempts": 0,
+          "archive": 0,
+          "births": 4,
+          "deaths": 0,
+          "randomArrivals": 4,
+          "sampledArrivals": 0,
+          "mutations": 0,
+          "crossovers": 0,
+          "giving": 6,
+          "nonGiving": 2,
+          "birthsByType": [
+            3,
+            1
+          ],
+          "energy": [
+            12.754638671875,
+            4.15380859375
+          ],
+          "thirdLinks": [
+            1,
+            0
+          ],
+          "mixedLinks": 1,
+          "meanLight": [
+            0.20671848952770233,
+            0.20248298346996307
+          ],
+          "colonies": [
+            {
+              "selection": "largest",
+              "size": 8,
+              "speed": 14.776043591497555,
+              "omitted": "Whole body exceeds observation limit"
+            }
+          ]
+        },
+        {
+          "seconds": 600,
+          "tick": 36000,
+          "living": 8,
+          "corpses": 0,
+          "kills": 0,
+          "attacks": 0,
+          "eaten": 0,
+          "moves": 118680,
+          "photosynthesis": 5843.48828125,
+          "attackDamage": 0,
+          "free": 4088,
+          "birthAttempts": 0,
+          "archive": 0,
+          "births": 4,
+          "deaths": 0,
+          "randomArrivals": 4,
+          "sampledArrivals": 0,
+          "mutations": 0,
+          "crossovers": 0,
+          "giving": 6,
+          "nonGiving": 2,
+          "birthsByType": [
+            3,
+            1
+          ],
+          "energy": [
+            46.195068359375,
+            15.143310546875
+          ],
+          "thirdLinks": [
+            1,
+            0
+          ],
+          "mixedLinks": 1,
+          "meanLight": [
+            0.27589525779088336,
+            0.2701305150985718
+          ],
+          "colonies": [
+            {
+              "selection": "largest",
+              "size": 8,
+              "speed": 35.88394074759395,
+              "omitted": "Whole body exceeds observation limit"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "complete": true
+}

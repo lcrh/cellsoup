@@ -2,6 +2,11 @@ import { create, globals } from "webgpu";
 import { mkdir, writeFile, rename } from "node:fs/promises";
 import { auditMemory } from "./tree-memory-audit.mjs";
 import { observeColonies } from "./colony-observation.mjs";
+import {
+  readCellActivity,
+  cellActivity,
+  summarizeColonyActivity,
+} from "./colony-activity.mjs";
 import { createLifeEngine, describeGenome } from "../web/gpu/engine.js";
 const args = Object.fromEntries(
   process.argv.slice(2).map((a) => {
@@ -244,7 +249,14 @@ for (let second = 0; second <= seconds; second++) {
   if (second % sample === 0 || second === seconds) {
     const counters = await engine.counters(),
       stateBuffer = await engine.state(),
-      analysis = analyze(stateBuffer);
+      analysis = analyze(stateBuffer),
+      activity = await readCellActivity(device, engine),
+      activityAnalysis = summarizeColonyActivity(
+        stateBuffer,
+        activity,
+        engine.tick,
+        engine.cfg.side * 32,
+      );
     if (counters.living !== analysis.living)
       throw Error("Population counter mismatch");
     if (
@@ -255,7 +267,13 @@ for (let second = 0; second <= seconds; second++) {
         counters.deaths
     )
       throw Error("Population ledger mismatch");
-    const record = { seconds: second, ...counters, ...analysis, computeMs };
+    const record = {
+      seconds: second,
+      ...counters,
+      ...analysis,
+      ...activityAnalysis,
+      computeMs,
+    };
     delete record.raw;
     if (
       closure &&
@@ -266,6 +284,10 @@ for (let second = 0; second <= seconds; second++) {
     console.log(JSON.stringify(record));
     // Preserve population observations even if a long GPU run stops early.
     const colonies = observeColonies(stateBuffer, engine.cfg.side * 32);
+    const stateWords = new Uint32Array(stateBuffer);
+    for (const body of colonies)
+      for (const cell of body.cells ?? [])
+        cell.activity = cellActivity(stateWords, activity, cell.slot);
     const slots = new Set(record.leaders.map(([slot]) => slot));
     for (const body of colonies)
       for (const cell of body.cells ?? []) slots.add(cell.genomeSlot);
