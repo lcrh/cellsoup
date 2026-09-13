@@ -42,11 +42,23 @@ export async function createBehaviorMeter(device, engine) {
       ctx.stroke();
     }
   }
-  function reset() {
-    epoch++;
+  function stopWorker() {
+    if (worker) {
+      worker.onmessage = worker.onerror = null;
+      worker.terminate();
+      worker = null;
+    }
     pending = 0;
-    worker?.terminate();
-    worker = null;
+  }
+  function fail(message) {
+    error = true;
+    stopWorker();
+    $("epi-status").textContent = message;
+  }
+  function reset() {
+    if (destroyed) return;
+    epoch++;
+    stopWorker();
     latest = null;
     history = [];
     error = false;
@@ -62,9 +74,14 @@ export async function createBehaviorMeter(device, engine) {
     }
     $("epi-status").textContent = "Recording behavior · 0 / 32 samples";
     const version = epoch;
-    worker = new Worker(new URL("./epiplexity-worker.js", import.meta.url), {
-      type: "module",
-    });
+    try {
+      worker = new Worker(new URL("./epiplexity-worker.js", import.meta.url), {
+        type: "module",
+      });
+    } catch (e) {
+      fail(`Measurement unavailable: ${e.message}`);
+      return;
+    }
     worker.onmessage = ({ data }) => {
       if (destroyed || version !== epoch) return;
       if (data.accepted) {
@@ -72,8 +89,7 @@ export async function createBehaviorMeter(device, engine) {
         return;
       }
       if (data.error) {
-        error = true;
-        $("epi-status").textContent = `Measurement unavailable: ${data.error}`;
+        fail(`Measurement unavailable: ${data.error}`);
         return;
       }
       if (data.warming) {
@@ -103,16 +119,14 @@ export async function createBehaviorMeter(device, engine) {
       draw();
     };
     worker.onerror = () => {
-      if (version === epoch) {
-        error = true;
-        $("epi-status").textContent =
-          "Measurement worker stopped. Toggle measurement to restart.";
+      if (!destroyed && version === epoch) {
+        fail("Measurement worker stopped. Toggle measurement to restart.");
       }
     };
   }
   $("epi-enabled").onchange = reset;
-  $("epi-export").onclick = () => {
-    if (!latest) return;
+  const exportRecord = () => {
+    if (destroyed || !latest) return;
     const record = {
       source: { kernel: engine.fingerprint, config: engine.cfg },
       ...latest,
@@ -130,7 +144,25 @@ export async function createBehaviorMeter(device, engine) {
     a.click();
     setTimeout(() => URL.revokeObjectURL(url), 1000);
   };
-  reset();
+  $("epi-export").onclick = exportRecord;
+  function destroy() {
+    if (destroyed) return;
+    destroyed = true;
+    epoch++;
+    stopWorker();
+    sampler.destroy();
+    latest = null;
+    history = [];
+    if ($("epi-enabled").onchange === reset) $("epi-enabled").onchange = null;
+    if ($("epi-export").onclick === exportRecord)
+      $("epi-export").onclick = null;
+  }
+  try {
+    reset();
+  } catch (e) {
+    destroy();
+    throw e;
+  }
   return {
     limitStep(ticks) {
       return worker && !error
@@ -138,8 +170,9 @@ export async function createBehaviorMeter(device, engine) {
         : ticks;
     },
     async observe() {
-      if (!worker || error || engine.tick < nextTick) return;
+      if (destroyed || !worker || error || engine.tick < nextTick) return;
       if (pending >= 8) reset();
+      if (!worker) return;
       const version = epoch;
       try {
         if (engine.tick !== nextTick)
@@ -150,17 +183,11 @@ export async function createBehaviorMeter(device, engine) {
         pending++;
         worker.postMessage(sample, [sample.symbols.buffer]);
       } catch (e) {
-        if (version === epoch) {
-          error = true;
-          $("epi-status").textContent = `Measurement unavailable: ${e.message}`;
+        if (!destroyed && version === epoch) {
+          fail(`Measurement unavailable: ${e.message}`);
         }
       }
     },
-    destroy() {
-      destroyed = true;
-      epoch++;
-      worker?.terminate();
-      sampler.destroy();
-    },
+    destroy,
   };
 }

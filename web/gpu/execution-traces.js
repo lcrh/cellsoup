@@ -18,91 +18,120 @@ fn hash(x:u32)->u32{var z=x+0x9e3779b9u;z=(z^(z>>16u))*0x21f0aaadu;z=(z^(z>>15u)
  let i=packed&262143u;result.selected[b]=vec4u(i,cells[i*52u+24u],cells[i*52u+25u],0u);
 }`;
 export async function createTraceSelector(device, engine) {
-  const result = device.createBuffer({
-    size: 640,
-    usage:
-      GPUBufferUsage.STORAGE |
-      GPUBufferUsage.COPY_SRC |
-      GPUBufferUsage.COPY_DST,
-  });
-  const config = device.createBuffer({
-    size: 16,
-    usage: GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST,
-  });
-  const readback = device.createBuffer({
-    size: 512,
-    usage: GPUBufferUsage.COPY_DST | GPUBufferUsage.MAP_READ,
-  });
-  const module = device.createShaderModule({ code: selectionShader });
-  const layout = device.createBindGroupLayout({
-    entries: [
-      {
-        binding: 0,
-        visibility: GPUShaderStage.COMPUTE,
-        buffer: { type: "read-only-storage" },
-      },
-      {
-        binding: 1,
-        visibility: GPUShaderStage.COMPUTE,
-        buffer: { type: "storage" },
-      },
-      {
-        binding: 2,
-        visibility: GPUShaderStage.COMPUTE,
-        buffer: { type: "uniform" },
-      },
-    ],
-  });
-  const pipelineLayout = device.createPipelineLayout({
-    bindGroupLayouts: [layout],
-  });
-  const pipelines = await Promise.all(
-    ["choose", "resolve"].map((entryPoint) =>
-      device.createComputePipelineAsync({
-        layout: pipelineLayout,
-        compute: { module, entryPoint },
-      }),
-    ),
-  );
-  const groups = engine.buffers.state.map((state) =>
-    device.createBindGroup({
-      layout,
-      entries: [state, result, config].map((buffer, binding) => ({
-        binding,
-        resource: { buffer },
-      })),
-    }),
-  );
-  return {
-    async select(seed) {
-      device.queue.writeBuffer(result, 0, new Uint32Array(32).fill(0xffffffff));
-      device.queue.writeBuffer(
-        config,
-        0,
-        new Uint32Array([engine.cfg.capacity, seed >>> 0, 0, 0]),
-      );
-      const encoder = device.createCommandEncoder(),
-        group = groups[engine.buffers.state.indexOf(engine.currentState)];
-      for (let i = 0; i < 2; i++) {
-        const pass = encoder.beginComputePass();
-        pass.setPipeline(pipelines[i]);
-        pass.setBindGroup(0, group);
-        pass.dispatchWorkgroups(i ? 1 : Math.ceil(engine.cfg.capacity / 128));
-        pass.end();
-      }
-      encoder.copyBufferToBuffer(result, 128, readback, 0, 512);
-      device.queue.submit([encoder.finish()]);
-      await readback.mapAsync(GPUMapMode.READ);
-      const selected = new Uint32Array(readback.getMappedRange().slice(0));
-      readback.unmap();
-      return selected;
-    },
-    destroy() {
-      result.destroy();
-      config.destroy();
-      readback.destroy();
-    },
+  const owned = [];
+  const allocate = (descriptor) => {
+    const buffer = device.createBuffer(descriptor);
+    owned.push(buffer);
+    return buffer;
   };
+  try {
+    const result = allocate({
+      size: 640,
+      usage:
+        GPUBufferUsage.STORAGE |
+        GPUBufferUsage.COPY_SRC |
+        GPUBufferUsage.COPY_DST,
+    });
+    const config = allocate({
+      size: 16,
+      usage: GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST,
+    });
+    const readback = allocate({
+      size: 512,
+      usage: GPUBufferUsage.COPY_DST | GPUBufferUsage.MAP_READ,
+    });
+    const module = device.createShaderModule({ code: selectionShader });
+    const layout = device.createBindGroupLayout({
+      entries: [
+        {
+          binding: 0,
+          visibility: GPUShaderStage.COMPUTE,
+          buffer: { type: "read-only-storage" },
+        },
+        {
+          binding: 1,
+          visibility: GPUShaderStage.COMPUTE,
+          buffer: { type: "storage" },
+        },
+        {
+          binding: 2,
+          visibility: GPUShaderStage.COMPUTE,
+          buffer: { type: "uniform" },
+        },
+      ],
+    });
+    const pipelineLayout = device.createPipelineLayout({
+      bindGroupLayouts: [layout],
+    });
+    const pipelines = await Promise.all(
+      ["choose", "resolve"].map((entryPoint) =>
+        device.createComputePipelineAsync({
+          layout: pipelineLayout,
+          compute: { module, entryPoint },
+        }),
+      ),
+    );
+    const groups = engine.buffers.state.map((state) =>
+      device.createBindGroup({
+        layout,
+        entries: [state, result, config].map((buffer, binding) => ({
+          binding,
+          resource: { buffer },
+        })),
+      }),
+    );
+    let busy = false,
+      destroyed = false;
+    return {
+      async select(seed) {
+        if (busy || destroyed) throw Error("Trace selector unavailable");
+        busy = true;
+        try {
+          device.queue.writeBuffer(
+            result,
+            0,
+            new Uint32Array(32).fill(0xffffffff),
+          );
+          device.queue.writeBuffer(
+            config,
+            0,
+            new Uint32Array([engine.cfg.capacity, seed >>> 0, 0, 0]),
+          );
+          const encoder = device.createCommandEncoder(),
+            group = groups[engine.buffers.state.indexOf(engine.currentState)];
+          for (let i = 0; i < 2; i++) {
+            const pass = encoder.beginComputePass();
+            pass.setPipeline(pipelines[i]);
+            pass.setBindGroup(0, group);
+            pass.dispatchWorkgroups(
+              i ? 1 : Math.ceil(engine.cfg.capacity / 128),
+            );
+            pass.end();
+          }
+          encoder.copyBufferToBuffer(result, 128, readback, 0, 512);
+          device.queue.submit([encoder.finish()]);
+          await readback.mapAsync(GPUMapMode.READ);
+          try {
+            return new Uint32Array(readback.getMappedRange().slice(0));
+          } finally {
+            readback.unmap();
+          }
+        } finally {
+          busy = false;
+        }
+      },
+      destroy() {
+        if (destroyed) return;
+        destroyed = true;
+        result.destroy();
+        config.destroy();
+        readback.destroy();
+      },
+    };
+  } catch (error) {
+    for (const buffer of owned) buffer.destroy();
+    throw error;
+  }
 }
 export function unpackExecutionTrace(buffer) {
   const words = new Uint32Array(buffer),

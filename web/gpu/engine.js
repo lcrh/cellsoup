@@ -141,6 +141,15 @@ export const defaults = {
   storageCapacity: 400,
 };
 export async function createLifeEngine(device, options = {}) {
+  const allocated = [];
+  try {
+    return await buildLifeEngine(device, options, allocated);
+  } catch (error) {
+    for (const buffer of allocated) buffer.destroy();
+    throw error;
+  }
+}
+async function buildLifeEngine(device, options, allocated) {
   for (const key of Object.keys(options))
     if (!(key in defaults)) throw Error(`Unknown setting ${key}`);
   const cfg = { ...defaults, ...options };
@@ -289,8 +298,13 @@ export async function createLifeEngine(device, options = {}) {
   const n = cfg.capacity,
     g = cfg.genomeCapacity,
     t = cfg.side ** 2;
+  const createOwnedBuffer = (descriptor) => {
+    const buffer = device.createBuffer(descriptor);
+    allocated.push(buffer);
+    return buffer;
+  };
   const storage = (size) =>
-    device.createBuffer({
+    createOwnedBuffer({
       size: Math.ceil(size / 4) * 4,
       usage:
         GPUBufferUsage.STORAGE |
@@ -322,7 +336,7 @@ export async function createLifeEngine(device, options = {}) {
     food = storage(t * 16 + cfg.sources * 32),
     intents = storage(n * 128),
     activity = storage(n * 32);
-  const uniform = device.createBuffer({
+  const uniform = createOwnedBuffer({
     size: 336,
     usage: GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST,
   });
@@ -553,14 +567,21 @@ export async function createLifeEngine(device, options = {}) {
       size,
       usage: GPUBufferUsage.COPY_DST | GPUBufferUsage.MAP_READ,
     });
-    const e = device.createCommandEncoder();
-    e.copyBufferToBuffer(buffer, offset, result, 0, size);
-    device.queue.submit([e.finish()]);
-    await result.mapAsync(GPUMapMode.READ);
-    const copy = result.getMappedRange().slice(0);
-    result.unmap();
-    result.destroy();
-    return copy;
+    let mapped = false;
+    try {
+      const e = device.createCommandEncoder();
+      e.copyBufferToBuffer(buffer, offset, result, 0, size);
+      device.queue.submit([e.finish()]);
+      await result.mapAsync(GPUMapMode.READ);
+      mapped = true;
+      return result.getMappedRange().slice(0);
+    } finally {
+      try {
+        if (mapped) result.unmap();
+      } finally {
+        result.destroy();
+      }
+    }
   }
   if (cfg.treePrograms && cfg.initial) {
     const founders = new Uint8Array(cfg.initial * GENOME_BYTES);
@@ -1438,6 +1459,8 @@ export async function createLifeEngine(device, options = {}) {
         crossovers: c[24],
         divisionMutations: c[26],
         capacityArrivals: c[28],
+        queryBudgetLimits: c[29],
+        denseScanLimits: c[30],
         skippedDivisionMutations: c[27],
         raw: [...c],
       };

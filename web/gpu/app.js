@@ -1,3 +1,4 @@
+import { createDeviceSession, describeGpuFailure } from "./device-session.js";
 import { worldConfigFromUrl, worldUrlForConfig } from "./world-url.js";
 import { protectCoreFunctionMasks } from "./core-language.js";
 import {
@@ -128,6 +129,7 @@ let device,
   paused = false,
   busy = true,
   failed = false;
+const gpuSession = createDeviceSession(navigator.gpu, fail);
 let pendingReset = false,
   pendingStep = false,
   pendingFind = false,
@@ -152,17 +154,25 @@ function notice(message, error = false) {
   $("notice").classList.toggle("error", error);
 }
 function fail(error) {
+  try {
+    gpuSession.check();
+  } catch (gpuError) {
+    error = gpuError;
+  }
   failed = true;
   paused = true;
   busy = false;
-  console.error(error);
-  notice(
-    `${error.message || error} Try a new world or a WebGPU-capable browser.`,
-    true,
-  );
-  $("pause").disabled = true;
-  $("step").disabled = true;
-  $("find").disabled = true;
+  const world = engine
+    ? {
+        seed: engine.cfg.seed,
+        tick: engine.tick,
+        capacity: engine.cfg.capacity,
+      }
+    : null;
+  console.error("Cell Soup stopped", { error, world });
+  notice(describeGpuFailure(error, world), true);
+  controls(false);
+  $("restart").textContent = "Restart soup";
   $("restart").disabled = false;
   $("random-world").disabled = false;
 }
@@ -179,6 +189,7 @@ function controls(enabled) {
     $(id).disabled = !enabled;
   $("step").disabled = !enabled || !paused;
   $("pause").textContent = paused ? "Resume" : "Pause";
+  if (enabled) $("restart").textContent = "Use these settings";
 }
 function options() {
   if (!$("habitat-size").checkValidity())
@@ -237,47 +248,46 @@ function fitWorld() {
   camera.overview = true;
   $("follow").checked = false;
 }
+function releaseWorld() {
+  executionMeter?.destroy();
+  executionMeter = null;
+  behaviorMeter?.destroy();
+  behaviorMeter = null;
+  renderer?.destroy();
+  renderer = null;
+  engine?.destroy();
+  engine = null;
+}
 async function start() {
   // Validate before discarding an existing habitat.
   const cfg = options();
   busy = true;
   controls(false);
   notice("Preparing the GPU habitat…");
-  if (!device || failed) {
-    if (!navigator.gpu) throw Error("WebGPU is unavailable in this browser.");
-    const adapter = await navigator.gpu.requestAdapter({
-      powerPreference: "high-performance",
-    });
-    if (!adapter) throw Error("No WebGPU adapter is available.");
-    device = await adapter.requestDevice();
-    const activeDevice = device;
-    device.addEventListener("uncapturederror", (event) => {
-      if (device === activeDevice) fail(event.error);
-    });
-    device.lost.then((info) => {
-      if (device === activeDevice && info.reason !== "destroyed")
-        fail(
-          Error("The GPU connection was lost. Start a new soup to reconnect."),
-        );
-    });
+  // Release the old world's buffers and workers before requesting replacements.
+  releaseWorld();
+  if (failed) gpuSession.dispose();
+  failed = false;
+  try {
+    device = await gpuSession.connect();
+    engine = await createLifeEngine(device, cfg);
+    gpuSession.check();
+    renderer = await createRenderer(
+      device,
+      canvas,
+      engine,
+      navigator.gpu.getPreferredCanvasFormat(),
+    );
+    behaviorMeter = await createBehaviorMeter(device, engine);
+    executionMeter = await createExecutionMeter(device, engine);
+    gpuSession.check();
+  } catch (error) {
+    // Also reclaim resources from constructors that failed before returning.
+    releaseWorld();
+    gpuSession.dispose();
+    device = null;
+    throw error;
   }
-  executionMeter?.destroy();
-  executionMeter = null;
-  behaviorMeter?.destroy();
-  behaviorMeter = null;
-  renderer?.destroy();
-  engine?.destroy();
-  renderer = null;
-  engine = null;
-  engine = await createLifeEngine(device, cfg);
-  renderer = await createRenderer(
-    device,
-    canvas,
-    engine,
-    navigator.gpu.getPreferredCanvasFormat(),
-  );
-  behaviorMeter = await createBehaviorMeter(device, engine);
-  executionMeter = await createExecutionMeter(device, engine);
   $("world-description").textContent = describeWorld(engine.cfg);
   $("genome-kind").textContent = "Random typed-tree genomes";
   renderReference();
@@ -552,11 +562,13 @@ async function frame(now) {
           executionMeter?.limitStep(ticks) ?? ticks,
         );
         await engine.step(batch);
+        gpuSession.check();
         ticks -= batch;
         await behaviorMeter?.observe();
         await executionMeter?.observe();
       }
       await observe(performance.now());
+      gpuSession.check();
       renderer.draw(camera, {
         food: $("food").checked,
         activity: $("activity").checked,
@@ -565,6 +577,10 @@ async function frame(now) {
         slot: selection?.slot,
         identity: selection?.identity,
       });
+      // Do not let browser animation frames outrun GPU completion. Max speed
+      // still batches simulation ticks, but at most one rendered frame is queued.
+      await device.queue.onSubmittedWorkDone();
+      gpuSession.check();
       $("scale").textContent = `${formatNumber(camera.width)} units across`;
     } else previousTime = now;
   } catch (error) {

@@ -34,6 +34,14 @@ const Q=4096.0;
 const CAP_E=${Math.round(energyCapacity * 4096)}u;
 const DT=1.0/60.0;
 const NONE=0xffffffffu;
+// Runtime safety ceilings, independent of world/population size. Below these
+// limits the original scan order and results are unchanged. Extremely dense
+// neighborhoods use partial contact/sensor estimates instead of unbounded work.
+const MAX_SPATIAL_VISITS=512u;
+const MAX_VM_VISITS=1024u;
+const MAX_FILTER_STEPS=1024u;
+var<private> vmVisits:u32;
+var<private> filterSteps:u32;
 const SIG=array<vec3u,${GPU_OPS.length}>(${signatures});
 struct Cell {
   p:vec4f,
@@ -332,9 +340,10 @@ fn searchKind(i:u32,tag:f32,cone:f32,hue:f32,tolerance:f32,kind:u32)->u32 {
       let b=(base+vec2i(x,y)+vec2i(i32(SIDE)))%vec2i(i32(SIDE));
       var j=atomicLoad(&s.heads[u32(b.y)*SIDE+u32(b.x)]);
       loop {
-        if(j==NONE) {
+        if(j==NONE||vmVisits==0u) {
           break;
         }
+        vmVisits--;
         if(j!=i) {
           let n=old[j];
           let d=delta(n.p.xy,c.p.xy);
@@ -360,7 +369,7 @@ fn edibleCorpse(i:u32,step:u32)->u32 {
  for(var y=-1;y<=1;y++){for(var x=-1;x<=1;x++){
   let b=(base+vec2i(x,y)+vec2i(i32(SIDE)))%vec2i(i32(SIDE));
   var j=atomicLoad(&s.heads[u32(b.y)*SIDE+u32(b.x)]);
-  loop{if(j==NONE){break;}let n=old[j];let d=delta(n.p.xy,c.p.xy);
+  loop{if(j==NONE||vmVisits==0u){break;}vmVisits--;let n=old[j];let d=delta(n.p.xy,c.p.xy);
    if(n.life.w==2u&&n.b.x>0&&dot(d,d)<=cfg.geometry.x*cfg.geometry.x){
     let rank=hash(seed ^ hash(n.machine.x));
     if(chosen==NONE||rank>priority||(rank==priority&&j<chosen)){chosen=j;priority=rank;}
@@ -372,7 +381,7 @@ fn storedGradient(i:u32,kindSelection:f32)->vec2f {
  let c=old[i];let base=vec2i(floor(c.p.xy/32));var result=vec2f(0);
  for(var y=-3;y<=3;y++){for(var x=-3;x<=3;x++){
   let b=(base+vec2i(x,y)+vec2i(i32(SIDE)))%vec2i(i32(SIDE));var j=atomicLoad(&s.heads[u32(b.y)*SIDE+u32(b.x)]);
-  loop{if(j==NONE){break;}let other=old[j];
+  loop{if(j==NONE||vmVisits==0u){break;}vmVisits--;let other=old[j];
    if(j!=i&&(kindSelection<0||(kindSelection<.5&&other.life.w==1u)||(kindSelection>=.5&&other.life.w==2u))){
     let d=delta(other.p.xy,c.p.xy);let q=dot(d,d);
     if(q<9216){let amount=select(other.res.z,other.b.x,other.life.w==2u)/Q;result+=d*amount/max(64.0,q);}
@@ -458,6 +467,7 @@ fn filterMatch(i:u32,j:u32,start:u32,source:ptr<function,Cell>)->bool {
   var c=*source;let tile=bin(c.p.xy);let g=c.machine.y;let len=genomes[g].info.x;
   var pc=start%len;var result=false;
   for(var step=0u;step<64u;step++){
+    if(filterSteps==0u){break;}filterSteps--;
     if(!payCPU(i,&c)){break;}
     let ins=genomes[g].code[pc];pc=(pc+1u)%len;
     let op=u32(ins.x);let d=u32(max(0.0,-ins.y-1000000.0))%8u;
@@ -668,10 +678,10 @@ fn neighborhood(i:u32,mode:u32,predicate:u32,radius:f32,source:ptr<function,Cell
  let reach=i32(ceil(r/32.0));
  let first=-min(reach,i32(SIDE)/2);let last=min(reach,(i32(SIDE)-1)/2);
  for(var y=first;y<=last;y++){for(var x=first;x<=last;x++){
-  if(scanned>=u32(cfg.communication.w)){break;}
+  if(scanned>=u32(cfg.communication.w)||vmVisits==0u||filterSteps==0u){break;}
   let tile=(base+vec2i(x,y)+vec2i(i32(SIDE)))%vec2i(i32(SIDE));
   var j=atomicLoad(&s.heads[u32(tile.y)*SIDE+u32(tile.x)]);
-  loop {if(j==NONE||scanned>=u32(cfg.communication.w)){break;}scanned++;
+  loop {if(j==NONE||scanned>=u32(cfg.communication.w)||vmVisits==0u||filterSteps==0u){break;}scanned++;vmVisits--;
    let diff=delta(old[j].p.xy,center);let dist=length(diff);
    if(j!=i&&old[j].life.w!=0u&&dist<=r&&filterMatch(i,j,predicate,source)){
     count++;if(dist<best||(dist==best&&j<nearest)){best=dist;nearest=j;}
@@ -811,6 +821,7 @@ fn sunlightAt(p:vec2f)->f32 {
   if(i>=N||old[i].life.w==0u) {
     return;
   }
+  vmVisits=MAX_VM_VISITS;filterSteps=MAX_FILTER_STEPS;
   var c=old[i];
 ${
   executionTrace
@@ -1144,9 +1155,10 @@ ${executionTrace ? `        if(traceRow!=0xffffffffu){let n=s.traceCounts[traceR
               let p=(base+vec2i(x,y)+vec2i(i32(SIDE)))%vec2i(i32(SIDE));
               var j=atomicLoad(&s.heads[u32(p.y)*SIDE+u32(p.x)]);
               loop {
-                if(j==NONE) {
+                if(j==NONE||vmVisits==0u) {
                   break;
                 }
+                vmVisits--;
                 let distance=length(delta(old[j].p.xy,c.p.xy));
                 if(j!=i&&old[j].life.w==1u&&distance<60.0) {
                   heard+=old[j].signal[u32(clamp(b,0.0,3.0))]*(1-distance/60.0);
@@ -1302,6 +1314,7 @@ ${executionTrace ? `      if(traceRow!=0xffffffffu){let n=s.traceCounts[traceRow
       }
     }
   }
+  if(vmVisits==0u||filterSteps==0u){atomicAdd(&s.counter[29],1u);}
   action.base.x=u32(c.b.x);
   cells[i]=c;
   intents[i]=action;
@@ -1421,13 +1434,13 @@ fn linkReaction(i:u32,j:u32)->vec2f {
   let start=old[a].p.xy;let end=start+edge;
   let lo=vec2i(floor((min(start,end)-vec2f(cfg.geometry.w))/32.0));
   let hi=vec2i(floor((max(start,end)+vec2f(cfg.geometry.w))/32.0));
-  var force=vec2f(0);
+  var force=vec2f(0);var visited=0u;
   for(var y=lo.y;y<=hi.y;y++){
     for(var x=lo.x;x<=hi.x;x++){
       let tile=(vec2i(x,y)+vec2i(i32(SIDE)))%vec2i(i32(SIDE));
       var p=atomicLoad(&s.heads[u32(tile.y)*SIDE+u32(tile.x)]);
       loop {
-        if(p==NONE){break;}
+        if(p==NONE||visited>=MAX_SPATIAL_VISITS){break;}visited++;
         if(p!=a&&p!=b&&old[p].life.w==1u){
           let contact=linkContact(p,a,b);
           force-=contact.xy*select(1.0-contact.z,contact.z,i==b);
@@ -1436,6 +1449,7 @@ fn linkReaction(i:u32,j:u32)->vec2f {
       }
     }
   }
+  if(visited>=MAX_SPATIAL_VISITS){atomicAdd(&s.counter[30],1u);}
   return force;
 }
 fn forces(i:u32)->vec4f {
@@ -1443,15 +1457,16 @@ fn forces(i:u32)->vec4f {
   let base=vec2i(floor(c.p.xy/32.0));
   var f=vec2f(0);
   var torque=0.0;
-  var crowding=0.0;
+  var crowding=0.0;var visited=0u;
   for(var y=-2;y<=2;y++) {
     for(var x=-2;x<=2;x++) {
       let b=(base+vec2i(x,y)+vec2i(i32(SIDE)))%vec2i(i32(SIDE));
       var j=atomicLoad(&s.heads[u32(b.y)*SIDE+u32(b.x)]);
       loop {
-        if(j==NONE) {
+        if(j==NONE||visited>=MAX_SPATIAL_VISITS) {
           break;
         }
+        visited++;
         if(j!=i) {
           let d=delta(c.p.xy,old[j].p.xy);
           let q=dot(d,d);
@@ -1504,6 +1519,7 @@ fn forces(i:u32)->vec4f {
       torque+=(arm.x*force.y-arm.y*force.x)/8.0/6.2831853;
     }
   }
+  if(visited>=MAX_SPATIAL_VISITS){atomicAdd(&s.counter[30],1u);}
   return vec4f(f,torque,crowding);
 }
 // On immigration ticks, spare slots are reserved before competing divisions.

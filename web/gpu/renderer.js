@@ -122,188 +122,199 @@ fn nutrient(p:vec2i)->vec2f {
 export async function createRenderer(device, canvas, engine, format) {
   const context = canvas.getContext("webgpu");
   if (!context) throw Error("This browser cannot create a WebGPU canvas.");
-  context.configure({ device, format, alphaMode: "opaque" });
-  const module = device.createShaderModule({
-    label: "Cell Soup observation",
-    code: shader,
-  });
-  const info = await module.getCompilationInfo();
-  if (info.messages.some((m) => m.type === "error"))
-    throw Error(info.messages.map((m) => m.message).join("\n"));
-  const uniform = device.createBuffer({
-    size: 80,
-    usage: GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST,
-  });
-  const layout = device.createBindGroupLayout({
-    entries: [
-      {
-        binding: 4,
-        visibility: GPUShaderStage.VERTEX,
-        buffer: { type: "read-only-storage" },
-      },
-      {
-        binding: 5,
-        visibility: GPUShaderStage.VERTEX,
-        buffer: { type: "read-only-storage" },
-      },
-      {
-        binding: 3,
-        visibility: GPUShaderStage.VERTEX,
-        buffer: { type: "read-only-storage" },
-      },
-      {
-        binding: 0,
-        visibility: GPUShaderStage.VERTEX,
-        buffer: { type: "read-only-storage" },
-      },
-      {
-        binding: 1,
-        visibility: GPUShaderStage.FRAGMENT,
-        buffer: { type: "read-only-storage" },
-      },
-      {
-        binding: 2,
-        visibility: GPUShaderStage.VERTEX | GPUShaderStage.FRAGMENT,
-        buffer: { type: "uniform" },
-      },
-    ],
-  });
-  const pipelineLayout = device.createPipelineLayout({
-    bindGroupLayouts: [layout],
-  });
-  const pipelines = await Promise.all(
-    ["field", "link", "cell", "attack", "motor", "gift"].map((name) =>
-      device.createRenderPipelineAsync({
-        layout: pipelineLayout,
-        vertex: { module, entryPoint: name + "Vertex" },
-        fragment: {
-          module,
-          entryPoint: name + "Fragment",
-          targets: [
-            {
-              format,
-              blend: {
-                color: {
-                  srcFactor: "src-alpha",
-                  dstFactor: "one-minus-src-alpha",
-                  operation: "add",
-                },
-                alpha: {
-                  srcFactor: "one",
-                  dstFactor: "one-minus-src-alpha",
-                  operation: "add",
+  let uniform,
+    destroyed = false;
+  try {
+    context.configure({ device, format, alphaMode: "opaque" });
+    const module = device.createShaderModule({
+      label: "Cell Soup observation",
+      code: shader,
+    });
+    const info = await module.getCompilationInfo();
+    if (info.messages.some((m) => m.type === "error"))
+      throw Error(info.messages.map((m) => m.message).join("\n"));
+    uniform = device.createBuffer({
+      size: 80,
+      usage: GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST,
+    });
+    const layout = device.createBindGroupLayout({
+      entries: [
+        {
+          binding: 4,
+          visibility: GPUShaderStage.VERTEX,
+          buffer: { type: "read-only-storage" },
+        },
+        {
+          binding: 5,
+          visibility: GPUShaderStage.VERTEX,
+          buffer: { type: "read-only-storage" },
+        },
+        {
+          binding: 3,
+          visibility: GPUShaderStage.VERTEX,
+          buffer: { type: "read-only-storage" },
+        },
+        {
+          binding: 0,
+          visibility: GPUShaderStage.VERTEX,
+          buffer: { type: "read-only-storage" },
+        },
+        {
+          binding: 1,
+          visibility: GPUShaderStage.FRAGMENT,
+          buffer: { type: "read-only-storage" },
+        },
+        {
+          binding: 2,
+          visibility: GPUShaderStage.VERTEX | GPUShaderStage.FRAGMENT,
+          buffer: { type: "uniform" },
+        },
+      ],
+    });
+    const pipelineLayout = device.createPipelineLayout({
+      bindGroupLayouts: [layout],
+    });
+    const pipelines = await Promise.all(
+      ["field", "link", "cell", "attack", "motor", "gift"].map((name) =>
+        device.createRenderPipelineAsync({
+          layout: pipelineLayout,
+          vertex: { module, entryPoint: name + "Vertex" },
+          fragment: {
+            module,
+            entryPoint: name + "Fragment",
+            targets: [
+              {
+                format,
+                blend: {
+                  color: {
+                    srcFactor: "src-alpha",
+                    dstFactor: "one-minus-src-alpha",
+                    operation: "add",
+                  },
+                  alpha: {
+                    srcFactor: "one",
+                    dstFactor: "one-minus-src-alpha",
+                    operation: "add",
+                  },
                 },
               },
+            ],
+          },
+          primitive: {
+            topology: ["link", "attack", "motor", "gift"].includes(name)
+              ? "line-list"
+              : "triangle-list",
+          },
+        }),
+      ),
+    );
+    const groups = engine.buffers.state.map((buffer, index) =>
+      device.createBindGroup({
+        layout,
+        entries: [
+          { binding: 0, resource: { buffer } },
+          { binding: 1, resource: { buffer: engine.buffers.food } },
+          { binding: 2, resource: { buffer: uniform } },
+          { binding: 3, resource: { buffer: engine.buffers.activity } },
+          { binding: 4, resource: { buffer: engine.buffers.intents } },
+          { binding: 5, resource: { buffer: engine.buffers.state[1 - index] } },
+        ],
+      }),
+    );
+    return {
+      draw(camera, options = {}) {
+        if (destroyed) throw Error("Renderer unavailable");
+        const rect = canvas.getBoundingClientRect(),
+          dpr = Math.min(devicePixelRatio || 1, 2);
+        const width = Math.max(1, Math.round(rect.width * dpr)),
+          height = Math.max(1, Math.round(rect.height * dpr));
+        if (canvas.width !== width || canvas.height !== height) {
+          canvas.width = width;
+          canvas.height = height;
+        }
+        if (camera.overview)
+          camera.width = engine.cfg.side * 32 * Math.max(1, width / height);
+        camera.height = (camera.width * height) / width;
+        const data = new ArrayBuffer(80),
+          f = new Float32Array(data),
+          u = new Uint32Array(data);
+        f.set([
+          camera.x,
+          camera.y,
+          camera.width,
+          camera.height,
+          engine.cfg.side * 32,
+          engine.cfg.side,
+          camera.width / width,
+          engine.cfg.safeTemperature,
+        ]);
+        u.set(
+          [
+            options.food ? 1 : 0,
+            options.links ? 1 : 0,
+            options.color || 0,
+            engine.tick % 2,
+            options.slot ?? 0xffffffff,
+            options.identity ?? 0,
+            engine.tick,
+            options.activity ? 1 : 0,
+          ],
+          8,
+        );
+        f.set(
+          [
+            engine.cfg.energyCapacity,
+            engine.cfg.storageCapacity,
+            engine.cfg.shieldCapacity,
+            0,
+          ],
+          16,
+        );
+        device.queue.writeBuffer(uniform, 0, data);
+        const encoder = device.createCommandEncoder();
+        const pass = encoder.beginRenderPass({
+          colorAttachments: [
+            {
+              view: context.getCurrentTexture().createView(),
+              loadOp: "clear",
+              storeOp: "store",
+              clearValue: { r: 0, g: 0, b: 0, a: 1 },
             },
           ],
-        },
-        primitive: {
-          topology: ["link", "attack", "motor", "gift"].includes(name)
-            ? "line-list"
-            : "triangle-list",
-        },
-      }),
-    ),
-  );
-  const groups = engine.buffers.state.map((buffer, index) =>
-    device.createBindGroup({
-      layout,
-      entries: [
-        { binding: 0, resource: { buffer } },
-        { binding: 1, resource: { buffer: engine.buffers.food } },
-        { binding: 2, resource: { buffer: uniform } },
-        { binding: 3, resource: { buffer: engine.buffers.activity } },
-        { binding: 4, resource: { buffer: engine.buffers.intents } },
-        { binding: 5, resource: { buffer: engine.buffers.state[1 - index] } },
-      ],
-    }),
-  );
-  return {
-    draw(camera, options = {}) {
-      const rect = canvas.getBoundingClientRect(),
-        dpr = Math.min(devicePixelRatio || 1, 2);
-      const width = Math.max(1, Math.round(rect.width * dpr)),
-        height = Math.max(1, Math.round(rect.height * dpr));
-      if (canvas.width !== width || canvas.height !== height) {
-        canvas.width = width;
-        canvas.height = height;
-      }
-      if (camera.overview)
-        camera.width = engine.cfg.side * 32 * Math.max(1, width / height);
-      camera.height = (camera.width * height) / width;
-      const data = new ArrayBuffer(80),
-        f = new Float32Array(data),
-        u = new Uint32Array(data);
-      f.set([
-        camera.x,
-        camera.y,
-        camera.width,
-        camera.height,
-        engine.cfg.side * 32,
-        engine.cfg.side,
-        camera.width / width,
-        engine.cfg.safeTemperature,
-      ]);
-      u.set(
-        [
-          options.food ? 1 : 0,
-          options.links ? 1 : 0,
-          options.color || 0,
-          engine.tick % 2,
-          options.slot ?? 0xffffffff,
-          options.identity ?? 0,
-          engine.tick,
-          options.activity ? 1 : 0,
-        ],
-        8,
-      );
-      f.set(
-        [
-          engine.cfg.energyCapacity,
-          engine.cfg.storageCapacity,
-          engine.cfg.shieldCapacity,
+        });
+        pass.setBindGroup(
           0,
-        ],
-        16,
-      );
-      device.queue.writeBuffer(uniform, 0, data);
-      const encoder = device.createCommandEncoder();
-      const pass = encoder.beginRenderPass({
-        colorAttachments: [
-          {
-            view: context.getCurrentTexture().createView(),
-            loadOp: "clear",
-            storeOp: "store",
-            clearValue: { r: 0, g: 0, b: 0, a: 1 },
-          },
-        ],
-      });
-      pass.setBindGroup(
-        0,
-        groups[engine.buffers.state.indexOf(engine.currentState)],
-      );
-      pass.setPipeline(pipelines[0]);
-      pass.draw(6);
-      if (options.links) {
-        pass.setPipeline(pipelines[1]);
-        pass.draw(2, engine.cfg.capacity * 4);
-      }
-      if (options.activity) {
-        pass.setPipeline(pipelines[3]);
-        pass.draw(2, engine.cfg.capacity);
-        pass.setPipeline(pipelines[4]);
-        pass.draw(2, engine.cfg.capacity);
-        pass.setPipeline(pipelines[5]);
+          groups[engine.buffers.state.indexOf(engine.currentState)],
+        );
+        pass.setPipeline(pipelines[0]);
+        pass.draw(6);
+        if (options.links) {
+          pass.setPipeline(pipelines[1]);
+          pass.draw(2, engine.cfg.capacity * 4);
+        }
+        if (options.activity) {
+          pass.setPipeline(pipelines[3]);
+          pass.draw(2, engine.cfg.capacity);
+          pass.setPipeline(pipelines[4]);
+          pass.draw(2, engine.cfg.capacity);
+          pass.setPipeline(pipelines[5]);
+          pass.draw(6, engine.cfg.capacity);
+        }
+        pass.setPipeline(pipelines[2]);
         pass.draw(6, engine.cfg.capacity);
-      }
-      pass.setPipeline(pipelines[2]);
-      pass.draw(6, engine.cfg.capacity);
-      pass.end();
-      device.queue.submit([encoder.finish()]);
-    },
-    destroy() {
-      uniform.destroy();
-      context.unconfigure();
-    },
-  };
+        pass.end();
+        device.queue.submit([encoder.finish()]);
+      },
+      destroy() {
+        if (destroyed) return;
+        destroyed = true;
+        uniform.destroy();
+        context.unconfigure();
+      },
+    };
+  } catch (error) {
+    uniform?.destroy();
+    context.unconfigure();
+    throw error;
+  }
 }

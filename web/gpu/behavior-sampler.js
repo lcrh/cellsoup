@@ -61,96 +61,104 @@ fn recent(mark:u32)->bool{return mark>0u&&mark<=config.y&&config.y-mark<60u;}
 }`;
 export async function createBehaviorSampler(device, engine) {
   const bytes = BEHAVIOR_GRID ** 2 * BIN_WORDS * 4;
-  const bins = device.createBuffer({
-    size: bytes,
-    usage:
-      GPUBufferUsage.STORAGE |
-      GPUBufferUsage.COPY_SRC |
-      GPUBufferUsage.COPY_DST,
-  });
-  const readback = device.createBuffer({
-    size: bytes,
-    usage: GPUBufferUsage.COPY_DST | GPUBufferUsage.MAP_READ,
-  });
-  const config = device.createBuffer({
-    size: 16,
-    usage: GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST,
-  });
-  let pipeline;
+  const owned = [];
+  const allocate = (descriptor) => {
+    const buffer = device.createBuffer(descriptor);
+    owned.push(buffer);
+    return buffer;
+  };
   try {
-    pipeline = await device.createComputePipelineAsync({
+    const bins = allocate({
+      size: bytes,
+      usage:
+        GPUBufferUsage.STORAGE |
+        GPUBufferUsage.COPY_SRC |
+        GPUBufferUsage.COPY_DST,
+    });
+    const readback = allocate({
+      size: bytes,
+      usage: GPUBufferUsage.COPY_DST | GPUBufferUsage.MAP_READ,
+    });
+    const config = allocate({
+      size: 16,
+      usage: GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST,
+    });
+    const pipeline = await device.createComputePipelineAsync({
       layout: "auto",
       compute: {
         module: device.createShaderModule({ code: shader }),
         entryPoint: "collect",
       },
     });
+    const groups = engine.buffers.state.map((state) =>
+      device.createBindGroup({
+        layout: pipeline.getBindGroupLayout(0),
+        entries: [state, engine.buffers.activity, bins, config].map(
+          (buffer, binding) => ({ binding, resource: { buffer } }),
+        ),
+      }),
+    );
+    let busy = false,
+      destroyed = false;
+    return {
+      async sample() {
+        if (busy || destroyed) throw Error("Behavior sampler unavailable");
+        busy = true;
+        try {
+          const tick = engine.tick;
+          device.queue.writeBuffer(
+            config,
+            0,
+            new Uint32Array([
+              engine.cfg.capacity,
+              tick,
+              engine.cfg.side * 32,
+              BEHAVIOR_GRID,
+            ]),
+          );
+          const encoder = device.createCommandEncoder();
+          encoder.clearBuffer(bins);
+          const pass = encoder.beginComputePass();
+          pass.setPipeline(pipeline);
+          pass.setBindGroup(
+            0,
+            groups[engine.currentState === engine.buffers.state[0] ? 0 : 1],
+          );
+          pass.dispatchWorkgroups(Math.ceil(engine.cfg.capacity / 128));
+          pass.end();
+          encoder.copyBufferToBuffer(bins, 0, readback, 0, bytes);
+          device.queue.submit([encoder.finish()]);
+          await readback.mapAsync(GPUMapMode.READ);
+          let data;
+          try {
+            data = new Int32Array(readback.getMappedRange().slice(0));
+          } finally {
+            readback.unmap();
+          }
+          return {
+            tick,
+            symbols: behaviorSymbols(data),
+            living: data.reduce(
+              (a, n, i) => a + (i % BIN_WORDS === 0 ? n : 0),
+              0,
+            ),
+          };
+        } finally {
+          busy = false;
+        }
+      },
+      destroy() {
+        if (destroyed) return;
+        destroyed = true;
+        bins.destroy();
+        readback.destroy();
+        config.destroy();
+      },
+      readbackBytes: bytes,
+      sampleTicks: SAMPLE_TICKS,
+    };
   } catch (error) {
-    bins.destroy();
-    readback.destroy();
-    config.destroy();
+    for (const buffer of owned) buffer.destroy();
     throw error;
   }
-  const groups = engine.buffers.state.map((state) =>
-    device.createBindGroup({
-      layout: pipeline.getBindGroupLayout(0),
-      entries: [state, engine.buffers.activity, bins, config].map(
-        (buffer, binding) => ({ binding, resource: { buffer } }),
-      ),
-    }),
-  );
-  let busy = false,
-    destroyed = false;
-  return {
-    async sample() {
-      if (busy || destroyed) throw Error("Behavior sampler unavailable");
-      busy = true;
-      try {
-        const tick = engine.tick;
-        device.queue.writeBuffer(
-          config,
-          0,
-          new Uint32Array([
-            engine.cfg.capacity,
-            tick,
-            engine.cfg.side * 32,
-            BEHAVIOR_GRID,
-          ]),
-        );
-        const encoder = device.createCommandEncoder();
-        encoder.clearBuffer(bins);
-        const pass = encoder.beginComputePass();
-        pass.setPipeline(pipeline);
-        pass.setBindGroup(
-          0,
-          groups[engine.currentState === engine.buffers.state[0] ? 0 : 1],
-        );
-        pass.dispatchWorkgroups(Math.ceil(engine.cfg.capacity / 128));
-        pass.end();
-        encoder.copyBufferToBuffer(bins, 0, readback, 0, bytes);
-        device.queue.submit([encoder.finish()]);
-        await readback.mapAsync(GPUMapMode.READ);
-        const data = new Int32Array(readback.getMappedRange().slice(0));
-        readback.unmap();
-        return {
-          tick,
-          symbols: behaviorSymbols(data),
-          living: data.reduce(
-            (a, n, i) => a + (i % BIN_WORDS === 0 ? n : 0),
-            0,
-          ),
-        };
-      } finally {
-        busy = false;
-      }
-    },
-    destroy() {
-      destroyed = true;
-      bins.destroy();
-      readback.destroy();
-      config.destroy();
-    },
-    readbackBytes: bytes,
-    sampleTicks: SAMPLE_TICKS,
-  };
 }

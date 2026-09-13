@@ -15,15 +15,24 @@ export async function createExecutionMeter(device, engine) {
     latest = null,
     destroyed = false,
     pending = false;
+  function stopWorker() {
+    if (worker) {
+      worker.onmessage = worker.onerror = null;
+      worker.terminate();
+      worker = null;
+    }
+    pending = false;
+  }
   function reset() {
+    if (destroyed) return;
     epoch++;
     engine.stopExecutionTrace();
     window = null;
     latest = null;
     pending = false;
     nextTick = engine.tick;
-    worker?.terminate();
-    worker = null;
+    stopWorker();
+    programs = [];
     $("trace-score").textContent = "—";
     $("trace-shuffled").textContent = "—";
     $("trace-saving").textContent = "—";
@@ -41,9 +50,7 @@ export async function createExecutionMeter(device, engine) {
     pending = true;
     worker.onmessage = ({ data }) => {
       if (destroyed || version !== epoch) return;
-      pending = false;
-      worker.terminate();
-      worker = null;
+      stopWorker();
       if (data.error) {
         $("trace-status").textContent =
           "Trace compression unavailable: " + data.error;
@@ -72,9 +79,7 @@ export async function createExecutionMeter(device, engine) {
     };
     worker.onerror = () => {
       if (destroyed || version !== epoch) return;
-      pending = false;
-      worker?.terminate();
-      worker = null;
+      stopWorker();
       $("trace-status").textContent =
         "Trace worker stopped. Toggle recording to restart.";
     };
@@ -90,8 +95,8 @@ export async function createExecutionMeter(device, engine) {
     });
   }
   $("trace-enabled").onchange = reset;
-  $("trace-export").onclick = () => {
-    if (!latest) return;
+  const exportRecord = () => {
+    if (destroyed || !latest) return;
     const url = URL.createObjectURL(
         new Blob([latest.download], { type: "application/gzip" }),
       ),
@@ -101,7 +106,27 @@ export async function createExecutionMeter(device, engine) {
     a.click();
     setTimeout(() => URL.revokeObjectURL(url), 1000);
   };
-  reset();
+  $("trace-export").onclick = exportRecord;
+  function destroy() {
+    if (destroyed) return;
+    destroyed = true;
+    epoch++;
+    stopWorker();
+    selector.destroy();
+    engine.stopExecutionTrace();
+    window = latest = null;
+    programs = [];
+    if ($("trace-enabled").onchange === reset)
+      $("trace-enabled").onchange = null;
+    if ($("trace-export").onclick === exportRecord)
+      $("trace-export").onclick = null;
+  }
+  try {
+    reset();
+  } catch (e) {
+    destroy();
+    throw e;
+  }
   return {
     limitStep(ticks) {
       return window ? Math.min(ticks, window.collectTick - engine.tick) : ticks;
@@ -121,6 +146,7 @@ export async function createExecutionMeter(device, engine) {
         if (!window && !pending && engine.tick >= nextTick) {
           const seed = (engine.cfg.seed ^ engine.tick ^ 0x768a352d) >>> 0,
             selected = await selector.select(seed);
+          if (destroyed || version !== epoch) return;
           const genes = new Set(
             Array.from({ length: 32 }, (_, i) => i)
               .filter((i) => selected[i * 4] !== 0xffffffff)
@@ -140,19 +166,14 @@ export async function createExecutionMeter(device, engine) {
       } catch (error) {
         if (destroyed || version !== epoch) return;
         engine.stopExecutionTrace();
+        stopWorker();
+        programs = [];
         window = null;
         nextTick = engine.tick + 3600;
         $("trace-status").textContent =
           "Execution recording unavailable: " + error.message;
       }
     },
-    destroy() {
-      destroyed = true;
-      worker?.terminate();
-      selector.destroy();
-      engine.stopExecutionTrace();
-      $("trace-enabled").onchange = null;
-      $("trace-export").onclick = null;
-    },
+    destroy,
   };
 }
