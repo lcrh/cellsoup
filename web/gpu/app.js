@@ -1,3 +1,5 @@
+import { worldConfigFromUrl, worldUrlForConfig } from "./world-url.js";
+import { protectCoreFunctionMasks } from "./core-language.js";
 import {
   SETTING_GROUPS as settingGroups,
   WORLD_CAPACITIES,
@@ -34,18 +36,25 @@ for (const [title, fields] of settingGroups) {
     summary = document.createElement("summary");
   summary.textContent = title;
   section.append(summary);
+  if (title === "Evolution") {
+    const hint = document.createElement("p");
+    hint.className = "hint";
+    hint.textContent =
+      "At capacity, the separate newcomer rate replaces randomly selected living cells (or corpses if none are alive). Set it to 0 to stop arrivals when full. The rate is a target; replacement availability can limit it.";
+    section.append(hint);
+  }
   if (title === "Physics & reach") {
     const hint = document.createElement("p");
     hint.className = "hint";
     hint.textContent =
-      "Thrust, drag, cell spacing and spring barriers shape bodies and movement. Links also pull toward the chosen rest distance.";
+      "Movement force and movement energy cost independently control propulsion per energy spent. Drag, cell spacing and spring barriers shape bodies; links pull toward the chosen rest distance.";
     section.append(hint);
   }
   if (title === "Energy & reserves") {
     const hint = document.createElement("p");
     hint.className = "hint";
     hint.textContent =
-      "Each pathway’s efficiency multiplies its specialization multiplier. Converted or eaten material is spent even when some energy is lost.";
+      "Each pathway’s efficiency multiplies its specialization multiplier. Converted or eaten material is spent even when some energy is lost. Lifespan 0 means unlimited age; reaching a finite lifespan leaves a normal edible corpse. Closing-speed attacks multiply damage by 1 + bonus × relative approach speed (world units/sec).";
     section.append(hint);
   }
   if (title === "Mutation styles") {
@@ -208,8 +217,16 @@ function options() {
     throw Error(
       "Initial founders must fit within one quarter of entity capacity.",
     );
-  if (cfg.floor > capacity || cfg.rate > capacity)
-    throw Error("Population floor and newcomer rate must not exceed capacity.");
+  if (cfg.capacityRate > 64)
+    throw Error("Newcomers at capacity must not exceed 64 per second.");
+  if (
+    cfg.floor > capacity ||
+    cfg.rate > capacity ||
+    cfg.capacityRate > capacity
+  )
+    throw Error(
+      "Population floor and both newcomer rates must not exceed capacity.",
+    );
   Object.assign(cfg, functionMasks);
   return cfg;
 }
@@ -289,6 +306,11 @@ async function start() {
   busy = false;
   controls(true);
   notice("");
+  window.history.replaceState(
+    null,
+    "",
+    worldUrlForConfig(location.href, engine.cfg),
+  );
 }
 function selectSlot(slot, fit = false) {
   if (slot < 0) {
@@ -360,6 +382,8 @@ function updateSelection(fit = false) {
   $("cell-storage").textContent = (snap.f[k + 38] / 4096).toFixed(1);
   $("body-motion").textContent = bodyMotion(snap, body).toFixed(1);
   $("cell-light").textContent = `${Math.round(snap.f[k + 37] * 100)}%`;
+  $("cell-barrier").textContent =
+    `${snap.f[k + 7].toFixed(1)} / ${engine.cfg.shieldCapacity}`;
   $("cell-temperature").textContent = `${snap.f[k + 39].toFixed(1)} °C`;
   $("cell-detail").textContent =
     `Cell ${selection.identity} · generation ${snap.u[k + 29]} · instruction ${snap.u[k + 26] + 1}`;
@@ -449,6 +473,7 @@ async function observe(now) {
     $("attacks").textContent = formatNumber(c.attacks);
     $("kills").textContent = formatNumber(c.kills);
     $("eaten").textContent = formatNumber(c.eaten);
+    $("capacity-arrivals").textContent = formatNumber(c.capacityArrivals ?? 0);
     $("mutations").textContent = formatNumber(c.mutations);
     $("division-mutations").textContent = formatNumber(c.divisionMutations);
     $("crossovers").textContent = formatNumber(c.crossovers);
@@ -571,6 +596,10 @@ function applySettings(settings) {
     $(id).value = value;
     $(id).dispatchEvent(new Event("input", { bubbles: true }));
   }
+  Object.assign(
+    functionMasks,
+    protectCoreFunctionMasks(functionMasks, TREE_SCHEMA),
+  );
   renderReference();
 }
 function rollWorld() {
@@ -683,6 +712,7 @@ function syncPopulationLimits() {
   for (const [id, max] of [
     ["initial", capacity / 4],
     ["rate", capacity],
+    ["capacityRate", Math.min(capacity, 64)],
     ["floor", capacity],
   ]) {
     $(id).max = max;
@@ -694,9 +724,10 @@ $("capacity").onchange = () => {
   syncPopulationLimits();
   const n = Number($("capacity").value);
   $("rate").value = Math.max(1, n / 4096);
+  $("capacityRate").value = Math.max(1, n / 8192);
   $("floor").value = n / 64;
   $("initial").value = n / 4;
-  for (const id of ["rate", "floor", "initial"])
+  for (const id of ["rate", "capacityRate", "floor", "initial"])
     $(id).dispatchEvent(new Event("input"));
 };
 let exportURL = null;
@@ -839,7 +870,7 @@ document.addEventListener("keydown", (event) => {
 function renderReference() {
   $("reference-title").textContent = "Functions & evolution palette";
   $("reference-note").textContent =
-    "Choose which primitives can appear in new random trees and mutations. Changes apply to the next world. Essential literals and sequence forms remain available. Existing code can still execute disabled forms. Sampling weights further control memory, communication, neighborhood queries and daughter modifiers.";
+    "Choose which primitives can appear in new random trees and mutations. Changes apply to the next world. The core toolkit—basic math, comparisons, memory, energy, movement and division—stays enabled. Optional features can be switched off or varied by Random new world. Existing code can still execute disabled forms. Sampling weights further control memory, communication, neighborhood queries and daughter modifiers.";
   const container = document.createElement("div");
   const search = document.createElement("input");
   search.type = "search";
@@ -892,7 +923,7 @@ function renderReference() {
     label.append(toggle, title);
     row.append(label);
     const signature = document.createElement("small");
-    signature.textContent = `${fn.args.join(", ") || "No inputs"} → ${fn.result === "Any" ? "branch/body type" : fn.result}${fn.essential ? " · essential grammar" : ""}`;
+    signature.textContent = `${fn.args.join(", ") || "No inputs"} → ${fn.result === "Any" ? "branch/body type" : fn.result}${fn.essential ? " · core toolkit · always enabled" : ""}`;
     const description = document.createElement("p");
     description.textContent = fn.description;
     const example = document.createElement("pre");
@@ -914,8 +945,15 @@ $("habitat-size-range").oninput = () => {
 $("habitat-size").oninput = () => {
   $("habitat-size-range").value = $("habitat-size").value;
 };
-rollWorld();
 try {
+  const linkedWorld = worldConfigFromUrl(location.href);
+  if (linkedWorld) {
+    $("capacity").value = linkedWorld.capacity;
+    $("habitat-size").value = linkedWorld.side * 32;
+    $("habitat-size").dispatchEvent(new Event("input"));
+    syncPopulationLimits();
+    applySettings(linkedWorld);
+  } else rollWorld();
   await start();
 } catch (error) {
   fail(error);

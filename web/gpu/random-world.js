@@ -1,4 +1,5 @@
-import { TREE_SCHEMA } from "./trees.js";
+import { isCoreFunction } from "./core-language.js";
+import { TREE_SCHEMA, treeRng } from "./trees.js";
 // Explore around the working ecology defaults, not the full (often lethal)
 // ranges of the manual controls. Capacity and habitat size stay user-chosen.
 export function randomWorldSettings({
@@ -8,6 +9,19 @@ export function randomWorldSettings({
 } = {}) {
   if (!Number.isInteger(capacity) || capacity < 128 || capacity > 262144)
     throw Error("Invalid random-world capacity");
+  let seed = Math.floor(rng() * 4294967296);
+  if (seed === previousSeed) seed = (seed + 1) >>> 0;
+  return worldSettingsForSeed(seed, { capacity });
+}
+
+// A shareable seed selects the whole feature palette and ecological setup.
+// The caller chooses the habitat dimensions and population capacity separately.
+export function worldSettingsForSeed(seed, { capacity = 32768 } = {}) {
+  if (!Number.isInteger(seed) || seed < 0 || seed > 4294967295)
+    throw Error("Invalid world seed");
+  if (!Number.isInteger(capacity) || capacity < 128 || capacity > 262144)
+    throw Error("Invalid random-world capacity");
+  const rng = treeRng(seed);
   const pick = (values) => values[Math.floor(rng() * values.length)];
   const range = (min, max, step = 1) =>
     Number(
@@ -16,38 +30,14 @@ export function randomWorldSettings({
         Math.floor(rng() * (Math.round((max - min) / step) + 1)) * step
       ).toFixed(5),
     );
-  let seed = Math.floor(rng() * 4294967296);
-  if (seed === previousSeed) seed = (seed + 1) >>> 0;
   const ambientTemperature = range(12, 28);
   const scale = Math.max(1, capacity / 32768);
   const masks = [0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff];
   const solarEnabled = pick([0, 1, 1, 1, 1, 1, 1, 1]);
-  const protectedNames = new Set([
-    "number",
-    "bool",
-    "slot",
-    "channel",
-    "nop",
-    "seq",
-  ]);
   for (const [id, fn] of TREE_SCHEMA.entries())
-    if (!protectedNames.has(fn.name) && rng() < 0.18)
+    if (!isCoreFunction(fn.name) && rng() < 0.18)
       masks[Math.floor(id / 32)] =
         (masks[Math.floor(id / 32)] & ~(1 << (id % 32))) >>> 0;
-  const enabled = (name) => {
-    const id = TREE_SCHEMA.findIndex((fn) => fn.name === name);
-    return (masks[Math.floor(id / 32)] >>> (id % 32)) & 1;
-  };
-  const enable = (name) => {
-    const id = TREE_SCHEMA.findIndex((fn) => fn.name === name);
-    masks[Math.floor(id / 32)] =
-      (masks[Math.floor(id / 32)] | (1 << (id % 32))) >>> 0;
-  };
-  // Preserve an available energy pathway and a way to reproduce while allowing
-  // ecological roles such as immobile, nonphotosynthetic or detached-only life.
-  if (!enabled("eat") && !(solarEnabled && enabled("photosynthesize")))
-    enable(solarEnabled ? pick(["eat", "photosynthesize"]) : "eat");
-  if (!enabled("bud") && !enabled("split")) enable(pick(["bud", "split"]));
   return {
     seed,
     functionMask0: masks[0],
@@ -68,6 +58,8 @@ export function randomWorldSettings({
     numericMutationScale: pick([0.5, 1, 1.5]),
     mutationOrdinary: pick([0.25, 0.5, 1]),
     motorImpulse: pick([3, 5, 7, 9]),
+    resistCost: pick([0.05, 0.1, 0.2, 0.4, 0.8]),
+    resistStrength: pick([40, 80, 120, 200, 320]),
     dragRetention: pick([0.88, 0.92, 0.94, 0.96, 0.98]),
     springStiffness: pick([12, 18, 24, 36, 48]),
     springRestDistance: pick([14, 18, 22, 26]),
@@ -83,6 +75,10 @@ export function randomWorldSettings({
     mobilizeEfficiency: pick([0.5, 0.7, 0.85, 1]),
     eatAmount: pick([1, 2, 3, 5]),
     attackAmountMax: pick([1, 2, 3, 5]),
+    attackEfficiency: pick([2, 3, 5, 8, 12]),
+    attackSpeedBonus: pick([0, 0, 0.01, 0.025, 0.05, 0.1]),
+    shieldCapacity: pick([5, 10, 20, 40]),
+    shieldBuildEfficiency: pick([0.5, 1, 2, 4]),
     shieldProtection: pick([0.5, 0.7, 0.9, 1]),
     mutationLocal: pick([0, 0.2, 0.5, 1]),
     mutationPoint: pick([0, 0.25, 0.5, 1]),
@@ -106,6 +102,11 @@ export function randomWorldSettings({
     specializationStrength: pick([0, 0.15, 0.3, 0.5, 0.65]),
     specializationTime: pick([15, 30, 60, 120]),
     rate: Math.min(capacity, Math.round(pick([4, 8, 12, 16]) * scale)),
+    capacityRate: Math.min(
+      capacity,
+      64,
+      Math.round((pick([0, 1, 2, 4, 8]) * capacity) / 32768),
+    ),
     floor: Math.min(
       Math.floor(capacity / 16),
       Math.round(pick([128, 256, 512, 1024]) * scale),
@@ -126,6 +127,7 @@ export function randomWorldSettings({
     upkeep: range(0.25, 0.75, 0.05),
     energyDecay: range(0.03, 0.07, 0.01),
     exchange: range(0.04, 0.2, 0.01),
+    maximumAge: pick([0, 120, 300, 600, 1200, 2400]),
     corpseLifetime: range(600, 1800, 60),
     corpseEnergy: range(6, 16),
     ambientTemperature,

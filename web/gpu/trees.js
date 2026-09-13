@@ -48,6 +48,7 @@ export const TREE_VM_OPS = [
   ],
   ["sin", "r", "Pure sine, with a radian argument."],
   ["cos", "r", "Pure cosine, with a radian argument."],
+  ["resist", "v", "Set persistent bracing resistance between zero and one."],
 ];
 const entry = (name, result, args = []) => ({ name, result, args });
 export const TREE_SCHEMA = [
@@ -163,6 +164,7 @@ export const TREE_SCHEMA = [
   entry("sin", "Number", ["Number"]),
   entry("cos", "Number", ["Number"]),
   entry("time", "Number"),
+  entry("resist", "Action", ["Number"]),
 ];
 // Parser conveniences lower to the same typed, serialized vocabulary. Function
 // switches act on the canonical nodes below; aliases do not bypass a switch.
@@ -1245,7 +1247,7 @@ function samplingWeight(name, options) {
     ].includes(name)
   )
     return options.neighborhoodWeight;
-  if (["child-set", "child-turn"].includes(name))
+  if (["child-set", "child-turn", "resist"].includes(name))
     return options.developmentWeight;
   return 1;
 }

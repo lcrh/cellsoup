@@ -1,6 +1,9 @@
+import { isCoreFunction } from "./core-language.js";
 import { TREE_SCHEMA } from "./trees.js";
 import { GPU_OPS } from "./language.js";
 const descriptions = {
+  resist:
+    "Set persistent anchoring from 0 to 1; 0 releases it. Strong drag braces against the environment so contraction can pull linked neighbors. Costs energy per second and switches off if upkeep is unaffordable. The daughter inherits the brace level.",
   sin: "Sine of an angle in radians. Pure numeric function; combine with time and a phase offset for oscillation.",
   cos: "Cosine of an angle in radians. Pure numeric function; combine with time and a phase offset for oscillation.",
   time: "Simulation time in seconds, shared by every cell. Multiply by angular frequency, then add a phase offset, before applying sin or cos.",
@@ -83,7 +86,7 @@ const descriptions = {
   turn: "Rotate by a relative number of degrees, clamped to −360…360. Costs energy.",
   contract: "Adjust spring rest lengths, spending energy.",
   shield:
-    "Set defensive shielding from 0 to 1; shielding has continuing upkeep.",
+    "Spend up to amount energy to build a persistent barrier, limited by capacity and build efficiency. Zero does nothing. Hits consume barrier points before cell energy, with damage absorbed per point set by toughness. Unpaid upkeep erodes the barrier. Division shares existing points between parent and daughter.",
   "color-set": "Set your visible hue, wrapping around 360 degrees.",
   "tag-set": "Set your integer tag.",
   store:
@@ -94,7 +97,7 @@ const descriptions = {
   link: "Attempt a reciprocal spring link to a nearby living target.",
   unlink: "Remove the link to this target; none removes all links.",
   attack:
-    "Spend energy to damage a nearby living target. Does not steal its reserves; a resulting corpse can be eaten.",
+    "Strike a nearby living target with the supplied effort, capped by Maximum strike effort. Damage equals the variable energy actually spent × attack effectiveness; the separate base fee produces no damage. A configurable closing-speed bonus multiplies damage by 1 + bonus × relative approach speed. Barriers absorb hits first. Does not steal reserves; a resulting corpse can be eaten.",
   give: "Give a fraction (0–1) of your usable energy to a nearby or directly linked living target, preserving a tiny reserve.",
   emit: "Publish a persistent broadcast on c0–c3, clipped to −100…100, at the configured cost. Neighbors can aggregate it, and nearby cells can listen.",
   send: "Send a direct mailbox message to the chosen linked target and channel. none broadcasts to direct links.",
@@ -150,6 +153,7 @@ const descriptions = {
     "Set the next daughter’s heading offset relative to the parent, in degrees, in addition to configured random jitter. Does not rotate the parent. Consumed only by successful division.",
 };
 const examples = {
+  resist: "(resist 0.8)",
   sin: "(sin (+ (time) 0.5))",
   cos: "(cos (* (time) 2))",
   "child-set": "(seq (child-set m0 (* (memory m0) 0.5)) (bud))",
@@ -180,6 +184,9 @@ export const FUNCTION_REFERENCE = TREE_SCHEMA.map((spec) => {
   let description = descriptions[spec.name];
   if (spec.name.startsWith("target-"))
     description = `Read the target’s ${spec.name.slice(7)}. Returns zero for an absent or out-of-range handle. Bearings are relative; storage also reads remaining corpse value.`;
+  if (spec.name === "target-shield")
+    description =
+      "Read the target’s remaining barrier points, before applying barrier toughness. Zero means no barrier or no valid target.";
   if (!description) description = GPU_OPS.find((o) => o[0] === spec.name)?.[2];
   if (!description) throw Error("Missing function documentation: " + spec.name);
   return {
@@ -188,8 +195,6 @@ export const FUNCTION_REFERENCE = TREE_SCHEMA.map((spec) => {
     example:
       examples[spec.name] ??
       `(${spec.name}${spec.args.length ? " " + spec.args.map((t) => argument[t]).join(" ") : ""})`,
-    essential: ["number", "bool", "slot", "channel", "nop", "seq"].includes(
-      spec.name,
-    ),
+    essential: isCoreFunction(spec.name),
   };
 });

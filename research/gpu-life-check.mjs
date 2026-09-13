@@ -17,6 +17,7 @@ const device = await adapter.requestDevice();
 let errors = [];
 device.addEventListener("uncapturederror", (e) => errors.push(e.error.message));
 const options = {
+  capacityRate: 0,
   forkMutation: 0,
   treePrograms: 0,
   capacity: 64,
@@ -29,7 +30,8 @@ const options = {
   solarEnabled: 0,
   solarRate: 0,
   energyDecay: 0,
-  attackDamageCost: 0,
+  attackDamageCost: 1,
+  attackEfficiency: 1,
   eatCost: 0,
   upkeep: 0,
   sunlightHeating: 0,
@@ -182,7 +184,7 @@ await test("competing attackers cannot overdraw a victim", async () => {
   assert.ok(c.every((c) => c.energy >= 0 && c.energy <= 200));
   const stolen = 2 - c[0].energy;
   const gains = c.slice(1, 31).reduce((sum, c) => sum + c.energy - 70, 0);
-  assert.equal(gains, 0);
+  assert.equal(gains, -90);
   assert.ok(stolen > 1.99);
   e.destroy();
 });
@@ -199,7 +201,7 @@ await test("a single predator can kill, and deaths update genome and population 
     stats = await e.counters(),
     genes = await e.genes();
   assert.equal(c[0].alive, 0);
-  assert.equal(c[1].energy, 70);
+  assert.equal(c[1].energy, 67);
   assert.equal(stats.deaths, 1);
   assert.equal(stats.living, 1);
   assert.equal(genes.stats[4], 0);
@@ -299,15 +301,15 @@ await test("linked zero-valued messages arrive next tick with sender identity", 
   assert.equal(c[1].r[1], 1);
   e.destroy();
 });
-await test("unaffordable movement and shields do not exhaust a cell", async () => {
+await test("unaffordable movement noops and shield construction retains a reserve", async () => {
   const e = await setup(["move 1\nshield 1\nwait 1000"], [{ energy: 1 }], {
     moveCost: 1,
     shieldUpkeep: 60,
   });
   await e.step();
   const c = await state(e);
-  assert.equal(c[0].energy, 1);
-  assert.equal(c[0].shield, 0);
+  assert.equal(c[0].energy, 1 / 4096);
+  assert.equal(c[0].shield, 1 - 1 / 4096);
   e.destroy();
 });
 await test("photosynthesis is explicit, light-limited and bounded per tick", async () => {
@@ -395,18 +397,29 @@ await test("paid attacks leave storage-rich corpses, with eating as a separate a
       { x: 100, y: 100, energy: 2, storage: 100 },
       { genome: 1, x: 114, y: 100, energy: 70 },
     ],
-    { corpseEnergy: 8, attackCost: 0.08, attackDamageCost: 0.2 },
+    {
+      corpseEnergy: 8,
+      attackCost: 0.08,
+      attackDamageCost: 0.2,
+      attackEfficiency: 5,
+    },
   );
   await e.step();
   let c = await state(e);
   assert.equal(c[0].alive, 2);
   assert.equal(c[0].energy, 108);
-  assert.equal(c[1].energy, 70 - Math.round(0.68 * 4096) / 4096);
+  assert.equal(
+    c[1].energy,
+    70 - (Math.round(0.6 * 4096) + Math.round(0.08 * 4096)) / 4096,
+  );
   assert.equal((await e.counters()).kills, 1);
   await e.step();
   c = await state(e);
   assert.equal(c[1].r[0], 3);
-  assert.equal(c[1].energy, 73 - Math.round(0.68 * 4096) / 4096);
+  assert.equal(
+    c[1].energy,
+    73 - (Math.round(0.6 * 4096) + Math.round(0.08 * 4096)) / 4096,
+  );
   assert.ok(c[0].energy < 105 && c[0].energy > 104.98);
   e.destroy();
 });

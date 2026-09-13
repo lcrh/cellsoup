@@ -1,6 +1,6 @@
 # Cell Soup function vocabulary
 
-The browser reference is searchable and includes an evolution switch for every primitive. Switches affect new random programs and mutations, not already running genomes. Syntax aliases lower to those same primitives.
+The browser reference is searchable and shows an evolution switch for every primitive. Basic computation, comparisons, memory, energy, movement, waiting and reproduction form a protected core that stays enabled. Optional senses, communication, oscillators and other extensions can be switched off manually or varied by Random new world. Switches affect new random programs and mutations, not already running genomes. Syntax aliases lower to those same primitives. Older saved setups are normalized to keep the core enabled while preserving their optional switches.
 
 Programs are typed Lisp trees, limited to 32 nodes and 64 compiled instructions. Cells retain eight numeric memory slots across program cycles and exact-copy division. Temporal expressions and named bindings share that memory budget. Actions still spend energy and generate heat.
 
@@ -170,7 +170,7 @@ Examples show an expression unless a short sequence is needed to demonstrate con
 
 ### number
 
-No inputs → Number. Essential grammar; always available.
+No inputs → Number. Core toolkit; always enabled.
 
 A numeric literal, such as 0, 0.5 or 90. Values are bounded by the VM.
 
@@ -180,7 +180,7 @@ A numeric literal, such as 0, 0.5 or 90. Values are bounded by the VM.
 
 ### bool
 
-No inputs → Bool. Essential grammar; always available.
+No inputs → Bool. Core toolkit; always enabled.
 
 A boolean literal: true or false.
 
@@ -190,7 +190,7 @@ true
 
 ### slot
 
-No inputs → Memory. Essential grammar; always available.
+No inputs → Memory. Core toolkit; always enabled.
 
 A persistent memory address m0–m7.
 
@@ -200,7 +200,7 @@ m0
 
 ### channel
 
-No inputs → Channel. Essential grammar; always available.
+No inputs → Channel. Core toolkit; always enabled.
 
 One of four independent communication channels: c0–c3.
 
@@ -210,7 +210,7 @@ c0
 
 ### energy
 
-No inputs → Number.
+No inputs → Number. Core toolkit; always enabled.
 
 Your usable energy. Reaching zero kills the cell.
 
@@ -220,7 +220,7 @@ Your usable energy. Reaching zero kills the cell.
 
 ### storage
 
-No inputs → Number.
+No inputs → Number. Core toolkit; always enabled.
 
 Your stored reserves. These diffuse through links and require mobilization before use.
 
@@ -340,7 +340,7 @@ Your integer tag, from 0 to 255.
 
 ### self
 
-No inputs → Cell.
+No inputs → Cell. Core toolkit; always enabled.
 
 A handle for this cell.
 
@@ -350,7 +350,7 @@ A handle for this cell.
 
 ### none
 
-No inputs → Cell.
+No inputs → Cell. Core toolkit; always enabled.
 
 An absent target. Target reads return zero; unlinking none removes all links.
 
@@ -380,7 +380,7 @@ Nearest edible corpse within sensing range; none if absent.
 
 ### memory
 
-Memory → Number.
+Memory → Number. Core toolkit; always enabled.
 
 Read one of the eight persistent numeric values.
 
@@ -390,7 +390,7 @@ Read one of the eight persistent numeric values.
 
 ### birth-result
 
-No inputs → Number.
+No inputs → Number. Core toolkit; always enabled.
 
 0 in the parent, 1 in its daughter, −1 when the attempted division fails.
 
@@ -400,7 +400,7 @@ No inputs → Number.
 
 ### +
 
-Number, Number → Number.
+Number, Number → Number. Core toolkit; always enabled.
 
 Add two numbers.
 
@@ -410,7 +410,7 @@ Add two numbers.
 
 ### -
 
-Number, Number → Number.
+Number, Number → Number. Core toolkit; always enabled.
 
 Subtract the second number from the first.
 
@@ -420,7 +420,7 @@ Subtract the second number from the first.
 
 ### *
 
-Number, Number → Number.
+Number, Number → Number. Core toolkit; always enabled.
 
 Multiply two numbers.
 
@@ -430,7 +430,7 @@ Multiply two numbers.
 
 ### /
 
-Number, Number → Number.
+Number, Number → Number. Core toolkit; always enabled.
 
 Protected division; a zero divisor produces zero.
 
@@ -440,7 +440,7 @@ Protected division; a zero divisor produces zero.
 
 ### mod
 
-Number, Number → Number.
+Number, Number → Number. Core toolkit; always enabled.
 
 Protected remainder; a zero divisor produces zero.
 
@@ -450,7 +450,7 @@ Protected remainder; a zero divisor produces zero.
 
 ### min
 
-Number, Number → Number.
+Number, Number → Number. Core toolkit; always enabled.
 
 The smaller input.
 
@@ -460,7 +460,7 @@ The smaller input.
 
 ### max
 
-Number, Number → Number.
+Number, Number → Number. Core toolkit; always enabled.
 
 The larger input.
 
@@ -470,7 +470,7 @@ The larger input.
 
 ### abs
 
-Number → Number.
+Number → Number. Core toolkit; always enabled.
 
 Absolute value.
 
@@ -490,7 +490,7 @@ A new random fraction of the supplied value.
 
 ### >
 
-Number, Number → Bool.
+Number, Number → Bool. Core toolkit; always enabled.
 
 True when the first number is greater.
 
@@ -500,7 +500,7 @@ True when the first number is greater.
 
 ### <
 
-Number, Number → Bool.
+Number, Number → Bool. Core toolkit; always enabled.
 
 True when the first number is smaller.
 
@@ -510,7 +510,7 @@ True when the first number is smaller.
 
 ### =
 
-Number, Number → Bool.
+Number, Number → Bool. Core toolkit; always enabled.
 
 True when the numbers are equal.
 
@@ -520,7 +520,7 @@ True when the numbers are equal.
 
 ### not
 
-Bool → Bool.
+Bool → Bool. Core toolkit; always enabled.
 
 Invert a boolean.
 
@@ -530,7 +530,7 @@ Invert a boolean.
 
 ### and
 
-Bool, Bool → Bool.
+Bool, Bool → Bool. Core toolkit; always enabled.
 
 Both conditions must hold. The second is skipped if the first is false.
 
@@ -540,7 +540,7 @@ Both conditions must hold. The second is skipped if the first is false.
 
 ### or
 
-Bool, Bool → Bool.
+Bool, Bool → Bool. Core toolkit; always enabled.
 
 Either condition may hold. The second is skipped if the first is true.
 
@@ -550,7 +550,7 @@ Either condition may hold. The second is skipped if the first is true.
 
 ### if
 
-Bool, Any, Any → Any.
+Bool, Any, Any → Any. Core toolkit; always enabled.
 
 Evaluate only the chosen branch. Both branches must have the same type. Useful for zero gating or conditional actions.
 
@@ -662,7 +662,7 @@ Read the target’s tag. Returns zero for an absent or out-of-range handle. Bear
 
 Cell → Number.
 
-Read the target’s shield. Returns zero for an absent or out-of-range handle. Bearings are relative; storage also reads remaining corpse value.
+Read the target’s remaining barrier points, before applying barrier toughness. Zero means no barrier or no valid target.
 
 ```lisp
 (target-shield (nearest living))
@@ -760,7 +760,7 @@ Consume the latest direct mailbox message on this channel; zero if none. Message
 
 ### nop
 
-No inputs → Action. Essential grammar; always available.
+No inputs → Action. Core toolkit; always enabled.
 
 Do nothing for this instruction. Ordinary upkeep still applies.
 
@@ -770,7 +770,7 @@ Do nothing for this instruction. Ordinary upkeep still applies.
 
 ### photosynthesize
 
-No inputs → Action.
+No inputs → Action. Core toolkit; always enabled.
 
 Harvest sunlight into usable energy. Limited by light per tick and by specialization efficiency.
 
@@ -780,7 +780,7 @@ Harvest sunlight into usable energy. Limited by light per tick and by specializa
 
 ### eat
 
-No inputs → Action.
+No inputs → Action. Core toolkit; always enabled.
 
 Eat a randomly selected nearby corpse. Usable gain depends on specialization; the consumed material is removed once.
 
@@ -790,7 +790,7 @@ Eat a randomly selected nearby corpse. Usable gain depends on specialization; th
 
 ### bud
 
-No inputs → Action.
+No inputs → Action. Core toolkit; always enabled.
 
 Divide, staying linked. Requires energy and a free link slot. Returns through birth-result.
 
@@ -800,7 +800,7 @@ Divide, staying linked. Requires energy and a free link slot. Returns through bi
 
 ### split
 
-No inputs → Action.
+No inputs → Action. Core toolkit; always enabled.
 
 Divide and disconnect the daughter. Requires sufficient energy. Returns through birth-result.
 
@@ -810,7 +810,7 @@ Divide and disconnect the daughter. Requires sufficient energy. Returns through 
 
 ### seq
 
-Action, Action → Action. Essential grammar; always available.
+Action, Action → Action. Core toolkit; always enabled.
 
 Execute actions in order.
 
@@ -820,7 +820,7 @@ Execute actions in order.
 
 ### set
 
-Memory, Number → Action.
+Memory, Number → Action. Core toolkit; always enabled.
 
 Write a numeric value to a persistent memory slot.
 
@@ -830,7 +830,7 @@ Write a numeric value to a persistent memory slot.
 
 ### move
 
-Number → Action.
+Number → Action. Core toolkit; always enabled.
 
 Apply forward/backward thrust. Amount is clamped to −1…1; spring links pull other cells along.
 
@@ -840,7 +840,7 @@ Apply forward/backward thrust. Amount is clamped to −1…1; spring links pull 
 
 ### turn
 
-Number → Action.
+Number → Action. Core toolkit; always enabled.
 
 Rotate by a relative number of degrees, clamped to −360…360. Costs energy.
 
@@ -862,7 +862,7 @@ Adjust spring rest lengths, spending energy.
 
 Number → Action.
 
-Set defensive shielding from 0 to 1; shielding has continuing upkeep.
+Spend up to amount energy to build a persistent barrier, limited by capacity and build efficiency. Zero does nothing. Hits consume barrier points before cell energy, with damage absorbed per point set by toughness. Unpaid upkeep erodes the barrier. Division shares existing points between parent and daughter.
 
 ```lisp
 (shield 0.5)
@@ -890,7 +890,7 @@ Set your integer tag.
 
 ### store
 
-Number → Action.
+Number → Action. Core toolkit; always enabled.
 
 Convert usable energy into stored reserves; keeps a tiny usable reserve.
 
@@ -900,7 +900,7 @@ Convert usable energy into stored reserves; keeps a tiny usable reserve.
 
 ### mobilize
 
-Number → Action.
+Number → Action. Core toolkit; always enabled.
 
 Consume stored reserves to gain usable energy, reduced by specialization efficiency. Cannot rescue an already dead cell.
 
@@ -910,7 +910,7 @@ Consume stored reserves to gain usable energy, reduced by specialization efficie
 
 ### wait
 
-Number → Action.
+Number → Action. Core toolkit; always enabled.
 
 Yield execution for the requested number of ticks; wait 0 yields until the next tick.
 
@@ -942,7 +942,7 @@ Remove the link to this target; none removes all links.
 
 Cell, Number → Action.
 
-Spend energy to damage a nearby living target. Does not steal its reserves; a resulting corpse can be eaten.
+Strike a nearby living target with the supplied effort, capped by Maximum strike effort. Damage equals the variable energy actually spent × attack effectiveness; the separate base fee produces no damage. A configurable closing-speed bonus multiplies damage by 1 + bonus × relative approach speed. Barriers absorb hits first. Does not steal reserves; a resulting corpse can be eaten.
 
 ```lisp
 (attack (nearest living) 0.5)
@@ -980,7 +980,7 @@ Send a direct mailbox message to the chosen linked target and channel. none broa
 
 ### state
 
-Memory, Number, Any → Any.
+Memory, Number, Any → Any. Core toolkit; always enabled.
 
 Initialize named numeric state once, then evaluate the body. Exact-copy division inherits it. Use set! to update the name.
 
@@ -990,7 +990,7 @@ Initialize named numeric state once, then evaluate the body. Exact-copy division
 
 ### let
 
-Memory, Number, Any → Any.
+Memory, Number, Any → Any. Core toolkit; always enabled.
 
 Evaluate a named numeric local once per evaluation, then use it in the body.
 
@@ -1000,7 +1000,7 @@ Evaluate a named numeric local once per evaluation, then use it in the body.
 
 ### do
 
-Action, Any → Any.
+Action, Any → Any. Core toolkit; always enabled.
 
 Perform an action and then return the value of another expression.
 
@@ -1286,4 +1286,14 @@ Simulation time in seconds, shared by every cell. Multiply by angular frequency,
 
 ```lisp
 (time)
+```
+
+### resist
+
+Number → Action.
+
+Set persistent anchoring from 0 to 1; 0 releases it. Strong drag braces against the environment so contraction can pull linked neighbors. Costs energy per second and switches off if upkeep is unaffordable. The daughter inherits the brace level.
+
+```lisp
+(seq (resist 0.8) (contract 0.3))
 ```

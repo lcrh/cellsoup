@@ -99,6 +99,7 @@ ${specializationStrength > 0 ? "  metabolicHistory:array<vec4f,N>," : ""}
 ${linkedRelay > 0 ? "  relayA:array<vec4f,N>, relayB:array<vec4f,N>," : ""}
 ${treePrograms ? "  colonyParent:array<atomic<u32>,N>, colonyCount:array<atomic<u32>,N>," : ""}
   cpuRemainder:array<f32,N>,
+${treePrograms ? "  resistance:array<f32,N>," : ""}
 }
 struct Field {
   a:array<vec2f,T>,
@@ -128,6 +129,7 @@ struct Config {
   contact:vec4f,
   efficiency:vec4f,
   geometry:vec4f,
+  bracing:vec4f,
 }
 @group(0) @binding(0) var<storage,read> old:array<Cell>;
 @group(0) @binding(1) var<storage,read_write> cells:array<Cell>;
@@ -694,6 +696,7 @@ fn neighborhood(i:u32,mode:u32,predicate:u32,radius:f32,source:ptr<function,Cell
 }
 fn newCell(i:u32,g:u32,identity:u32,seed:u32)->Cell {
   s.cpuRemainder[i]=0;
+${treePrograms ? "  s.resistance[i]=0;" : ""}
 ${treePrograms ? "  for(var k=0u;k<3u;k++){s.childState[i*3u+k]=vec4f(0);}" : ""}
 ${specializationStrength > 0 ? "  s.metabolicHistory[i]=vec4f(0);" : ""}
 ${linkedRelay > 0 ? "  s.relayA[i]=vec4f(0);s.relayB[i]=vec4f(0);" : ""}
@@ -832,6 +835,7 @@ ${
     c.res.w=cfg.thermal.x+(c.res.w-cfg.thermal.x)*exp(-cfg.thermal.w*DT);
     c.life.x++; action.base.x=u32(c.b.x); cells[i]=c; intents[i]=action; return;
   }
+  c.life.x++;
 ${specializationStrength > 0 ? "  s.metabolicHistory[i]*=cfg.specialization.y;" : ""}
   action.uptake=forces(i);
   activity[i].marks.z=c.machine.x;
@@ -841,6 +845,12 @@ ${specializationStrength > 0 ? "  s.metabolicHistory[i]*=cfg.specialization.y;" 
   for(var k=0u;k<4u;k++){let j=liveLink(i,k);if(j!=NONE){heatFlow+=(old[j].res.w-old[i].res.w)*cfg.cooling.x;}}
   c.phen.y=action.uptake.w;
   c.res=vec4f(c.res.x,fvalue(tile).x,c.res.z+f32(exchange),c.res.w+heatFlow);
+  if(cfg.specialization.w>0.0&&f32(c.life.x)*DT>=cfg.specialization.w){
+    // Senescence bypasses program execution and uses the ordinary corpse path.
+    // A separate cause flag prevents an attack or incoming gift from changing it.
+    c.b.x=0.0;action.misc.w=1u;action.base.x=0u;cells[i]=c;intents[i]=action;return;
+  }
+
   let exposure=1.0/(1.0+c.phen.y*cfg.cooling.y);
   c.res.w=cfg.thermal.x+(c.res.w-cfg.thermal.x)*exp(-cfg.thermal.w*exposure*DT);
   c.res.w=min(10000.0,c.res.w+cfg.thermal.y*c.res.y*DT);
@@ -849,8 +859,14 @@ ${specializationStrength > 0 ? "  s.metabolicHistory[i]*=cfg.specialization.y;" 
   c.b.x-=metabolicLoss;
   c.res.w=min(10000.0,c.res.w+metabolicLoss/Q*cfg.thermal.z);
   c.b.x=max(0.0,c.b.x-f32(quantum(max(0.0,c.res.w-cfg.cooling.z)*cfg.cooling.w*DT)));
-  if(!pay(&c,c.b.w*cfg.ecology.w*DT)){c.b.w=0.0;}
-  c.life.x++;
+  c.b.w=clamp(c.b.w,0.0,cfg.ecology.x);
+  let maintenance=quantum(c.b.w/max(.000001,cfg.ecology.x)*cfg.ecology.w*DT);
+  let maintenancePaid=min(maintenance,u32(max(0.0,c.b.x-1.0)));
+  c.b.x-=f32(maintenancePaid);
+  c.res.w=min(10000.0,c.res.w+f32(maintenancePaid)/Q*cfg.thermal.z);
+  // Unfunded maintenance erodes the corresponding construction value. It
+  // neither creates a free shield nor erases the whole barrier in one tick.
+  c.b.w=max(0.0,c.b.w-f32(maintenance-maintenancePaid)/Q*cfg.ecology.z);
   c.signal*=cfg.communication.y;
   if(c.machine.w>0u) {
     if(c.machine.w!=NONE){c.machine.w--;}
@@ -1077,10 +1093,20 @@ ${executionTrace ? `        if(traceRow!=0xffffffffu){let n=s.traceCounts[traceR
           // breaking distance. Attacks still require direct proximity.
           if(j!=NONE&&j!=i&&(length(delta(old[j].p.xy,c.p.xy))<=cfg.geometry.x||(op==26u&&linked(c,j)&&linked(old[j],i)&&length(delta(old[j].p.xy,c.p.xy))<=65.0))) {
             if(op==25u) {
-              if(pay(&c,cfg.cost1.y+clamp(b,0.0,cfg.efficiency.x)*cfg.metabolism.y)) {
+              let effort=clamp(b,0.0,cfg.efficiency.x);
+              let spent=quantum(effort*cfg.metabolism.y);
+              if(spent>0u&&cfg.metabolism.w>0.0&&pay(&c,cfg.cost1.y+f32(spent)/Q)) {
                 action.aim.y=j;
                 action.misc.z=0u;
-                action.req.y=clamp(b,0.0,cfg.efficiency.x)*(1.0-old[j].b.w*cfg.contact.z);
+                let separation=delta(old[j].p.xy,old[i].p.xy);
+                let distance=length(separation);
+                var closing=0.0;
+                if(distance>.000001){closing=max(0.0,dot(old[i].p.zw-old[j].p.zw,separation/distance));}
+                // Only relative approach contributes; common motion and
+                // retreat confer no bonus. The previous snapshot makes this
+                // independent of the two cells' VM execution order.
+                let impact=1.0+cfg.bracing.z*closing;
+                action.req.y=min(f32(CAP_E)/Q+cfg.ecology.x,f32(spent)/Q*cfg.metabolism.w*impact);
               }
             }
             else {
@@ -1093,9 +1119,13 @@ ${executionTrace ? `        if(traceRow!=0xffffffffu){let n=s.traceCounts[traceR
           c.b.z=floor(clamp(a,0.0,255.0));
         }
         case 28u: {
-          let shield=clamp(a,0.0,1.0);
-          if(c.b.x-f32(quantum(shield*cfg.ecology.w*DT))>=1.0) {
-            c.b.w=shield;
+          if(a>0.0&&cfg.ecology.z>0.0&&c.b.w<cfg.ecology.x){
+            let room=max(0.0,cfg.ecology.x-c.b.w);
+            let needed=u32(min(f32(CAP_E),ceil(room*Q/cfg.ecology.z)));
+            let spent=min(needed,min(quantum(a),u32(max(0.0,c.b.x-1.0))));
+            if(spent>0u&&pay(&c,f32(spent)/Q)){
+              c.b.w=min(cfg.ecology.x,c.b.w+f32(spent)/Q*cfg.ecology.z);
+            }
           }
         }
         case 29u: {
@@ -1206,7 +1236,8 @@ ${executionTrace ? `        if(traceRow!=0xffffffffu){let n=s.traceCounts[traceR
         }
 ${
   treePrograms
-    ? `        case 53u:{c.r[d]=neighborhood(i,u32(clamp(b,0.0,21.0)),u32(max(v,0.0)),c.r[d],&c);}
+    ? `        case 62u:{s.resistance[i]=clamp(a,0.0,1.0);}
+        case 53u:{c.r[d]=neighborhood(i,u32(clamp(b,0.0,21.0)),u32(max(v,0.0)),c.r[d],&c);}
         case 54u:{c.r[d]=0;}
         case 55u:{}
         case 56u:{let slot=u32(clamp(a,0.0,7.0));s.childState[i*3u+slot/4u][slot%4u]=clamp(b,-999999.0,999999.0);s.childState[i*3u+2u].x=f32(u32(s.childState[i*3u+2u].x)|(1u<<slot));}
@@ -1295,7 +1326,7 @@ ${executionTrace ? `      if(traceRow!=0xffffffffu){let n=s.traceCounts[traceRow
     return;
   }
   let j=intents[i].aim.x;
-  if(j==NONE) {
+  if(j==NONE||intents[j].misc.w!=0u) {
     return;
   }
   let units=min(quantum(intents[i].req.x),u32(max(0.0,f32(intents[i].base.x)-1.0)));
@@ -1329,13 +1360,17 @@ ${executionTrace ? `      if(traceRow!=0xffffffffu){let n=s.traceCounts[traceRow
   if(j==NONE) {
     return;
   }
-  let requested=quantum(intents[i].req.y);
+  let requested=u32(clamp(round(intents[i].req.y*Q),0.0,f32(CAP_E)+cfg.ecology.x*Q));
   let amount=select(requested,min(requested,CAP_E-balance),intents[i].misc.z>0u);
   intents[i].base.w=amount;
   let prev=atomicAdd(&s.theft[j].lo,amount);
   if(prev+amount<prev) {
     atomicAdd(&s.theft[j].hi,1u);
   }
+}
+fn barrierAbsorption(i:u32)->u32 {
+ if(old[i].life.w!=1u||intents[i].misc.w!=0u){return 0u;}
+ return u32(floor(clamp(cells[i].b.w,0.0,cfg.ecology.x)*cfg.contact.z*Q));
 }
 @compute @workgroup_size(128) fn theftApply(@builtin(global_invocation_id) id:vec3u) {
   let i=id.x;
@@ -1346,7 +1381,7 @@ ${executionTrace ? `      if(traceRow!=0xffffffffu){let n=s.traceCounts[traceRow
   if(j==NONE) {
     return;
   }
-  let amount=portion(intents[i].base.w,intents[j].base.z,wideTheft(j));
+  let amount=portion(intents[i].base.w,intents[j].base.z+barrierAbsorption(j),wideTheft(j));
   atomicAdd(&s.theftDebit[j],amount);
   let eating=intents[i].misc.z>0u;
   var credit=0u;
@@ -1482,14 +1517,20 @@ fn birthCapacity()->u32 {
     return;
   }
   var c=cells[i];
-  c.b.x=f32(intents[i].base.z-atomicLoad(&s.theftDebit[i])+atomicLoad(&s.theftCredit[i]));
+  let damage=atomicLoad(&s.theftDebit[i]);
+  let barrierAvailable=barrierAbsorption(i);
+  let blocked=min(damage,barrierAvailable);
+  if(blocked>0u){
+    c.b.w=select(max(0.0,c.b.w-f32(blocked)/Q/max(.000001,cfg.contact.z)),0.0,blocked==barrierAvailable);
+  }
+  c.b.x=f32(intents[i].base.z-(damage-blocked)+atomicLoad(&s.theftCredit[i]));
   if(old[i].life.w==2u){
     if(c.b.x<=0){c.life.w=0u;atomicSub(&s.counter[13],1u);}
     cells[i]=c;return;
   }
-  if(c.b.x==0.0) {
-    c.life.w=select(0u,2u,cfg.clouds.w>0||c.res.z>0);c.life.x=0u;c.link=vec4u(0);c.b.x=round(cfg.clouds.w*Q)+c.res.z;c.res.z=c.b.x;c.p=vec4f(c.p.xy,0,0);
-    if(atomicLoad(&s.theftDebit[i])>0u){atomicAdd(&s.counter[22],1u);}
+  if(c.b.x==0.0||intents[i].misc.w!=0u) {
+    c.life.w=select(0u,2u,cfg.clouds.w>0||c.res.z>0);c.life.x=0u;c.link=vec4u(0);c.b.w=0.0;c.b.x=round(cfg.clouds.w*Q)+c.res.z;c.res.z=c.b.x;c.p=vec4f(c.p.xy,0,0);
+    if(intents[i].misc.w==0u&&atomicLoad(&s.theftDebit[i])>0u){atomicAdd(&s.counter[22],1u);}
     atomicSub(&s.genes[c.machine.y].refs,1u);atomicSub(&s.counter[1],1u);atomicAdd(&s.counter[7],1u);
     if(c.life.w==2u){atomicAdd(&s.counter[13],1u);}
     geneMetric(c.machine.y,u32(c.phen.z*256.0));cells[i]=c;return;
@@ -1498,10 +1539,19 @@ fn birthCapacity()->u32 {
     geneMetric(c.machine.y,u32(c.phen.z*256.0));
     c.phen.z=0.0;
   }
+  var braceDamping=1.0;
+${
+  treePrograms
+    ? `
+  if(!pay(&c,s.resistance[i]*cfg.bracing.x*DT)){s.resistance[i]=0;}
+  braceDamping=exp(-s.resistance[i]*cfg.bracing.y*DT);
+`
+    : ""
+}
   let force=intents[i].uptake;
-  c.phen.w=clamp((c.phen.w+force.z*DT)*cfg.motion.y,-2.0,2.0);
+  c.phen.w=clamp((c.phen.w+force.z*DT)*cfg.motion.y*braceDamping,-2.0,2.0);
   c.b.y=fract(c.b.y+c.phen.w*DT);
-  c.p=vec4f(c.p.xy,clamp((c.p.zw+force.xy*DT)*cfg.motion.y,vec2f(-100),vec2f(100)));
+  c.p=vec4f(c.p.xy,clamp((c.p.zw+force.xy*DT)*cfg.motion.y*braceDamping,vec2f(-100),vec2f(100)));
   c.p=vec4f(wrapped(c.p.xy+c.p.zw*DT),c.p.zw);
   let birth=u32(intents[i].req.z);
   var free=NONE;
@@ -1517,6 +1567,8 @@ fn birthCapacity()->u32 {
       let j=s.free[at];
       let identity=atomicAdd(&s.counter[11],1u);
       var child=c;
+      child.b.w=c.b.w*.5;c.b.w-=child.b.w;
+${treePrograms ? "      s.resistance[j]=s.resistance[i];" : ""}
       s.cpuRemainder[i]*=.5;s.cpuRemainder[j]=s.cpuRemainder[i];
       let heading=c.b.y*6.2831853;
       child.p=vec4f(wrapped(c.p.xy+vec2f(cos(heading),sin(heading))*14.0),0,0);

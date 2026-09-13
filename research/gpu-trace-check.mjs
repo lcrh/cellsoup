@@ -15,6 +15,7 @@ const device = await adapter.requestDevice();
 const errors = [];
 device.addEventListener("uncapturederror", (e) => errors.push(e.error.message));
 const config = {
+  capacityRate: 0,
   capacity: 1,
   genomeCapacity: 1,
   initial: 0,

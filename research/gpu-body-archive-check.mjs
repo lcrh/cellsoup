@@ -15,6 +15,7 @@ const adapter = await globalThis.__archiveGPU.requestAdapter(),
   errors = [];
 device.addEventListener("uncapturederror", (e) => errors.push(e.error.message));
 const base = {
+  capacityRate: 0,
   treePrograms: 1,
   manualArrivals: 1,
   capacity: 4,

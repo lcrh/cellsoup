@@ -15,6 +15,7 @@ const adapter = await __forkGPU.requestAdapter(),
   errors = [];
 device.addEventListener("uncapturederror", (e) => errors.push(e.error.message));
 const base = {
+  capacityRate: 0,
   capacity: 16,
   genomeCapacity: 16,
   initial: 0,

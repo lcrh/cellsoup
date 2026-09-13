@@ -22,6 +22,7 @@ const base = {
   treePrograms: 0,
   forkMutation: 0,
   rate: 0,
+  capacityRate: 0,
   floor: 0,
   upkeep: 0,
   energyDecay: 0,

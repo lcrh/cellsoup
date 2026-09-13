@@ -1,3 +1,10 @@
+import {
+  CORE_FUNCTIONS,
+  isCoreFunction,
+  protectCoreFunctionMasks,
+} from "../web/gpu/core-language.js";
+import { TREE_SCHEMA } from "../web/gpu/trees.js";
+import { FUNCTION_REFERENCE } from "../web/gpu/function-reference.js";
 import test from "node:test";
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
@@ -52,6 +59,7 @@ test("random worlds cover every model slider within its control bounds and maint
         observed.get(id).add(value);
       }
       assert.ok(Number.isInteger(cfg.initial) && cfg.initial <= capacity / 4);
+      assert.ok(cfg.capacityRate <= Math.min(capacity, 64));
       assert.ok(cfg.seedEnergy <= cfg.energyCapacity);
       assert.ok(cfg.seedStorage <= cfg.storageCapacity);
       assert.ok(
@@ -80,28 +88,53 @@ test("the capacity selector and saved-setup validator support the 64k tier", asy
   assert.ok(cfg.floor <= 4096 && cfg.rate <= 65536);
 });
 
-test("random palettes vary core life actions while retaining an energy path and division", () => {
-  const disabled = new Set();
+test("random palettes retain the protected core and vary every optional primitive", () => {
+  const enabled = new Set(),
+    disabled = new Set();
   for (let seed = 0; seed < 1000; seed++) {
     const cfg = randomWorldSettings({ rng: random(seed) });
-    for (const name of ["number", "bool", "slot", "channel", "nop", "seq"])
+    for (const name of CORE_FUNCTIONS)
       assert.ok(functionEnabled(name, cfg), name);
-    assert.ok(
-      functionEnabled("eat", cfg) ||
-        (cfg.solarEnabled && functionEnabled("photosynthesize", cfg)),
-    );
-    assert.ok(functionEnabled("bud", cfg) || functionEnabled("split", cfg));
-    for (const name of [
-      "photosynthesize",
-      "eat",
-      "store",
-      "mobilize",
-      "bud",
-      "split",
-      "move",
-      "turn",
-    ])
-      if (!functionEnabled(name, cfg)) disabled.add(name);
+    for (const { name } of TREE_SCHEMA)
+      if (!isCoreFunction(name)) {
+        (functionEnabled(name, cfg) ? enabled : disabled).add(name);
+      }
   }
-  assert.equal(disabled.size, 8);
+  const optional = TREE_SCHEMA.filter((fn) => !isCoreFunction(fn.name))
+    .map((fn) => fn.name)
+    .sort();
+  assert.deepEqual([...enabled].sort(), optional);
+  assert.deepEqual([...disabled].sort(), optional);
+});
+test("reference switches and imported world masks share the protected core", () => {
+  assert.equal(new Set(CORE_FUNCTIONS).size, CORE_FUNCTIONS.length);
+  const allOff = Object.fromEntries(
+    [0, 1, 2, 3].map((i) => ["functionMask" + i, 0]),
+  );
+  const repaired = protectCoreFunctionMasks(allOff, TREE_SCHEMA);
+  assert.deepEqual(Object.values(allOff), [0, 0, 0, 0]);
+  for (const fn of FUNCTION_REFERENCE) {
+    assert.equal(fn.essential, isCoreFunction(fn.name), fn.name + " reference");
+    assert.equal(
+      functionEnabled(fn.name, repaired),
+      isCoreFunction(fn.name),
+      fn.name + " imported mask",
+    );
+  }
+  for (let seed = 0; seed < 100; seed++) {
+    const masks = Object.fromEntries(
+      [0, 1, 2, 3].map((i) => [
+        "functionMask" + i,
+        Math.floor(random(seed + i)() * 4294967296),
+      ]),
+    );
+    const normalized = protectCoreFunctionMasks(masks, TREE_SCHEMA);
+    for (const fn of TREE_SCHEMA)
+      if (!isCoreFunction(fn.name))
+        assert.equal(
+          functionEnabled(fn.name, normalized),
+          functionEnabled(fn.name, masks),
+          fn.name,
+        );
+  }
 });

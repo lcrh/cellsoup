@@ -14,6 +14,7 @@ const errors = [],
   checks = [];
 device.addEventListener("uncapturederror", (e) => errors.push(e.error.message));
 const base = {
+  capacityRate: 0,
   capacity: 16,
   genomeCapacity: 8,
   initial: 0,
@@ -35,7 +36,8 @@ const base = {
   solarRate: 6,
   eatCost: 0,
   attackCost: 0,
-  attackDamageCost: 0,
+  attackDamageCost: 1,
+  attackEfficiency: 1,
   shieldUpkeep: 0,
   linkCost: 0,
   jitter: 0,
@@ -156,7 +158,7 @@ try {
       attackAmountMax: 10,
     });
   near(unshielded.f[56] / 4096, 60, 2 / 4096);
-  near(shielded.f[56] / 4096, 70);
+  near(shielded.f[56] / 4096, 61);
   checks.push("maximum attack amount and shield effectiveness");
   const corpse = [
     { x: 100, y: 100, energy: 20 },

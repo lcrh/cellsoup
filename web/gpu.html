@@ -92,6 +92,7 @@
                 <option value="2">Energy</option>
                 <option value="3">Recent activity</option>
                 <option value="4">Temperature</option>
+                <option value="5">Barrier</option>
               </select></label
             ><label><input id="food" type="checkbox" checked /> Light</label
             ><label><input id="links" type="checkbox" checked /> Links</label
@@ -260,6 +261,7 @@
               <div><b id="body-motion">—</b><span>body units / sec</span></div>
               <div><b id="cell-light">—</b><span>local sunlight</span></div>
               <div><b id="cell-temperature">—</b><span>temperature</span></div>
+              <div><b id="cell-barrier">—</b><span>barrier points</span></div>
             </div>
             <p id="cell-detail"></p>
             <p id="cell-specialization" class="hint"></p>
@@ -286,7 +288,8 @@
             <span id="archive">0</span> archived lineages ·
             <span id="crossovers">0</span> crossovers ·
             <span id="kills">0</span> attack kills ·
-            <span id="eaten">0</span> energy eaten
+            <span id="eaten">0</span> energy eaten ·
+            <span id="capacity-arrivals">0</span> newcomers at capacity
           </p>
         </section>
         <details open>
@@ -348,7 +351,9 @@
             </div>
             <p class="hint">
               Random worlds vary the habitat and evolution settings. Capacity
-              and habitat size stay as selected.
+              and habitat size stay as selected. The address updates after a
+              world starts; copy it to share the same starting setup in this
+              version.
             </p>
             <div id="settings-fields"></div>
             <p class="hint">
@@ -363,7 +368,9 @@
             <p>
               <b>Energy is short-lived and local.</b> Actions and upkeep spend
               it, and it also decays. At zero the cell dies, even if it has
-              stored reserves.
+              stored reserves. A cell also dies when it reaches the configured
+              lifespan, leaving a normal edible corpse. A lifespan of 0 disables
+              death from old age.
             </p>
             <p>
               <code>(photosynthesize)</code> converts available sunlight into
@@ -381,11 +388,18 @@
               into usable energy. These conversions are explicit actions.
             </p>
             <p>
-              <code>(attack target amount)</code> costs energy and damages the
-              target's energy. It transfers nothing. A corpse contains body
-              material plus the victim's stored reserves;
-              <code>(eat)</code> eats a random corpse within reach and returns
-              the energy gained. Gold rings mark successful feeding.
+              <code>(attack target amount)</code> costs energy and strikes the
+              target. Built barriers absorb damage before its energy is reduced.
+              It transfers nothing. A corpse contains body material plus the
+              victim's stored reserves; <code>(eat)</code> eats a random corpse
+              within reach and returns the energy gained. Gold rings mark
+              successful feeding.
+            </p>
+            <p>
+              <code>(shield amount)</code> spends energy to build a persistent
+              barrier. Violet rims show remaining barrier strength. Attacks wear
+              it down; building more repairs it. Barrier capacity, toughness,
+              construction efficiency and upkeep are configurable.
             </p>
             <p>
               <code>(energy)</code> and <code>(storage)</code> read your own

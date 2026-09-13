@@ -19,7 +19,13 @@ export const GPU_OPS = [
               "v v",
               "Give a fraction (0–1) of current energy to a living target within 18 units, or through a reciprocal link up to its 65-unit breaking distance. Limited by receiver capacity and a tiny donor reserve.",
             ]
-          : op,
+          : op[0] === "shield"
+            ? [
+                "shield",
+                "v",
+                "Spend up to this much local energy to build persistent barrier health, limited by capacity and a tiny energy reserve. Zero/negative does nothing; upkeep maintains the barrier and attacks wear it down.",
+              ]
+            : op,
   ),
   [
     "photosynthesize",

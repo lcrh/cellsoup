@@ -166,12 +166,15 @@ test("development, activation, oscillation, colony and zero gates compose and se
     "(move (swish (- (storage) 2)))",
     "(turn (* 25 (sin (+ (* (time) 2) (memory m0)))))",
     "(move (cos (time)))",
+    "(seq (resist 0.8) (contract 0.3))",
     "(if (> (colony-size) 4) (split) (photosynthesize))",
     "(if (= (energy) 0) (nop) (if (< (storage) 1) (eat) (mobilize 0.2)))",
   ])
     roundTrip(parseTree(source));
   assert.equal(TREE_VM_OPS[60][0], "sin");
   assert.equal(TREE_VM_OPS[61][0], "cos");
+  assert.equal(TREE_VM_OPS[62][0], "resist");
+  assert.match(compileTree("(resist 0.8)").source, /resist r0/);
 });
 
 function visit(tree, fn) {

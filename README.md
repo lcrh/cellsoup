@@ -10,7 +10,8 @@ capacity are independent and stay fixed when you roll another world.
 
 Cells harvest sunlight, scavenge corpses, turn shared reserves into usable
 energy, attack, divide, move and connect through spring links. Clouds move slowly;
-heat and crowding create ecological costs. With specialization enabled, cells
+heat and crowding create ecological costs. An optional lifespan limits survival
+even when energy is plentiful; deaths leave edible remains. With specialization enabled, cells
 adapt to recent intake and mixing energy pathways reduces efficiency.
 
 Programs can use persistent state, temporal filters, comparisons, ReLU and
@@ -29,7 +30,11 @@ is required to start a world.
 The [function reference](docs/functions.md), also available in the application,
 explains primitives, types and examples.
 Its toggles control what can appear in randomly generated programs and mutations.
-World setup files preserve settings and the chosen palette. Settings take effect
+The basic language, memory, movement and survival/reproduction toolkit stays
+enabled; optional features vary between random worlds.
+The address bar carries the current world seed and settings, so its link
+recreates the starting world. World setup files also preserve settings and the
+chosen palette. Settings take effect
 when starting a new world; a setup file is not a full simulation checkpoint.
 
 ## Run locally

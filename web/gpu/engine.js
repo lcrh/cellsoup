@@ -1,4 +1,5 @@
 import { BodyArchive } from "./body-archive.js";
+import { capacityVictims } from "./capacity-arrivals.js";
 import {
   compileTree,
   TREE_EVOLUTION_DEFAULTS,
@@ -60,6 +61,12 @@ export const defaults = {
   linkBarrierStiffness: 90,
   linkBarrierDamping: 5,
   shieldProtection: 0.9,
+  shieldCapacity: 20,
+  shieldBuildEfficiency: 1,
+  attackEfficiency: 5,
+  attackSpeedBonus: 0,
+  resistCost: 0.2,
+  resistStrength: 120,
   eatAmount: 3,
   attackAmountMax: 3,
   photoEfficiency: 1,
@@ -81,11 +88,13 @@ export const defaults = {
   budget: 24,
   floor: 2048,
   rate: 32,
+  capacityRate: 4,
   share: 0.5,
   mutation: 0.8,
   forkMutation: 0.01,
   specializationStrength: 0,
   specializationTime: 60,
+  maximumAge: 0,
   energyCapacity: 200,
   seedEnergy: 24,
   seedStorage: 24,
@@ -135,6 +144,14 @@ export async function createLifeEngine(device, options = {}) {
   for (const key of Object.keys(options))
     if (!(key in defaults)) throw Error(`Unknown setting ${key}`);
   const cfg = { ...defaults, ...options };
+  if (options.capacityRate === undefined)
+    cfg.capacityRate = Math.min(cfg.capacityRate, cfg.capacity);
+  if (
+    !Number.isInteger(cfg.capacityRate) ||
+    cfg.capacityRate < 0 ||
+    cfg.capacityRate > Math.min(cfg.capacity, 64)
+  )
+    throw Error("Invalid capacityRate");
   treeEvolutionOptions(cfg);
   if (cfg.motorImpulse < 0 || cfg.motorImpulse > 20)
     throw Error("Invalid motorImpulse");
@@ -148,6 +165,15 @@ export async function createLifeEngine(device, options = {}) {
     throw Error("Invalid linkBarrierStiffness");
   if (cfg.linkBarrierDamping < 0 || cfg.linkBarrierDamping > 20)
     throw Error("Invalid linkBarrierDamping");
+  if (cfg.attackSpeedBonus > 1) throw Error("Invalid attack speed bonus");
+  if (cfg.resistCost > 10 || cfg.resistStrength > 600)
+    throw Error("Invalid resistance settings");
+  if (
+    cfg.shieldCapacity > 200 ||
+    cfg.shieldBuildEfficiency > 20 ||
+    cfg.attackEfficiency > 20
+  )
+    throw Error("Invalid combat conversion settings");
   if (cfg.shieldProtection < 0 || cfg.shieldProtection > 1)
     throw Error("Invalid shieldProtection");
   if (cfg.eatAmount < 0.1 || cfg.eatAmount > 20)
@@ -254,6 +280,7 @@ export async function createLifeEngine(device, options = {}) {
     cfg.specializationStrength > 0.95 ||
     cfg.specializationTime < 1 ||
     cfg.specializationTime > 3600 ||
+    cfg.maximumAge > 86400 ||
     cfg.share > 1 ||
     cfg.side > 512 ||
     cfg.sources > 256
@@ -286,17 +313,20 @@ export async function createLifeEngine(device, options = {}) {
     relayOffset +
     (cfg.linkedRelay > 0 ? n * 32 : 0) +
     (cfg.treePrograms ? n * 8 : 0);
-  const scratch = storage(Math.ceil((cpuRemainderOffset + n * 4) / 16) * 16),
+  const resistanceOffset = cpuRemainderOffset + n * 4;
+  const scratch = storage(
+      Math.ceil((resistanceOffset + (cfg.treePrograms ? n * 4 : 0)) / 16) * 16,
+    ),
     genomes = storage(g * GENOME_BYTES),
     archive = storage(128 * GENOME_BYTES),
     food = storage(t * 16 + cfg.sources * 32),
     intents = storage(n * 128),
     activity = storage(n * 32);
   const uniform = device.createBuffer({
-    size: 320,
+    size: 336,
     usage: GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST,
   });
-  const settings = new ArrayBuffer(320),
+  const settings = new ArrayBuffer(336),
     u = new Uint32Array(settings),
     f = new Float32Array(settings);
   u.set([cfg.seed, cfg.budget, cfg.initial, cfg.floor]);
@@ -310,9 +340,9 @@ export async function createLifeEngine(device, options = {}) {
       cfg.upkeep,
       cfg.divisionCost,
       cfg.minimumBirthEnergy,
-      0,
+      cfg.shieldCapacity,
       cfg.exchange,
-      0,
+      cfg.shieldBuildEfficiency,
       cfg.shieldUpkeep,
       cfg.cpuCost,
       cfg.moveCost,
@@ -345,7 +375,7 @@ export async function createLifeEngine(device, options = {}) {
       cfg.storageCapacity,
       cfg.attackDamageCost,
       cfg.sunContrast,
-      0,
+      cfg.attackEfficiency,
       cfg.ambientTemperature,
       cfg.sunlightHeating,
       cfg.activityHeating,
@@ -362,7 +392,7 @@ export async function createLifeEngine(device, options = {}) {
       cfg.specializationStrength,
       Math.exp(-1 / (60 * cfg.specializationTime)),
       cfg.springRestDistance,
-      0,
+      cfg.maximumAge,
     ],
     56,
   );
@@ -391,6 +421,7 @@ export async function createLifeEngine(device, options = {}) {
     ],
     64,
   );
+  f.set([cfg.resistCost, cfg.resistStrength, cfg.attackSpeedBonus, 0], 80);
   device.queue.writeBuffer(uniform, 0, settings);
   const source = simulationShader(cfg);
   const fingerprint = [
@@ -767,7 +798,10 @@ export async function createLifeEngine(device, options = {}) {
       new Uint32Array([0, counters[26], counters[27]]),
     );
   }
-  async function admitBody({ programs, cells: seeds }) {
+  async function admitBody(
+    { programs, cells: seeds },
+    { retireSlots = [] } = {},
+  ) {
     if (!cfg.treePrograms) throw Error("Body arrivals require typed programs");
     if (
       !Array.isArray(seeds) ||
@@ -892,6 +926,53 @@ export async function createLifeEngine(device, options = {}) {
       const oldWords = new Uint32Array(stateData),
         counters = new Uint32Array(counterData),
         stats = new Uint32Array(geneData);
+      if (
+        !Array.isArray(retireSlots) ||
+        new Set(retireSlots).size !== retireSlots.length ||
+        (retireSlots.length && retireSlots.length !== seeds.length) ||
+        retireSlots.some(
+          (i) =>
+            !Number.isInteger(i) ||
+            i < 0 ||
+            i >= n ||
+            ![1, 2].includes(oldWords[i * 52 + 31]),
+        )
+      )
+        throw Error("Invalid capacity retirement plan");
+      // These are detached CPU snapshots. A failed allocation leaves all GPU
+      // buffers, population counters and source lineages untouched.
+      const retired = new Set(retireSlots),
+        changedGenes = new Set();
+      for (const slot of retireSlots) {
+        const at = slot * 52,
+          life = oldWords[at + 31];
+        if (life === 1) {
+          const gene = oldWords[at + 25];
+          if (gene >= g || !stats[gene * 4])
+            throw Error("Invalid retiring genome reference");
+          stats[gene * 4]--;
+          changedGenes.add(gene);
+          counters[1]--;
+          counters[7]++;
+        } else counters[13]--;
+        oldWords.fill(0, at, at + 52);
+      }
+      if (retired.size) {
+        for (let i = 0; i < n; i++) {
+          if (retired.has(i)) continue;
+          const at = i * 52;
+          for (let channel = 0; channel < 4; channel++) {
+            if (retired.has(oldWords[at + 32 + channel] - 1)) {
+              oldWords[at + 32 + channel] = 0;
+              oldWords[at + 44 + channel] = 0;
+            }
+            if (retired.has(oldWords[at + 40 + channel] - 1)) {
+              oldWords[at + 40 + channel] = 0;
+              oldWords[at + 20 + channel] = 0;
+            }
+          }
+        }
+      }
       const freeCells = [],
         freeGenes = [];
       for (let i = 0; i < n; i++)
@@ -975,6 +1056,16 @@ export async function createLifeEngine(device, options = {}) {
       counters[2] = freeCells.length - seeds.length;
       counters[4] = freeGenes.length - programs.length;
       // Validation and all allocation decisions precede the first mutation.
+      counters[28] += retireSlots.length;
+      if (retired.size) {
+        device.queue.writeBuffer(state[parity], 0, stateData);
+        for (const gene of changedGenes)
+          device.queue.writeBuffer(
+            scratch,
+            geneOffset + gene * 16,
+            stats.subarray(gene * 4, gene * 4 + 4),
+          );
+      }
       records.forEach(({ record, buffer }, j) => {
         treeSlots[genomeSlots[j]] = record;
         device.queue.writeBuffer(
@@ -989,6 +1080,16 @@ export async function createLifeEngine(device, options = {}) {
         );
       });
       packets.forEach((data, j) => {
+        device.queue.writeBuffer(
+          intents,
+          cellSlots[j] * 128,
+          new Uint32Array(32),
+        );
+        device.queue.writeBuffer(
+          scratch,
+          resistanceOffset + cellSlots[j] * 4,
+          new Float32Array(1),
+        );
         device.queue.writeBuffer(
           scratch,
           cpuRemainderOffset + cellSlots[j] * 4,
@@ -1046,6 +1147,59 @@ export async function createLifeEngine(device, options = {}) {
     }
   }
 
+  const capacityRandom = treeRng(cfg.seed ^ 0xd87431ab);
+  async function admitCapacityArrivals() {
+    const census = new Uint32Array(await read(scratch, counterOffset, 128));
+    if (census[1] + census[13] < n) return;
+    const [buffer, geneData] = await Promise.all([
+      read(state[parity]),
+      read(scratch, geneOffset, g * 16),
+    ]);
+    const victims = capacityVictims(
+      new Uint32Array(buffer),
+      new Uint32Array(geneData),
+      cfg.capacityRate,
+      capacityRandom,
+    );
+    if (!victims.length) return;
+    const byId = new Map(treeArchive.map((record) => [record.id, record]));
+    const origin = (id) => {
+      const record = byId.get(id);
+      if (!record) throw Error("Missing capacity arrival ancestry");
+      return {
+        serial: record.id,
+        founder: record.founder,
+        depth: record.depth,
+        tree: record.tree,
+      };
+    };
+    const programs = victims.map(() => {
+      const sample = sampleTreeArrival(treeArchive, {
+        rng: capacityRandom,
+        archiveShare: cfg.share,
+        crossoverRate: cfg.crossover,
+        mutationRate: cfg.mutation,
+        evolution: cfg,
+      });
+      return {
+        tree: sample.tree,
+        mutated: sample.mutated,
+        ...(sample.parents.length ? { origin: origin(sample.parents[0]) } : {}),
+        ...(sample.parents.length > 1
+          ? { secondOrigin: origin(sample.parents[1]) }
+          : {}),
+      };
+    });
+    const cells = victims.map((slot, genome) => ({
+      genome,
+      x: capacityRandom() * cfg.side * 32,
+      y: capacityRandom() * cfg.side * 32,
+      heading: capacityRandom(),
+      energy: cfg.seedEnergy,
+      storage: cfg.seedStorage,
+    }));
+    await admitBody({ programs, cells }, { retireSlots: victims });
+  }
   const bodySampler =
     cfg.treePrograms && cfg.bodyShare > 0 && !cfg.manualArrivals
       ? new BodyArchive({
@@ -1108,6 +1262,14 @@ export async function createLifeEngine(device, options = {}) {
     },
     get currentState() {
       return state[parity];
+    },
+    async cellResistance(slot) {
+      if (!Number.isInteger(slot) || slot < 0 || slot >= n)
+        throw Error("Invalid cell slot");
+      if (!cfg.treePrograms) return 0;
+      return new Float32Array(
+        await read(scratch, resistanceOffset + slot * 4, 4),
+      )[0];
     },
     async cellSpecialization(slot) {
       if (!Number.isInteger(slot) || slot < 0 || slot >= n)
@@ -1173,10 +1335,18 @@ export async function createLifeEngine(device, options = {}) {
             encoder = device.createCommandEncoder();
           }
           parity = 1 - parity;
-          if (bodySampler && tick % 60 === 0) {
+          if (
+            (bodySampler ||
+              (cfg.treePrograms &&
+                cfg.capacityRate > 0 &&
+                !cfg.manualArrivals)) &&
+            tick % 60 === 0
+          ) {
             device.queue.submit([encoder.finish()]);
             await device.queue.onSubmittedWorkDone();
-            await admitAutomaticBodies();
+            if (bodySampler) await admitAutomaticBodies();
+            if (cfg.treePrograms && cfg.capacityRate > 0 && !cfg.manualArrivals)
+              await admitCapacityArrivals();
             encoder = device.createCommandEncoder();
           }
         }
@@ -1267,6 +1437,7 @@ export async function createLifeEngine(device, options = {}) {
         mutations: c[10],
         crossovers: c[24],
         divisionMutations: c[26],
+        capacityArrivals: c[28],
         skippedDivisionMutations: c[27],
         raw: [...c],
       };

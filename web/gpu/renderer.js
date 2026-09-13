@@ -7,7 +7,7 @@ struct Cell {
 }
 struct Activity {marks:vec4u,impact:vec4f}
 struct Intent {req:vec4f,aim:vec4u,msg:vec4f,dest:vec4u,base:vec4u,uptake:vec4f,newLinks:vec4u,misc:vec4u}
-struct View { camera:vec4f, world:vec4f, flags:vec4u, selection:vec4u }
+struct View { camera:vec4f, world:vec4f, flags:vec4u, selection:vec4u, capacities:vec4f }
 @group(0) @binding(0) var<storage,read> cells:array<Cell>;
 @group(0) @binding(1) var<storage,read> food:array<vec2f>;
 @group(0) @binding(2) var<uniform> view:View;
@@ -21,9 +21,10 @@ fn hue(h:f32)->vec3f {
  let rgb=clamp(abs(fract(h+vec3f(0,2.0/3.0,1.0/3.0))*6-3)-1,vec3f(0),vec3f(1));
  return mix(vec3f(0.24),vec3f(0.96),rgb);
 }
-struct Vertex { @builtin(position) pos:vec4f, @location(0) uv:vec2f, @location(1) color:vec4f, @location(2) facing:vec2f, @location(3) @interpolate(flat) picked:u32, @location(4) feeding:f32 }
+struct Vertex { @builtin(position) pos:vec4f, @location(0) uv:vec2f, @location(1) color:vec4f, @location(2) facing:vec2f, @location(3) @interpolate(flat) picked:u32, @location(4) feeding:f32, @location(5) barrier:f32 }
 @vertex fn cellVertex(@builtin(vertex_index) v:u32,@builtin(instance_index) i:u32)->Vertex {
  let c=cells[i]; var o:Vertex;
+ o.barrier=select(0.0,clamp(c.b.w/max(view.capacities.z,0.001),0,1),c.life.w==1u);
  o.uv=CORNERS[v]; o.facing=vec2f(cos(c.b.y*6.2831853),sin(c.b.y*6.2831853));
  o.picked=select(0u,1u,i==view.selection.x && c.machine.x==view.selection.y);
  let activityState=activity[i];
@@ -32,10 +33,11 @@ struct Vertex { @builtin(position) pos:vec4f, @location(0) uv:vec2f, @location(1
  o.pos=clip(delta(c.p.xy-view.camera.xy)+o.uv*radius);
  if(c.life.w==0u){o.pos=vec4f(3,3,0,1);}
  var color=hue(c.phen.x/360);
- if(view.flags.z==1u){color=mix(vec3f(.15,.28,.35),vec3f(.76,.94,.45),clamp(c.res.z/(200*4096),0,1));}
- if(view.flags.z==2u){color=mix(vec3f(0.4,0.18,0.24),vec3f(0.85,0.98,0.53),clamp(c.b.x/(4096*100),0,1));}
+ if(view.flags.z==1u){color=mix(vec3f(.15,.28,.35),vec3f(.76,.94,.45),clamp(c.res.z/(max(view.capacities.y,0.001)*4096),0,1));}
+ if(view.flags.z==2u){color=mix(vec3f(0.4,0.18,0.24),vec3f(0.85,0.98,0.53),clamp(c.b.x/(4096*max(view.capacities.x,0.001)),0,1));}
  if(view.flags.z==3u){let a=activity[i];color=vec3f(.30,.39,.39);if(a.marks.z==c.machine.x){if(a.marks.x>0u&&view.selection.z-a.marks.x<120u){color=vec3f(.35,.9,.88);}if(a.marks.w>0u&&view.selection.z-a.marks.w<120u){color=vec3f(1,.72,.18);}if(a.marks.y>0u&&view.selection.z-a.marks.y<120u){color=vec3f(1,.25,.18);}}}
  if(view.flags.z==4u){let warmth=clamp((c.res.w-view.world.w+8)/8,0,1);color=mix(vec3f(.22,.55,.9),vec3f(.98,.76,.25),warmth);if(c.res.w>view.world.w){color=mix(color,vec3f(1,.12,.10),clamp((c.res.w-view.world.w)/8,.1,1));}}
+ if(view.flags.z==5u){color=mix(vec3f(.18,.20,.28),vec3f(.72,.57,1),o.barrier);}
  if(c.life.w==2u){color=mix(vec3f(.25,.18,.12),vec3f(.72,.49,.25),clamp(c.b.x/(64*4096),0,1));o.picked=2u;}
  o.color=vec4f(color,1); return o;
 }
@@ -46,6 +48,7 @@ struct Vertex { @builtin(position) pos:vec4f, @location(0) uv:vec2f, @location(1
  var color=i.color.rgb*(0.72+0.28*(1-d));
  let nose=dot(i.uv,i.facing);
  if(i.picked!=2u && nose>0.45 && abs(dot(i.uv,vec2f(-i.facing.y,i.facing.x)))<0.14){color=vec3f(1);}
+ if(i.barrier>0.0 && d>0.82){color=mix(color,vec3f(.72,.57,1),0.35+0.65*i.barrier);}
  if(i.feeding>0.5 && d>0.58){color=vec3f(1,.72,.18);}
  if(i.picked==1u && d>0.68){color=vec3f(1);}
  return vec4f(color,alpha);
@@ -128,7 +131,7 @@ export async function createRenderer(device, canvas, engine, format) {
   if (info.messages.some((m) => m.type === "error"))
     throw Error(info.messages.map((m) => m.message).join("\n"));
   const uniform = device.createBuffer({
-    size: 64,
+    size: 80,
     usage: GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST,
   });
   const layout = device.createBindGroupLayout({
@@ -228,7 +231,7 @@ export async function createRenderer(device, canvas, engine, format) {
       if (camera.overview)
         camera.width = engine.cfg.side * 32 * Math.max(1, width / height);
       camera.height = (camera.width * height) / width;
-      const data = new ArrayBuffer(64),
+      const data = new ArrayBuffer(80),
         f = new Float32Array(data),
         u = new Uint32Array(data);
       f.set([
@@ -253,6 +256,15 @@ export async function createRenderer(device, canvas, engine, format) {
           options.activity ? 1 : 0,
         ],
         8,
+      );
+      f.set(
+        [
+          engine.cfg.energyCapacity,
+          engine.cfg.storageCapacity,
+          engine.cfg.shieldCapacity,
+          0,
+        ],
+        16,
       );
       device.queue.writeBuffer(uniform, 0, data);
       const encoder = device.createCommandEncoder();
