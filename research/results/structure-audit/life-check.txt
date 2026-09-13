@@ -1,0 +1,53 @@
+PASS fractional gifts conserve energy and retain a reserve
+PASS gifts use reciprocal links while attacks retain their contact range
+PASS oversubscribed gifts respect recipient capacity exactly
+PASS a full gift cannot directly kill its donor
+PASS fractional target IDs are rejected, not converted into nearest-neighbor attack
+PASS competing attackers cannot overdraw a victim
+PASS a single predator can kill, and deaths update genome and population counts
+PASS division allocates one child and conserves energy after its cost
+PASS simultaneous divisions respect capacity without charging failed births
+PASS links are reciprocal under contention and unlink removes both ends
+PASS linked zero-valued messages arrive next tick with sender identity
+PASS unaffordable movement noops and shield construction retains a reserve
+PASS photosynthesis is explicit, light-limited and bounded per tick
+PASS storage conversion conserves energy and requires explicit mobilization
+PASS linked storage diffuses conservatively while usable energy remains local
+PASS zero energy kills despite stored reserves and a queued mobilize instruction
+PASS paid attacks leave storage-rich corpses, with eating as a separate action
+PASS eaters cannot duplicate a contested corpse's nutrients
+PASS corpse sensing distinguishes status and storage-gradient direction
+PASS uneaten corpses decay and eventually release their slots
+PASS small corpses retain fractional decay over the configured lifetime
+PASS untargeted eating samples corpses around the cell without slot or heading preference
+PASS eating ignores living cells and distant remains, respects costs and wraps at edges
+PASS linked heat exchange conserves temperature sum and exposes local and neighbor readings
+PASS sunlight heats idle cells and energy expenditure generates heat
+PASS crowds reduce cooling without a direct crowding energy penalty
+PASS overheating can kill despite stored reserves and division inherits temperature
+PASS configurable daughter energy gates division and conserves the remainder
+PASS closing immigration disables both the steady rate and low-population replenishment
+PASS newcomers retain free slots when divisions compete near capacity
+PASS cloud shadows change smoothly and light stays bounded
+PASS a motor cell pulls its linked body through springs
+PASS link interiors repel cells and distribute equal opposite reactions
+PASS link barriers cover periodic seams and stretched link midpoints
+PASS a moving cell is resisted by a link without wedging its endpoints
+PASS exact link overlap has a finite balanced separation force
+PASS typed trees execute ReLU with memory independent of temporary registers
+PASS typed division copies genome and memory and returns distinct birth results
+PASS typed lazy branches do not execute effects from the untaken branch
+PASS a crossed typed genome executes its donor expression on the GPU
+PASS named state accumulates across ticks while let refreshes each evaluation
+PASS let evaluates once and expression effects preserve outer temporaries
+PASS a state initializer does not consume later linked messages
+PASS division inherits initialized named state without running its initializer again
+PASS archived arrivals initialize their own state instead of copying a parent's accumulator
+PASS tree worlds create random founders and constant-rate random arrivals
+PASS tree replenishment runs below the floor with the constant rate disabled
+PASS successful trees reenter through actual two-parent crossover without forced mutation
+PASS tree archive mutation is independent of crossover and survives slot recycling
+PASS successful archive resampling creates a mutated genome, not division mutations
+PASS three linked cells execute a weighted ReLU relay
+PASS gift demand safely exceeds 32-bit capacity under massive contention
+52 GPU lifecycle checks passed

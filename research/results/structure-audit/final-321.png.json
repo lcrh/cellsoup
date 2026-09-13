@@ -1,0 +1,46 @@
+{
+  "title": "Selected colony snapshots",
+  "span": 240,
+  "cellRadius": 4,
+  "sources": [
+    {
+      "label": "Baseline 321 at 20 minutes",
+      "path": "/private/tmp/cellsoup-structure-baseline/321-colonies-1200.json",
+      "sha256": "30172934050b306c991731becb648bed98da5e04de069eff76bd4a449ffe0e9f",
+      "world": 4096,
+      "bodies": [
+        {
+          "selection": "largest",
+          "size": 63,
+          "speed": 10.818920099327633,
+          "extent": 181.001220703125,
+          "branches": 18,
+          "leaves": 29,
+          "edges": 62,
+          "velocityCoherence": 0.7402372803742931,
+          "genomeSlots": 3
+        }
+      ]
+    },
+    {
+      "label": "Release 321 at 20 minutes",
+      "path": "/private/tmp/cellsoup-structure-production/321-colonies-1200.json",
+      "sha256": "8de6e87aa79ac8db7d6a85490015bbca030d878a4c8e663e67bc5937aec4d650",
+      "world": 4096,
+      "bodies": [
+        {
+          "selection": "largest",
+          "size": 43,
+          "speed": 24.612405045499525,
+          "extent": 209.0842742919922,
+          "branches": 29,
+          "leaves": 10,
+          "edges": 67,
+          "velocityCoherence": 0.8533424516275943,
+          "genomeSlots": 7
+        }
+      ]
+    }
+  ],
+  "scope": "Selected saved colonies; not whole-world coverage. Shared scale; no image-specific zoom or synthesized cells."
+}

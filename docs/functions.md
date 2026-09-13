@@ -792,7 +792,7 @@ undefined
 
 No inputs → Action. Core toolkit; always enabled.
 
-Divide, staying linked. Requires energy and a free link slot. Returns through birth-result.
+Divide, staying linked. Requires energy and a free link slot. Returns through birth-result. An unaffordable attempt, a full set of links, or no available birth slots returns failure immediately and continues execution; a feasible attempt pauses for synchronized division.
 
 ```lisp
 (bud)
@@ -802,7 +802,7 @@ Divide, staying linked. Requires energy and a free link slot. Returns through bi
 
 No inputs → Action. Core toolkit; always enabled.
 
-Divide and disconnect the daughter. Requires sufficient energy. Returns through birth-result.
+Divide and disconnect the daughter. Requires sufficient energy. Returns through birth-result. An unaffordable attempt or no available birth slots returns failure immediately and continues execution; a feasible attempt pauses for synchronized division.
 
 ```lisp
 (split)

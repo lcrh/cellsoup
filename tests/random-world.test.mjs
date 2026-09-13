@@ -1,7 +1,13 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { randomWorldSettings } from "../web/gpu/random-world.js";
+import { createHash } from "node:crypto";
+import {
+  randomWorldSettings,
+  worldSettingsForSeed,
+} from "../web/gpu/random-world.js";
 import { defaults } from "../web/gpu/engine.js";
+import { CORE_FUNCTIONS } from "../web/gpu/core-language.js";
+import { functionEnabled } from "../web/gpu/trees.js";
 const random = (seed) => () =>
   (seed = (Math.imul(seed, 1664525) + 1013904223) >>> 0) / 4294967296;
 test("random habitats stay bounded, retain thermal headroom and sustain immigration at every supported capacity", () => {
@@ -24,7 +30,7 @@ test("random habitats stay bounded, retain thermal headroom and sustain immigrat
       assert.ok(
         s.upkeep > 0 && s.energyDecay > 0 && s.cpuCost > 0 && s.heatDamage > 0,
       );
-      assert.ok(s.solarRate >= 3 && s.solarRate <= 6);
+      assert.ok(s.solarRate >= 3 && s.solarRate <= 20);
       assert.ok(s.corpseLifetime >= 600 && s.corpseLifetime <= 1800);
       for (const k of ["share", "mutation", "crossover"])
         assert.ok(s[k] > 0 && s[k] < 1);
@@ -39,6 +45,79 @@ test("random habitats stay bounded, retain thermal headroom and sustain immigrat
         assert.equal(s[k], undefined);
     }
   assert.equal(seen.size, 4000);
+});
+
+test("10,000 seeded worlds retain their palette and non-target settings while allowing photosynthesis headroom", () => {
+  const preserved = createHash("sha256");
+  let sunny = 0,
+    sunless = 0,
+    increasedKnee = 0;
+  for (let seed = 0; seed < 10000; seed++) {
+    const s = worldSettingsForSeed(seed);
+    assert.deepEqual(s, worldSettingsForSeed(seed));
+    assert.equal(s.generationDepth, 6);
+    assert.equal(s.founderActions, 6);
+    for (const op of CORE_FUNCTIONS) assert.ok(functionEnabled(op, s), op);
+    assert.ok(s.solarRate >= 3 && s.solarRate <= 20);
+    assert.equal(s.solarRate * 2, Math.round(s.solarRate * 2));
+    assert.ok(s.energyFillScale >= 40 && s.energyFillScale <= 256);
+    if (s.solarEnabled) {
+      sunny++;
+      const threshold = s.divisionCost + 2 * s.minimumBirthEnergy;
+      const required = s.upkeep + s.energyDecay * threshold + 0.5;
+      const input =
+        0.7 * s.photoEfficiency * Math.exp(-threshold / s.energyFillScale);
+      assert.ok(s.solarRate * input >= required - 1e-12, `seed ${seed}`);
+      // Rates above the old ceiling must be the smallest sufficient half-step.
+      if (s.solarRate > 6) assert.ok((s.solarRate - 0.5) * input < required);
+      if (s.energyFillScale > 140) {
+        increasedKnee++;
+        assert.ok(
+          20 *
+            0.7 *
+            s.photoEfficiency *
+            Math.exp(-threshold / (s.energyFillScale - 20)) <
+            required,
+        );
+      }
+    } else {
+      sunless++;
+      assert.ok(s.solarRate <= 6);
+      assert.ok([40, 60, 80, 100, 140].includes(s.energyFillScale));
+    }
+    const unchanged = { ...s };
+    delete unchanged.generationDepth;
+    delete unchanged.founderActions;
+    // In sunless worlds even the old solar rate and fill knee must be exact.
+    if (s.solarEnabled) {
+      delete unchanged.solarRate;
+      delete unchanged.energyFillScale;
+    }
+    preserved.update(JSON.stringify(unchanged) + "\n");
+  }
+  assert.equal(sunny, 8755);
+  assert.equal(sunless, 1245);
+  assert.ok(increasedKnee > 0);
+  // Captured from d54ae2d before tuning; protects RNG draw order and every
+  // non-target setting across the entire sample, including optional masks.
+  assert.equal(
+    preserved.digest("hex"),
+    "483b0419d0f102406eb2942c9fd0c7a58670f004ed3b762caf34b077a45fb485",
+  );
+});
+
+test("candidate settings match the three balanced GPU trial fixtures", () => {
+  for (const [seed, solarRate, energyFillScale] of [
+    [42, 5.5, 140],
+    [97, 11.5, 100],
+    [321, 8, 100],
+  ]) {
+    const s = worldSettingsForSeed(seed);
+    assert.equal(s.generationDepth, 6);
+    assert.equal(s.founderActions, 6);
+    assert.equal(s.solarRate, solarRate);
+    assert.equal(s.energyFillScale, energyFillScale);
+  }
 });
 test("random world settings are reproducible and always change the previous seed", () => {
   assert.deepEqual(

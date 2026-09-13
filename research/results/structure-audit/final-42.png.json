@@ -1,0 +1,57 @@
+{
+  "title": "Selected colony snapshots",
+  "span": 400,
+  "cellRadius": 4,
+  "sources": [
+    {
+      "label": "Baseline 42 at 20 minutes",
+      "path": "/private/tmp/cellsoup-structure-baseline/42-colonies-1200.json",
+      "sha256": "803a4ac15309ae461a7d291ffcfe70667a08bcc1752480bbb5fb86f3151d3f21",
+      "world": 4096,
+      "bodies": [
+        {
+          "selection": "largest",
+          "size": 543,
+          "speed": 0.16304786986508826,
+          "extent": 356.704833984375,
+          "branches": 165,
+          "leaves": 251,
+          "edges": 542,
+          "velocityCoherence": 0.41485180436817076,
+          "genomeSlots": 3
+        },
+        {
+          "selection": "largest-moving",
+          "size": 47,
+          "speed": 3.843999328241951,
+          "extent": 112.343994140625,
+          "branches": 14,
+          "leaves": 23,
+          "edges": 46,
+          "velocityCoherence": 0.9335497400965598,
+          "genomeSlots": 1
+        }
+      ]
+    },
+    {
+      "label": "Release 42 at 20 minutes",
+      "path": "/private/tmp/cellsoup-structure-production/42-colonies-1200.json",
+      "sha256": "510c8b375a0609b8e3654bfc91799cb25e69fb7910b60b65b3a4e413c2c1a77a",
+      "world": 4096,
+      "bodies": [
+        {
+          "selection": "largest",
+          "size": 61,
+          "speed": 6.100390064980849,
+          "extent": 152.311279296875,
+          "branches": 18,
+          "leaves": 27,
+          "edges": 60,
+          "velocityCoherence": 0.3308756208687674,
+          "genomeSlots": 1
+        }
+      ]
+    }
+  ],
+  "scope": "Selected saved colonies; not whole-world coverage. Shared scale; no image-specific zoom or synthesized cells."
+}

@@ -1080,10 +1080,18 @@ ${executionTrace ? `        if(traceRow!=0xffffffffu){let n=s.traceCounts[traceR
           }
         }
         case 18u,19u: {
-          action.req.z=f32(op-17u);
-          action.req.w=f32(d);
           c.r[d]=-1.0;
-          yielding=true;
+          // Match the later life-stage energy/topology gate. An impossible
+          // division is a true no-op, allowing the program to gather energy
+          // or act again this tick. Feasible attempts still yield until the
+          // synchronized allocator resolves contention and competing damage.
+          // prepare has finalized free slots and immigration reservations;
+          // known-zero capacity cannot admit a birth in this tick.
+          if(birthCapacity()>0u&&c.b.x>=f32(quantum(cfg.energy.z)+2u*quantum(cfg.energy.w))&&(op==18u||any(c.link==vec4u(0)))){
+            action.req.z=f32(op-17u);
+            action.req.w=f32(d);
+            yielding=true;
+          }
         }
         case 20u: {
           let amount=clamp(a,-360.0,360.0);

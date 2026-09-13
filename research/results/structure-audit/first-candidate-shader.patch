@@ -1,0 +1,22 @@
+--- a/web/gpu/shader.js
++++ b/web/gpu/shader.js
+@@ -1080,10 +1080,16 @@
+           }
+         }
+         case 18u,19u: {
+-          action.req.z=f32(op-17u);
+-          action.req.w=f32(d);
+           c.r[d]=-1.0;
+-          yielding=true;
++          // Match the later life-stage energy/topology gate. An impossible
++          // division is a true no-op, allowing the program to gather energy
++          // or act again this tick. Feasible attempts still yield until the
++          // synchronized allocator resolves capacity and competing damage.
++          if(c.b.x>=f32(quantum(cfg.energy.z)+2u*quantum(cfg.energy.w))&&(op==18u||any(c.link==vec4u(0)))){
++            action.req.z=f32(op-17u);
++            action.req.w=f32(d);
++            yielding=true;
++          }
+         }
+         case 20u: {
+           let amount=clamp(a,-360.0,360.0);

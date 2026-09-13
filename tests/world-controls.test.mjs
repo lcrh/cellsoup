@@ -76,6 +76,10 @@ test("random worlds cover every model slider within its control bounds and maint
         1,
         "Numerical upper limits stay generous across random worlds",
       );
+    } else if (id === "founderActions" || id === "generationDepth") {
+      // Keep the full founder grammar available; each genome still samples
+      // its own action count and tree rather than guaranteeing any behavior.
+      assert.deepEqual([...values], [6]);
     } else assert.ok(values.size > 1, id + " never varies");
   }
 });

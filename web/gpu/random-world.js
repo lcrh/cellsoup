@@ -1,6 +1,32 @@
-import { MAX_ENERGY_CAPACITY, MAX_STORAGE_CAPACITY } from "./energy-fill.js";
+import {
+  MAX_ENERGY_CAPACITY,
+  MAX_STORAGE_CAPACITY,
+  MAX_FILL_SCALE,
+} from "./energy-fill.js";
 import { isCoreFunction } from "./core-language.js";
 import { TREE_SCHEMA, treeRng } from "./trees.js";
+
+// Leave room for a photosynthesizing cell to reach division energy. The chosen
+// 0.7 sunlight and 0.5 surplus are tuning assumptions, not viability guarantees.
+function photosynthesisHeadroom(settings) {
+  if (!settings.solarEnabled) return settings;
+  const threshold = settings.divisionCost + 2 * settings.minimumBirthEnergy;
+  const requiredRate = () =>
+    (settings.upkeep + settings.energyDecay * threshold + 0.5) /
+    (0.7 *
+      settings.photoEfficiency *
+      Math.exp(-threshold / settings.energyFillScale));
+  while (requiredRate() > 20 && settings.energyFillScale < MAX_FILL_SCALE)
+    settings.energyFillScale = Math.min(
+      MAX_FILL_SCALE,
+      settings.energyFillScale + 20,
+    );
+  settings.solarRate = Math.min(
+    20,
+    Math.ceil(Math.max(settings.solarRate, requiredRate()) * 2) / 2,
+  );
+  return settings;
+}
 // Explore around the working ecology defaults, not the full (often lethal)
 // ranges of the manual controls. Capacity and habitat size stay user-chosen.
 export function randomWorldSettings({
@@ -39,7 +65,7 @@ export function worldSettingsForSeed(seed, { capacity = 32768 } = {}) {
     if (!isCoreFunction(fn.name) && rng() < 0.18)
       masks[Math.floor(id / 32)] =
         (masks[Math.floor(id / 32)] & ~(1 << (id % 32))) >>> 0;
-  return {
+  return photosynthesisHeadroom({
     seed,
     functionMask0: masks[0],
     functionMask1: masks[1],
@@ -56,8 +82,10 @@ export function worldSettingsForSeed(seed, { capacity = 32768 } = {}) {
     archiveAge: pick([30, 60, 90, 120]),
     archiveHarvest: pick([40, 80, 120, 180, 240]),
     archiveOffspring: pick([2, 4, 8, 12]),
-    generationDepth: pick([3, 4, 5, 6, 7]),
-    founderActions: pick([2, 3, 4, 5, 6]),
+    // Preserve both RNG draws and the rest of each seed's existing settings.
+    // Founders still contain 1–6 random actions with no guaranteed primitive.
+    generationDepth: pick([6, 6, 6, 6, 6]),
+    founderActions: pick([6, 6, 6, 6, 6]),
     literalScale: pick([0.25, 0.5, 1, 2]),
     numericMutationScale: pick([0.5, 1, 1.5]),
     mutationOrdinary: pick([0.25, 0.5, 1]),
@@ -157,7 +185,7 @@ export function worldSettingsForSeed(seed, { capacity = 32768 } = {}) {
     shieldUpkeep: range(0.36, 1.08, 0.01),
     sendCost: range(0.01, 0.03, 0.01),
     emitCost: range(0.01, 0.03, 0.01),
-  };
+  });
 }
 
 export function describeWorld(s) {
