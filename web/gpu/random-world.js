@@ -1,5 +1,6 @@
+import { TREE_SCHEMA } from "./trees.js";
 // Explore around the working ecology defaults, not the full (often lethal)
-// ranges of the manual controls. Capacity and genome language stay user-chosen.
+// ranges of the manual controls. Capacity and habitat size stay user-chosen.
 export function randomWorldSettings({
   capacity = 32768,
   previousSeed,
@@ -19,8 +20,91 @@ export function randomWorldSettings({
   if (seed === previousSeed) seed = (seed + 1) >>> 0;
   const ambientTemperature = range(12, 28);
   const scale = Math.max(1, capacity / 32768);
+  const masks = [0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff];
+  const solarEnabled = pick([0, 1, 1, 1, 1, 1, 1, 1]);
+  const protectedNames = new Set([
+    "number",
+    "bool",
+    "slot",
+    "channel",
+    "nop",
+    "seq",
+  ]);
+  for (const [id, fn] of TREE_SCHEMA.entries())
+    if (!protectedNames.has(fn.name) && rng() < 0.18)
+      masks[Math.floor(id / 32)] =
+        (masks[Math.floor(id / 32)] & ~(1 << (id % 32))) >>> 0;
+  const enabled = (name) => {
+    const id = TREE_SCHEMA.findIndex((fn) => fn.name === name);
+    return (masks[Math.floor(id / 32)] >>> (id % 32)) & 1;
+  };
+  const enable = (name) => {
+    const id = TREE_SCHEMA.findIndex((fn) => fn.name === name);
+    masks[Math.floor(id / 32)] =
+      (masks[Math.floor(id / 32)] | (1 << (id % 32))) >>> 0;
+  };
+  // Preserve an available energy pathway and a way to reproduce while allowing
+  // ecological roles such as immobile, nonphotosynthetic or detached-only life.
+  if (!enabled("eat") && !(solarEnabled && enabled("photosynthesize")))
+    enable(solarEnabled ? pick(["eat", "photosynthesize"]) : "eat");
+  if (!enabled("bud") && !enabled("split")) enable(pick(["bud", "split"]));
   return {
     seed,
+    functionMask0: masks[0],
+    functionMask1: masks[1],
+    functionMask2: masks[2],
+    functionMask3: masks[3],
+    initial: Math.floor(capacity * pick([1 / 32, 1 / 16, 1 / 8, 1 / 4])),
+    archiveEnabled: pick([0, 1, 1, 1, 1, 1]),
+    solarEnabled,
+    energyCapacity: pick([100, 150, 200, 300, 400]),
+    storageCapacity: pick([100, 200, 400, 600]),
+    archiveAge: pick([30, 60, 90, 120]),
+    archiveHarvest: pick([40, 80, 120, 180, 240]),
+    archiveOffspring: pick([2, 4, 8, 12]),
+    generationDepth: pick([3, 4, 5, 6, 7]),
+    founderActions: pick([2, 3, 4, 5, 6]),
+    literalScale: pick([0.25, 0.5, 1, 2]),
+    numericMutationScale: pick([0.5, 1, 1.5]),
+    mutationOrdinary: pick([0.25, 0.5, 1]),
+    motorImpulse: pick([3, 5, 7, 9]),
+    dragRetention: pick([0.88, 0.92, 0.94, 0.96, 0.98]),
+    springStiffness: pick([12, 18, 24, 36, 48]),
+    springRestDistance: pick([14, 18, 22, 26]),
+    collisionStiffness: pick([30, 45, 55, 75]),
+    collisionDistance: pick([8, 10, 12]),
+    linkBarrierStiffness: pick([45, 60, 90, 120]),
+    linkBarrierDamping: pick([2, 4, 5, 8]),
+    linkBarrierWidth: pick([3, 4, 6, 8]),
+    interactionRadius: pick([12, 18, 24]),
+    linkRange: pick([18, 24, 30]),
+    photoEfficiency: pick([0.5, 0.7, 0.85, 1]),
+    scavengeEfficiency: pick([0.5, 0.7, 0.85, 1]),
+    mobilizeEfficiency: pick([0.5, 0.7, 0.85, 1]),
+    eatAmount: pick([1, 2, 3, 5]),
+    attackAmountMax: pick([1, 2, 3, 5]),
+    shieldProtection: pick([0.5, 0.7, 0.9, 1]),
+    mutationLocal: pick([0, 0.2, 0.5, 1]),
+    mutationPoint: pick([0, 0.25, 0.5, 1]),
+    mutationGuard: pick([0, 0.1, 0.5, 1]),
+    mutationInsertion: pick([0, 0.25, 0.5, 1]),
+    memoryBias: range(0, 1, 0.25),
+    temporalWeight: pick([0, 0.25, 0.5, 1]),
+    communicationWeight: pick([0.25, 0.5, 1]),
+    activationWeight: pick([0.25, 0.5, 1]),
+    neighborhoodWeight: pick([0.1, 0.25, 0.5, 1]),
+    developmentWeight: pick([0, 0.1, 0.25, 0.5]),
+    queryRadius: pick([48, 60, 80, 96]),
+    queryBudget: pick([16, 32, 48]),
+    loopYield: pick([0, 1, 1]),
+    bodyShare: pick([0, 0.1, 0.25, 0.5]),
+    bodyPreserveLinks: pick([0.5, 0.8, 1]),
+    bodyMaxCells: pick([4, 8, 16]),
+    bodyCaptureSeconds: pick([5, 10, 15]),
+    linkedRelay: pick([0, 0, 0.25, 0.5, 0.75]),
+    signalRetention: pick([0.9, 0.97, 0.99, 0.995]),
+    specializationStrength: pick([0, 0.15, 0.3, 0.5, 0.65]),
+    specializationTime: pick([15, 30, 60, 120]),
     rate: Math.min(capacity, Math.round(pick([4, 8, 12, 16]) * scale)),
     floor: Math.min(
       Math.floor(capacity / 16),
@@ -68,4 +152,29 @@ export function randomWorldSettings({
     sendCost: range(0.01, 0.03, 0.01),
     emitCost: range(0.01, 0.03, 0.01),
   };
+}
+
+export function describeWorld(s) {
+  const features = [];
+  features.push(
+    s.solarEnabled === 0
+      ? "sunless scavenger world"
+      : s.cloudCover > 0.55
+        ? "cloudy skies"
+        : s.sunContrast > 2.5
+          ? "rare bright patches"
+          : "broad sunlight",
+  );
+  if (s.specializationStrength > 0)
+    features.push(
+      `${Math.round(s.specializationStrength * 100)}% specialization pressure`,
+    );
+  if (s.bodyShare > 0) features.push("body resampling");
+  if (s.linkedRelay > 0) features.push("relayed broadcasts");
+  if (s.temporalWeight > 0) features.push("memory filters");
+  if (s.loopYield === 0) features.push("continuous computation");
+  const enabled = TREE_SCHEMA.filter(
+    (_, id) => (s["functionMask" + Math.floor(id / 32)] >>> (id % 32)) & 1,
+  ).length;
+  return `World ${s.seed.toLocaleString()} · ${features.join(" · ")} · ${enabled} primitives`;
 }

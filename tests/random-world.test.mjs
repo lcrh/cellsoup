@@ -6,7 +6,7 @@ const random = (seed) => () =>
   (seed = (Math.imul(seed, 1664525) + 1013904223) >>> 0) / 4294967296;
 test("random habitats stay bounded, retain thermal headroom and sustain immigration at every supported capacity", () => {
   const seen = new Set();
-  for (const capacity of [32768, 131072, 262144])
+  for (const capacity of [32768, 65536, 131072, 262144])
     for (let seed = 0; seed < 1000; seed++) {
       const s = randomWorldSettings({ capacity, rng: random(seed) });
       seen.add(JSON.stringify(s));
@@ -33,12 +33,12 @@ test("random habitats stay bounded, retain thermal headroom and sustain immigrat
         "capacity",
         "genomeCapacity",
         "treePrograms",
-        "initial",
+        "side",
         "divisionMutation",
       ])
         assert.equal(s[k], undefined);
     }
-  assert.equal(seen.size, 3000);
+  assert.equal(seen.size, 4000);
 });
 test("random world settings are reproducible and always change the previous seed", () => {
   assert.deepEqual(

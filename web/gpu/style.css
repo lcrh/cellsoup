@@ -54,10 +54,6 @@ header {
   margin-left: 8px;
   color: #a9c6b6;
 }
-.classic {
-  margin-left: auto;
-  font-size: 12px;
-}
 main {
   display: grid;
   grid-template-columns: minmax(0, 1fr) 350px;
@@ -532,9 +528,6 @@ footer {
   .edition {
     font-size: 10px;
   }
-  .classic {
-    font-size: 10px;
-  }
   main {
     display: block;
   }
@@ -777,4 +770,130 @@ dialog textarea {
   .behavior-values {
     grid-template-columns: 1fr;
   }
+}
+
+/* The primary interaction is rolling a fresh feature soup. */
+.world-play {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  margin-bottom: 12px;
+  flex-shrink: 0;
+}
+.world-play .world-roll {
+  font-size: 18px;
+  padding: 14px 22px;
+  min-height: 54px;
+  background: #caf392;
+  color: #172716;
+  border: 1px solid #dafcae;
+  border-radius: 10px;
+  box-shadow: 0 4px 22px #9fdb6330;
+  font-weight: 750;
+}
+.world-play .world-roll:hover {
+  background: #ddffb4;
+  box-shadow: 0 5px 26px #b9ed7545;
+}
+.world-play p {
+  color: #a9bdb3;
+  font-size: 11px;
+  line-height: 1.55;
+  margin: 0;
+  max-width: 650px;
+}
+#pause {
+  background: #14272c;
+  color: #dbe9e5;
+  border-color: #3b5052;
+  font-weight: 400;
+}
+#settings-fields .setting-control {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 78px;
+  gap: 5px 10px;
+  margin: 15px 0;
+}
+.setting-control > span {
+  grid-column: 1 / -1;
+  font-size: 11px;
+}
+.setting-control input[type="range"] {
+  width: 100%;
+  min-width: 0;
+  accent-color: #caf392;
+}
+.setting-control input[type="number"] {
+  width: 78px;
+  padding: 5px;
+  font-size: 11px;
+}
+.world-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+}
+.function-entry {
+  padding: 12px 0;
+  border-bottom: 1px solid #294044;
+}
+.function-entry label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.function-entry input {
+  accent-color: #caf392;
+}
+.function-entry small {
+  color: #89a69b;
+  font-size: 10px;
+}
+.function-entry p {
+  margin: 6px 0;
+}
+.function-entry pre {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  font-size: 10px;
+}
+.reference input[type="search"] {
+  width: 100%;
+  padding: 10px;
+  background: #0b1b20;
+  color: #dbe9e5;
+  border: 1px solid #3b5052;
+  border-radius: 6px;
+}
+@media (max-width: 760px) {
+  .world-play {
+    align-items: stretch;
+    flex-direction: column;
+    gap: 7px;
+  }
+  .world-play .world-roll {
+    width: 100%;
+  }
+  .world-play p {
+    font-size: 10px;
+  }
+}
+
+.settings .habitat-control {
+  display: grid;
+  grid-template-columns: 1fr 90px;
+}
+.habitat-control input[type="range"] {
+  grid-column: 1 / -1;
+}
+
+.reference h2 {
+  margin-top: 22px;
+  color: #d7ebcc;
+  font-size: 12px;
+}
+.surface-form {
+  border-left: 2px solid #5b8050;
+  padding-left: 10px;
+  margin-top: 10px;
 }

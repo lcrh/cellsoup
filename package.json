@@ -1,22 +1,18 @@
 {
   "name": "cellsoup",
-  "version": "0.8.8",
+  "version": "0.9.0",
   "private": true,
   "type": "module",
-  "description": "Programmable cellular life with typed Lisp and assembly genomes, sunlight, scavenging and thermal spring physics in WebGPU and WebAssembly.",
+  "description": "An evolving soup of typed programs, specialization, linked communication and cellular physics in WebGPU.",
   "scripts": {
     "build": "node scripts/build.mjs",
     "dev": "node scripts/serve.mjs",
     "start": "node scripts/serve.mjs",
     "test": "node --test tests/*.test.mjs",
-    "bench": "node tests/benchmark.mjs",
-    "soak": "node tests/evolution-soak.mjs",
-    "headless": "node scripts/headless.mjs",
-    "research:check": "node research/native-check.mjs",
-    "gpu:check": "node research/gpu-check.mjs",
     "gpu:bench": "node research/gpu-bench.mjs",
     "gpu:life-check": "node research/gpu-life-check.mjs",
-    "gpu:life-run": "node research/gpu-life-run.mjs"
+    "gpu:life-run": "node research/gpu-life-run.mjs",
+    "gpu:check": "node research/gpu-life-check.mjs"
   },
   "engines": {
     "node": ">=20"

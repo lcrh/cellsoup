@@ -3,12 +3,18 @@
 // from a cell merely using its own persistent output as memory.
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
-const marker = "c.r[d]=sum/f32(max(1u,count));";
+const legacyMarker = "c.r[d]=sum/f32(max(1u,count));";
+const aggregateMarker = "c.r[d]=select(sum/f32(max(1u,count)),sum,op==51u);";
 export function interveneLinkedSignal(
   source,
   { mode = "zero", genomeSlots = null, value = 0 } = {},
 ) {
   assert.ok(["zero", "self", "constant"].includes(mode));
+  // Keep old retained-source experiments valid and isolate only mean reads in
+  // the combined mean/sum implementation. Sum reads remain untouched.
+  const marker = source.includes(aggregateMarker)
+    ? aggregateMarker
+    : legacyMarker;
   assert.equal(
     source.split(marker).length,
     2,
@@ -34,7 +40,11 @@ export function interveneLinkedSignal(
     genomeSlots === null
       ? alternative
       : `select(sum/f32(max(1u,count)),${alternative},${genomeSlots.map((s) => `c.machine.y==${s}u`).join("||")})`;
-  return source.replace(marker, `c.r[d]=${expression};`);
+  const result =
+    marker === aggregateMarker
+      ? `select(${expression},sum,op==51u)`
+      : expression;
+  return source.replace(marker, `c.r[d]=${result};`);
 }
 export function linkedSignalDevice(device, options) {
   let actualSha256,

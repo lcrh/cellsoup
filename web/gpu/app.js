@@ -1,10 +1,19 @@
+import {
+  SETTING_GROUPS as settingGroups,
+  WORLD_CAPACITIES,
+} from "./world-controls.js";
 import { createLifeEngine, defaults } from "./engine.js";
-import { randomWorldSettings } from "./random-world.js";
-import { TREE_SCHEMA } from "./trees.js";
+import { randomWorldSettings, describeWorld } from "./random-world.js";
+import { TREE_SCHEMA, TREE_SURFACE_FORMS, functionEnabled } from "./trees.js";
+import { FUNCTION_REFERENCE } from "./function-reference.js";
+import { specializationSummary, ENERGY_PATHWAYS } from "./specialization.js";
+const functionMasks = Object.fromEntries(
+  [0, 1, 2, 3].map((i) => ["functionMask" + i, 4294967295]),
+);
 import { createRenderer } from "./renderer.js";
 import { createExecutionMeter } from "./trace-meter.js";
 import { createBehaviorMeter } from "./behavior-meter.js";
-import { GPU_OPS, GPU_SENSORS, GPU_FIELDS } from "./language.js";
+
 import {
   snapshot,
   bodyAt,
@@ -19,107 +28,82 @@ import {
 const $ = (id) => document.getElementById(id);
 const canvas = $("world"),
   camera = { x: 4096, y: 4096, width: 8192, height: 8192 };
-const settingGroups = [
-  [
-    "Evolution",
-    [
-      ["seed", "Random seed", 0, 4294967295, 1],
-      ["rate", "Newcomers / second", 0, 262144, 1],
-      ["floor", "Population floor", 0, 262144, 1],
-      ["share", "Archive share", 0, 1, 0.05],
-      ["mutation", "Resampling mutation", 0, 1, 0.05],
-      ["forkMutation", "Division mutation", 0, 1, 0.001],
-      ["crossover", "Crossover (trees)", 0, 1, 0.05],
-    ],
-  ],
-  [
-    "Sunlight & clouds",
-    [
-      ["solarRate", "Peak photosynthesis / second", 0, 20, 0.5],
-      ["sunContrast", "Bright peak rarity", 1, 8, 0.25],
-      ["cloudCover", "Cloud coverage", 0, 1, 0.05],
-      ["cloudOpacity", "Cloud opacity", 0, 1, 0.05],
-      ["cloudScale", "Cloud size (units)", 64, 8192, 1],
-      ["cloudSpeed", "Cloud drift (units / sec)", 0, 100, 1],
-      ["cloudMorph", "Cloud morph time (sec)", 1, 3600, 1],
-    ],
-  ],
-  [
-    "Energy & reserves",
-    [
-      ["seedEnergy", "Newcomer energy", 1, 200, 1],
-      ["seedStorage", "Newcomer storage", 0, 400, 1],
-      ["upkeep", "Basic upkeep / sec", 0, 20, 0.05],
-      ["energyDecay", "Energy decay / sec", 0, 1, 0.01],
-      ["exchange", "Storage sharing / tick", 0, 0.25, 0.01],
-      ["corpseLifetime", "Uneaten corpse lifetime (sec)", 1, 7200, 1],
-      ["corpseEnergy", "Body material value", 0, 100, 1],
-    ],
-  ],
-  [
-    "Temperature",
-    [
-      ["ambientTemperature", "Ambient temperature (°C)", 0, 100, 1],
-      ["sunlightHeating", "Sun heating (°C / sec)", 0, 10, 0.1],
-      ["activityHeating", "Activity heat (°C / energy)", 0, 10, 0.01],
-      ["cooling", "Cooling / sec", 0, 10, 0.01],
-      ["thermalExchange", "Linked heat sharing / tick", 0, 0.25, 0.01],
-      ["crowdInsulation", "Crowding insulation", 0, 20, 0.1],
-      ["safeTemperature", "Overheating threshold (°C)", 0, 100, 1],
-      ["heatDamage", "Overheating energy cost / °C / sec", 0, 20, 0.1],
-    ],
-  ],
-  [
-    "Actions & movement",
-    [
-      ["cpuCost", "Instruction cost", 0, 1, 0.00001],
-      ["budget", "Instructions / tick", 0, 128, 1],
-      ["divisionCost", "Division cost", 0, 150, 1],
-      ["minimumBirthEnergy", "Minimum energy per daughter", 1, 100, 1],
-      ["jitter", "Daughter heading jitter", 0, 180, 1],
-      ["moveCost", "Movement cost", 0, 10, 0.001],
-      ["turnCost", "Turn cost / degree", 0, 1, 0.0001],
-      ["attackCost", "Attack base cost", 0, 10, 0.01],
-      ["attackDamageCost", "Attack cost / damage", 0, 10, 0.05],
-      ["eatCost", "Eating cost", 0, 10, 0.01],
-      ["linkCost", "Link cost", 0, 20, 0.1],
-      ["contractCost", "Contraction cost", 0, 10, 0.01],
-      ["shieldUpkeep", "Shield upkeep / sec", 0, 20, 0.01],
-      ["sendCost", "Message cost", 0, 10, 0.01],
-      ["emitCost", "Signal cost", 0, 10, 0.01],
-    ],
-  ],
-];
 const numericSettings = [];
 for (const [title, fields] of settingGroups) {
   const section = document.createElement("details"),
     summary = document.createElement("summary");
   summary.textContent = title;
   section.append(summary);
-  section.open = title === "Sunlight & clouds";
+  if (title === "Physics & reach") {
+    const hint = document.createElement("p");
+    hint.className = "hint";
+    hint.textContent =
+      "Thrust, drag, cell spacing and spring barriers shape bodies and movement. Links also pull toward the chosen rest distance.";
+    section.append(hint);
+  }
+  if (title === "Energy & reserves") {
+    const hint = document.createElement("p");
+    hint.className = "hint";
+    hint.textContent =
+      "Each pathway’s efficiency multiplies its specialization multiplier. Converted or eaten material is spent even when some energy is lost.";
+    section.append(hint);
+  }
+  if (title === "Mutation styles") {
+    const hint = document.createElement("p");
+    hint.className = "hint";
+    hint.textContent =
+      "Weights are normalized together. Failed bounded edits fall back to subtree mutation; all-zero weights also use subtree mutation.";
+    section.append(hint);
+  }
+  if (title === "Specialization") {
+    const hint = document.createElement("p");
+    hint.className = "hint";
+    hint.textContent =
+      "Recent photosynthesis, scavenging and mobilization compete. One source is efficient; an even mix pays the full penalty. Zero switches specialization off.";
+    section.append(hint);
+  }
+  if (title === "Computation & broadcasts") {
+    const hint = document.createElement("p");
+    hint.className = "hint";
+    hint.textContent =
+      "Sampling weights shape random programs. Broadcasts use c0–c3. Relay 0 reads direct neighbors; higher values mix in earlier neighbor broadcasts, spreading farther with attenuation and delay.";
+    section.append(hint);
+  }
   for (const [id, title, min, max, step] of fields) {
     numericSettings.push(id);
     const label = document.createElement("label"),
+      name = document.createElement("span"),
       input = document.createElement("input");
-    label.textContent = title;
+    label.className = "setting-control";
+    name.textContent = title;
+    name.id = id + "-label";
     input.id = id;
     input.type = "number";
     input.min = min;
     input.max = max;
     input.step = step;
     input.value = defaults[id];
-    label.append(input);
-    if (["mutation", "crossover", "forkMutation"].includes(id)) {
-      input.type = "range";
-      const output = document.createElement("output");
-      output.htmlFor = id;
-      const update = () => {
-        output.textContent = `${Math.round(Number(input.value) * 1000) / 10}%`;
-      };
-      input.addEventListener("input", update);
-      update();
-      label.append(output);
+    input.setAttribute("aria-label", title + " exact value");
+    label.append(name);
+    if (id !== "seed") {
+      const slider = document.createElement("input");
+      slider.type = "range";
+      slider.id = id + "-range";
+      slider.min = min;
+      slider.max = max;
+      slider.step = step;
+      slider.value = input.value;
+      slider.setAttribute("aria-label", title);
+      slider.addEventListener("input", () => {
+        input.value = slider.value;
+        input.dispatchEvent(new Event("input", { bubbles: true }));
+      });
+      input.addEventListener("input", () => {
+        slider.value = input.value;
+      });
+      label.append(slider);
     }
+    label.append(input);
     section.append(label);
   }
   $("settings-fields").append(section);
@@ -164,7 +148,7 @@ function fail(error) {
   busy = false;
   console.error(error);
   notice(
-    `${error.message || error} Open the classic laboratory using the link above.`,
+    `${error.message || error} Try a new world or a WebGPU-capable browser.`,
     true,
   );
   $("pause").disabled = true;
@@ -188,13 +172,15 @@ function controls(enabled) {
   $("pause").textContent = paused ? "Resume" : "Pause";
 }
 function options() {
+  if (!$("habitat-size").checkValidity())
+    throw Error("Habitat width must be 160–16,384 units, in steps of 32.");
   const capacity = Number($("capacity").value);
   const cfg = {
     capacity,
     genomeCapacity: capacity / 4,
-    treePrograms: Number($("substrate").value === "trees"),
+    treePrograms: 1,
     initial: capacity / 4,
-    side: Math.ceil(Math.sqrt(capacity / 2)),
+    side: Number($("habitat-size").value) / 32,
     sources: 1,
     executionTrace: 1,
   };
@@ -206,8 +192,25 @@ function options() {
       );
     cfg[id] = Number(input.value);
   }
+  if (cfg.ambientTemperature > cfg.safeTemperature)
+    throw Error(
+      "The overheating threshold must be at least the ambient temperature.",
+    );
+  if (cfg.divisionCost + 2 * cfg.minimumBirthEnergy > cfg.energyCapacity)
+    throw Error(
+      "Division cost plus both daughters’ minimum energy must fit within the usable energy capacity.",
+    );
+  if (cfg.seedEnergy > cfg.energyCapacity)
+    throw Error("Newcomer energy must fit within the usable energy capacity.");
+  if (cfg.seedStorage > cfg.storageCapacity)
+    throw Error("Newcomer storage must fit within the storage capacity.");
+  if (cfg.initial > cfg.genomeCapacity)
+    throw Error(
+      "Initial founders must fit within one quarter of entity capacity.",
+    );
   if (cfg.floor > capacity || cfg.rate > capacity)
     throw Error("Population floor and newcomer rate must not exceed capacity.");
+  Object.assign(cfg, functionMasks);
   return cfg;
 }
 function fitWorld() {
@@ -258,28 +261,9 @@ async function start() {
   );
   behaviorMeter = await createBehaviorMeter(device, engine);
   executionMeter = await createExecutionMeter(device, engine);
-  $("genome-kind").textContent = cfg.treePrograms
-    ? "Random typed-tree genomes"
-    : "Random assembly genomes";
-  renderReference(Boolean(cfg.treePrograms));
-  const treeExamples = {
-    "photosynthesize r0": "(photosynthesize)",
-    "store r0 amount": "(store amount)",
-    "mobilize r0 amount": "(mobilize amount)",
-    "attack target amount": "(attack target amount)",
-    "eat r0": "(eat)",
-    "sense r0 energy": "(energy)",
-    "sense r1 storage": "(storage)",
-    "gradient r0 r1": "(sunlight-bearing)",
-    "storage_gradient r0 r1 kind": "(storage-bearing kind)",
-    "peek r0 target alive": "(alive target)",
-  };
-  for (const code of document.querySelectorAll(".explanation code")) {
-    code.dataset.assembly ??= code.textContent;
-    code.textContent = cfg.treePrograms
-      ? (treeExamples[code.dataset.assembly] ?? code.dataset.assembly)
-      : code.dataset.assembly;
-  }
+  $("world-description").textContent = describeWorld(engine.cfg);
+  $("genome-kind").textContent = "Random typed-tree genomes";
+  renderReference();
   failed = false;
   paused = false;
   selection = null;
@@ -430,6 +414,19 @@ async function observe(now) {
     $("memory-panel").hidden = !selection || !engine.cfg.treePrograms;
     if (selection && engine.cfg.treePrograms) {
       const memory = await engine.cellMemory(selection.slot);
+      const intake = await engine.cellSpecialization(selection.slot);
+      const specialization = specializationSummary(
+        intake,
+        engine.cfg.specializationStrength,
+      );
+      const intakeDescription =
+        intake.reduce((sum, value) => sum + value, 0) > 1e-12
+          ? `Recent intake: ${specialization.shares.map((share, i) => `${Math.round(share * 100)}% ${ENERGY_PATHWAYS[i].toLowerCase()}`).join(" · ")}.`
+          : "No recent intake yet.";
+      $("cell-specialization").textContent =
+        engine.cfg.specializationStrength > 0
+          ? `${intakeDescription} Specialization multiplier ${Math.round(specialization.efficiency * 100)}%.`
+          : "Specialization is off in this world.";
       $("cell-memory").replaceChildren(
         ...[...memory].map((value, i) => {
           const item = document.createElement("div"),
@@ -564,17 +561,105 @@ $("step").onclick = () => {
 $("restart").onclick = () => {
   pendingReset = true;
 };
-$("random-world").onclick = () => {
-  const settings = randomWorldSettings({
-    capacity: Number($("capacity").value),
-    previousSeed: Number($("seed").value),
-  });
+function applySettings(settings) {
   for (const [id, value] of Object.entries(settings)) {
+    if (id in functionMasks) {
+      functionMasks[id] = value >>> 0;
+      continue;
+    }
+    if (!numericSettings.includes(id)) continue;
     $(id).value = value;
     $(id).dispatchEvent(new Event("input", { bubbles: true }));
   }
+  renderReference();
+}
+function rollWorld() {
+  applySettings(
+    randomWorldSettings({
+      capacity: Number($("capacity").value),
+      previousSeed: Number($("seed").value),
+    }),
+  );
+}
+$("random-world").onclick = () => {
+  rollWorld();
   controls(false);
   pendingReset = true;
+};
+$("save-world").onclick = () => {
+  try {
+    const setup = { model: "cellsoup-feature-world-1", config: options() };
+    $("export-data").value = JSON.stringify(setup, null, 2);
+    $("export-title").textContent = "Save world setup";
+    if (exportURL) URL.revokeObjectURL(exportURL);
+    exportURL = URL.createObjectURL(
+      new Blob([$("export-data").value], { type: "application/json" }),
+    );
+    $("download-export").href = exportURL;
+    $("download-export").download = `cellsoup-world-${setup.config.seed}.json`;
+    $("export-status").textContent = "";
+    $("export-dialog").showModal();
+  } catch (error) {
+    notice(error.message, true);
+  }
+};
+$("load-world").onclick = () => $("world-file").click();
+$("world-file").onchange = async () => {
+  try {
+    const file = $("world-file").files[0];
+    if (!file) return;
+    if (file.size > 1000000) throw Error("World setup is too large.");
+    const data = JSON.parse(await file.text()),
+      cfg = data.config;
+    if (data.model !== "cellsoup-feature-world-1")
+      throw Error("This is not a saved world setup.");
+    if (!cfg || typeof cfg !== "object")
+      throw Error("This file has no world settings.");
+    for (const [key, value] of Object.entries(cfg))
+      if (
+        !(key in defaults) ||
+        !Number.isFinite(value) ||
+        value < 0 ||
+        (key in functionMasks &&
+          (!Number.isInteger(value) || value > 4294967295))
+      )
+        throw Error("Invalid world setting: " + key);
+    if (!WORLD_CAPACITIES.includes(cfg.capacity))
+      throw Error("Unsupported world capacity.");
+    if (cfg.treePrograms !== 1)
+      throw Error("This setup does not use typed Lisp trees.");
+    if (!Number.isInteger(cfg.side) || cfg.side < 5 || cfg.side > 512)
+      throw Error("Invalid habitat size.");
+    const previous = {
+      capacity: $("capacity").value,
+      size: $("habitat-size").value,
+      settings: Object.fromEntries(
+        numericSettings.map((id) => [id, Number($(id).value)]),
+      ),
+      masks: { ...functionMasks },
+    };
+    try {
+      $("capacity").value = cfg.capacity;
+      syncPopulationLimits();
+      $("habitat-size").value = cfg.side * 32;
+      $("habitat-size").dispatchEvent(new Event("input"));
+      applySettings({ ...defaults, ...cfg });
+      options();
+      controls(false);
+      pendingReset = true;
+    } catch (error) {
+      $("capacity").value = previous.capacity;
+      syncPopulationLimits();
+      $("habitat-size").value = previous.size;
+      $("habitat-size").dispatchEvent(new Event("input"));
+      applySettings({ ...previous.settings, ...previous.masks });
+      throw error;
+    }
+  } catch (error) {
+    notice(error.message);
+  } finally {
+    $("world-file").value = "";
+  }
 };
 $("find").onclick = () => {
   pendingFind = true;
@@ -593,14 +678,31 @@ $("speed").onchange = () => {
       ? "Max advances 24 ticks between drawings."
       : "Every physics tick is simulated.";
 };
+function syncPopulationLimits() {
+  const capacity = Number($("capacity").value);
+  for (const [id, max] of [
+    ["initial", capacity / 4],
+    ["rate", capacity],
+    ["floor", capacity],
+  ]) {
+    $(id).max = max;
+    $(id + "-range").max = max;
+  }
+}
+syncPopulationLimits();
 $("capacity").onchange = () => {
+  syncPopulationLimits();
   const n = Number($("capacity").value);
   $("rate").value = Math.max(1, n / 4096);
   $("floor").value = n / 64;
+  $("initial").value = n / 4;
+  for (const id of ["rate", "floor", "initial"])
+    $(id).dispatchEvent(new Event("input"));
 };
 let exportURL = null;
 $("export").onclick = () => {
   if (!selectedGenome) return;
+  $("export-title").textContent = "Save genome";
   const { slot, ...genome } = selectedGenome;
   const json = JSON.stringify(
     {
@@ -715,81 +817,104 @@ canvas.addEventListener(
   },
   { passive: false },
 );
-canvas.addEventListener("keydown", (event) => {
+document.addEventListener("keydown", (event) => {
+  if (
+    event.repeat ||
+    event.altKey ||
+    event.ctrlKey ||
+    event.metaKey ||
+    document.querySelector("dialog[open]") ||
+    event.target.closest('input,select,textarea,[contenteditable="true"]')
+  )
+    return;
+  if (event.code === "KeyR" && !$("random-world").disabled) {
+    event.preventDefault();
+    $("random-world").click();
+  }
   if (event.code === "Space" && !$("pause").disabled) {
     event.preventDefault();
     $("pause").click();
   }
 });
-// The classic grammar shares opcodes, but the GPU model has distinct costs/limits.
-const overrides = {
-  split:
-    "Detached division: 0 parent, 1 child, −1 failure. Requires division cost plus twice the minimum daughter energy. Division yields this tick.",
-  bud: "Connected division, with the same return values and energy threshold as split. Four links maximum.",
-  link: "Try to link to a target within 24 units; four links maximum. A paid attempt may lose under contention.",
-  bond: "Read linked neighbor handle in slot 0–3; 0 if empty. Use peek to inspect its storage.",
-  give: "Give a fraction 0–1 of remaining energy to a target within 18. Keeps one energy quantum; transfers respect recipient capacity.",
-  sense: `Read a sensor: ${GPU_SENSORS.join(", ")}.`,
-  peek: `Read a nearby living cell or corpse field: ${GPU_FIELDS.join(", ")}.`,
-};
-function renderReference(trees) {
-  $("reference-title").textContent = trees
-    ? "Typed-tree reference"
-    : "Assembly reference";
-  $("reference-note").textContent = trees
-    ? "Up to 32 typed nodes. Numbers feed arithmetic, conditions and actions; cell references select targets. Use state for once-initialized numeric memory, let for per-evaluation numeric locals, and set! for updates. Eight values persist across ticks. Unmutated division copies the tree and memory; mutated daughters start their changed tree with fresh memory. birth-result is 0 for the parent, 1 for its daughter, or −1 on failure. New arrivals may cross compatible subtrees and then mutate."
-    : "Eight registers, relative sensing and motion, at most 64 instructions per genome. Division and archive resampling have separate mutation controls.";
-  const dl = document.createElement("dl");
-  if (trees) {
+function renderReference() {
+  $("reference-title").textContent = "Functions & evolution palette";
+  $("reference-note").textContent =
+    "Choose which primitives can appear in new random trees and mutations. Changes apply to the next world. Essential literals and sequence forms remain available. Existing code can still execute disabled forms. Sampling weights further control memory, communication, neighborhood queries and daughter modifiers.";
+  const container = document.createElement("div");
+  const search = document.createElement("input");
+  search.type = "search";
+  search.placeholder = "Find a function…";
+  search.setAttribute("aria-label", "Search functions");
+  container.append(search);
+  const rows = [];
+  const vocabularyTitle = document.createElement("h2");
+  vocabularyTitle.textContent = "A vocabulary for the world";
+  container.append(vocabularyTitle);
+  for (const form of TREE_SURFACE_FORMS) {
+    const row = document.createElement("article");
+    row.className = "function-entry surface-form";
+    const name = document.createElement("code");
+    name.textContent = form.signature;
+    const description = document.createElement("p");
+    description.textContent = form.description;
     const example = document.createElement("pre");
-    example.textContent =
-      "(state ((accumulator 0))\n  (let ((light (sunlight)))\n    (set! accumulator\n      (+ (* 0.9 accumulator) light))))";
-    dl.append(example);
-    for (const node of TREE_SCHEMA) {
-      const dt = document.createElement("dt"),
-        dd = document.createElement("dd");
-      dt.textContent = node.name;
-      const forms = {
-        state: [
-          "(state ((name initial)) body)",
-          "Numeric memory initialized once per cell. Read name directly; update with set!. Division inherits the value.",
-        ],
-        let: [
-          "(let ((name expression)) body)",
-          "A numeric local evaluated once each time this form runs. Names are available inside the body.",
-        ],
-      };
-      dd.textContent = `${node.args.join(", ") || "No inputs"} → ${node.result === "Any" ? "body or branch type" : node.result}`;
-      if (forms[node.name]) {
-        dt.textContent = forms[node.name][0];
-        dd.textContent = forms[node.name][1];
-      }
-      dl.append(dt, dd);
-    }
-  } else
-    for (const [op, args, description] of GPU_OPS) {
-      const dt = document.createElement("dt"),
-        dd = document.createElement("dd");
-      dt.textContent = `${op} ${args}`;
-      dd.textContent = overrides[op] || description;
-      dl.append(dt, dd);
-    }
-  $("reference").replaceChildren(dl);
+    example.textContent = form.example;
+    const palette = document.createElement("small");
+    palette.textContent =
+      "Uses palette primitives: " + form.canonicalNames.join(", ");
+    row.append(name, description, example, palette);
+    container.append(row);
+    rows.push(row);
+  }
+  const paletteTitle = document.createElement("h2");
+  paletteTitle.textContent = "Evolution switches";
+  container.append(paletteTitle);
+  for (const fn of FUNCTION_REFERENCE) {
+    const row = document.createElement("article");
+    row.className = "function-entry";
+    const label = document.createElement("label"),
+      toggle = document.createElement("input"),
+      title = document.createElement("code");
+    toggle.type = "checkbox";
+    toggle.checked = functionEnabled(fn.name, functionMasks);
+    toggle.disabled = fn.essential;
+    toggle.setAttribute("aria-label", "Allow " + fn.name + " in evolution");
+    toggle.onchange = () => {
+      const id = TREE_SCHEMA.findIndex((s) => s.name === fn.name),
+        key = "functionMask" + Math.floor(id / 32),
+        bit = 1 << (id % 32);
+      functionMasks[key] =
+        (toggle.checked
+          ? functionMasks[key] | bit
+          : functionMasks[key] & ~bit) >>> 0;
+    };
+    title.textContent = fn.name;
+    label.append(toggle, title);
+    row.append(label);
+    const signature = document.createElement("small");
+    signature.textContent = `${fn.args.join(", ") || "No inputs"} → ${fn.result === "Any" ? "branch/body type" : fn.result}${fn.essential ? " · essential grammar" : ""}`;
+    const description = document.createElement("p");
+    description.textContent = fn.description;
+    const example = document.createElement("pre");
+    example.textContent = fn.example;
+    row.append(signature, description, example);
+    container.append(row);
+    rows.push(row);
+  }
+  search.oninput = () => {
+    const query = search.value.toLowerCase();
+    for (const row of rows)
+      row.hidden = !row.textContent.toLowerCase().includes(query);
+  };
+  $("reference").replaceChildren(container);
 }
-function substrateSettings() {
-  const trees = $("substrate").value === "trees";
-  $("crossover").disabled = !trees;
-  $("substrate-note").textContent = trees
-    ? "Random typed trees. Archived arrivals can combine two parents, then mutate independently. Division has its own mutation chance."
-    : "Division has its own mutation chance. New arrivals mix random founders and archived lineages.";
-}
-const requestedSubstrate = new URLSearchParams(location.search).get(
-  "substrate",
-);
-if (["trees", "assembly"].includes(requestedSubstrate))
-  $("substrate").value = requestedSubstrate;
-$("substrate").addEventListener("change", substrateSettings);
-substrateSettings();
+$("habitat-size-range").oninput = () => {
+  $("habitat-size").value = $("habitat-size-range").value;
+};
+$("habitat-size").oninput = () => {
+  $("habitat-size-range").value = $("habitat-size").value;
+};
+rollWorld();
 try {
   await start();
 } catch (error) {

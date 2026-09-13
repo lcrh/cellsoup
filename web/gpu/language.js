@@ -59,6 +59,8 @@ export const GPU_SENSORS = [
   "temperature",
   "linked_temperature",
   "crowding",
+  "colony-size",
+  "time",
 ];
 export const GPU_FIELDS = [...FIELDS, "storage", "alive", "temperature"];
 export function compile(source) {

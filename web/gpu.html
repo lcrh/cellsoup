@@ -11,14 +11,26 @@
     <header>
       <a class="brand" href="./">◉ <strong>cell soup</strong></a
       ><span class="edition"
-        >Sunlight & survival
+        >A world of possibilities
         <span class="badge" data-build>development</span></span
-      ><a class="classic" href="./classic.html">Classic laboratory ↗</a>
+      >
     </header>
     <main>
       <section class="laboratory" aria-label="Simulation">
+        <div class="world-play">
+          <button
+            id="random-world"
+            class="primary world-roll"
+            title="Random new world (R)"
+            disabled
+          >
+            ✦ Random new world
+          </button>
+          <p id="world-description">Roll a living world. See what evolves.</p>
+        </div>
         <div class="toolbar">
-          <button id="pause" disabled>Pause</button
+          <button id="pause" title="Pause or resume (Space)" disabled>
+            Pause</button
           ><button id="step" disabled>Step</button
           ><label
             >Speed
@@ -46,7 +58,7 @@
             ><span id="scale">—</span>
           </div>
           <div class="gesture">
-            Scroll to zoom · drag to pan · click to inspect
+            Scroll to zoom · drag to pan · click to inspect · R to roll
           </div>
         </div>
         <div
@@ -250,6 +262,7 @@
               <div><b id="cell-temperature">—</b><span>temperature</span></div>
             </div>
             <p id="cell-detail"></p>
+            <p id="cell-specialization" class="hint"></p>
             <div class="enzyme-meter" title="Local sunlight">
               <div id="light-fill"></div>
             </div>
@@ -287,34 +300,61 @@
               >Entity capacity
               <select id="capacity">
                 <option value="32768" selected>32,768</option>
+                <option value="65536">65,536</option>
                 <option value="131072">131,072</option>
                 <option value="262144">262,144</option>
               </select></label
             >
-            <label
-              >Genome language
-              <select id="substrate">
-                <option value="trees" selected>
-                  Typed Lisp trees (experimental)
-                </option>
-                <option value="assembly">Assembly</option>
-              </select>
+            <label class="habitat-control">
+              <span>Habitat width (units)</span>
+              <input
+                id="habitat-size"
+                type="number"
+                min="160"
+                max="16384"
+                step="32"
+                value="4096"
+                aria-label="Habitat width in world units"
+              />
+              <input
+                id="habitat-size-range"
+                type="range"
+                min="160"
+                max="16384"
+                step="32"
+                value="4096"
+                aria-label="Habitat width"
+              />
             </label>
-            <p class="hint" id="substrate-note">
-              Division has its own mutation chance. New arrivals mix random
-              founders and archived lineages.
+            <p class="hint">
+              A square habitat. Size and capacity stay fixed when you roll a
+              random world; a larger habitat spreads the same population farther
+              apart.
+            </p>
+            <p class="hint">
+              Typed Lisp trees evolve through mutation and crossover. Division
+              has its own mutation chance.
             </p>
             <div class="world-actions">
-              <button id="restart" class="primary" disabled>
-                Start new world
-              </button>
-              <button id="random-world" disabled>Random new world</button>
+              <button id="restart" disabled>Use these settings</button>
+              <button id="save-world">Save setup</button>
+              <button id="load-world">Load setup</button>
+              <input
+                id="world-file"
+                type="file"
+                accept=".json,application/json"
+                hidden
+              />
             </div>
             <p class="hint">
               Random worlds vary the habitat and evolution settings. Capacity
-              and genome language stay as selected.
+              and habitat size stay as selected.
             </p>
             <div id="settings-fields"></div>
+            <p class="hint">
+              Explore the function palette below to enable or disable individual
+              primitives.
+            </p>
           </div>
         </details>
         <details open>
@@ -326,7 +366,7 @@
               stored reserves.
             </p>
             <p>
-              <code>photosynthesize r0</code> converts available sunlight into
+              <code>(photosynthesize)</code> converts available sunlight into
               energy. It must be executed; idle cells absorb nothing. Each cell
               has a light-limited harvest budget per tick.
             </p>
@@ -336,42 +376,38 @@
               Use the Temperature view to see warm and overheated cells.
             </p>
             <p>
-              <code>store r0 amount</code> creates stable reserves. Linked cells
-              share storage. <code>mobilize r0 amount</code> turns reserves back
+              <code>(store amount)</code> creates stable reserves. Linked cells
+              share storage. <code>(mobilize amount)</code> turns reserves back
               into usable energy. These conversions are explicit actions.
             </p>
             <p>
-              <code>attack target amount</code> costs energy and damages the
+              <code>(attack target amount)</code> costs energy and damages the
               target's energy. It transfers nothing. A corpse contains body
               material plus the victim's stored reserves;
-              <code>eat r0</code> eats a random corpse within reach and returns
+              <code>(eat)</code> eats a random corpse within reach and returns
               the energy gained. Gold rings mark successful feeding.
             </p>
             <p>
-              <code>sense r0 energy</code> and
-              <code>sense r1 storage</code> read your own pools.
-              <code>gradient r0 r1</code> senses sunlight.
-              <code>storage_gradient r0 r1 kind</code> points toward reserves: 0
+              <code>(energy)</code> and <code>(storage)</code> read your own
+              pools. <code>(sunlight-bearing)</code> senses sunlight.
+              <code>(storage-bearing kind)</code> points toward reserves: 0
               living, 1 corpses, −1 both.
-              <code>peek r0 target alive</code> distinguishes status.
+              <code>(alive target)</code> distinguishes status.
             </p>
           </div>
         </details>
         <details>
-          <summary id="reference-title">Assembly reference</summary>
+          <summary id="reference-title">Functions & evolution palette</summary>
           <div class="reference">
             <p id="reference-note">
-              Eight registers, relative sensing and motion, at most 64
-              instructions per genome. Target handles can be reused after a cell
-              or corpse disappears. Division and archive resampling have
-              separate mutation controls.
+              Typed expressions combine sensing, computation and actions. Search
+              the vocabulary and choose which functions may appear in new
+              genomes.
             </p>
             <div id="reference"></div>
           </div>
         </details>
-        <footer>
-          WebGPU required · <a href="./classic.html">Classic WASM laboratory</a>
-        </footer>
+        <footer>WebGPU required · Typed Lisp life</footer>
       </aside>
     </main>
     <dialog id="export-dialog" aria-labelledby="export-title">
@@ -380,12 +416,12 @@
         <button id="close-export">Close</button>
       </div>
       <p>
-        This saves the observed program and settings, not the entire habitat.
+        This saves a world setup or observed genome, not a running population.
         Copy JSON if downloads are unavailable.
       </p>
       <textarea
         id="export-data"
-        aria-label="Genome JSON"
+        aria-label="Setup or genome JSON"
         readonly
         rows="14"
         spellcheck="false"

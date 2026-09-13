@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { colonyPropagule } from "../research/colony-propagule.mjs";
+import { colonyPropagule } from "../web/gpu/colony-propagule.js";
 const fixture = () => ({
   world: 100,
   seconds: 60,

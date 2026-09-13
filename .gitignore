@@ -4,3 +4,6 @@ node_modules/
 *.log
 research/bin/
 research/runs/
+
+# Also ignore a shared dependency-directory symlink in development worktrees.
+node_modules

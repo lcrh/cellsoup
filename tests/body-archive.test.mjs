@@ -4,7 +4,7 @@ import {
   BodyArchive,
   fragmentObservation,
   resampleBodyProgram,
-} from "../research/body-archive.mjs";
+} from "../web/gpu/body-archive.js";
 import { parseTree, compileTree } from "../web/gpu/trees.js";
 const rng = (seed) => () =>
   (seed = (Math.imul(seed, 1664525) + 1013904223) >>> 0) / 4294967296;

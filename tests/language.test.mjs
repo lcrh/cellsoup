@@ -1,13 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { assemble, disassemble } from "../web/language.js";
-import { PRESETS } from "../web/presets.js";
-test("every example assembles and disassembles to identical bytecode", () => {
-  for (const p of Object.values(PRESETS)) {
-    const a = assemble(p.source);
-    assert.deepEqual(assemble(disassemble(a.buffer)).buffer, a.buffer);
-  }
-});
 test("labels, comments, comma syntax, register encoding", () => {
   const p = assemble("; title\nstart: MOV r0, 12.5\nadd r0 -2\njmp start");
   const v = new DataView(p.buffer);

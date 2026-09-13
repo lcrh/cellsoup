@@ -1,5 +1,8 @@
+import { BodyArchive } from "./body-archive.js";
 import {
   compileTree,
+  TREE_EVOLUTION_DEFAULTS,
+  treeEvolutionOptions,
   decodeTreeBytecode,
   randomTree,
   mutateTree,
@@ -19,6 +22,10 @@ const stages = [
   "clear",
   "field",
   "prepare",
+  "broadcast",
+  "colonyInit",
+  "colonyUnion",
+  "colonyCount",
   "vm",
   "giftPlan",
   "giftApply",
@@ -35,6 +42,35 @@ const stages = [
 ];
 export const defaults = {
   treePrograms: 1,
+  ...TREE_EVOLUTION_DEFAULTS,
+  loopYield: 1,
+  manualArrivals: 0,
+  bodyShare: 0,
+  bodyPreserveLinks: 1,
+  bodyMaxCells: 8,
+  bodyCaptureSeconds: 5,
+  linkedRelay: 0,
+  queryRadius: 128,
+  queryBudget: 32,
+  signalRetention: 0.97,
+  motorImpulse: 5,
+  dragRetention: 0.94,
+  springStiffness: 24,
+  collisionStiffness: 55,
+  linkBarrierStiffness: 90,
+  linkBarrierDamping: 5,
+  shieldProtection: 0.9,
+  eatAmount: 3,
+  attackAmountMax: 3,
+  photoEfficiency: 1,
+  scavengeEfficiency: 1,
+  mobilizeEfficiency: 1,
+  interactionRadius: 18,
+  linkRange: 24,
+  collisionDistance: 10,
+  linkBarrierWidth: 6,
+  springRestDistance: 18,
+
   crossover: 0.25,
   capacity: 131072,
   genomeCapacity: 32768,
@@ -48,6 +84,9 @@ export const defaults = {
   share: 0.5,
   mutation: 0.8,
   forkMutation: 0.01,
+  specializationStrength: 0,
+  specializationTime: 60,
+  energyCapacity: 200,
   seedEnergy: 24,
   seedStorage: 24,
   upkeep: 0.5,
@@ -96,6 +135,58 @@ export async function createLifeEngine(device, options = {}) {
   for (const key of Object.keys(options))
     if (!(key in defaults)) throw Error(`Unknown setting ${key}`);
   const cfg = { ...defaults, ...options };
+  treeEvolutionOptions(cfg);
+  if (cfg.motorImpulse < 0 || cfg.motorImpulse > 20)
+    throw Error("Invalid motorImpulse");
+  if (cfg.dragRetention < 0.5 || cfg.dragRetention > 1)
+    throw Error("Invalid dragRetention");
+  if (cfg.springStiffness < 0 || cfg.springStiffness > 100)
+    throw Error("Invalid springStiffness");
+  if (cfg.collisionStiffness < 0 || cfg.collisionStiffness > 200)
+    throw Error("Invalid collisionStiffness");
+  if (cfg.linkBarrierStiffness < 0 || cfg.linkBarrierStiffness > 300)
+    throw Error("Invalid linkBarrierStiffness");
+  if (cfg.linkBarrierDamping < 0 || cfg.linkBarrierDamping > 20)
+    throw Error("Invalid linkBarrierDamping");
+  if (cfg.shieldProtection < 0 || cfg.shieldProtection > 1)
+    throw Error("Invalid shieldProtection");
+  if (cfg.eatAmount < 0.1 || cfg.eatAmount > 20)
+    throw Error("Invalid eatAmount");
+  if (cfg.attackAmountMax < 0 || cfg.attackAmountMax > 20)
+    throw Error("Invalid attackAmountMax");
+  if (cfg.photoEfficiency < 0.1 || cfg.photoEfficiency > 1)
+    throw Error("Invalid photoEfficiency");
+  if (cfg.scavengeEfficiency < 0.1 || cfg.scavengeEfficiency > 1)
+    throw Error("Invalid scavengeEfficiency");
+  if (cfg.mobilizeEfficiency < 0.1 || cfg.mobilizeEfficiency > 1)
+    throw Error("Invalid mobilizeEfficiency");
+  if (cfg.interactionRadius < 6 || cfg.interactionRadius > 32)
+    throw Error("Invalid interactionRadius");
+  if (cfg.linkRange < 6 || cfg.linkRange > 32) throw Error("Invalid linkRange");
+  if (cfg.collisionDistance < 6 || cfg.collisionDistance > 16)
+    throw Error("Invalid collisionDistance");
+  if (cfg.linkBarrierWidth < 0 || cfg.linkBarrierWidth > 12)
+    throw Error("Invalid linkBarrierWidth");
+  if (cfg.springRestDistance < 10 || cfg.springRestDistance > 30)
+    throw Error("Invalid springRestDistance");
+
+  if (
+    ![0, 1].includes(cfg.manualArrivals) ||
+    (cfg.manualArrivals && !cfg.treePrograms)
+  )
+    throw Error("Manual arrivals require trees");
+  if (
+    cfg.bodyShare > 1 ||
+    cfg.bodyPreserveLinks > 1 ||
+    !Number.isInteger(cfg.bodyMaxCells) ||
+    cfg.bodyMaxCells < 2 ||
+    cfg.bodyMaxCells > 64 ||
+    !Number.isInteger(cfg.bodyCaptureSeconds) ||
+    cfg.bodyCaptureSeconds < 1 ||
+    cfg.bodyCaptureSeconds > 120
+  )
+    throw Error("Invalid body resampling settings");
+  if (![0, 1].includes(cfg.loopYield)) throw Error("Invalid loop yield");
   for (const [k, v] of Object.entries(cfg))
     if (!Number.isFinite(v) || !Number.isFinite(Math.fround(v)) || v < 0)
       throw Error(`Invalid ${k}`);
@@ -143,9 +234,11 @@ export async function createLifeEngine(device, options = {}) {
     cfg.sunContrast > 8 ||
     cfg.corpseEnergy > 200 ||
     cfg.solarEnabled > 1 ||
-    cfg.seedEnergy > 200 ||
+    cfg.energyCapacity < 40 ||
+    cfg.energyCapacity > 1000 ||
+    cfg.seedEnergy > cfg.energyCapacity ||
     cfg.minimumBirthEnergy < 1 / ENERGY_SCALE ||
-    cfg.divisionCost + 2 * cfg.minimumBirthEnergy > 200 ||
+    cfg.divisionCost + 2 * cfg.minimumBirthEnergy > cfg.energyCapacity ||
     cfg.storageCapacity > 1000 ||
     cfg.seedStorage > cfg.storageCapacity ||
     cfg.energyDecay > 1 ||
@@ -153,6 +246,14 @@ export async function createLifeEngine(device, options = {}) {
     cfg.exchange > 0.25 ||
     cfg.mutation > 1 ||
     cfg.forkMutation > 1 ||
+    cfg.linkedRelay > 0.95 ||
+    cfg.queryRadius > 128 ||
+    cfg.queryBudget < 1 ||
+    cfg.queryBudget > 128 ||
+    cfg.signalRetention > 1 ||
+    cfg.specializationStrength > 0.95 ||
+    cfg.specializationTime < 1 ||
+    cfg.specializationTime > 3600 ||
     cfg.share > 1 ||
     cfg.side > 512 ||
     cfg.sources > 256
@@ -172,23 +273,30 @@ export async function createLifeEngine(device, options = {}) {
   const state = [storage(n * CELL_BYTES), storage(n * CELL_BYTES)];
   const treeMemoryOffset =
     Math.ceil((40 * n + 20 * t + 20 * g + 640) / 16) * 16;
-  const traceOffset = treeMemoryOffset + (cfg.treePrograms ? 48 * n : 0);
+  const childStateOffset = treeMemoryOffset + (cfg.treePrograms ? 48 * n : 0);
+  const traceOffset = childStateOffset + (cfg.treePrograms ? 48 * n : 0);
   const traceBytes = 16 + 32 * 16 + 8192 * 4 + 1048576 * 4;
   const birthMutationOffset =
     traceOffset + (cfg.executionTrace ? traceBytes : 0);
-  const scratch = storage(
-      birthMutationOffset + (cfg.forkMutation > 0 ? n * 16 : 0),
-    ),
+  const specializationOffset =
+    birthMutationOffset + (cfg.forkMutation > 0 ? n * 16 : 0);
+  const relayOffset =
+    specializationOffset + (cfg.specializationStrength > 0 ? n * 16 : 0);
+  const cpuRemainderOffset =
+    relayOffset +
+    (cfg.linkedRelay > 0 ? n * 32 : 0) +
+    (cfg.treePrograms ? n * 8 : 0);
+  const scratch = storage(Math.ceil((cpuRemainderOffset + n * 4) / 16) * 16),
     genomes = storage(g * GENOME_BYTES),
     archive = storage(128 * GENOME_BYTES),
     food = storage(t * 16 + cfg.sources * 32),
     intents = storage(n * 128),
     activity = storage(n * 32);
   const uniform = device.createBuffer({
-    size: 224,
+    size: 320,
     usage: GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST,
   });
-  const settings = new ArrayBuffer(224),
+  const settings = new ArrayBuffer(320),
     u = new Uint32Array(settings),
     f = new Float32Array(settings);
   u.set([cfg.seed, cfg.budget, cfg.initial, cfg.floor]);
@@ -248,6 +356,40 @@ export async function createLifeEngine(device, options = {}) {
       cfg.heatDamage,
     ],
     4,
+  );
+  f.set(
+    [
+      cfg.specializationStrength,
+      Math.exp(-1 / (60 * cfg.specializationTime)),
+      cfg.springRestDistance,
+      0,
+    ],
+    56,
+  );
+  f.set(
+    [cfg.linkedRelay, cfg.signalRetention, cfg.queryRadius, cfg.queryBudget],
+    60,
+  );
+  f.set(
+    [
+      cfg.motorImpulse,
+      cfg.dragRetention,
+      cfg.springStiffness,
+      cfg.collisionStiffness,
+      cfg.linkBarrierStiffness,
+      cfg.linkBarrierDamping,
+      cfg.shieldProtection,
+      cfg.eatAmount,
+      cfg.attackAmountMax,
+      cfg.photoEfficiency,
+      cfg.scavengeEfficiency,
+      cfg.mobilizeEfficiency,
+      cfg.interactionRadius,
+      cfg.linkRange,
+      cfg.collisionDistance,
+      cfg.linkBarrierWidth,
+    ],
+    64,
   );
   device.queue.writeBuffer(uniform, 0, settings);
   const source = simulationShader(cfg);
@@ -314,7 +456,8 @@ export async function createLifeEngine(device, options = {}) {
     }),
   );
   let parity = 0,
-    tick = 0;
+    tick = 0,
+    hostOperation = false;
   function dispatch(encoder, name, count) {
     if (!count) return;
     const pass = encoder.beginComputePass();
@@ -333,7 +476,7 @@ export async function createLifeEngine(device, options = {}) {
     secondParent = 0,
     mutated = false,
   ) {
-    const code = compileTree(tree);
+    const code = compileTree(tree, cfg);
     const record = {
       id: serial,
       tree: code.tree,
@@ -391,7 +534,10 @@ export async function createLifeEngine(device, options = {}) {
   if (cfg.treePrograms && cfg.initial) {
     const founders = new Uint8Array(cfg.initial * GENOME_BYTES);
     for (let i = 0; i < cfg.initial; i++) {
-      const { record, buffer } = treeRecord(randomTree(treeRandom), i + 1);
+      const { record, buffer } = treeRecord(
+        randomTree(treeRandom, undefined, cfg),
+        i + 1,
+      );
       treeSlots[i] = record;
       founders.set(new Uint8Array(buffer), i * GENOME_BYTES);
     }
@@ -417,6 +563,7 @@ export async function createLifeEngine(device, options = {}) {
       if (!record) throw Error("Missing archived tree genotype " + id);
       treeArchive.push(record);
     }
+    if (cfg.manualArrivals || (cfg.treePrograms && cfg.bodyShare > 0)) return 0;
     const reserved = Math.min(counters[2], counters[16]);
     const start = Math.min(counters[3], counters[2] - reserved);
     const count = Math.min(counters[16], counters[4], counters[2] - start);
@@ -435,6 +582,7 @@ export async function createLifeEngine(device, options = {}) {
         archiveShare: cfg.share,
         crossoverRate: cfg.crossover,
         mutationRate: cfg.mutation,
+        evolution: cfg,
       });
       const parent = child.parents.length ? byId.get(child.parents[0]) : null;
       const { record, buffer } = treeRecord(
@@ -552,7 +700,7 @@ export async function createLifeEngine(device, options = {}) {
           const parent = treeSlots[parentSlot];
           if (!parent) throw Error("Missing division source tree");
           const child = treeRecord(
-            mutateTree(parent.tree, rng),
+            mutateTree(parent.tree, rng, cfg),
             serial,
             parent,
             0,
@@ -561,8 +709,15 @@ export async function createLifeEngine(device, options = {}) {
           treeSlots[gene] = child.record;
           buffer = child.buffer;
           cf.fill(0, 8, 16);
+          const previousMemory = new Float32Array(
+            await read(scratch, treeMemoryOffset + slot * 48, 48),
+          );
           const memory = new Float32Array(12);
+          const overrides = previousMemory[10] >>> 0;
+          for (let k = 0; k < 8; k++)
+            if (overrides & (1 << k)) memory[k] = previousMemory[k];
           memory[8] = 1;
+          memory[9] = overrides;
           device.queue.writeBuffer(
             scratch,
             treeMemoryOffset + slot * 48,
@@ -612,7 +767,336 @@ export async function createLifeEngine(device, options = {}) {
       new Uint32Array([0, counters[26], counters[27]]),
     );
   }
-  return {
+  async function admitBody({ programs, cells: seeds }) {
+    if (!cfg.treePrograms) throw Error("Body arrivals require typed programs");
+    if (
+      !Array.isArray(seeds) ||
+      !seeds.length ||
+      seeds.length > 64 ||
+      !Array.isArray(programs) ||
+      !programs.length ||
+      programs.length > seeds.length
+    )
+      throw Error("Expected 1–64 cells and their programs");
+    const finite = (x) => Number.isFinite(x) && Number.isFinite(Math.fround(x));
+    const integer = (x) => Number.isInteger(x) && x >= 1 && x <= 0xffffffff;
+    const prepared = programs.map((p) => {
+      const code = compileTree(p.tree, cfg),
+        origin = p.origin,
+        secondOrigin = p.secondOrigin;
+      if (
+        (secondOrigin && !origin) ||
+        (p.mutated !== undefined && typeof p.mutated !== "boolean") ||
+        (!origin && p.mutated)
+      )
+        throw Error("Invalid resampling provenance");
+      for (const ancestor of [origin, secondOrigin].filter(Boolean)) {
+        if (
+          !integer(ancestor.serial) ||
+          !integer(ancestor.founder) ||
+          !Number.isInteger(ancestor.depth) ||
+          ancestor.depth < 0 ||
+          ancestor.depth >= 0xffffffff
+        )
+          throw Error("Invalid source ancestry");
+        compileTree(ancestor.tree, cfg);
+      }
+      if (secondOrigin?.serial === origin?.serial && secondOrigin)
+        throw Error("Crossover requires distinct parents");
+      const mutated =
+        p.mutated ??
+        (!!origin &&
+          formatTree(code.tree) !==
+            formatTree(compileTree(origin.tree, cfg).tree));
+      return { tree: code.tree, origin, secondOrigin, mutated };
+    });
+    const normalized = seeds.map((c) => {
+      if (
+        Object.keys(c).some(
+          (k) =>
+            ![
+              "x",
+              "y",
+              "heading",
+              "energy",
+              "storage",
+              "genome",
+              "rest",
+              "links",
+              "anchors",
+              "color",
+            ].includes(k),
+        )
+      )
+        throw Error("Body arrivals reset physiology and program state");
+      const result = {
+        x: c.x,
+        y: c.y,
+        heading: c.heading ?? 0,
+        energy: c.energy ?? cfg.seedEnergy,
+        storage: c.storage ?? cfg.seedStorage,
+        genome: c.genome ?? 0,
+        rest: c.rest ?? 1,
+        links: c.links ?? [0, 0, 0, 0],
+        anchors: c.anchors ?? [0, 0, 0, 0],
+        color: c.color,
+      };
+      if (
+        ![
+          result.x,
+          result.y,
+          result.heading,
+          result.energy,
+          result.storage,
+          result.rest,
+        ].every(finite) ||
+        result.energy < 1 / ENERGY_SCALE ||
+        result.energy > cfg.energyCapacity ||
+        result.storage < 0 ||
+        result.storage > cfg.storageCapacity ||
+        result.rest < 0.55 ||
+        result.rest > 1.5 ||
+        !Number.isInteger(result.genome) ||
+        result.genome < 0 ||
+        result.genome >= programs.length ||
+        (result.color !== undefined && !finite(result.color)) ||
+        !Array.isArray(result.links) ||
+        result.links.length !== 4 ||
+        !Array.isArray(result.anchors) ||
+        result.anchors.length !== 4 ||
+        !result.anchors.every(finite)
+      )
+        throw Error("Invalid body cell");
+      return result;
+    });
+    if (new Set(normalized.map((c) => c.genome)).size !== programs.length)
+      throw Error("Every body program must be used");
+    normalized.forEach((c, i) => {
+      const neighbors = c.links.filter(Boolean);
+      if (
+        new Set(neighbors).size !== neighbors.length ||
+        c.links.some(
+          (h) =>
+            !Number.isInteger(h) || h < 0 || h > seeds.length || h === i + 1,
+        ) ||
+        neighbors.some((h) => !normalized[h - 1].links.includes(i + 1))
+      )
+        throw Error("Body links must be reciprocal local handles");
+    });
+    {
+      const [stateData, counterData, geneData] = await Promise.all([
+        read(state[parity]),
+        read(scratch, counterOffset, 128),
+        read(scratch, geneOffset, g * 16),
+      ]);
+      const oldWords = new Uint32Array(stateData),
+        counters = new Uint32Array(counterData),
+        stats = new Uint32Array(geneData);
+      const freeCells = [],
+        freeGenes = [];
+      for (let i = 0; i < n; i++)
+        if (oldWords[i * 52 + 31] === 0) freeCells.push(i);
+      for (let i = 0; i < g; i++) if (stats[i * 4] === 0) freeGenes.push(i);
+      if (freeCells.length < seeds.length || freeGenes.length < programs.length)
+        return {
+          admitted: 0,
+          reason: "capacity",
+          cellSlots: [],
+          genomeSlots: [],
+        };
+      if (
+        counters[11] + seeds.length > 0xffffffff ||
+        counters[12] + programs.length > 0xffffffff
+      )
+        throw Error("Arrival identity capacity exceeded");
+      const cellSlots = freeCells.slice(0, seeds.length),
+        genomeSlots = freeGenes.slice(0, programs.length);
+      const records = prepared.map((p, j) =>
+        treeRecord(
+          p.tree,
+          counters[12] + j,
+          p.origin
+            ? {
+                id: p.origin.serial,
+                founder: p.origin.founder,
+                depth: p.origin.depth,
+              }
+            : null,
+          p.secondOrigin?.serial ?? 0,
+          p.mutated,
+        ),
+      );
+      const references = new Uint32Array(programs.length),
+        packets = normalized.map((c, j) => {
+          const data = new ArrayBuffer(CELL_BYTES),
+            cf = new Float32Array(data),
+            cu = new Uint32Array(data),
+            program = c.genome;
+          const wrap = (x, size) => ((x % size) + size) % size;
+          cf.set([wrap(c.x, cfg.side * 32), wrap(c.y, cfg.side * 32), 0, 0], 0);
+          cf.set(
+            [Math.round(c.energy * ENERGY_SCALE), wrap(c.heading, 1), 0, 0],
+            4,
+          );
+          cu.set([counters[11] + j, genomeSlots[program], 0, 0], 24);
+          cu.set([0, 0, 0, 1], 28);
+          cu.set(
+            c.links.map((h) => (h ? cellSlots[h - 1] + 1 : 0)),
+            32,
+          );
+          cf.set(
+            [
+              c.rest,
+              0,
+              Math.round(c.storage * ENERGY_SCALE),
+              cfg.ambientTemperature,
+            ],
+            36,
+          );
+          cf.set(c.anchors, 44);
+          let z = (records[program].record.founder + 0x9e3779b9) >>> 0;
+          z = Math.imul(z ^ (z >>> 16), 0x21f0aaad) >>> 0;
+          z = Math.imul(z ^ (z >>> 15), 0x735a2d97) >>> 0;
+          z = (z ^ (z >>> 15)) >>> 0;
+          cf[48] =
+            c.color === undefined
+              ? Math.fround(((z >>> 8) / 16777216) * 360)
+              : wrap(c.color, 360);
+          references[program]++;
+          if (prepared[program].origin) counters[9]++;
+          else counters[8]++;
+          return data;
+        });
+      counters[1] += seeds.length;
+      counters[11] += seeds.length;
+      counters[12] += programs.length;
+      counters[10] += prepared.filter((p) => p.mutated).length;
+      counters[24] += prepared.filter((p) => p.secondOrigin).length;
+      counters[2] = freeCells.length - seeds.length;
+      counters[4] = freeGenes.length - programs.length;
+      // Validation and all allocation decisions precede the first mutation.
+      records.forEach(({ record, buffer }, j) => {
+        treeSlots[genomeSlots[j]] = record;
+        device.queue.writeBuffer(
+          genomes,
+          genomeSlots[j] * GENOME_BYTES,
+          buffer,
+        );
+        device.queue.writeBuffer(
+          scratch,
+          geneOffset + genomeSlots[j] * 16,
+          new Uint32Array([references[j], 0, 0, 0]),
+        );
+      });
+      packets.forEach((data, j) => {
+        device.queue.writeBuffer(
+          scratch,
+          cpuRemainderOffset + cellSlots[j] * 4,
+          new Float32Array(1),
+        );
+        device.queue.writeBuffer(
+          scratch,
+          childStateOffset + cellSlots[j] * 48,
+          new Float32Array(12),
+        );
+        if (cfg.specializationStrength)
+          device.queue.writeBuffer(
+            scratch,
+            specializationOffset + cellSlots[j] * 16,
+            new Float32Array(4),
+          );
+        if (cfg.linkedRelay) {
+          device.queue.writeBuffer(
+            scratch,
+            relayOffset + cellSlots[j] * 16,
+            new Float32Array(4),
+          );
+          device.queue.writeBuffer(
+            scratch,
+            relayOffset + n * 16 + cellSlots[j] * 16,
+            new Float32Array(4),
+          );
+        }
+        device.queue.writeBuffer(
+          state[parity],
+          cellSlots[j] * CELL_BYTES,
+          data,
+        );
+        device.queue.writeBuffer(
+          scratch,
+          treeMemoryOffset + cellSlots[j] * 48,
+          new Uint32Array(12),
+        );
+        device.queue.writeBuffer(
+          activity,
+          cellSlots[j] * 32,
+          new Uint32Array(8),
+        );
+      });
+      device.queue.writeBuffer(scratch, counterOffset, counters);
+      await device.queue.onSubmittedWorkDone();
+      return {
+        admitted: seeds.length,
+        cellSlots,
+        genomeSlots,
+        serials: records.map((r) => r.record.id),
+        mutations: prepared.filter((p) => p.mutated).length,
+        crossovers: prepared.filter((p) => p.secondOrigin).length,
+      };
+    }
+  }
+
+  const bodySampler =
+    cfg.treePrograms && cfg.bodyShare > 0 && !cfg.manualArrivals
+      ? new BodyArchive({
+          rng: treeRng(cfg.seed ^ 0x71234311),
+          maxCells: cfg.bodyMaxCells,
+          minimumAge: cfg.archiveAge,
+        })
+      : null;
+  const bodyRandom = treeRng(cfg.seed ^ 0x84673a01);
+  const bodyStats = { captured: 0, admitted: 0, bodyCells: 0 };
+  async function admitAutomaticBodies() {
+    const [buffer, geneData, counterData] = await Promise.all([
+      read(state[parity]),
+      read(scratch, geneOffset, g * 16),
+      read(scratch, counterOffset, 128),
+    ]);
+    const words = new Uint32Array(buffer),
+      stats = new Uint32Array(geneData),
+      counters = new Uint32Array(counterData);
+    if (tick % (cfg.bodyCaptureSeconds * 60) === 0)
+      bodyStats.captured += await bodySampler.capture(api, buffer);
+    let freeCells = 0,
+      freeGenes = 0;
+    for (let i = 0; i < n; i++) freeCells += Number(words[i * 52 + 31] === 0);
+    for (let i = 0; i < g; i++) freeGenes += Number(stats[i * 4] === 0);
+    // counter[16] includes the steady rate AND population-floor replenishment.
+    let remaining = Math.min(counters[16], freeCells);
+    while (remaining > 0 && freeGenes > 0) {
+      const plan = bodySampler.plan(api, {
+        budget: remaining,
+        freeCells,
+        freeGenes,
+        connected: bodyRandom() < cfg.bodyPreserveLinks,
+        rng: bodyRandom,
+        bodyShare: cfg.bodyShare,
+        archiveShare: cfg.share,
+        mutation: cfg.mutation,
+        crossover: cfg.crossover,
+      });
+      if (!plan.cells.length) break;
+      const result = await admitBody(plan);
+      if (!result.admitted) break;
+      bodyStats.admitted += result.admitted;
+      if (plan.source === "body")
+        bodyStats.bodyCells += plan.provenance.sourceSlots.length;
+      remaining -= result.admitted;
+      freeCells -= result.admitted;
+      freeGenes -= plan.programs.length;
+    }
+  }
+  const api = {
     cfg,
     fingerprint,
     genomeSampler: cfg.treePrograms
@@ -625,47 +1109,82 @@ export async function createLifeEngine(device, options = {}) {
     get currentState() {
       return state[parity];
     },
+    async cellSpecialization(slot) {
+      if (!Number.isInteger(slot) || slot < 0 || slot >= n)
+        throw Error("Invalid cell slot");
+      if (!cfg.specializationStrength) return [0, 0, 0];
+      return [
+        ...new Float32Array(
+          await read(scratch, specializationOffset + slot * 16, 16),
+        ),
+      ].slice(0, 3);
+    },
+    async admitBody(body) {
+      if (hostOperation) throw Error("Engine operation already in progress");
+      hostOperation = true;
+      try {
+        return await admitBody(body);
+      } finally {
+        hostOperation = false;
+      }
+    },
+    bodyStats() {
+      return { ...bodyStats, archived: bodySampler?.size ?? 0 };
+    },
     async step(ticks = 1) {
       if (!Number.isInteger(ticks) || ticks < 0 || ticks > 600)
         throw Error("step accepts 0–600 ticks");
-      let encoder = device.createCommandEncoder();
-      for (let k = 0; k < ticks; k++) {
-        tick++;
-        for (const name of stages) {
-          if (cfg.treePrograms && name === "arrivals") continue;
-          if (name === "weather" && tick !== 1 && tick % 30 !== 0) continue;
-          if (
-            ["geneScan", "archiveUpdate", "arrivals"].includes(name) &&
-            tick % 60 !== 0
-          )
-            continue;
-          let count = n;
-          if (["field", "foodDebit"].includes(name)) count = t;
-          else if (name === "clear") count = Math.max(n, t, 128);
-          else if (name === "weather") count = cfg.sources;
-          else if (name === "geneScan") count = g;
-          else if (name === "archiveUpdate") count = 128;
-          else if (name === "arrivals")
-            count = Math.min(n, cfg.rate + Math.floor(n / 512) + 1);
-          dispatch(encoder, name, count);
+      if (hostOperation) throw Error("Engine operation already in progress");
+      hostOperation = true;
+      try {
+        let encoder = device.createCommandEncoder();
+        for (let k = 0; k < ticks; k++) {
+          tick++;
+          for (const name of stages) {
+            if (name === "broadcast" && !cfg.linkedRelay) continue;
+            if (cfg.treePrograms && name === "arrivals") continue;
+            if (name === "weather" && tick !== 1 && tick % 30 !== 0) continue;
+            if (
+              ["geneScan", "archiveUpdate", "arrivals"].includes(name) &&
+              tick % 60 !== 0
+            )
+              continue;
+            let count = n;
+            if (["field", "foodDebit"].includes(name)) count = t;
+            else if (name === "clear") count = Math.max(n, t, 128);
+            else if (name === "weather") count = cfg.sources;
+            else if (name === "geneScan") count = g;
+            else if (name === "archiveUpdate") count = 128;
+            else if (name === "arrivals")
+              count = Math.min(n, cfg.rate + Math.floor(n / 512) + 1);
+            dispatch(encoder, name, count);
+          }
+          if (cfg.treePrograms && tick % 60 === 0) {
+            device.queue.submit([encoder.finish()]);
+            await device.queue.onSubmittedWorkDone();
+            const count = await prepareTreeArrivals();
+            encoder = device.createCommandEncoder();
+            dispatch(encoder, "arrivals", count);
+          }
+          if (cfg.forkMutation > 0 && tick % 16 === 0) {
+            device.queue.submit([encoder.finish()]);
+            await device.queue.onSubmittedWorkDone();
+            await resolveBirthMutations();
+            encoder = device.createCommandEncoder();
+          }
+          parity = 1 - parity;
+          if (bodySampler && tick % 60 === 0) {
+            device.queue.submit([encoder.finish()]);
+            await device.queue.onSubmittedWorkDone();
+            await admitAutomaticBodies();
+            encoder = device.createCommandEncoder();
+          }
         }
-        if (cfg.treePrograms && tick % 60 === 0) {
-          device.queue.submit([encoder.finish()]);
-          await device.queue.onSubmittedWorkDone();
-          const count = await prepareTreeArrivals();
-          encoder = device.createCommandEncoder();
-          dispatch(encoder, "arrivals", count);
-        }
-        if (cfg.forkMutation > 0 && tick % 16 === 0) {
-          device.queue.submit([encoder.finish()]);
-          await device.queue.onSubmittedWorkDone();
-          await resolveBirthMutations();
-          encoder = device.createCommandEncoder();
-        }
-        parity = 1 - parity;
+        device.queue.submit([encoder.finish()]);
+        await device.queue.onSubmittedWorkDone();
+      } finally {
+        hostOperation = false;
       }
-      device.queue.submit([encoder.finish()]);
-      await device.queue.onSubmittedWorkDone();
     },
     armExecutionTrace(selected, seed) {
       if (!cfg.executionTrace) throw Error("Execution tracing was not enabled");
@@ -786,6 +1305,12 @@ export async function createLifeEngine(device, options = {}) {
         substrate: "tree",
       };
     },
+    archivedGenomeSlots() {
+      const ids = new Set(treeArchive.map((r) => r.id));
+      return treeSlots.flatMap((r, slot) =>
+        r && ids.has(r.id) ? [{ slot, id: r.id, founder: r.founder }] : [],
+      );
+    },
     archivedTrees() {
       return structuredClone(treeArchive);
     },
@@ -818,7 +1343,7 @@ export async function createLifeEngine(device, options = {}) {
         const code =
             typeof source === "string"
               ? compile(source)
-              : compileTree(source.tree),
+              : compileTree(source.tree, cfg),
           v = new DataView(code.buffer),
           base = j * GENOME_BYTES;
         if (typeof source !== "string") {
@@ -912,6 +1437,7 @@ export async function createLifeEngine(device, options = {}) {
         b.destroy();
     },
   };
+  return api;
 }
 export function describeGenome(buffer, index = 0) {
   const view = new DataView(buffer),
