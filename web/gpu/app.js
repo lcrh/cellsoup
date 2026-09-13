@@ -41,7 +41,7 @@ for (const [title, fields] of settingGroups) {
     const hint = document.createElement("p");
     hint.className = "hint";
     hint.textContent =
-      "At capacity, the separate newcomer rate replaces randomly selected living cells (or corpses if none are alive). Set it to 0 to stop arrivals when full. The rate is a target; replacement availability can limit it.";
+      "At capacity, the separate newcomer rate replaces living cells with selection weighted toward lower usable energy (or corpses if none are alive). Set it to 0 to stop arrivals when full. The rate is a target; replacement availability can limit it.";
     section.append(hint);
   }
   if (title === "Physics & reach") {
@@ -55,7 +55,7 @@ for (const [title, fields] of settingGroups) {
     const hint = document.createElement("p");
     hint.className = "hint";
     hint.textContent =
-      "Each pathway’s efficiency multiplies its specialization multiplier. Converted or eaten material is spent even when some energy is lost. Lifespan 0 means unlimited age; reaching a finite lifespan leaves a normal edible corpse. Closing-speed attacks multiply damage by 1 + bonus × relative approach speed (world units/sec).";
+      "Fill scales make intake less efficient as a pool grows; 0 disables this effect. Higher scales support larger pools. Linked sharing conserves existing reserves. Each pathway’s efficiency also multiplies its specialization multiplier. Converted or eaten material is spent even when some energy is lost. Lifespan 0 means unlimited age; reaching a finite lifespan leaves a normal edible corpse. Closing-speed attacks multiply damage by 1 + bonus × relative approach speed (world units/sec).";
     section.append(hint);
   }
   if (title === "Mutation styles") {
@@ -390,6 +390,25 @@ function updateSelection(fit = false) {
   $("cell-energy").textContent = (snap.f[k + 4] / 4096).toFixed(1);
   $("cell-age").textContent = time(snap.u[k + 28] / 60);
   $("cell-storage").textContent = (snap.f[k + 38] / 4096).toFixed(1);
+  for (const [id, amount, scale, capacity] of [
+    [
+      "cell-energy",
+      snap.f[k + 4] / 4096,
+      engine.cfg.energyFillScale,
+      engine.cfg.energyCapacity,
+    ],
+    [
+      "cell-storage",
+      snap.f[k + 38] / 4096,
+      engine.cfg.storageFillScale,
+      engine.cfg.storageCapacity,
+    ],
+  ]) {
+    $(id).title =
+      scale > 0
+        ? `Fill scale ${scale}; marginal intake efficiency ${(100 * Math.exp(-amount / scale)).toFixed(1)}% before pathway efficiency. Safety limit ${capacity}.`
+        : `Diminishing intake disabled. Safety limit ${capacity}.`;
+  }
   $("body-motion").textContent = bodyMotion(snap, body).toFixed(1);
   $("cell-light").textContent = `${Math.round(snap.f[k + 37] * 100)}%`;
   $("cell-barrier").textContent =

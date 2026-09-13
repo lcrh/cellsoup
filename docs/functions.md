@@ -772,7 +772,7 @@ Do nothing for this instruction. Ordinary upkeep still applies.
 
 No inputs → Action. Core toolkit; always enabled.
 
-Harvest sunlight into usable energy. Limited by light per tick and by specialization efficiency.
+undefined
 
 ```lisp
 (photosynthesize)
@@ -782,7 +782,7 @@ Harvest sunlight into usable energy. Limited by light per tick and by specializa
 
 No inputs → Action. Core toolkit; always enabled.
 
-Eat a randomly selected nearby corpse. Usable gain depends on specialization; the consumed material is removed once.
+undefined
 
 ```lisp
 (eat)
@@ -892,7 +892,7 @@ Set your integer tag.
 
 Number → Action. Core toolkit; always enabled.
 
-Convert usable energy into stored reserves; keeps a tiny usable reserve.
+undefined
 
 ```lisp
 (store 0.5)
@@ -902,7 +902,7 @@ Convert usable energy into stored reserves; keeps a tiny usable reserve.
 
 Number → Action. Core toolkit; always enabled.
 
-Consume stored reserves to gain usable energy, reduced by specialization efficiency. Cannot rescue an already dead cell.
+undefined
 
 ```lisp
 (mobilize 0.5)
@@ -952,7 +952,7 @@ Strike a nearby living target with the supplied effort, capped by Maximum strike
 
 Cell, Number → Action.
 
-Give a fraction (0–1) of your usable energy to a nearby or directly linked living target, preserving a tiny reserve.
+undefined
 
 ```lisp
 (give (nearest living) 0.5)

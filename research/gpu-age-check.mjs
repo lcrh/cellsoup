@@ -14,6 +14,10 @@ const errors = [],
 device.addEventListener("uncapturederror", (e) => errors.push(e.error.message));
 const base = {
   capacityRate: 0,
+  energyFillScale: 0,
+  storageFillScale: 0,
+  energyCapacity: 200,
+  storageCapacity: 400,
   capacity: 8,
   genomeCapacity: 4,
   initial: 0,

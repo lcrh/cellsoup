@@ -26,6 +26,8 @@ const engine = await createLifeEngine(device, {
   cpuCost: 0,
   energyCapacity: 300,
   storageCapacity: 600,
+  energyFillScale: 0,
+  storageFillScale: 0,
   shieldCapacity: 20,
 });
 const texture = device.createTexture({
@@ -114,10 +116,42 @@ try {
     fullStorage[1] > halfStorage[1] + 50,
     "Storage view must use configured 600-point capacity",
   );
+  engine.cfg.energyCapacity = 4095;
+  engine.cfg.storageCapacity = 3895;
+  engine.cfg.energyFillScale = 50;
+  engine.cfg.storageFillScale = 100;
+  set(4, 150 * 4096);
+  const saturatedEnergy = center(await pixels(2));
+  set(4, 75 * 4096);
+  const moderateEnergy = center(await pixels(2));
+  assert.deepEqual(
+    saturatedEnergy,
+    fullEnergy,
+    "Three fill scales reaches full energy color despite a generous hard limit",
+  );
+  assert.deepEqual(
+    moderateEnergy,
+    halfEnergy,
+    "Energy color retains detail at ordinary pool levels",
+  );
+  set(38, 300 * 4096);
+  const saturatedStorage = center(await pixels(1));
+  set(38, 150 * 4096);
+  const moderateStorage = center(await pixels(1));
+  assert.deepEqual(
+    saturatedStorage,
+    fullStorage,
+    "Three fill scales reaches full storage color despite a generous hard limit",
+  );
+  assert.deepEqual(
+    moderateStorage,
+    halfStorage,
+    "Storage color retains detail at ordinary pool levels",
+  );
   await device.queue.onSubmittedWorkDone();
   assert.deepEqual(errors, []);
   console.log(
-    "PASS visible barrier rim, barrier color view, and configured energy/storage color scales",
+    "PASS barrier rim/view, energy/storage fill-scale colors, and disabled-curve capacity fallback",
   );
 } finally {
   renderer.destroy();

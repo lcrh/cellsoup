@@ -1,3 +1,8 @@
+import {
+  MAX_ENERGY_CAPACITY,
+  MAX_STORAGE_CAPACITY,
+  MAX_FILL_SCALE,
+} from "./energy-fill.js";
 import { BodyArchive } from "./body-archive.js";
 import { capacityVictims } from "./capacity-arrivals.js";
 import {
@@ -95,7 +100,9 @@ export const defaults = {
   specializationStrength: 0,
   specializationTime: 60,
   maximumAge: 0,
-  energyCapacity: 200,
+  energyCapacity: MAX_ENERGY_CAPACITY,
+  energyFillScale: 100,
+  storageFillScale: 100,
   seedEnergy: 24,
   seedStorage: 24,
   upkeep: 0.5,
@@ -138,7 +145,7 @@ export const defaults = {
   corpseEnergy: 8,
   corpseLifetime: 900,
   eatCost: 0.04,
-  storageCapacity: 400,
+  storageCapacity: MAX_STORAGE_CAPACITY,
 };
 export async function createLifeEngine(device, options = {}) {
   const allocated = [];
@@ -270,11 +277,15 @@ async function buildLifeEngine(device, options, allocated) {
     cfg.corpseEnergy > 200 ||
     cfg.solarEnabled > 1 ||
     cfg.energyCapacity < 40 ||
-    cfg.energyCapacity > 1000 ||
+    cfg.energyCapacity > MAX_ENERGY_CAPACITY ||
+    (cfg.energyFillScale > 0 && cfg.energyFillScale < 1) ||
+    (cfg.storageFillScale > 0 && cfg.storageFillScale < 1) ||
+    cfg.energyFillScale > MAX_FILL_SCALE ||
+    cfg.storageFillScale > MAX_FILL_SCALE ||
     cfg.seedEnergy > cfg.energyCapacity ||
     cfg.minimumBirthEnergy < 1 / ENERGY_SCALE ||
     cfg.divisionCost + 2 * cfg.minimumBirthEnergy > cfg.energyCapacity ||
-    cfg.storageCapacity > 1000 ||
+    cfg.storageCapacity > MAX_STORAGE_CAPACITY ||
     cfg.seedStorage > cfg.storageCapacity ||
     cfg.energyDecay > 1 ||
     cfg.budget > 128 ||
@@ -328,19 +339,18 @@ async function buildLifeEngine(device, options, allocated) {
     (cfg.linkedRelay > 0 ? n * 32 : 0) +
     (cfg.treePrograms ? n * 8 : 0);
   const resistanceOffset = cpuRemainderOffset + n * 4;
-  const scratch = storage(
-      Math.ceil((resistanceOffset + (cfg.treePrograms ? n * 4 : 0)) / 16) * 16,
-    ),
+  const fillRemainderOffset = resistanceOffset + (cfg.treePrograms ? n * 4 : 0);
+  const scratch = storage(Math.ceil((fillRemainderOffset + n * 8) / 16) * 16),
     genomes = storage(g * GENOME_BYTES),
     archive = storage(128 * GENOME_BYTES),
     food = storage(t * 16 + cfg.sources * 32),
     intents = storage(n * 128),
     activity = storage(n * 32);
   const uniform = createOwnedBuffer({
-    size: 336,
+    size: 352,
     usage: GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST,
   });
-  const settings = new ArrayBuffer(336),
+  const settings = new ArrayBuffer(352),
     u = new Uint32Array(settings),
     f = new Float32Array(settings);
   u.set([cfg.seed, cfg.budget, cfg.initial, cfg.floor]);
@@ -436,6 +446,7 @@ async function buildLifeEngine(device, options, allocated) {
     64,
   );
   f.set([cfg.resistCost, cfg.resistStrength, cfg.attackSpeedBonus, 0], 80);
+  f.set([cfg.energyFillScale, cfg.storageFillScale, 0, 0], 84);
   device.queue.writeBuffer(uniform, 0, settings);
   const source = simulationShader(cfg);
   const fingerprint = [
@@ -1102,6 +1113,16 @@ async function buildLifeEngine(device, options, allocated) {
       });
       packets.forEach((data, j) => {
         device.queue.writeBuffer(
+          scratch,
+          fillRemainderOffset + cellSlots[j] * 4,
+          new Float32Array(1),
+        );
+        device.queue.writeBuffer(
+          scratch,
+          fillRemainderOffset + n * 4 + cellSlots[j] * 4,
+          new Float32Array(1),
+        );
+        device.queue.writeBuffer(
           intents,
           cellSlots[j] * 128,
           new Uint32Array(32),
@@ -1283,6 +1304,18 @@ async function buildLifeEngine(device, options, allocated) {
     },
     get currentState() {
       return state[parity];
+    },
+    async cellFillRemainders(slot) {
+      if (!Number.isInteger(slot) || slot < 0 || slot >= n)
+        throw Error("Invalid cell slot");
+      return [
+        new Float32Array(
+          await read(scratch, fillRemainderOffset + slot * 4, 4),
+        )[0],
+        new Float32Array(
+          await read(scratch, fillRemainderOffset + n * 4 + slot * 4, 4),
+        )[0],
+      ];
     },
     async cellResistance(slot) {
       if (!Number.isInteger(slot) || slot < 0 || slot >= n)

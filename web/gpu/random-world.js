@@ -1,3 +1,4 @@
+import { MAX_ENERGY_CAPACITY, MAX_STORAGE_CAPACITY } from "./energy-fill.js";
 import { isCoreFunction } from "./core-language.js";
 import { TREE_SCHEMA, treeRng } from "./trees.js";
 // Explore around the working ecology defaults, not the full (often lethal)
@@ -47,8 +48,11 @@ export function worldSettingsForSeed(seed, { capacity = 32768 } = {}) {
     initial: Math.floor(capacity * pick([1 / 32, 1 / 16, 1 / 8, 1 / 4])),
     archiveEnabled: pick([0, 1, 1, 1, 1, 1]),
     solarEnabled,
-    energyCapacity: pick([100, 150, 200, 300, 400]),
-    storageCapacity: pick([100, 200, 400, 600]),
+    // Keep numerical headroom generous; randomize the biologically relevant knees.
+    energyCapacity: MAX_ENERGY_CAPACITY,
+    storageCapacity: MAX_STORAGE_CAPACITY,
+    energyFillScale: pick([40, 60, 80, 100, 140]),
+    storageFillScale: pick([40, 60, 80, 120, 160, 240]),
     archiveAge: pick([30, 60, 90, 120]),
     archiveHarvest: pick([40, 80, 120, 180, 240]),
     archiveOffspring: pick([2, 4, 8, 12]),

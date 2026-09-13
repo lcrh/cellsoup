@@ -4,13 +4,15 @@ The interactive `/gpu.html` prototype runs program execution, physics, evolution
 
 ## Energy and storage
 
-Usable energy is cell-local and pays upkeep, proportional decay and actions. Reaching zero kills the cell even if storage remains. Storage is stable and diffuses conservatively across reciprocal links. `store result amount` converts usable energy into storage; `mobilize result amount` converts it back. Both return the actual amount converted. Voluntary spending retains a tiny positive energy reserve. Explicit fractional energy gifts can reach a living target within 18 units, or travel through a reciprocal spring link up to its 65-unit breaking distance. Gifts remain limited by recipient capacity and the donor reserve; attacks still require proximity within 18 units.
+Usable energy is cell-local and pays upkeep, proportional decay and actions. Reaching zero kills the cell even if storage remains. Storage is stable and diffuses conservatively across reciprocal links. `store result amount` converts usable energy into storage; `mobilize result amount` converts it back. Both return the actual amount credited. Usable energy and reserves use independently configurable logarithmic fill curves; fuller pools retain less of a new input. Conversion losses dissipate. Voluntary spending retains a tiny positive energy reserve. Explicit fractional energy gifts can reach a living target within 18 units, or travel through a reciprocal spring link up to its 65-unit breaking distance. With nonlinear fill enabled, gifts consume the donor’s full transfer and aggregate at the recipient before its fill curve is applied; unretained energy dissipates. The donor keeps a tiny usable reserve; attacks still require proximity within 18 units.
 
 Sunlight and energy expenditure heat cells. Cells cool toward ambient temperature, with nearby living cells reducing their cooling rate. Linked cells exchange temperature using the previous tick's values, so exposed cells can conduct heat away from a crowded body. There is no direct crowding energy penalty. Above the configurable safe temperature, heat stress drains usable energy and can kill. Conversion between usable energy and reserves does not itself generate heat. The inspector and temperature view show cell temperature; `sense result temperature`, `sense result linked_temperature` (neighbor mean, zero if none), and `peek result target temperature` expose it to programs. `sense result crowding` reads the local, distance-weighted living-neighbor density.
 
 Sunlight varies under slowly drifting, morphing cloud shadows, with broad penumbrae and rare bright peaks. Peak photosynthesis defaults to 4 energy per second; Bright peak rarity controls how strongly illumination concentrates into those peaks. There are no environmental food drops and no automatic absorption. `photosynthesize result` harvests local sunlight, subject to a per-cell, per-tick limit shared across repeated calls. `gradient bearing strength` senses sunlight in coordinates relative to the cell's heading.
 
 `attack target amount` spends energy to reduce a nearby living target's usable energy. It does not credit the attacker. On death, body material plus stored energy becomes an edible corpse. Corpses decay over 15 simulated minutes by default (configurable), with fractional decay preserved for small remains, and occupy population slots until consumed or decayed. `eat result` chooses a random corpse within 18 units and consumes remains into usable energy, without requiring a scan or target register; competing eaters cannot consume more than the corpse contains.
+
+For the exact fill equation, numerical bounds and current controls, see [logarithmic energy filling](release-0.9.3.md).
 
 ## Sensing
 
@@ -39,7 +41,7 @@ A 180-second autonomous pilot with 2,048 independently random founders in 8,192 
 
 The headless runner accepts `--close-at=300` to stop both steady immigration and low-population replenishment after five simulated minutes. Output records the closure time, arrival total, starting configuration and final configuration. A population surviving beyond closure can no longer be explained by continued newcomers, although corpses from the initial population can still feed survivors. Continuing reproduction across cloud cycles, energy sources and lineage diversity all matter when interpreting these trials.
 
-Scheduled newcomers reserve available slots before divisions on their arrival tick. This prevents rapidly dividing residents from taking all newly free slots. It does not evict living cells or corpses when capacity is completely occupied.
+Scheduled newcomers reserve available slots before divisions on their arrival tick. This prevents rapidly dividing residents from taking all newly free slots. A separate configurable at-capacity rate replaces living cells with probability proportional to the inverse of their usable energy (or reclaims corpses uniformly when no living cells remain). Genome-allocation safeguards can limit actual arrivals.
 
 ## Affordable movement assay
 

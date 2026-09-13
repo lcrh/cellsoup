@@ -10,7 +10,9 @@ capacity are independent and stay fixed when you roll another world.
 
 Cells harvest sunlight, scavenge corpses, turn shared reserves into usable
 energy, attack, divide, move and connect through spring links. Clouds move slowly;
-heat and crowding create ecological costs. An optional lifespan limits survival
+heat and crowding create ecological costs. Both usable energy and stored reserves
+fill logarithmically: fuller pools require more input for each additional unit.
+Their separate fill scales are adjustable and vary between random worlds. An optional lifespan limits survival
 even when energy is plentiful; deaths leave edible remains. With specialization enabled, cells
 adapt to recent intake and mixing energy pathways reduces efficiency.
 
@@ -25,7 +27,9 @@ Evolution begins with random programs. New arrivals combine fresh random genomes
 with previously successful lineages, optional crossover and adjustable mutation
 styles. Division mutation is separate. A structural archive can reintroduce
 small connected fragments instead of only isolated genomes. No authored creature
-is required to start a world.
+is required to start a world. At capacity, newcomers preferentially replace cells
+with low usable energy; high-energy cells remain eligible. Reserves are not part
+of this replacement weight.
 
 The [function reference](docs/functions.md), also available in the application,
 explains primitives, types and examples.

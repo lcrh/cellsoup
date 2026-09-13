@@ -263,8 +263,18 @@ export async function createRenderer(device, canvas, engine, format) {
         );
         f.set(
           [
-            engine.cfg.energyCapacity,
-            engine.cfg.storageCapacity,
+            engine.cfg.energyFillScale > 0
+              ? Math.min(
+                  engine.cfg.energyCapacity,
+                  3 * engine.cfg.energyFillScale,
+                )
+              : engine.cfg.energyCapacity,
+            engine.cfg.storageFillScale > 0
+              ? Math.min(
+                  engine.cfg.storageCapacity,
+                  3 * engine.cfg.storageFillScale,
+                )
+              : engine.cfg.storageCapacity,
             engine.cfg.shieldCapacity,
             0,
           ],

@@ -18,6 +18,10 @@ let errors = [];
 device.addEventListener("uncapturederror", (e) => errors.push(e.error.message));
 const options = {
   capacityRate: 0,
+  energyFillScale: 0,
+  storageFillScale: 0,
+  energyCapacity: 200,
+  storageCapacity: 400,
   forkMutation: 0,
   treePrograms: 0,
   capacity: 64,

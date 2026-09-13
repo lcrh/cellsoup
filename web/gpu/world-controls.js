@@ -1,3 +1,8 @@
+import {
+  MAX_ENERGY_CAPACITY,
+  MAX_STORAGE_CAPACITY,
+  MAX_FILL_SCALE,
+} from "./energy-fill.js";
 export const WORLD_CAPACITIES = [32768, 65536, 131072, 262144];
 // Public model controls. Structural buffer and VM dimensions remain internal.
 export const SETTING_GROUPS = [
@@ -32,10 +37,36 @@ export const SETTING_GROUPS = [
   [
     "Energy & reserves",
     [
-      ["energyCapacity", "Usable energy capacity per cell", 40, 1000, 1],
+      [
+        "energyCapacity",
+        "Usable energy upper limit",
+        40,
+        MAX_ENERGY_CAPACITY,
+        1,
+      ],
+      [
+        "energyFillScale",
+        "Energy fill scale K (0 = linear)",
+        0,
+        MAX_FILL_SCALE,
+        1,
+      ],
       ["seedEnergy", "Newcomer energy", 1, 1000, 1],
       ["seedStorage", "Newcomer storage", 0, 1000, 1],
-      ["storageCapacity", "Storage capacity per cell", 0, 1000, 1],
+      [
+        "storageCapacity",
+        "Stored reserves upper limit",
+        0,
+        MAX_STORAGE_CAPACITY,
+        1,
+      ],
+      [
+        "storageFillScale",
+        "Reserves fill scale K (0 = linear)",
+        0,
+        MAX_FILL_SCALE,
+        1,
+      ],
       ["photoEfficiency", "Photosynthesis efficiency", 0.1, 1, 0.05],
       ["scavengeEfficiency", "Scavenging efficiency", 0.1, 1, 0.05],
       [

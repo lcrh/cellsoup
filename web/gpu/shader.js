@@ -9,7 +9,7 @@ export function simulationShader({
   forkMutation = 0,
   specializationStrength = 0,
   linkedRelay = 0,
-  energyCapacity = 200,
+  energyCapacity = 3895,
 }) {
   const types = { r: 1, v: 2, l: 3, s: 4, p: 5 };
   const signatures = GPU_OPS.map(
@@ -108,6 +108,8 @@ ${linkedRelay > 0 ? "  relayA:array<vec4f,N>, relayB:array<vec4f,N>," : ""}
 ${treePrograms ? "  colonyParent:array<atomic<u32>,N>, colonyCount:array<atomic<u32>,N>," : ""}
   cpuRemainder:array<f32,N>,
 ${treePrograms ? "  resistance:array<f32,N>," : ""}
+  energyFillRemainder:array<f32,N>,
+  storageFillRemainder:array<f32,N>,
 }
 struct Field {
   a:array<vec2f,T>,
@@ -138,6 +140,7 @@ struct Config {
   efficiency:vec4f,
   geometry:vec4f,
   bracing:vec4f,
+  fill:vec4f,
 }
 @group(0) @binding(0) var<storage,read> old:array<Cell>;
 @group(0) @binding(1) var<storage,read_write> cells:array<Cell>;
@@ -228,6 +231,26 @@ ${
   return credit;`
     : "  return u32(floor(f32(raw)*cfg.efficiency[pathway+1u]));"
 }
+}
+// Integral of d(pool)/d(input)=exp(-pool/K), in integer-energy quanta.
+// Separate fractional carry prevents instruction-sized credits rounding to zero.
+fn fillCredit(i:u32,pool:u32,balance:f32,input:f32)->u32 {
+  let cap=select(f32(CAP_E),cfg.metabolism.x*Q,pool==1u);
+  let room=max(0.0,cap-balance);
+  let raw=max(0.0,input);
+  let scale=cfg.fill[pool]*Q;
+  var remainder=select(s.energyFillRemainder[i],s.storageFillRemainder[i],pool==1u);
+  if(raw<=0.0){return 0u;}
+  if(scale<=0.0){return u32(min(room,floor(raw)));}
+  let x=(raw/scale)*exp(-balance/scale)*exp(-remainder/scale);
+  var logarithm=0.0;
+  if(x<.001){logarithm=x*(1.0-x*.5+x*x/3.0);}else{logarithm=log(1.0+x);}
+  let gain=clamp(scale*logarithm,0.0,raw);
+  let accrued=min(room,gain+remainder);
+  let credit=floor(accrued);
+  remainder=select(accrued-credit,0.0,accrued>=room);
+  if(pool==0u){s.energyFillRemainder[i]=remainder;}else{s.storageFillRemainder[i]=remainder;}
+  return u32(credit);
 }
 fn hash(x:u32)->u32 {
   var z=x+0x9e3779b9u;
@@ -706,6 +729,7 @@ fn neighborhood(i:u32,mode:u32,predicate:u32,radius:f32,source:ptr<function,Cell
 }
 fn newCell(i:u32,g:u32,identity:u32,seed:u32)->Cell {
   s.cpuRemainder[i]=0;
+  s.energyFillRemainder[i]=0;s.storageFillRemainder[i]=0;
 ${treePrograms ? "  s.resistance[i]=0;" : ""}
 ${treePrograms ? "  for(var k=0u;k<3u;k++){s.childState[i*3u+k]=vec4f(0);}" : ""}
 ${specializationStrength > 0 ? "  s.metabolicHistory[i]=vec4f(0);" : ""}
@@ -1220,8 +1244,8 @@ ${executionTrace ? `        if(traceRow!=0xffffffffu){let n=s.traceCounts[traceR
           c.mail[ch]=0.0;
         }
         case 40u: {
-          let amount=min(photons,CAP_E-u32(c.b.x)); photons-=amount;
-          let credit=harvestCredit(i,0u,amount);
+          let amount=select(photons,min(photons,CAP_E-u32(c.b.x)),cfg.fill.x==0.0); photons-=amount;
+          let credit=fillCredit(i,0u,c.b.x,f32(harvestCredit(i,0u,amount)));
           c.b.x+=f32(credit); c.r[d]=f32(credit)/Q; c.phen.z+=f32(credit)/Q;
           if(credit>0u){let previous=atomicAdd(&s.counter[18],credit);if(previous+credit<previous){atomicAdd(&s.counter[19],1u);}}
         }
@@ -1238,12 +1262,15 @@ ${executionTrace ? `        if(traceRow!=0xffffffffu){let n=s.traceCounts[traceR
           }
         }
         case 43u:{
-          let amount=min(quantum(max(0.0,b)),min(u32(max(0.0,c.b.x-1.0)),u32(max(0.0,cfg.metabolism.x*Q-c.res.z))));
-          c.b.x-=f32(amount);c.res.z+=f32(amount);c.r[d]=f32(amount)/Q;
+          let requested=min(quantum(max(0.0,b)),u32(max(0.0,c.b.x-1.0)));
+          let amount=select(requested,min(requested,u32(max(0.0,cfg.metabolism.x*Q-c.res.z))),cfg.fill.y==0.0);
+          let credit=fillCredit(i,1u,c.res.z,f32(amount));
+          c.b.x-=f32(amount);c.res.z+=f32(credit);c.r[d]=f32(credit)/Q;
         }
         case 44u:{
-          let amount=min(quantum(max(0.0,b)),min(u32(c.res.z),CAP_E-u32(c.b.x)));
-          let credit=harvestCredit(i,2u,amount);
+          let requested=min(quantum(max(0.0,b)),u32(c.res.z));
+          let amount=select(requested,min(requested,CAP_E-u32(c.b.x)),cfg.fill.x==0.0);
+          let credit=fillCredit(i,0u,c.b.x,f32(harvestCredit(i,2u,amount)));
           c.res.z-=f32(amount);c.b.x+=f32(credit);c.r[d]=f32(credit)/Q;
         }
 ${
@@ -1358,6 +1385,8 @@ ${executionTrace ? `      if(traceRow!=0xffffffffu){let n=s.traceCounts[traceRow
   if(j==NONE) {
     return;
   }
+  // Nonlinear recipients consume the complete wide aggregate in theftPlan.
+  if(cfg.fill.x>0.0){return;}
   let amount=portion(intents[i].base.y,CAP_E-intents[j].base.x,wideGift(j));
   intents[i].base.y=amount;
   atomicAdd(&s.giftCredit[j],amount);
@@ -1367,14 +1396,15 @@ ${executionTrace ? `      if(traceRow!=0xffffffffu){let n=s.traceCounts[traceRow
   if(i>=N||old[i].life.w==0u) {
     return;
   }
-  let balance=intents[i].base.x-intents[i].base.y+atomicLoad(&s.giftCredit[i]);
+  var balance=intents[i].base.x-intents[i].base.y+atomicLoad(&s.giftCredit[i]);
+  if(cfg.fill.x>0.0&&old[i].life.w==1u){balance+=fillCredit(i,0u,f32(balance),wideGift(i));}
   intents[i].base.z=balance;
   let j=intents[i].aim.y;
   if(j==NONE) {
     return;
   }
   let requested=u32(clamp(round(intents[i].req.y*Q),0.0,f32(CAP_E)+cfg.ecology.x*Q));
-  let amount=select(requested,min(requested,CAP_E-balance),intents[i].misc.z>0u);
+  let amount=select(requested,min(requested,CAP_E-balance),intents[i].misc.z>0u&&cfg.fill.x==0.0);
   intents[i].base.w=amount;
   let prev=atomicAdd(&s.theft[j].lo,amount);
   if(prev+amount<prev) {
@@ -1398,7 +1428,7 @@ fn barrierAbsorption(i:u32)->u32 {
   atomicAdd(&s.theftDebit[j],amount);
   let eating=intents[i].misc.z>0u;
   var credit=0u;
-  if(eating){credit=harvestCredit(i,1u,amount);}
+  if(eating){credit=fillCredit(i,0u,f32(intents[i].base.z),f32(harvestCredit(i,1u,amount)));}
   atomicAdd(&s.theftCredit[i],credit);
   if(eating){if(credit>0u){activity[i].marks.w=tick();}cells[i].r[intents[i].misc.z-1u]=f32(credit)/Q;let previous=atomicAdd(&s.counter[15],credit);if(previous+credit<previous){atomicAdd(&s.counter[23],1u);}cells[i].phen.z+=f32(credit)/Q;}
   else if(amount>0u){activity[i].marks.y=tick();activity[i].impact=vec4f(old[j].p.xy,f32(amount)/Q,activity[i].impact.w);atomicAdd(&s.counter[14],1u);let previous=atomicAdd(&s.counter[20],amount);if(previous+amount<previous){atomicAdd(&s.counter[21],1u);}}
@@ -1586,6 +1616,8 @@ ${
       child.b.w=c.b.w*.5;c.b.w-=child.b.w;
 ${treePrograms ? "      s.resistance[j]=s.resistance[i];" : ""}
       s.cpuRemainder[i]*=.5;s.cpuRemainder[j]=s.cpuRemainder[i];
+      s.energyFillRemainder[i]*=.5;s.energyFillRemainder[j]=s.energyFillRemainder[i];
+      s.storageFillRemainder[i]*=.5;s.storageFillRemainder[j]=s.storageFillRemainder[i];
       let heading=c.b.y*6.2831853;
       child.p=vec4f(wrapped(c.p.xy+vec2f(cos(heading),sin(heading))*14.0),0,0);
       let remaining=u32(c.b.x)-quantum(cfg.energy.z);

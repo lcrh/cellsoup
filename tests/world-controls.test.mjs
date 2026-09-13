@@ -69,8 +69,15 @@ test("random worlds cover every model slider within its control bounds and maint
       assert.equal(cfg.capacity, undefined);
       assert.equal(cfg.side, undefined);
     }
-  for (const [id, values] of observed)
-    assert.ok(values.size > 1, id + " never varies");
+  for (const [id, values] of observed) {
+    if (id === "energyCapacity" || id === "storageCapacity") {
+      assert.equal(
+        values.size,
+        1,
+        "Numerical upper limits stay generous across random worlds",
+      );
+    } else assert.ok(values.size > 1, id + " never varies");
+  }
 });
 test("the capacity selector and saved-setup validator support the 64k tier", async () => {
   assert.deepEqual(WORLD_CAPACITIES, [32768, 65536, 131072, 262144]);
@@ -136,5 +143,14 @@ test("reference switches and imported world masks share the protected core", () 
           functionEnabled(fn.name, masks),
           fn.name,
         );
+  }
+});
+
+test("random worlds use diminishing fill for both pools with generous headroom", () => {
+  for (let seed = 0; seed < 200; seed++) {
+    const cfg = randomWorldSettings({ rng: random(seed) });
+    assert.ok(cfg.energyFillScale > 0 && cfg.storageFillScale > 0);
+    assert.ok(cfg.energyCapacity > 15 * cfg.energyFillScale);
+    assert.ok(cfg.storageCapacity > 15 * cfg.storageFillScale);
   }
 });

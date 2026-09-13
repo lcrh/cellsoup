@@ -75,8 +75,8 @@ const descriptions = {
     "Consume the latest direct mailbox message on this channel; zero if none. Messages differ from persistent broadcasts.",
   nop: "Do nothing for this instruction. Ordinary upkeep still applies.",
   photosynthesize:
-    "Harvest sunlight into usable energy. Limited by light per tick and by specialization efficiency.",
-  eat: "Eat a randomly selected nearby corpse. Usable gain depends on specialization; the consumed material is removed once.",
+    "Harvest sunlight into usable energy. Light per tick, conversion/specialization efficiency, and the energy fill curve determine actual gain.",
+  eat: "Eat a randomly selected nearby corpse. The corpse loses consumed material once; actual usable gain follows conversion/specialization efficiency and the energy fill curve.",
   bud: "Divide, staying linked. Requires energy and a free link slot. Returns through birth-result.",
   split:
     "Divide and disconnect the daughter. Requires sufficient energy. Returns through birth-result.",
@@ -90,15 +90,15 @@ const descriptions = {
   "color-set": "Set your visible hue, wrapping around 360 degrees.",
   "tag-set": "Set your integer tag.",
   store:
-    "Convert usable energy into stored reserves; keeps a tiny usable reserve.",
+    "Spend usable energy to fill stored reserves. Filling becomes less efficient as reserves grow; returns the actual amount stored and keeps a tiny usable reserve.",
   mobilize:
-    "Consume stored reserves to gain usable energy, reduced by specialization efficiency. Cannot rescue an already dead cell.",
+    "Consume stored reserves to gain usable energy, reduced by conversion/specialization efficiency and the current energy fill curve. Returns actual energy gained. Cannot rescue an already dead cell.",
   wait: "Yield execution for the requested number of ticks; wait 0 yields until the next tick.",
   link: "Attempt a reciprocal spring link to a nearby living target.",
   unlink: "Remove the link to this target; none removes all links.",
   attack:
     "Strike a nearby living target with the supplied effort, capped by Maximum strike effort. Damage equals the variable energy actually spent × attack effectiveness; the separate base fee produces no damage. A configurable closing-speed bonus multiplies damage by 1 + bonus × relative approach speed. Barriers absorb hits first. Does not steal reserves; a resulting corpse can be eaten.",
-  give: "Give a fraction (0–1) of your usable energy to a nearby or directly linked living target, preserving a tiny reserve.",
+  give: "Give a fraction (0–1) of your usable energy to a nearby or directly linked living target, preserving a tiny reserve. Incoming gifts are pooled and follow the recipient’s energy fill curve; transferred energy can be lost, never multiplied.",
   emit: "Publish a persistent broadcast on c0–c3, clipped to −100…100, at the configured cost. Neighbors can aggregate it, and nearby cells can listen.",
   send: "Send a direct mailbox message to the chosen linked target and channel. none broadcasts to direct links.",
   state:

@@ -385,7 +385,16 @@
             <p>
               <code>(store amount)</code> creates stable reserves. Linked cells
               share storage. <code>(mobilize amount)</code> turns reserves back
-              into usable energy. These conversions are explicit actions.
+              into usable energy. These conversions are explicit actions. Linked
+              sharing conserves existing reserves.
+            </p>
+            <p>
+              Filling either pool becomes progressively less efficient as it
+              grows. Its configurable fill scale sets how quickly intake slows;
+              0 disables this effect. Energy and storage colors reach full
+              brightness around three times their fill scale, independently of
+              the generous safety limits. Hover over an inspected pool to see
+              its current intake efficiency.
             </p>
             <p>
               <code>(attack target amount)</code> costs energy and strikes the

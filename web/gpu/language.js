@@ -17,7 +17,7 @@ export const GPU_OPS = [
           ? [
               "give",
               "v v",
-              "Give a fraction (0–1) of current energy to a living target within 18 units, or through a reciprocal link up to its 65-unit breaking distance. Limited by receiver capacity and a tiny donor reserve.",
+              "Give a fraction (0–1) of current energy to a living target within 18 units, or through a reciprocal link up to its 65-unit breaking distance. Keeps a tiny donor reserve. Nonlinear recipients aggregate incoming gifts and retain energy through their fill curve; the full donor transfer is spent and unretained energy dissipates.",
             ]
           : op[0] === "shield"
             ? [
@@ -45,12 +45,12 @@ export const GPU_OPS = [
   [
     "store",
     "r v",
-    "Convert up to the requested amount of local energy into stable storage; return amount stored. Keeps a tiny energy reserve.",
+    "Spend up to the requested local energy to fill stable reserves with diminishing efficiency; return the amount actually retained. Keeps a tiny energy reserve.",
   ],
   [
     "mobilize",
     "r v",
-    "Convert up to the requested amount of storage into local energy; return energy gained. Cannot rescue a cell whose energy has already reached zero.",
+    "Consume up to the requested reserves and apply metabolic efficiency plus the energy fill curve; return energy actually gained. Cannot rescue a cell whose energy has already reached zero.",
   ],
   [
     "storage_gradient",
