@@ -23,6 +23,7 @@ const base = {
   forkMutation: 0,
   rate: 0,
   capacityRate: 0,
+  pressureStrength: 0,
   floor: 0,
   upkeep: 0,
   energyDecay: 0,
@@ -48,10 +49,10 @@ async function setup(programs, cells, options = {}) {
 }
 async function state(e) {
   const b = await e.state();
-  assert.equal(b.byteLength, e.cfg.capacity * 208);
+  assert.equal(b.byteLength, e.cfg.capacity * 2 * 208);
   const f = new Float32Array(b),
     u = new Uint32Array(b);
-  return Array.from({ length: e.cfg.capacity }, (_, i) => ({
+  return Array.from({ length: b.byteLength / 208 }, (_, i) => ({
     energy: f[i * 52 + 4] / 4096,
     storage: f[i * 52 + 38] / 4096,
     heading: f[i * 52 + 5],
@@ -66,7 +67,10 @@ async function validate(e) {
   const c = await state(e),
     counts = await e.counters(),
     stats = (await e.genes()).stats;
-  assert.ok(counts.living + counts.corpses <= e.cfg.capacity);
+  assert.ok(counts.living <= e.cfg.capacity * 2);
+  assert.ok(counts.corpses + counts.living <= e.cfg.capacity * 2);
+  assert.ok(counts.corpses <= e.cfg.capacity);
+  assert.equal(counts.corpses, c.filter((c) => c.life === 2).length);
   assert.equal(counts.living, c.filter((c) => c.life === 1).length);
   const refs = new Uint32Array(e.cfg.genomeCapacity);
   for (let i = 0; i < c.length; i++) {
@@ -103,7 +107,7 @@ async function check(name, fn) {
 }
 try {
   await check(
-    "every valid full-capacity division happens, then exactly excess entities are culled",
+    "division may exceed the soft target without killing parents or daughters",
     async () => {
       const e = await setup(
         ["bud r0\nwait 1000"],
@@ -117,59 +121,74 @@ try {
         await e.step();
         const { c, counts } = await validate(e);
         assert.equal(counts.births, 8);
-        assert.equal(counts.capacityDeaths, 8);
+        assert.equal(counts.capacityDeaths, 0);
         assert.equal(counts.kills, 0);
         assert.equal(counts.energyBudget.reproduction, 96);
-        assert.equal(counts.energyBudget.turnover, 352);
-        assert.equal(c.length, 8);
+        assert.equal(counts.energyBudget.turnover, 0);
+        assert.equal(c.length, 16);
+        assert.equal(counts.living, 16);
+        assert.equal(counts.corpses, 0);
       } finally {
         e.destroy();
       }
     },
   );
   await check(
-    "either parent or daughter may survive; child modifiers and orphan links remain correct",
+    "parent and daughter retain child modifiers and reciprocal links above the target",
     async () => {
-      let parents = 0,
-        daughters = 0;
-      for (let seed = 0; seed < 32; seed++) {
-        const e = await setup(
-          [
-            {
-              tree: parseTree(
-                "(seq (child-set m0 99) (seq (child-turn 45) (bud)))",
-              ),
-            },
-          ],
-          [{ energy: 100, memory: [41] }],
-          { capacity: 1, genomeCapacity: 1, treePrograms: 1, seed },
-        );
-        try {
-          await e.step();
-          const { c, counts } = await validate(e),
-            memory = await e.cellMemory(0);
-          assert.equal(counts.births, 1);
-          assert.equal(counts.capacityDeaths, 1);
-          assert.equal(c[0].energy, 44);
-          assert.deepEqual(c[0].links, [0, 0, 0, 0]);
-          if (c[0].id === 1) {
-            parents++;
-            assert.equal(memory[0], 41);
-            assert.equal(c[0].heading, 0);
-          } else {
-            daughters++;
-            assert.equal(memory[0], 99);
-            assert.equal(c[0].heading, 0.125);
-          }
-        } finally {
-          e.destroy();
+      const e = await setup(
+        [
+          {
+            tree: parseTree(
+              "(seq (child-set m0 99) (seq (child-turn 45) (bud)))",
+            ),
+          },
+        ],
+        [{ energy: 100, memory: [41] }],
+        { capacity: 1, genomeCapacity: 1, treePrograms: 1 },
+      );
+      try {
+        await e.step();
+        const { c, counts } = await validate(e);
+        assert.equal(counts.births, 1);
+        assert.equal(counts.capacityDeaths, 0);
+        assert.equal(counts.living, 2);
+        for (let slot = 0; slot < c.length; slot++) {
+          const cell = c[slot],
+            memory = await e.cellMemory(slot);
+          assert.equal(cell.energy, 44);
+          assert.ok(cell.links.includes(1 - slot + 1));
+          assert.equal(memory[0], cell.id === 1 ? 41 : 99);
+          assert.equal(cell.heading, cell.id === 1 ? 0 : 0.125);
         }
+      } finally {
+        e.destroy();
       }
-      assert.ok(parents > 4 && daughters > 4);
     },
   );
   await check(
-    "retained old and newborn links are reciprocal after parent or neighbor replacement",
+    "hard-ceiling division is refused without its energy fee",
+    async () => {
+      const e = await setup(
+        ["bud r0\nwait 1000"],
+        [{ energy: 100 }, { energy: 100 }],
+        { capacity: 1, genomeCapacity: 1 },
+      );
+      try {
+        await e.step();
+        const { counts } = await validate(e);
+        assert.equal(counts.births, 0);
+        assert.equal(counts.living, 2);
+        assert.equal(counts.deaths, 0);
+        assert.equal(counts.energyBudget.reproduction, 0);
+        assert.equal(counts.energyBudget.turnover, 0);
+      } finally {
+        e.destroy();
+      }
+    },
+  );
+  await check(
+    "old and newborn links remain reciprocal above the soft target",
     async () => {
       const cells = Array.from({ length: 8 }, (_, i) => ({
         x: 20 + i * 18,
@@ -189,7 +208,7 @@ try {
     },
   );
   await check(
-    "corpses can be reclaimed without manufacturing an additional living death",
+    "existing corpses do not consume the independent living-cell allowance",
     async () => {
       const e = await setup(
         ["bud r0\nwait 1000", "wait 1000"],
@@ -200,15 +219,45 @@ try {
         await e.step();
         const { counts } = await validate(e);
         assert.equal(counts.births, 1);
-        assert.equal(counts.living + counts.corpses, 2);
-        assert.equal(counts.deaths, counts.capacityDeaths);
+        assert.equal(counts.living, 2);
+        assert.equal(counts.corpses, 1);
+        assert.equal(counts.deaths, 0);
+        assert.equal(counts.capacityDeaths, 0);
       } finally {
         e.destroy();
       }
     },
   );
   await check(
-    "steady plus capacity-boost newcomers enter the same full-capacity competition",
+    "new births retire the oldest corpse when physical room is needed",
+    async () => {
+      const e = await setup(
+        ["bud r0\nwait 1000", "wait 1000"],
+        [
+          { slot: 0, energy: 100 },
+          { slot: 1, energy: 100, genome: 1 },
+          { slot: 2, corpse: true, energy: 20, age: 600, genome: 1 },
+          { slot: 3, corpse: true, energy: 20, age: 300, genome: 1 },
+        ],
+        { capacity: 2, genomeCapacity: 2 },
+      );
+      try {
+        await e.step();
+        const { c, counts } = await validate(e);
+        assert.equal(counts.living, 3);
+        assert.equal(counts.corpses, 1);
+        assert.equal(counts.births, 1);
+        assert.equal(counts.deaths, 0);
+        assert.equal(counts.capacityDeaths, 0);
+        assert.ok(!c.some((cell) => cell.life === 2 && cell.id === 3));
+        assert.ok(c.some((cell) => cell.life === 2 && cell.id === 4));
+      } finally {
+        e.destroy();
+      }
+    },
+  );
+  await check(
+    "steady plus capacity-boost newcomers stop at the hard ceiling without resident deaths",
     async () => {
       const e = await setup(["wait 1000"], [{ energy: 100 }, { energy: 100 }], {
         capacity: 2,
@@ -221,18 +270,18 @@ try {
       try {
         await e.step(60);
         const { counts } = await validate(e);
-        assert.equal(counts.randomArrivals + counts.sampledArrivals, 5);
-        assert.equal(counts.capacityDeaths, 3);
-        assert.equal(counts.capacityArrivals, 3);
-        assert.equal(counts.living, 2);
-        assert.equal(counts.energyBudget.arrivals, 272);
+        assert.equal(counts.randomArrivals + counts.sampledArrivals, 4);
+        assert.equal(counts.capacityDeaths, 0);
+        assert.equal(counts.capacityArrivals, 2);
+        assert.equal(counts.living, 4);
+        assert.equal(counts.energyBudget.arrivals, 248);
       } finally {
         e.destroy();
       }
     },
   );
   await check(
-    "culled pending daughters are removed from the mutation queue before it can saturate",
+    "hard-ceiling births do not overflow the pending mutation queue",
     async () => {
       const e = await setup(
         [{ tree: parseTree("(seq (photosynthesize) (bud))") }],
@@ -264,6 +313,87 @@ try {
         await e.step();
         await validate(e);
         assert.ok((await e.counters()).divisionMutations > 0);
+      } finally {
+        e.destroy();
+      }
+    },
+  );
+  await check(
+    "a sunless corpse-only world refills the full living floor and refills again after natural deaths",
+    async () => {
+      const e = await setup(
+        ["wait 1000"],
+        Array.from({ length: 8 }, (_, i) => ({
+          slot: i,
+          x: 30 + i * 20,
+          y: 100,
+          corpse: true,
+          energy: 20,
+          age: 300,
+        })),
+        {
+          treePrograms: 1,
+          genomeCapacity: 16,
+          floor: 5,
+          rate: 0,
+          capacityRate: 0,
+          seedEnergy: 1 / 4096,
+          seedStorage: 0,
+          upkeep: 60,
+          functionMask0: 0,
+          functionMask1: 0,
+          functionMask2: 0,
+          functionMask3: 0,
+        },
+      );
+      try {
+        await e.step(59);
+        let sample = await validate(e);
+        assert.equal(sample.counts.living, 0);
+        assert.equal(sample.counts.corpses, 8);
+        await e.step();
+        sample = await validate(e);
+        assert.equal(
+          sample.counts.living,
+          5,
+          "The full deficit is replenished in one arrival epoch",
+        );
+        assert.equal(
+          sample.counts.corpses,
+          8,
+          "Corpses do not consume living population slots",
+        );
+        assert.equal(
+          sample.counts.randomArrivals + sample.counts.sampledArrivals,
+          5,
+        );
+        await e.step();
+        sample = await validate(e);
+        assert.equal(
+          sample.counts.living,
+          0,
+          "Low-energy arrivals die naturally in the dark world",
+        );
+        assert.equal(sample.counts.deaths, 5);
+        assert.equal(sample.counts.capacityDeaths, 0);
+        assert.equal(
+          sample.counts.corpses,
+          8,
+          "Natural deaths obey the separate corpse limit",
+        );
+        await e.step(59);
+        sample = await validate(e);
+        assert.equal(
+          sample.counts.living,
+          5,
+          "The next scheduled epoch restores the full floor again",
+        );
+        assert.equal(
+          sample.counts.randomArrivals + sample.counts.sampledArrivals,
+          10,
+        );
+        assert.equal(sample.counts.deaths, 5);
+        assert.equal(sample.counts.corpses, 8);
       } finally {
         e.destroy();
       }

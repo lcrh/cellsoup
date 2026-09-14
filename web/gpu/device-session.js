@@ -32,7 +32,21 @@ export function createDeviceSession(gpu, onFailure) {
             ? "The browser could not reconnect to the GPU. If restarting the soup still fails, restart the browser."
             : "No WebGPU adapter is available.",
         );
-      const next = await adapter.requestDevice();
+      // Large habitats reserve room for both living cells and edible remains.
+      // Raising this limit grants capacity; it does not allocate GPU memory.
+      const bindingLimit = adapter.limits?.maxStorageBufferBindingSize;
+      const next = await adapter.requestDevice(
+        bindingLimit
+          ? {
+              requiredLimits: {
+                maxStorageBufferBindingSize: Math.min(
+                  bindingLimit,
+                  256 * 1024 * 1024,
+                ),
+              },
+            }
+          : {},
+      );
       if (ticket !== generation) {
         next.destroy();
         throw Error("GPU startup was cancelled.");

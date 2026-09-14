@@ -23,6 +23,7 @@ export const ENERGY_BUDGET_KEYS = Object.freeze([
   "attackDamage",
   "arrivals",
   "turnover",
+  "populationPressure",
 ]);
 export const ENERGY_BUDGET_BYTES = ENERGY_BUDGET_KEYS.length * 8;
 export function decodeEnergyBudget(words) {

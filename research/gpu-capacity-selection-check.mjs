@@ -13,12 +13,16 @@ const device = await adapter.requestDevice(),
   errors = [],
   checks = [];
 device.addEventListener("uncapturederror", (e) => errors.push(e.error.message));
-async function fixture(n, g = 1, zeroHash = false) {
-  const helper = capacitySelection({ capacity: n, genomeCapacity: g }),
+async function fixture(n, g = 1, zeroHash = false, options = {}) {
+  const helper = capacitySelection({
+      capacity: n,
+      genomeCapacity: g,
+      ...options,
+    }),
     C = helper.candidates;
-  const source = `const N=${n}u;const C=${C}u;
+  const source = `const N=${options.entityCapacity ?? n}u;const C=${C}u;
 struct Cell{p:vec4f,b:vec4f,r:array<f32,8>,signal:vec4f,mail:vec4f,machine:vec4u,life:vec4u,link:vec4u,res:vec4f,sender:vec4u,anchor:vec4f,phen:vec4f}
-struct Scratch{${helper.declarations}}
+struct Scratch{${helper.declarations} counter:array<atomic<u32>,32>}
 struct Config{sim:vec4u}
 @group(0)@binding(0)var<storage,read_write> cells:array<Cell,C>;
 @group(0)@binding(1)var<storage,read_write> s:Scratch;
@@ -57,7 +61,7 @@ ${helper.source}`;
         GPUBufferUsage.COPY_SRC,
     });
   const cells = storage(C * 208),
-    scratch = storage(helper.byteLength),
+    scratch = storage(helper.byteLength + 128),
     uniform = device.createBuffer({
       size: 16,
       usage: GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST,
@@ -82,9 +86,20 @@ ${helper.source}`;
       for (const [i, e] of entries.entries())
         if (e) {
           u[i * 52 + 31] = e.life ?? 1;
+          u[i * 52 + 28] = e.age ?? 0;
+          u.set(e.links ?? [0, 0, 0, 0], i * 52 + 32);
           u[i * 52 + 24] = e.identity ?? i + 1;
           f[i * 52 + 4] = (e.energy ?? 10) * 4096;
         }
+      const living = entries.filter((e) => e && (e.life ?? 1) === 1).length;
+      const limit = options.dynamicCorpseLimit
+        ? Math.min(n, Math.max(0, (options.entityCapacity ?? n) - living))
+        : n;
+      device.queue.writeBuffer(
+        scratch,
+        helper.byteLength,
+        new Uint32Array([0, living]),
+      );
       device.queue.writeBuffer(cells, 0, data);
       device.queue.writeBuffer(uniform, 0, new Uint32Array([seed, tick, 0, 0]));
       const encoder = device.createCommandEncoder();
@@ -106,8 +121,17 @@ ${helper.source}`;
       const active = entries.flatMap((e, i) =>
         e && [1, 2].includes(e.life ?? 1) ? [i] : [],
       );
-      active.sort((a, b) => keys[a] - keys[b] || a - b);
-      const victims = new Set(active.slice(0, Math.max(0, active.length - n)));
+      const eligible = active.filter((i) =>
+        options.policy === "living"
+          ? (entries[i].life ?? 1) === 1
+          : options.policy === "corpses"
+            ? entries[i].life === 2
+            : true,
+      );
+      eligible.sort((a, b) => keys[a] - keys[b] || a - b);
+      const victims = new Set(
+        eligible.slice(0, Math.max(0, eligible.length - limit)),
+      );
       const expected = Array.from({ length: C }, (_, i) =>
         Number(
           Boolean(
@@ -124,10 +148,10 @@ ${helper.source}`;
       );
       assert.equal(
         [...map].reduce((a, b) => a + b, 0),
-        Math.min(active.length, n),
+        active.length - Math.max(0, eligible.length - limit),
       );
-      assert.equal(state[0], active.length);
-      assert.equal(state[1], Math.max(0, active.length - n));
+      assert.equal(state[0], eligible.length);
+      assert.equal(state[1], Math.max(0, eligible.length - limit));
       return { keys, map, state };
     },
     destroy() {
@@ -256,6 +280,119 @@ try {
         assert.deepEqual(a.keys, b.keys);
         assert.ok([...a.map.slice(32768, 65536)].some(Boolean));
         assert.ok([...a.map.slice(0, 32768)].some(Boolean));
+      } finally {
+        f.destroy();
+      }
+    },
+  );
+
+  await check(
+    "living contest leaves corpses untouched and keeps exactly the living cap",
+    async () => {
+      const f = await fixture(4, 1, false, {
+        entityCapacity: 8,
+        policy: "living",
+      });
+      try {
+        const entries = Array.from({ length: 12 }, (_, i) => ({
+          life: i % 3 === 0 ? 2 : 1,
+          energy: i + 1,
+        }));
+        const r = await f.run(entries);
+        assert.equal(
+          entries.reduce(
+            (n, e, i) => n + Number(e.life === 1 && r.map[i] === 1),
+            0,
+          ),
+          4,
+        );
+        for (let i = 0; i < 12; i += 3) assert.equal(r.map[i], 1);
+        const sparse = await f.run([
+          { life: 1 },
+          ...Array.from({ length: 8 }, () => ({ life: 2 })),
+        ]);
+        assert.equal(sparse.map[0], 1);
+        assert.equal(sparse.state[1], 0);
+      } finally {
+        f.destroy();
+      }
+    },
+  );
+  await check(
+    "corpse contest removes oldest first, preserves living and ignores nutrient value",
+    async () => {
+      const f = await fixture(2, 1, false, {
+        entityCapacity: 4,
+        policy: "corpses",
+        prefix: "corpse",
+      });
+      try {
+        const entries = [
+          { life: 1, age: 9999 },
+          { life: 2, age: 3, energy: 1 },
+          { life: 2, age: 1, energy: 3000 },
+          { life: 2, age: 9 },
+          { life: 2, age: 2 },
+          { life: 1 },
+        ];
+        const a = await f.run(entries),
+          b = await f.run(
+            entries.map((e) => ({ ...e, energy: 3895 - (e.energy ?? 10) })),
+            { seed: 97, tick: 52 },
+          );
+        assert.deepEqual([...a.map.slice(0, 6)], [1, 0, 1, 0, 1, 1]);
+        assert.deepEqual(a.map, b.map);
+        assert.deepEqual(a.keys, b.keys);
+      } finally {
+        f.destroy();
+      }
+    },
+  );
+  await check(
+    "corpse age saturation and ties remove lowest indices deterministically",
+    async () => {
+      const f = await fixture(2, 1, false, {
+        entityCapacity: 4,
+        policy: "corpses",
+        prefix: "corpse",
+      });
+      try {
+        const r = await f.run([
+          { life: 2, age: 0xffffffff },
+          { life: 2, age: 0xfffffffe },
+          { life: 2, age: 0xffffffff },
+          { life: 2, age: 0 },
+        ]);
+        assert.deepEqual([...r.map.slice(0, 4)], [0, 0, 1, 1]);
+      } finally {
+        f.destroy();
+      }
+    },
+  );
+
+  await check(
+    "corpse retirement shrinks to free resident slots when living overshoots the soft target",
+    async () => {
+      const f = await fixture(4, 1, false, {
+        entityCapacity: 8,
+        policy: "corpses",
+        prefix: "corpse",
+        dynamicCorpseLimit: true,
+      });
+      try {
+        for (const living of [3, 6, 8]) {
+          const entries = [
+            ...Array.from({ length: living }, () => ({ life: 1 })),
+            ...Array.from({ length: 5 }, (_, i) => ({ life: 2, age: i + 1 })),
+          ];
+          const r = await f.run(entries),
+            kept = entries.filter((e, i) => e.life === 2 && r.map[i]).length;
+          assert.equal(kept, Math.min(4, 8 - living));
+          assert.equal(
+            [...r.map].reduce((a, b) => a + b, 0),
+            living + kept,
+          );
+        }
       } finally {
         f.destroy();
       }

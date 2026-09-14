@@ -57,6 +57,27 @@ test("healthy worlds reuse a device; disposal releases it before reconnecting", 
   assert.deepEqual(events, ["adapter", "destroy", "adapter"]);
   assert.equal(devices.length, 2);
 });
+
+test("large-world buffer limits are requested only within adapter support", async () => {
+  for (const supported of [128, 192, 512]) {
+    const { session, gpu } = fixture();
+    const adapter = await gpu.requestAdapter();
+    adapter.limits = { maxStorageBufferBindingSize: supported * 1024 * 1024 };
+    const request = adapter.requestDevice.bind(adapter);
+    let options;
+    adapter.requestDevice = (value) => {
+      options = value;
+      return request();
+    };
+    gpu.requestAdapter = async () => adapter;
+    await session.connect();
+    assert.equal(
+      options.requiredLimits.maxStorageBufferBindingSize,
+      Math.min(supported, 256) * 1024 * 1024,
+    );
+    session.dispose();
+  }
+});
 test("device loss preserves the actual reason and prevents further work until reconnect", async () => {
   const { session, failures } = fixture();
   const device = await session.connect();

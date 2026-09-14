@@ -106,10 +106,17 @@ export const ENERGY_OUTPUTS = [
   },
   {
     key: "turnover",
-    label: "Death & replacement",
+    label: "Other death losses",
     color: "#c3b5a9",
     description:
-      "Remaining usable energy removed by old-age death or newcomer replacement.",
+      "Remaining usable energy lost to old age. Stored reserves become corpse nutrients.",
+  },
+  {
+    key: "populationPressure",
+    label: "Population pressure",
+    color: "#ab8ec6",
+    description:
+      "Usable energy lost to random penalties above the living population target.",
   },
 ];
 

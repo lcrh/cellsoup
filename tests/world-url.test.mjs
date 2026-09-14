@@ -63,6 +63,8 @@ test("custom and loaded settings, population counts and optional function switch
     moveCost: 0.007,
     linkedRelay: 0.95,
     capacityRate: 512,
+    pressureStrength: 23,
+    pressureFrequency: 3.7,
     attackSpeedBonus: 0.075,
   });
   const id = TREE_SCHEMA.findIndex((fn) => fn.name === "sin"),

@@ -11,7 +11,9 @@ import { functionEnabled } from "../web/gpu/trees.js";
 const random = (seed) => () =>
   (seed = (Math.imul(seed, 1664525) + 1013904223) >>> 0) / 4294967296;
 test("random habitats stay bounded, retain thermal headroom and sustain immigration at every supported capacity", () => {
-  const seen = new Set();
+  const seen = new Set(),
+    strengths = new Set(),
+    frequencies = new Set();
   for (const capacity of [32768, 65536, 131072, 262144])
     for (let seed = 0; seed < 1000; seed++) {
       const s = randomWorldSettings({ capacity, rng: random(seed) });
@@ -30,6 +32,10 @@ test("random habitats stay bounded, retain thermal headroom and sustain immigrat
         s.capacityRate >= 16 && s.capacityRate <= Math.min(capacity, 1024),
       );
       assert.ok(s.floor > 0 && s.floor <= capacity / 16);
+      assert.ok([4, 8, 12, 18, 24].includes(s.pressureStrength));
+      assert.ok([0.5, 1, 2, 4, 8].includes(s.pressureFrequency));
+      strengths.add(s.pressureStrength);
+      frequencies.add(s.pressureFrequency);
       assert.ok(
         s.upkeep > 0 && s.energyDecay > 0 && s.cpuCost > 0 && s.heatDamage > 0,
       );
@@ -48,6 +54,8 @@ test("random habitats stay bounded, retain thermal headroom and sustain immigrat
         assert.equal(s[k], undefined);
     }
   assert.equal(seen.size, 4000);
+  assert.equal(strengths.size, 5);
+  assert.equal(frequencies.size, 5);
 });
 
 test("10,000 seeded worlds retain their palette and non-target settings while allowing photosynthesis headroom", () => {
@@ -92,6 +100,8 @@ test("10,000 seeded worlds retain their palette and non-target settings while al
     delete unchanged.generationDepth;
     delete unchanged.founderActions;
     delete unchanged.capacityRate;
+    delete unchanged.pressureStrength;
+    delete unchanged.pressureFrequency;
     // In sunless worlds even the old solar rate and fill knee must be exact.
     if (s.solarEnabled) {
       delete unchanged.solarRate;

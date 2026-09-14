@@ -155,12 +155,12 @@
               </div>
               <div>
                 <div class="event-heading">
-                  <span>Capacity deaths</span
+                  <span>Pressure deaths</span
                   ><strong id="capacityDeaths-history-value">—</strong>
                 </div>
                 <canvas
                   id="capacityDeaths-history"
-                  aria-label="Deaths from population pressure over simulated time"
+                  aria-label="Deaths from population-pressure energy loss over simulated time"
                 ></canvas>
               </div>
             </div>
@@ -168,9 +168,9 @@
               Same time window as population history, with separate vertical
               scales. Rates average each sampling interval. Kills count cells
               whose energy was depleted by an attack; shield-only hits and other
-              deaths are excluded. Capacity deaths count living cells removed to
-              make room after births and arrivals. Totals start at world
-              creation.
+              deaths are excluded. Pressure deaths count cells whose usable
+              energy was depleted by a population-pressure hit; their remains
+              can be eaten. Totals start at world creation.
             </p>
           </section>
           <section
@@ -393,19 +393,21 @@
             <span id="crossovers">0</span> crossovers ·
             <span id="eaten">0</span> energy eaten ·
             <span id="capacity-arrivals">0</span> newcomers at capacity ·
-            <span id="capacity-deaths">0</span> capacity deaths
+            <span id="capacity-deaths">0</span> pressure deaths
           </p>
         </section>
         <details open>
           <summary>Habitat & evolution</summary>
           <div class="settings">
             <p class="hint">
-              Settings apply when you start a new world. Capacity counts living
-              cells plus corpses. Births and newcomers can exceed the limit
-              temporarily; low-energy-biased removals bring it back down.
+              Settings apply when you start a new world. Above the living
+              target, random energy penalties rise rapidly with excess
+              population. Death leaves edible remains, capped at the target. The
+              hard storage ceiling is twice the target; oldest corpses make room
+              when needed.
             </p>
             <label
-              >Entity capacity
+              >Living population target
               <select id="capacity">
                 <option value="32768" selected>32,768</option>
                 <option value="65536">65,536</option>

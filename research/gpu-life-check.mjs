@@ -18,6 +18,7 @@ let errors = [];
 device.addEventListener("uncapturederror", (e) => errors.push(e.error.message));
 const options = {
   capacityRate: 0,
+  pressureStrength: 0,
   energyFillScale: 0,
   storageFillScale: 0,
   energyCapacity: 200,
@@ -65,7 +66,7 @@ async function state(e) {
   const buffer = await e.state(),
     f = new Float32Array(buffer),
     u = new Uint32Array(buffer);
-  return Array.from({ length: e.cfg.capacity }, (_, i) => ({
+  return Array.from({ length: e.entityCapacity }, (_, i) => ({
     alive: u[i * 52 + 31],
     energy: f[i * 52 + 4] / 4096,
     x: f[i * 52],
@@ -228,7 +229,7 @@ await test("division allocates one child and conserves energy after its cost", a
   assert.equal((await e.counters()).births, 1);
   e.destroy();
 });
-await test("simultaneous valid divisions all pay their fee before excess offspring or parents are culled", async () => {
+await test("simultaneous valid divisions cross the soft target without culling parents or offspring", async () => {
   const e = await setup(
     ["split r0"],
     Array.from({ length: 40 }, (_, i) => ({
@@ -239,9 +240,9 @@ await test("simultaneous valid divisions all pay their fee before excess offspri
   await e.step();
   const c = (await state(e)).filter((c) => c.alive),
     stats = await e.counters();
-  assert.equal(c.length, 64);
+  assert.equal(c.length, 80);
   assert.equal(stats.births, 40);
-  assert.equal(stats.capacityDeaths, 16);
+  assert.equal(stats.capacityDeaths, 0);
   assert.equal(
     c.reduce((n, c) => n + c.energy, 0),
     40 * 70 - 40 * 12 - stats.energyBudget.turnover,
@@ -393,6 +394,32 @@ await test("zero energy kills despite stored reserves and a queued mobilize inst
   assert.equal(c.energy, 108);
   assert.equal(n.living, 0);
   assert.equal(n.corpses, 1);
+  e.destroy();
+});
+await test("linked neighbors never automatically rescue an exhausted local energy pool", async () => {
+  const e = await setup(
+    ["wait 1000"],
+    [
+      { energy: 1 / 4096, links: [2, 0, 0, 0] },
+      { energy: 100, links: [1, 0, 0, 0] },
+    ],
+    {
+      capacity: 2,
+      genomeCapacity: 2,
+      pressureStrength: 0,
+      upkeep: 1,
+      corpseEnergy: 8,
+    },
+  );
+  await e.step();
+  const c = await state(e),
+    counts = await e.counters();
+  assert.equal(c[0].alive, 2);
+  assert.equal(c[0].energy, 8);
+  assert.equal(c[1].alive, 1);
+  assert.equal(counts.living, 1);
+  assert.equal(counts.capacityDeaths, 0);
+  assert.equal(counts.kills, 0);
   e.destroy();
 });
 await test("paid attacks leave storage-rich corpses, with eating as a separate action", async () => {
@@ -682,7 +709,7 @@ await test("closing immigration disables both the steady rate and low-population
   assert.equal(c.sampledArrivals, 0);
   e.destroy();
 });
-await test("newcomers and all valid divisions compete together near capacity", async () => {
+await test("newcomers and all valid divisions fit above the soft target", async () => {
   const e = await setup(
     ["wait 58\nsplit r0\nwait 100"],
     Array.from({ length: 60 }, (_, i) => ({
@@ -695,9 +722,9 @@ await test("newcomers and all valid divisions compete together near capacity", a
   await e.step(60);
   const c = await e.counters();
   assert.equal(c.births, 60);
-  assert.equal(c.capacityDeaths, 58);
+  assert.equal(c.capacityDeaths, 0);
   assert.equal(c.randomArrivals, 62);
-  assert.equal(c.living, 64);
+  assert.equal(c.living, 122);
   e.destroy();
 });
 await test("cloud shadows change smoothly and light stays bounded", async () => {
@@ -1062,15 +1089,18 @@ await test("tree worlds create random founders and constant-rate random arrivals
   assert.equal((await e.counters()).randomArrivals, 12);
   e.destroy();
 });
-await test("tree replenishment runs below the floor with the constant rate disabled", async () => {
+await test("tree replenishment restores the full living deficit with the constant rate disabled", async () => {
   const e = await createLifeEngine(device, {
     ...options,
     treePrograms: 1,
     rate: 0,
     floor: 8,
   });
-  await e.step(120);
-  assert.equal((await e.counters()).randomArrivals, 2);
+  await e.step(60);
+  assert.equal((await e.counters()).randomArrivals, 8);
+  assert.equal((await e.counters()).living, 8);
+  await e.step(60);
+  assert.equal((await e.counters()).randomArrivals, 8);
   e.destroy();
 });
 await test("successful trees reenter through actual two-parent crossover without forced mutation", async () => {

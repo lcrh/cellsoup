@@ -112,6 +112,18 @@ const cfg = {
   rate: 0,
   floor: 0,
 };
+test("unsupported large habitats fail before allocating their entity buffers", async () => {
+  const d = fakeDevice();
+  d.limits = {
+    maxStorageBufferBindingSize: 128 * 1024 * 1024,
+    maxBufferSize: 256 * 1024 * 1024,
+  };
+  await assert.rejects(
+    createLifeEngine(d, { ...cfg, capacity: 262144, genomeCapacity: 65536 }),
+    /smaller population limit/,
+  );
+  assert.ok(d.buffers.every((b) => b.destroyed));
+});
 for (const fault of [
   { allocation: 4 },
   { shader: true },
@@ -155,7 +167,8 @@ test("successful readbacks free staging and retain owned simulation buffers", as
   const d = fakeDevice(),
     e = await createLifeEngine(d, cfg);
   const data = await e.state();
-  assert.equal(data.byteLength, 208);
+  assert.equal(e.entityCapacity, 2 * cfg.capacity);
+  assert.equal(data.byteLength, e.entityCapacity * 208);
   const staging = d.buffers.at(-1);
   assert.ok(staging.unmapped && staging.destroyed);
   e.destroy();

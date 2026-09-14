@@ -792,7 +792,7 @@ undefined
 
 No inputs → Action. Core toolkit; always enabled.
 
-Divide, staying linked. Requires energy and a free link slot. Returns through birth-result. An unaffordable attempt or a full set of links returns failure immediately and continues execution; a feasible attempt pauses for synchronized division. Entity capacity does not block the birth: after division, both parent and daughter participate in low-energy-biased capacity culling.
+Divide, staying linked. Requires energy and a free link slot. Returns through birth-result. An unaffordable attempt or a full set of links returns failure immediately and continues execution; a feasible attempt pauses for synchronized division. The living population target does not block the birth. Above it, random energy penalties grow with excess population and can kill either cell. At the absolute storage ceiling, division waits for room without spending its division cost.
 
 ```lisp
 (bud)
@@ -802,7 +802,7 @@ Divide, staying linked. Requires energy and a free link slot. Returns through bi
 
 No inputs → Action. Core toolkit; always enabled.
 
-Divide and disconnect the daughter. Requires sufficient energy. Returns through birth-result. An unaffordable attempt returns failure immediately and continues execution; a feasible attempt pauses for synchronized division. Entity capacity does not block the birth: after division, both parent and daughter participate in low-energy-biased capacity culling.
+Divide and disconnect the daughter. Requires sufficient energy. Returns through birth-result. An unaffordable attempt returns failure immediately and continues execution; a feasible attempt pauses for synchronized division. The living population target does not block the birth. Above it, random energy penalties grow with excess population and can kill either cell. At the absolute storage ceiling, division waits for room without spending its division cost.
 
 ```lisp
 (split)

@@ -1,20 +1,45 @@
 // Exact weighted culling without a CPU readback or an unbounded GPU sort.
 // Exponential-race keys give inverse-energy sampling without replacement;
-// the smallest occupied-N keys are culled. Candidate index breaks key ties.
+// the smallest excess keys are culled. Living and corpse pools may be selected independently. Candidate index breaks key ties.
 // Declarations are fields to append inside Scratch. Source expects Cell cells,
-// N, C=2*N+max(G,64), s:Scratch, cfg.sim.x (seed), hash(u32), and tick().
-export function capacitySelection({ capacity, genomeCapacity }) {
+// N=entityCapacity, C=2*N+max(G,64), s:Scratch, cfg.sim.x (seed), hash(u32), and tick().
+export function capacitySelection({
+  capacity,
+  genomeCapacity,
+  entityCapacity = capacity,
+  policy = "entities",
+  prefix = "capacity",
+  dynamicCorpseLimit = false,
+}) {
   if (
     !Number.isInteger(capacity) ||
     capacity < 1 ||
     capacity > 262144 ||
+    !Number.isInteger(entityCapacity) ||
+    entityCapacity < capacity ||
+    entityCapacity > 524288 ||
+    !["entities", "living", "corpses"].includes(policy) ||
+    !/^[a-zA-Z][a-zA-Z0-9]*$/.test(prefix) ||
     !Number.isInteger(genomeCapacity) ||
     genomeCapacity < 1 ||
     genomeCapacity > 65536
   )
     throw Error("Invalid capacity-selection dimensions");
   // Body arrivals can contain 64 cells while sharing only one genome.
-  const candidates = 2 * capacity + Math.max(genomeCapacity, 64);
+  const candidates = 2 * entityCapacity + Math.max(genomeCapacity, 64);
+  const eligible =
+    policy === "living"
+      ? "life==1u"
+      : policy === "corpses"
+        ? "life==2u"
+        : "life==1u||life==2u";
+  const keySource =
+    policy === "corpses"
+      ? "s.selectionKeys[i]=0xfffffffeu-min(cells[i].life.x,0xfffffffeu);"
+      : `let bits=hash(hash(i+0x9e3779b9u)^hash(cells[i].machine.x+0x85ebca6bu)^hash(tick()^cfg.sim.x));
+  let u=f32(bits>>8u)/16777216.0;
+  var energy=select(1.0,max(1.0,cells[i].b.x),life==1u);
+  s.selectionKeys[i]=select(bitcast<u32>(-log(1.0-u)*energy),0u,u==0.0);`;
   const declarations = `
   selectionKeys:array<u32,C>,
   selectionMap:array<u32,C>,
@@ -32,18 +57,15 @@ export function capacitySelection({ capacity, genomeCapacity }) {
   let i=id.x;if(i>=C){return;}
   s.selectionMap[i]=0u;
   let life=cells[i].life.w;
-  if(life!=1u&&life!=2u){s.selectionKeys[i]=0xffffffffu;return;}
+  if(!(${eligible})){s.selectionKeys[i]=0xffffffffu;return;}
   atomicAdd(&s.selectionState[0],1u);
-  let bits=hash(hash(i+0x9e3779b9u)^hash(cells[i].machine.x+0x85ebca6bu)^hash(tick()^cfg.sim.x));
-  let u=f32(bits>>8u)/16777216.0;
-  let energy=select(1.0,max(1.0,cells[i].b.x),life==1u);
-  // Canonicalize zero: a negative-zero bit pattern would sort after positives.
-  s.selectionKeys[i]=select(bitcast<u32>(-log(1.0-u)*energy),0u,u==0.0);
+  ${keySource}
 }
 @compute @workgroup_size(128) fn capacityPrepare(@builtin(global_invocation_id) id:vec3u) {
   if(id.x!=0u){return;}
   let occupied=atomicLoad(&s.selectionState[0]);
-  let excess=occupied-min(occupied,N);
+  let limit=${dynamicCorpseLimit ? `min(${capacity}u,N-min(N,atomicLoad(&s.counter[1])))` : `${capacity}u`};
+  let excess=occupied-min(occupied,limit);
   atomicStore(&s.selectionState[1],excess);
   atomicStore(&s.selectionState[2],excess-min(excess,1u));
 }`,
@@ -84,7 +106,7 @@ export function capacitySelection({ capacity, genomeCapacity }) {
   parts.push(`
 @compute @workgroup_size(128) fn capacitySurvivors(@builtin(global_invocation_id) id:vec3u) {
   let i=id.x;if(i>=C){return;}
-  let key=s.selectionKeys[i];if(key==0xffffffffu){s.selectionMap[i]=0u;return;}
+  let key=s.selectionKeys[i];if(key==0xffffffffu){let life=cells[i].life.w;s.selectionMap[i]=select(0u,1u,life==1u||life==2u);return;}
   if(atomicLoad(&s.selectionState[1])==0u){s.selectionMap[i]=1u;return;}
   let threshold=atomicLoad(&s.selectionState[3]);
   let index=atomicLoad(&s.selectionState[4]);
@@ -93,8 +115,11 @@ export function capacitySelection({ capacity, genomeCapacity }) {
   stages.push({ name: "capacitySurvivors", count: candidates });
   return {
     declarations,
-    source: parts.join("\n"),
-    stages,
+    source: parts.join("\n").replaceAll("fn capacity", `fn ${prefix}`),
+    stages: stages.map((stage) => ({
+      ...stage,
+      name: stage.name.replace(/^capacity/, prefix),
+    })),
     candidates,
     byteLength: candidates * 8 + 256 * 4 + 16 * 4,
   };

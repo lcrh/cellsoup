@@ -60,6 +60,7 @@ fn recent(mark:u32)->bool{return mark>0u&&mark<=config.y&&config.y-mark<60u;}
  atomicAdd(&bins[k+8u],i32(round(clamp(c.res.z/4096.0,0.0,1000.0)*4.0)));
 }`;
 export async function createBehaviorSampler(device, engine) {
+  const entityCapacity = engine.entityCapacity ?? engine.cfg.capacity;
   const bytes = BEHAVIOR_GRID ** 2 * BIN_WORDS * 4;
   const owned = [];
   const allocate = (descriptor) => {
@@ -110,7 +111,7 @@ export async function createBehaviorSampler(device, engine) {
             config,
             0,
             new Uint32Array([
-              engine.cfg.capacity,
+              entityCapacity,
               tick,
               engine.cfg.side * 32,
               BEHAVIOR_GRID,
@@ -124,7 +125,7 @@ export async function createBehaviorSampler(device, engine) {
             0,
             groups[engine.currentState === engine.buffers.state[0] ? 0 : 1],
           );
-          pass.dispatchWorkgroups(Math.ceil(engine.cfg.capacity / 128));
+          pass.dispatchWorkgroups(Math.ceil(entityCapacity / 128));
           pass.end();
           encoder.copyBufferToBuffer(bins, 0, readback, 0, bytes);
           device.queue.submit([encoder.finish()]);

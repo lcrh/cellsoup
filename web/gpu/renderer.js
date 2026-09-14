@@ -120,6 +120,7 @@ fn nutrient(p:vec2i)->vec2f {
 }
 `;
 export async function createRenderer(device, canvas, engine, format) {
+  const entityCapacity = engine.entityCapacity ?? engine.cfg.capacity;
   const context = canvas.getContext("webgpu");
   if (!context) throw Error("This browser cannot create a WebGPU canvas.");
   let uniform,
@@ -300,18 +301,18 @@ export async function createRenderer(device, canvas, engine, format) {
         pass.draw(6);
         if (options.links) {
           pass.setPipeline(pipelines[1]);
-          pass.draw(2, engine.cfg.capacity * 4);
+          pass.draw(2, entityCapacity * 4);
         }
         if (options.activity) {
           pass.setPipeline(pipelines[3]);
-          pass.draw(2, engine.cfg.capacity);
+          pass.draw(2, entityCapacity);
           pass.setPipeline(pipelines[4]);
-          pass.draw(2, engine.cfg.capacity);
+          pass.draw(2, entityCapacity);
           pass.setPipeline(pipelines[5]);
-          pass.draw(6, engine.cfg.capacity);
+          pass.draw(6, entityCapacity);
         }
         pass.setPipeline(pipelines[2]);
-        pass.draw(6, engine.cfg.capacity);
+        pass.draw(6, entityCapacity);
         pass.end();
         device.queue.submit([encoder.finish()]);
       },

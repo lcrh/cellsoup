@@ -24,6 +24,7 @@ const base = {
   forkMutation: 0,
   rate: 0,
   capacityRate: 0,
+  pressureStrength: 0,
   floor: 0,
   upkeep: 0,
   energyDecay: 0,
@@ -64,7 +65,7 @@ async function budget(e) {
     f = new Float32Array(data),
     u = new Uint32Array(data);
   let actual = 0;
-  for (let i = 0; i < e.cfg.capacity; i++)
+  for (let i = 0; i < u.length / 52; i++)
     if (u[i * 52 + 31] === 1) actual += f[i * 52 + 4] / 4096;
   const net = Object.entries(b).reduce(
     (sum, [key, value]) => sum + (inputKeys.has(key) ? value : -value),
@@ -296,7 +297,7 @@ try {
     },
   );
   await check(
-    "host body admissions and at-capacity replacements record seeding and removed energy",
+    "host body admissions above the target record seeding without replacement losses",
     async () => {
       const e = await createLifeEngine(device, {
         ...base,
@@ -320,8 +321,82 @@ try {
         await e.step(60);
         b = await budget(e);
         assert.equal(b.arrivals, 104);
-        assert.ok(b.turnover === 24 || b.turnover === 40);
+        assert.equal(b.turnover, 0);
+        assert.equal((await e.counters()).living, 3);
         assert.equal((await e.counters()).capacityArrivals, 1);
+      } finally {
+        e.destroy();
+      }
+    },
+  );
+  await check(
+    "population pressure drains actual energy, leaves an edible reserve-rich corpse and permits scavenging",
+    async () => {
+      const e = await setup(
+        ["eat r1", "wait 1000"],
+        [
+          { x: 100, y: 100, energy: 3895 },
+          { x: 101, y: 100, energy: 1, storage: 40, genome: 1 },
+        ],
+        {
+          capacity: 1,
+          genomeCapacity: 2,
+          pressureStrength: 12,
+          pressureFrequency: 20,
+        },
+      );
+      try {
+        let counters;
+        for (let step = 0; step < 60; step++) {
+          await e.step();
+          counters = await e.counters();
+          if (counters.deaths) break;
+        }
+        let b = await budget(e);
+        assert.equal(counters.living, 1);
+        assert.equal(counters.corpses, 1);
+        assert.equal(counters.deaths, 1);
+        assert.equal(counters.kills, 0);
+        assert.ok(b.populationPressure >= 1);
+        assert.equal(b.turnover, 0);
+        assert.equal(b.scavenging, 0);
+        const pressureAtDeath = b.populationPressure;
+        const data = await e.state(),
+          u = new Uint32Array(data),
+          f = new Float32Array(data);
+        const corpse = Array.from({ length: u.length / 52 }, (_, i) => i).find(
+          (i) => u[i * 52 + 31] === 2,
+        );
+        assert.notEqual(corpse, undefined);
+        assert.equal(
+          f[corpse * 52 + 4] / 4096,
+          48,
+          "Pressure death retains eight body material plus forty reserves",
+        );
+        await e.step(3);
+        b = await budget(e);
+        counters = await e.counters();
+        assert.ok(b.scavenging >= 3);
+        assert.equal(counters.eaten, b.scavenging);
+        assert.equal(
+          b.populationPressure,
+          pressureAtDeath,
+          "Pressure stops when living returns to target",
+        );
+        assert.equal(counters.deaths, 1);
+        assert.equal(counters.kills, 0);
+        const later = await e.state(),
+          lf = new Float32Array(later),
+          lu = new Uint32Array(later);
+        const remaining = Array.from(
+          { length: lu.length / 52 },
+          (_, i) => i,
+        ).find((i) => lu[i * 52 + 31] === 2);
+        assert.notEqual(remaining, undefined);
+        assert.ok(
+          lf[remaining * 52 + 4] / 4096 <= 48 - b.scavenging &&
+            lf[remaining * 52 + 4] / 4096 > 47 - b.scavenging,
+        );
       } finally {
         e.destroy();
       }

@@ -2,7 +2,7 @@ import { snapshot, bodyAt, bodyMotion } from "../web/gpu/observe.js";
 
 // Read only at research observation times. This adds no work to the live UI.
 export async function readCellActivity(device, engine) {
-  const size = engine.cfg.capacity * 32;
+  const size = (engine.entityCapacity ?? engine.cfg.capacity) * 32;
   const output = device.createBuffer({
     size,
     usage: GPUBufferUsage.COPY_DST | GPUBufferUsage.MAP_READ,

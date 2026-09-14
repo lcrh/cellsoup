@@ -48,7 +48,7 @@ for (const [title, fields] of settingGroups) {
     const hint = document.createElement("p");
     hint.className = "hint";
     hint.textContent =
-      "Newcomers keep arriving when the world is full. The extra rate adds more pressure at capacity; set it to 0 to keep only the ordinary influx. Valid divisions happen first, then excess cells are removed with a bias toward low usable energy. Parents and newborns both compete. Capacity removal recycles the slot rather than leaving a corpse.";
+      "The population target is soft: above it, random energy hits grow with the square of the excess. Pressure strength is the average energy lost per cell per second at 10% over target; hit frequency controls whether that loss arrives in smaller frequent hits or larger rare ones. Set strength to 0 to disable pressure. Links help through shared reserves, not special protection. Once per simulated second, newcomers replenish the full shortage below the minimum living population; set the minimum to 0 to allow extinction. Corpses do not count toward either target. Living cells and corpses share a hard storage ceiling of twice the target; oldest corpses make room first, and births wait if all slots hold living cells.";
     section.append(hint);
   }
   if (title === "Physics & reach") {
@@ -233,7 +233,7 @@ function options() {
     throw Error("Newcomer storage must fit within the storage capacity.");
   if (cfg.initial > cfg.genomeCapacity)
     throw Error(
-      "Initial founders must fit within one quarter of entity capacity.",
+      "Initial founders must fit within one quarter of the living population target.",
     );
   if (cfg.capacityRate > 1024)
     throw Error(
@@ -576,7 +576,7 @@ function drawPredationHistory() {
     const chart = $(`${key}-history`);
     chart.setAttribute(
       "aria-label",
-      `${key === "kills" ? "Confirmed attack kills" : key === "capacityDeaths" ? "Capacity deaths" : "Attacks"} over simulated time; latest ${label}${mode === "rate" ? " per simulated minute" : " total"}`,
+      `${key === "kills" ? "Confirmed attack kills" : key === "capacityDeaths" ? "Pressure deaths" : "Attacks"} over simulated time; latest ${label}${mode === "rate" ? " per simulated minute" : " total"}`,
     );
     drawEventChart(chart, history, key, mode, color);
   }

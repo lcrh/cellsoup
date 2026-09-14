@@ -9,15 +9,18 @@ struct Output { winners:array<atomic<u32>,32>, selected:array<vec4u,32> }
 fn hash(x:u32)->u32{var z=x+0x9e3779b9u;z=(z^(z>>16u))*0x21f0aaadu;z=(z^(z>>15u))*0x735a2d97u;return z^(z>>15u);}
 @compute @workgroup_size(128) fn choose(@builtin(global_invocation_id) id:vec3u){
  let i=id.x;if(i>=cfg.x||cells[i*52u+31u]!=1u||cells[i*52u+27u]==0xffffffffu){return;}
- let h=hash(i^cfg.y);let bucket=h&31u;let rank=((h>>5u)&8191u)<<18u;
+ // N can include a corpse pool: 19 index bits cover all 524,288 slots.
+ // Keep bit31 clear so the all-ones sentinel can never be a real winner.
+ let h=hash(i^cfg.y);let bucket=h&31u;let rank=((h>>5u)&4095u)<<19u;
  atomicMin(&result.winners[bucket],rank|i);
 }
 @compute @workgroup_size(32) fn resolve(@builtin(global_invocation_id) id:vec3u){
  let b=id.x;if(b>=32u){return;}let packed=atomicLoad(&result.winners[b]);
  if(packed==0xffffffffu){result.selected[b]=vec4u(0xffffffffu);return;}
- let i=packed&262143u;result.selected[b]=vec4u(i,cells[i*52u+24u],cells[i*52u+25u],0u);
+ let i=packed&524287u;result.selected[b]=vec4u(i,cells[i*52u+24u],cells[i*52u+25u],0u);
 }`;
 export async function createTraceSelector(device, engine) {
+  const entityCapacity = engine.entityCapacity ?? engine.cfg.capacity;
   const owned = [];
   const allocate = (descriptor) => {
     const buffer = device.createBuffer(descriptor);
@@ -95,7 +98,7 @@ export async function createTraceSelector(device, engine) {
           device.queue.writeBuffer(
             config,
             0,
-            new Uint32Array([engine.cfg.capacity, seed >>> 0, 0, 0]),
+            new Uint32Array([entityCapacity, seed >>> 0, 0, 0]),
           );
           const encoder = device.createCommandEncoder(),
             group = groups[engine.buffers.state.indexOf(engine.currentState)];
@@ -103,9 +106,7 @@ export async function createTraceSelector(device, engine) {
             const pass = encoder.beginComputePass();
             pass.setPipeline(pipelines[i]);
             pass.setBindGroup(0, group);
-            pass.dispatchWorkgroups(
-              i ? 1 : Math.ceil(engine.cfg.capacity / 128),
-            );
+            pass.dispatchWorkgroups(i ? 1 : Math.ceil(entityCapacity / 128));
             pass.end();
           }
           encoder.copyBufferToBuffer(result, 128, readback, 0, 512);

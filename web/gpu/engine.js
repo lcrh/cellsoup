@@ -45,6 +45,7 @@ const stages = [
   "life",
   "geneScan",
   "archiveUpdate",
+  "arrivalsPrepare",
   "arrivals",
 ];
 const interactionStages = [
@@ -112,6 +113,8 @@ export const defaults = {
   floor: 2048,
   rate: 32,
   capacityRate: 64,
+  pressureStrength: 12,
+  pressureFrequency: 2,
   share: 0.5,
   mutation: 0.8,
   forkMutation: 0.01,
@@ -186,6 +189,12 @@ async function buildLifeEngine(device, options, allocated) {
     cfg.capacityRate > 1024
   )
     throw Error("Invalid capacityRate");
+  if (
+    cfg.pressureStrength > 100 ||
+    cfg.pressureFrequency < 0.1 ||
+    cfg.pressureFrequency > 20
+  )
+    throw Error("Invalid population pressure settings");
   treeEvolutionOptions(cfg);
   if (cfg.motorImpulse < 0 || cfg.motorImpulse > 20)
     throw Error("Invalid motorImpulse");
@@ -324,10 +333,20 @@ async function buildLifeEngine(device, options, allocated) {
     cfg.sources > 256
   )
     throw Error("Unsupported engine dimensions or rates");
-  const n = cfg.capacity,
+  const n = 2 * cfg.capacity,
     g = cfg.genomeCapacity,
     t = cfg.side ** 2;
   const createOwnedBuffer = (descriptor) => {
+    const maximum = Math.min(
+      device.limits?.maxBufferSize ?? 268435456,
+      descriptor.usage & GPUBufferUsage.STORAGE
+        ? (device.limits?.maxStorageBufferBindingSize ?? 134217728)
+        : Infinity,
+    );
+    if (descriptor.size > maximum)
+      throw Error(
+        `This ${cfg.capacity.toLocaleString()}-cell world needs a ${Math.ceil(descriptor.size / 1048576)} MiB GPU buffer; this device allows ${Math.floor(maximum / 1048576)} MiB. Choose a smaller population limit.`,
+      );
     const buffer = device.createBuffer(descriptor);
     allocated.push(buffer);
     return buffer;
@@ -340,7 +359,14 @@ async function buildLifeEngine(device, options, allocated) {
         GPUBufferUsage.COPY_SRC |
         GPUBufferUsage.COPY_DST,
     });
-  const selection = capacitySelection({ capacity: n, genomeCapacity: g });
+  const selection = capacitySelection({
+    capacity: cfg.capacity,
+    entityCapacity: n,
+    genomeCapacity: g,
+    policy: "corpses",
+    prefix: "corpse",
+    dynamicCorpseLimit: true,
+  });
   const candidateCount = selection.candidates;
   const state = [
     storage(candidateCount * CELL_BYTES),
@@ -484,18 +510,26 @@ async function buildLifeEngine(device, options, allocated) {
     ],
     64,
   );
-  f.set([cfg.resistCost, cfg.resistStrength, cfg.attackSpeedBonus, 0], 80);
+  f.set(
+    [
+      cfg.resistCost,
+      cfg.resistStrength,
+      cfg.attackSpeedBonus,
+      cfg.pressureFrequency,
+    ],
+    80,
+  );
   f.set(
     [
       cfg.energyFillScale,
       cfg.storageFillScale,
       cfg.manualArrivals ? 0 : cfg.capacityRate,
-      0,
+      cfg.pressureStrength,
     ],
     84,
   );
   device.queue.writeBuffer(uniform, 0, settings);
-  const source = simulationShader(cfg);
+  const source = simulationShader({ ...cfg, entityCapacity: n });
   const fingerprint = [
     ...new Uint8Array(
       await crypto.subtle.digest("SHA-256", new TextEncoder().encode(source)),
@@ -578,6 +612,7 @@ async function buildLifeEngine(device, options, allocated) {
   function dispatchFinalization(encoder, targetParity) {
     for (const stage of selection.stages)
       dispatch(encoder, stage.name, stage.count, 1 - targetParity);
+
     for (const name of materializationStages)
       dispatch(
         encoder,
@@ -599,7 +634,7 @@ async function buildLifeEngine(device, options, allocated) {
     device.queue.writeBuffer(
       scratch,
       materializeStateOffset + 12,
-      new Uint32Array([Number(census[1] + census[13] >= n)]),
+      new Uint32Array([Number(census[1] >= cfg.capacity)]),
     );
     const encoder = device.createCommandEncoder();
     dispatch(encoder, "clearCandidateTail", candidateCount, 1 - targetParity);
@@ -717,7 +752,7 @@ async function buildLifeEngine(device, options, allocated) {
       treeArchive.push(record);
     }
     if (cfg.manualArrivals || (cfg.treePrograms && cfg.bodyShare > 0)) return 0;
-    const count = Math.min(counters[16], counters[4], g);
+    const count = Math.min(counters[16], counters[4], g, n - counters[1]);
     if (!count) return 0;
     const freeGenesOffset = geneOffset + g * 16;
     const freeGenes = new Uint32Array(
@@ -934,7 +969,7 @@ async function buildLifeEngine(device, options, allocated) {
       throw Error("Expected 1–64 cells and their programs");
     const finite = (x) => Number.isFinite(x) && Number.isFinite(Math.fround(x));
     const integer = (x) => Number.isInteger(x) && x >= 1 && x <= 0xffffffff;
-    const prepared = programs.map((p) => {
+    let prepared = programs.map((p) => {
       const code = compileTree(p.tree, cfg),
         origin = p.origin,
         secondOrigin = p.secondOrigin;
@@ -964,7 +999,7 @@ async function buildLifeEngine(device, options, allocated) {
             formatTree(compileTree(origin.tree, cfg).tree));
       return { tree: code.tree, origin, secondOrigin, mutated };
     });
-    const normalized = seeds.map((c) => {
+    let normalized = seeds.map((c) => {
       if (
         Object.keys(c).some(
           (k) =>
@@ -1055,6 +1090,33 @@ async function buildLifeEngine(device, options, allocated) {
       read(scratch, materializeStateOffset + 12, 4),
     ]);
     const counters = new Uint32Array(counterData);
+    const headroom = Math.max(0, n - counters[1]);
+    if (!headroom)
+      return {
+        admitted: 0,
+        reason: "living storage ceiling",
+        cellSlots: [],
+        genomeSlots: [],
+      };
+    if (seeds.length > headroom) {
+      // Validate the complete body first, then admit only the prefix that fits.
+      // Refused cells neither allocate genotypes nor spend energy; prune their
+      // reciprocal edges and compact programs used by the admitted cells.
+      const retained = normalized.slice(0, headroom);
+      const usedPrograms = [...new Set(retained.map((c) => c.genome))];
+      const remap = new Map(usedPrograms.map((old, index) => [old, index]));
+      programs = usedPrograms.map((index) => programs[index]);
+      prepared = usedPrograms.map((index) => prepared[index]);
+      normalized = retained.map((c) => ({
+        ...c,
+        genome: remap.get(c.genome),
+        links: c.links.map((handle) => (handle <= headroom ? handle : 0)),
+        anchors: c.anchors.map((anchor, edge) =>
+          c.links[edge] > 0 && c.links[edge] <= headroom ? anchor : 0,
+        ),
+      }));
+      seeds = normalized;
+    }
     const stats = new Uint32Array(geneData);
     const budgetWords = new Uint32Array(budgetData);
     const freeGenes = [];
@@ -1203,7 +1265,7 @@ async function buildLifeEngine(device, options, allocated) {
   const bodyStats = { captured: 0, admitted: 0, bodyCells: 0 };
   async function admitAutomaticBodies(targetParity) {
     // Capture the previous settled population; pending virtual daughters are
-    // not an independently observable body until the competition completes.
+    // not an independently observable body until materialization completes.
     if (tick % (cfg.bodyCaptureSeconds * 60) === 0)
       bodyStats.captured += await bodySampler.capture(
         api,
@@ -1217,12 +1279,18 @@ async function buildLifeEngine(device, options, allocated) {
     let retriedEmptyEpoch = false;
     const tail = Math.max(g, 64);
     while (remaining > 0) {
-      const stats = new Uint32Array(await read(scratch, geneOffset, g * 16));
+      const [geneData, currentCounts] = await Promise.all([
+        read(scratch, geneOffset, g * 16),
+        read(scratch, counterOffset, 128),
+      ]);
+      const headroom = Math.max(0, n - new Uint32Array(currentCounts)[1]);
+      if (!headroom) break;
+      const stats = new Uint32Array(geneData);
       let freeGenes = 0;
       for (let i = 0; i < g; i++) freeGenes += Number(stats[i * 4] === 0);
       if (!freeGenes || staged === tail) {
-        // Large requested influxes run in bounded batches. The first cull
-        // includes daughters; later batches compete with its survivors.
+        // Large influxes use bounded staging batches, retiring old remains
+        // as necessary. Living cells are never culled to free storage.
         if (!staged && retriedEmptyEpoch) break;
         await finalizeCandidates(targetParity);
         retriedEmptyEpoch = staged === 0;
@@ -1231,7 +1299,7 @@ async function buildLifeEngine(device, options, allocated) {
       }
       const plan = bodySampler.plan(api, {
         budget: remaining,
-        freeCells: tail - staged,
+        freeCells: Math.min(tail - staged, headroom),
         freeGenes,
         connected: bodyRandom() < cfg.bodyPreserveLinks,
         rng: bodyRandom,
@@ -1247,8 +1315,7 @@ async function buildLifeEngine(device, options, allocated) {
       });
       if (!result.admitted) break;
       bodyStats.admitted += result.admitted;
-      if (plan.source === "body")
-        bodyStats.bodyCells += plan.provenance.sourceSlots.length;
+      if (plan.source === "body") bodyStats.bodyCells += result.admitted;
       remaining -= result.admitted;
       staged += result.admitted;
       retriedEmptyEpoch = false;
@@ -1256,6 +1323,7 @@ async function buildLifeEngine(device, options, allocated) {
   }
   const api = {
     cfg,
+    entityCapacity: n,
     fingerprint,
     genomeSampler: cfg.treePrograms
       ? "typed-sequences-state-v2"
@@ -1323,7 +1391,12 @@ async function buildLifeEngine(device, options, allocated) {
             if (cfg.treePrograms && name === "arrivals") continue;
             if (name === "weather" && tick !== 1 && tick % 30 !== 0) continue;
             if (
-              ["geneScan", "archiveUpdate", "arrivals"].includes(name) &&
+              [
+                "geneScan",
+                "archiveUpdate",
+                "arrivalsPrepare",
+                "arrivals",
+              ].includes(name) &&
               tick % 60 !== 0
             )
               continue;
@@ -1333,6 +1406,7 @@ async function buildLifeEngine(device, options, allocated) {
             else if (name === "weather") count = cfg.sources;
             else if (name === "geneScan") count = g;
             else if (name === "archiveUpdate") count = 128;
+            else if (name === "arrivalsPrepare") count = 1;
             else if (name === "arrivals") count = g;
             dispatch(encoder, name, count);
           }
@@ -1455,6 +1529,7 @@ async function buildLifeEngine(device, options, allocated) {
         queryBudgetLimits: c[29],
         denseScanLimits: c[30],
         capacityDeaths: c[31],
+        pressureDeaths: c[31],
         skippedDivisionMutations: c[27],
         raw: [...c],
       };

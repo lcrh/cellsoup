@@ -1,5 +1,5 @@
-// Body arrivals are candidates: admission counts every staged cell, then a
-// shared population limit can remove residents and newcomers alike.
+// The soft population target permits growth; the hard physical ceiling
+// refuses arrivals without killing residents or manufacturing energy flows.
 import assert from "node:assert/strict";
 import { writeFile } from "node:fs/promises";
 import { create, globals } from "webgpu";
@@ -30,6 +30,7 @@ const base = {
   floor: 0,
   rate: 0,
   capacityRate: 0,
+  pressureStrength: 0,
   forkMutation: 0,
   upkeep: 0,
   energyDecay: 0,
@@ -71,6 +72,7 @@ const outputKeys = [
   "giftsSent",
   "attackDamage",
   "turnover",
+  "populationPressure",
 ];
 function chain(size, energy) {
   return Array.from({ length: size }, (_, i) => ({
@@ -97,7 +99,9 @@ function audit(engine, state) {
     corpses = 0,
     energy = 0;
   const identities = new Set();
-  for (let slot = 0; slot < engine.cfg.capacity; slot++) {
+  const slots = state.u.length / 52;
+  assert.equal(slots, engine.cfg.capacity * 2);
+  for (let slot = 0; slot < slots; slot++) {
     const k = slot * 52;
     if (state.u[k + 31] === 2) corpses++;
     if (state.u[k + 31] !== 1) continue;
@@ -109,7 +113,7 @@ function audit(engine, state) {
     for (const handle of state.u.slice(k + 32, k + 36)) {
       if (!handle) continue;
       assert.ok(
-        handle <= engine.cfg.capacity,
+        handle <= slots,
         "No candidate-tail links survive materialization",
       );
       assert.equal(state.u[(handle - 1) * 52 + 31], 1);
@@ -121,7 +125,9 @@ function audit(engine, state) {
       );
     }
   }
-  assert.ok(living + corpses <= engine.cfg.capacity);
+  assert.ok(living <= engine.cfg.capacity * 2);
+  assert.ok(living + corpses <= engine.cfg.capacity * 2);
+  assert.ok(corpses <= engine.cfg.capacity);
   assert.equal(living, state.counters.living);
   assert.equal(corpses, state.counters.corpses);
   assert.equal(
@@ -159,7 +165,7 @@ async function withEngine(config, fn) {
 }
 try {
   await check(
-    "A low-energy newcomer is staged, counted and culled without immunity",
+    "A low-energy newcomer survives above the soft target without resident replacement",
     () =>
       withEngine({}, async (engine) => {
         await engine.fixture({
@@ -174,13 +180,14 @@ try {
         const after = await inspect(engine);
         audit(engine, after);
         assert.equal(result.admitted, 1);
-        assert.equal(result.survived, 0);
-        assert.deepEqual(result.cellSlots, []);
+        assert.equal(result.survived, 1);
+        assert.equal(after.counters.corpses, 0);
+        assert.equal(result.cellSlots.length, 1);
         assert.equal(
           after.counters.randomArrivals - before.counters.randomArrivals,
           1,
         );
-        assert.equal(after.counters.deaths - before.counters.deaths, 1);
+        assert.equal(after.counters.deaths - before.counters.deaths, 0);
         assert.equal(
           after.counters.energyBudget.arrivals -
             before.counters.energyBudget.arrivals,
@@ -189,23 +196,23 @@ try {
         assert.equal(
           after.counters.energyBudget.turnover -
             before.counters.energyBudget.turnover,
-          1 / Q,
+          0,
         );
         assert.deepEqual(
-          after.u,
-          before.u,
-          "Residents survive unchanged when the low-energy newcomer loses",
+          after.u.slice(0, 8 * 52),
+          before.u.slice(0, 8 * 52),
+          "Residents survive unchanged while the newcomer joins",
         );
         return { result, counters: after.counters };
       }),
   );
   await check(
-    "A high-energy newcomer can displace a resident at full capacity",
+    "The hard physical ceiling refuses newcomers without killing a resident",
     () =>
       withEngine({}, async (engine) => {
         await engine.fixture({
           programs: [{ tree: idle }],
-          cells: chain(8, 1 / Q),
+          cells: chain(16, 1 / Q),
         });
         const result = await engine.admitBody({
           programs: [{ tree: idle }],
@@ -213,16 +220,17 @@ try {
         });
         const after = await inspect(engine);
         const summary = audit(engine, after);
-        assert.equal(result.admitted, 1);
-        assert.equal(result.survived, 1);
-        assert.ok(summary.identities.includes(result.identities[0]));
-        assert.equal(summary.identities.filter((id) => id <= 8).length, 7);
-        assert.equal(after.counters.deaths, 1);
+        assert.equal(result.admitted, 0);
+        assert.equal(result.survived ?? 0, 0);
+        assert.equal(summary.living, 16);
+        assert.equal(summary.identities.filter((id) => id <= 16).length, 16);
+        assert.equal(after.counters.deaths, 0);
+        assert.equal(after.counters.energyBudget.arrivals, 16 / Q);
         return { result, counters: after.counters };
       }),
   );
   await check(
-    "64-cell body fits N8/G2 staging, counts culled candidates, remaps links and starts fresh",
+    "Oversized body admits only available slots, remaps links and starts fresh",
     () =>
       withEngine({}, async (engine) => {
         const dirty = parseTree("(seq (resist 1) (set m0 7) (wait 1000))");
@@ -261,29 +269,30 @@ try {
           programs: [{ tree: idle }],
           cells: chain(64, (i) => (i < 8 ? 1000 : 1 / Q)),
         });
-        assert.equal(result.admitted, 64);
-        assert.equal(result.candidateSlots.length, 64);
+        assert.equal(result.admitted, 8);
+        assert.equal(result.candidateSlots.length, 8);
         assert.equal(result.survived, 8);
         const after = await inspect(engine);
         const summary = audit(engine, after);
+        assert.equal(after.counters.corpses, 0);
         assert.equal(
           after.counters.randomArrivals - before.counters.randomArrivals,
-          64,
+          8,
         );
-        assert.equal(after.counters.deaths - before.counters.deaths, 64);
+        assert.equal(after.counters.deaths - before.counters.deaths, 0);
         assert.equal(
           after.counters.energyBudget.arrivals -
             before.counters.energyBudget.arrivals,
-          8000 + 56 / Q,
+          8000,
         );
         assert.equal(
           after.counters.energyBudget.turnover -
             before.counters.energyBudget.turnover,
-          64 / Q,
+          0,
         );
         assert.deepEqual(
-          new Set(summary.identities),
-          new Set(result.identities.slice(0, 8)),
+          new Set(summary.identities.filter((id) => id > 8)),
+          new Set(result.identities),
         );
         const memory = await engine.treeMemory();
         const byIdentity = new Map(
@@ -329,7 +338,7 @@ try {
       }),
   );
   await check(
-    "Automatic bodies process ordinary plus at-capacity arrivals beyond a small staging tail",
+    "Automatic body arrivals stop at physical capacity without killing residents",
     () =>
       withEngine(
         {
@@ -363,26 +372,54 @@ try {
             );
             assert.equal(
               stats.admitted,
-              136 * second,
-              "All ordinary8 + at-capacity128 cells per second are staged despite tail64 and G2",
+              8,
+              "Only eight physical slots are available; excess arrivals are refused",
             );
-            assert.equal(stats.bodyCells, 136 * second);
-            assert.equal(after.counters.sampledArrivals, 136 * second);
+            assert.equal(stats.bodyCells, 8);
+            assert.equal(after.counters.sampledArrivals, 8);
+            assert.equal(after.counters.corpses, 0);
             assert.equal(after.counters.randomArrivals, 8);
-            assert.equal(after.counters.deaths, 136 * second);
-            assert.equal(
-              after.counters.energyBudget.arrivals,
-              8000 + (136 * second) / Q,
-            );
-            assert.equal(
-              after.counters.energyBudget.turnover,
-              (136 * second) / Q,
-            );
+            assert.equal(after.counters.deaths, 0);
+            assert.equal(after.counters.energyBudget.arrivals, 8000 + 8 / Q);
+            assert.equal(after.counters.energyBudget.turnover, 0);
             samples.push({ second, stats, counters: after.counters });
           }
           return { samples };
         },
       ),
+  );
+  await check(
+    "Hard-ceiling prefix trimming compacts unused programs and prunes cut links",
+    () =>
+      withEngine({ capacity: 1, genomeCapacity: 2 }, async (engine) => {
+        await engine.fixture({
+          programs: [{ tree: idle }],
+          cells: [{ energy: 100 }],
+        });
+        const result = await engine.admitBody({
+          programs: [{ tree: parseTree("(turn 1)") }, { tree: idle }],
+          cells: [
+            { x: 100, y: 100, energy: 20, genome: 1, links: [2, 0, 0, 0] },
+            { x: 118, y: 100, energy: 30, genome: 0, links: [1, 0, 0, 0] },
+          ],
+        });
+        assert.equal(result.admitted, 1);
+        assert.equal(result.survived, 1);
+        assert.equal(result.genomeSlots.length, 1);
+        const after = await inspect(engine);
+        audit(engine, after);
+        const slot = result.cellSlots[0],
+          gene = after.u[slot * 52 + 25];
+        assert.equal(gene, result.genomeSlots[0]);
+        assert.equal(after.refs[gene * 4], 1);
+        assert.deepEqual(
+          [...after.u.slice(slot * 52 + 32, slot * 52 + 36)],
+          [0, 0, 0, 0],
+        );
+        assert.equal(after.counters.energyBudget.arrivals, 120);
+        assert.equal(after.counters.deaths, 0);
+        return { result, counters: after.counters };
+      }),
   );
   await check(
     "Genome exhaustion limits admission without silently removing residents",

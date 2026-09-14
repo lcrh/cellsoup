@@ -23,6 +23,7 @@ const base = {
   forkMutation: 0,
   rate: 0,
   capacityRate: 0,
+  pressureStrength: 0,
   floor: 0,
   upkeep: 0,
   energyDecay: 0,
@@ -49,7 +50,7 @@ async function state(e) {
   const b = await e.state(),
     f = new Float32Array(b),
     u = new Uint32Array(b);
-  return Array.from({ length: e.cfg.capacity }, (_, i) => ({
+  return Array.from({ length: e.entityCapacity }, (_, i) => ({
     energy: f[i * 52 + 4] / 4096,
     life: u[i * 52 + 31],
     r: [...f.slice(i * 52 + 8, i * 52 + 16)],
@@ -185,7 +186,7 @@ try {
     },
   );
   await check(
-    "capacity overflow is synchronized after all valid births pay their fees",
+    "crossing the soft target preserves every birth with available physical headroom",
     async () => {
       const e = await setup(
         ["bud r0\nadd r1 7\nwait 0"],
@@ -196,10 +197,10 @@ try {
         await e.step();
         const c = await state(e);
         assert.equal((await e.counters()).births, 2);
-        assert.equal((await e.counters()).capacityDeaths, 1);
+        assert.equal((await e.counters()).capacityDeaths, 0);
         assert.equal(
-          c.reduce((sum, c) => sum + c.energy, 0),
-          132,
+          c.filter((c) => c.life === 1).reduce((sum, c) => sum + c.energy, 0),
+          176,
         );
         assert.equal(c[0].r[1], 0);
         assert.equal(c[1].r[1], 0);
@@ -209,7 +210,7 @@ try {
     },
   );
   await check(
-    "a full habitat permits feasible division then culls its overflow",
+    "the soft target permits feasible division without an immediate death",
     async () => {
       const e = await setup(
         [
@@ -224,15 +225,15 @@ try {
         const counts = await e.counters();
         assert.equal(counts.photosynthesis, 1);
         assert.equal(counts.births, 1);
-        assert.equal(counts.capacityDeaths, 1);
-        assert.equal(counts.living, 2);
+        assert.equal(counts.capacityDeaths, 0);
+        assert.equal(counts.living, 3);
       } finally {
         e.destroy();
       }
     },
   );
   await check(
-    "immigration does not block a valid division before the shared capacity cull",
+    "immigration and valid division both enter available physical headroom",
     async () => {
       const e = await setup(
         ["photosynthesize r0\nbud r1\nadd r2 7\nwait 0"],
@@ -245,9 +246,9 @@ try {
           counts = await e.counters();
         assert.equal(c.r[2], 0);
         assert.equal(counts.births, 1);
-        assert.equal(counts.capacityDeaths, 1);
-        assert.ok(counts.energyBudget.turnover > 0);
-        assert.equal(counts.living, 2);
+        assert.equal(counts.capacityDeaths, 0);
+        assert.equal(counts.energyBudget.turnover, 0);
+        assert.equal(counts.living, 3);
       } finally {
         e.destroy();
       }

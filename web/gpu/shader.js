@@ -3,6 +3,7 @@ import { ENERGY_BUDGET_KEYS } from "./energy-ledger.js";
 import { GPU_OPS, GPU_SENSORS, GPU_FIELDS } from "./language.js";
 export function simulationShader({
   capacity,
+  entityCapacity = 2 * capacity,
   genomeCapacity,
   side,
   sources,
@@ -13,7 +14,14 @@ export function simulationShader({
   linkedRelay = 0,
   energyCapacity = 3895,
 }) {
-  const selection = capacitySelection({ capacity, genomeCapacity });
+  const selection = capacitySelection({
+    capacity,
+    entityCapacity,
+    genomeCapacity,
+    policy: "corpses",
+    prefix: "corpse",
+    dynamicCorpseLimit: true,
+  });
   const types = { r: 1, v: 2, l: 3, s: 4, p: 5 };
   const signatures = GPU_OPS.map(
     (op) =>
@@ -26,9 +34,10 @@ export function simulationShader({
         .join(",")})`,
   ).join(",");
   return /* wgsl */ `
-const N=${capacity}u;
+const N=${entityCapacity}u;
+const P=${capacity}u;
 const G=${genomeCapacity}u;
-const C=${2 * capacity + Math.max(genomeCapacity, 64)}u;
+const C=${2 * entityCapacity + Math.max(genomeCapacity, 64)}u;
 const SIDE=${side}u;
 const T=${side * side}u;
 const W=${side * 32}.0;
@@ -787,13 +796,17 @@ ${linkedRelay > 0 ? "  s.relayA[i]=vec4f(0);s.relayB[i]=vec4f(0);" : ""}
   if(i>=N&&i<C){cells[i].life.w=0u;}
   if(i==0u) {
     let nextTick=atomicAdd(&s.counter[0],1u)+1u;
-    atomicStore(&s.materializeState[3],select(0u,1u,atomicLoad(&s.counter[1])+atomicLoad(&s.counter[13])>=N));
+    let settledLiving=min(N,atomicLoad(&s.counter[1]));
+    atomicStore(&s.selectionState[13],settledLiving);
+    atomicStore(&s.selectionState[14],N-settledLiving);
+    atomicStore(&s.selectionState[15],0u);
+    atomicStore(&s.materializeState[3],select(0u,1u,atomicLoad(&s.counter[1])>=P));
     var wanted=0u;
     if(nextTick%60u==0u){
       let deficit=u32(max(0.0,f32(cfg.sim.w)-f32(atomicLoad(&s.counter[1]))));
-      wanted=u32(cfg.arrivals.x)+min(deficit,N/512u+1u);
+      wanted=u32(cfg.arrivals.x)+deficit;
     }
-    if(nextTick%60u==0u&&atomicLoad(&s.counter[1])+atomicLoad(&s.counter[13])>=N){wanted+=u32(cfg.fill.z);}
+    if(nextTick%60u==0u&&atomicLoad(&s.counter[1])>=P){wanted+=u32(cfg.fill.z);}
     atomicStore(&s.counter[16],wanted);
     atomicStore(&s.counter[2],0u);
     atomicStore(&s.counter[3],0u);
@@ -911,6 +924,13 @@ ${specializationStrength > 0 ? "  s.metabolicHistory[i]*=cfg.specialization.y;" 
     c.b.x=0.0;action.misc.w=1u;action.base.x=0u;cells[i]=c;intents[i]=action;return;
   }
 
+  let overshoot=max(0.0,f32(atomicLoad(&s.selectionState[13]))/f32(P)-1.0);
+  if(cfg.fill.w>0.0&&overshoot>0.0&&c.b.x>0.0&&random(hash(cfg.sim.x^c.machine.x^(tick()*0x9e3779b9u)^0x706f7075u))<cfg.bracing.w*DT){
+    let amplitude=10.0*overshoot;
+    let loss=round(min(c.b.x,cfg.fill.w*amplitude*amplitude/cfg.bracing.w*Q));
+    c.b.x-=loss;budgetRecord(FLOW_populationPressure,u32(loss));
+    if(c.b.x==0.0){action.misc.w=2u;action.base.x=0u;cells[i]=c;intents[i]=action;budgetFlush();return;}
+  }
   let exposure=1.0/(1.0+c.phen.y*cfg.cooling.y);
   c.res.w=cfg.thermal.x+(c.res.w-cfg.thermal.x)*exp(-cfg.thermal.w*exposure*DT);
   c.res.w=min(10000.0,c.res.w+cfg.thermal.y*c.res.y*DT);
@@ -1111,8 +1131,8 @@ ${executionTrace ? `        if(traceRow!=0xffffffffu){let n=s.traceCounts[traceR
           // division is a true no-op, allowing the program to gather energy
           // or act again this tick. Feasible attempts still yield until the
           // synchronized lifecycle resolves competing damage. Capacity is
-          // enforced afterward, with parents and daughters equally eligible.
-          if(c.b.x>=f32(quantum(cfg.energy.z)+2u*quantum(cfg.energy.w))&&(op==18u||any(c.link==vec4u(0)))){
+          // guarded by conservative tickets at the absolute storage ceiling.
+          if(atomicLoad(&s.selectionState[14])>0u&&c.b.x>=f32(quantum(cfg.energy.z)+2u*quantum(cfg.energy.w))&&(op==18u||any(c.link==vec4u(0)))){
             action.req.z=f32(op-17u);
             action.req.w=f32(d);
             yielding=true;
@@ -1588,6 +1608,12 @@ fn forces(i:u32)->vec4f {
   if(visited>=MAX_SPATIAL_VISITS){atomicAdd(&s.counter[30],1u);}
   return vec4f(f,torque,crowding);
 }
+fn corpseFromCell(source:Cell)->Cell {
+ var c=source;
+ c.life.w=select(0u,2u,cfg.clouds.w>0||c.res.z>0);c.life.x=0u;c.link=vec4u(0);c.b.w=0.0;c.b.x=round(cfg.clouds.w*Q)+c.res.z;c.res.z=c.b.x;c.p=vec4f(c.p.xy,0,0);
+ c.anchor=vec4f(0);c.signal=vec4f(0);c.mail=vec4f(0);c.sender=vec4u(0);
+ return c;
+}
 @compute @workgroup_size(128) fn life(@builtin(global_invocation_id) id:vec3u) {
   let i=id.x;
   if(i>=N||old[i].life.w==0u) {
@@ -1607,10 +1633,11 @@ fn forces(i:u32)->vec4f {
   }
   budgetAdd(FLOW_attackDamage,damage-blocked);
   if(c.b.x==0.0||intents[i].misc.w!=0u) {
-    c.life.w=select(0u,2u,cfg.clouds.w>0||c.res.z>0);c.life.x=0u;c.link=vec4u(0);c.b.w=0.0;c.b.x=round(cfg.clouds.w*Q)+c.res.z;c.res.z=c.b.x;c.p=vec4f(c.p.xy,0,0);
+    c=corpseFromCell(c);
     // Only damage that penetrated the barrier can cause an energy death.
     // A shield hit on a cell already starved or overheated is not a kill.
     if(intents[i].misc.w==0u&&damage>blocked){atomicAdd(&s.counter[22],1u);}
+    if(intents[i].misc.w==2u){atomicAdd(&s.counter[31],1u);}
     atomicSub(&s.genes[c.machine.y].refs,1u);atomicSub(&s.counter[1],1u);atomicAdd(&s.counter[7],1u);
     if(c.life.w==2u){atomicAdd(&s.counter[13],1u);}
     geneMetric(c.machine.y,u32(c.phen.z*256.0));cells[i]=c;return;
@@ -1643,6 +1670,8 @@ ${
   }
   if(birth>0u&&c.b.x>=f32(quantum(cfg.energy.z)+2u*quantum(cfg.energy.w))&&(birth==1u||free!=NONE)) {
     atomicAdd(&s.counter[3],1u);
+    let ticket=atomicAdd(&s.selectionState[15],1u);
+    if(ticket>=atomicLoad(&s.selectionState[14])){cells[i]=c;budgetFlush();return;}
     {
       let j=N+i;
       let identity=atomicAdd(&s.counter[11],1u);
@@ -1713,7 +1742,6 @@ ${selection.source}
  let i=id.x;if(i>=C){return;}
  if(s.selectionMap[i]==0u){
   let c=cells[i];
-  if(c.life.w==1u){budgetAdd(FLOW_turnover,u32(c.b.x));geneMetric(c.machine.y,u32(c.phen.z*256.0));atomicSub(&s.genes[c.machine.y].refs,1u);atomicSub(&s.counter[1],1u);atomicAdd(&s.counter[7],1u);atomicAdd(&s.counter[31],1u);}
   if(c.life.w==2u){atomicSub(&s.counter[13],1u);}
   cells[i].life.w=0u;cells[i].b.x=0.0;
   if(i<N){let at=atomicAdd(&s.materializeState[0],1u);s.free[at]=i;}
@@ -1732,7 +1760,7 @@ ${treePrograms ? " for(var k=0u;k<3u;k++){s.treeMemory[j*3u+k]=s.daughterMemory[
 ${specializationStrength > 0 ? " s.metabolicHistory[j]=s.daughterAux[parent*2u+1u];" : ""}
  }
 }
-fn remappedHandle(handle:u32)->u32{if(handle==0u||handle>C){return 0u;}return s.selectionMap[handle-1u];}
+fn remappedHandle(handle:u32)->u32{if(handle==0u||handle>C){return 0u;}let mapped=s.selectionMap[handle-1u];if(mapped==0u||cells[mapped-1u].life.w!=1u){return 0u;}return mapped;}
 @compute @workgroup_size(128) fn capacityRemap(@builtin(global_invocation_id) id:vec3u){
  let i=id.x;if(i>=N){return;}
  if(i==0u){atomicStore(&s.counter[2],N-atomicLoad(&s.counter[1])-atomicLoad(&s.counter[13]));}
@@ -1871,13 +1899,16 @@ ${forkMutation > 0 ? " let r=id.x;if(r>=atomicLoad(&s.materializeState[2])){retu
     archive[a].ancestry.z=score;
   }
 }
+@compute @workgroup_size(128) fn arrivalsPrepare(@builtin(global_invocation_id) id:vec3u){
+ if(id.x==0u){atomicStore(&s.selectionState[12],min(min(atomicLoad(&s.counter[16]),atomicLoad(&s.counter[4])),min(G,N-min(N,atomicLoad(&s.counter[1])))));}
+}
 @compute @workgroup_size(128) fn arrivals(@builtin(global_invocation_id) id:vec3u) {
   let r=id.x;
   if(tick()%60u!=0u) {
     return;
   }
   let wanted=atomicLoad(&s.counter[16]);
-  if(r>=wanted||r>=atomicLoad(&s.counter[4])||r>=G) {
+  if(r>=atomicLoad(&s.selectionState[12])) {
     return;
   }
   let i=2u*N+r;
