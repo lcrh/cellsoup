@@ -49,3 +49,22 @@ test("rates survive a GPU counter rollover and bounded history keeps its baselin
   assert.equal(history[1].attacksRate, 1);
   assert.equal(history[1].killsRate, 0);
 });
+
+test("capacity deaths are plotted independently from confirmed attack kills", () => {
+  const history = [];
+  appendEventSample(history, {
+    tick: 0,
+    attacks: 10,
+    kills: 2,
+    capacityDeaths: 100,
+  });
+  appendEventSample(history, {
+    tick: 3600,
+    attacks: 12,
+    kills: 3,
+    capacityDeaths: 125,
+  });
+  assert.equal(history[1].killsRate, 1);
+  assert.equal(history[1].capacityDeathsRate, 25);
+  assert.equal(history[1].capacityDeaths, 125);
+});

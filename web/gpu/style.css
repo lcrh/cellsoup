@@ -327,14 +327,17 @@ button:disabled {
 }
 .predation-charts {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 16px;
 }
 .predation-charts > div:first-child .event-heading {
   color: #ecad71;
 }
-.predation-charts > div:last-child .event-heading {
+.predation-charts > div:nth-child(2) .event-heading {
   color: #ec797c;
+}
+.predation-charts > div:last-child .event-heading {
+  color: #a8a4d6;
 }
 .predation-charts canvas {
   display: block;

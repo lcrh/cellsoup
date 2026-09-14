@@ -185,7 +185,7 @@ try {
     },
   );
   await check(
-    "capacity contention stays synchronized and does not debit failed births",
+    "capacity overflow is synchronized after all valid births pay their fees",
     async () => {
       const e = await setup(
         ["bud r0\nadd r1 7\nwait 0"],
@@ -195,10 +195,11 @@ try {
       try {
         await e.step();
         const c = await state(e);
-        assert.equal((await e.counters()).births, 1);
+        assert.equal((await e.counters()).births, 2);
+        assert.equal((await e.counters()).capacityDeaths, 1);
         assert.equal(
           c.reduce((sum, c) => sum + c.energy, 0),
-          188,
+          132,
         );
         assert.equal(c[0].r[1], 0);
         assert.equal(c[1].r[1], 0);
@@ -208,7 +209,7 @@ try {
     },
   );
   await check(
-    "a full habitat does not halve reproductive programs' harvesting cadence",
+    "a full habitat permits feasible division then culls its overflow",
     async () => {
       const e = await setup(
         [
@@ -219,18 +220,19 @@ try {
         { capacity: 2, genomeCapacity: 2, treePrograms: 1, loopYield: 1 },
       );
       try {
-        await e.step(6);
-        const [c] = await state(e);
-        assert.equal(c.energy, 106);
-        assert.equal((await e.counters()).photosynthesis, 6);
-        assert.equal((await e.counters()).births, 0);
+        await e.step();
+        const counts = await e.counters();
+        assert.equal(counts.photosynthesis, 1);
+        assert.equal(counts.births, 1);
+        assert.equal(counts.capacityDeaths, 1);
+        assert.equal(counts.living, 2);
       } finally {
         e.destroy();
       }
     },
   );
   await check(
-    "slots reserved for immigration also make division a same-tick no-op",
+    "immigration does not block a valid division before the shared capacity cull",
     async () => {
       const e = await setup(
         ["photosynthesize r0\nbud r1\nadd r2 7\nwait 0"],
@@ -241,10 +243,10 @@ try {
         await e.step(60);
         const [c] = await state(e),
           counts = await e.counters();
-        assert.equal(c.energy, 101);
-        assert.equal(c.r[1], -1);
-        assert.equal(c.r[2], 7);
-        assert.equal(counts.births, 0);
+        assert.equal(c.r[2], 0);
+        assert.equal(counts.births, 1);
+        assert.equal(counts.capacityDeaths, 1);
+        assert.ok(counts.energyBudget.turnover > 0);
         assert.equal(counts.living, 2);
       } finally {
         e.destroy();

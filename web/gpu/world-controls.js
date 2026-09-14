@@ -12,7 +12,7 @@ export const SETTING_GROUPS = [
       ["seed", "Random seed", 0, 4294967295, 1],
       ["initial", "Initial random founders", 0, 65536, 1],
       ["rate", "Newcomers / second", 0, 262144, 1],
-      ["capacityRate", "Newcomers at capacity / sec", 0, 64, 1],
+      ["capacityRate", "Extra newcomers at capacity / sec", 0, 1024, 1],
       ["archiveEnabled", "Lineage archive enabled", 0, 1, 1],
       ["floor", "Population floor", 0, 262144, 1],
       ["share", "Archive share", 0, 1, 0.05],

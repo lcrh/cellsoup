@@ -48,7 +48,7 @@ for (const [title, fields] of settingGroups) {
     const hint = document.createElement("p");
     hint.className = "hint";
     hint.textContent =
-      "At capacity, the separate newcomer rate replaces living cells with selection weighted toward lower usable energy (or corpses if none are alive). Set it to 0 to stop arrivals when full. The rate is a target; replacement availability can limit it.";
+      "Newcomers keep arriving when the world is full. The extra rate adds more pressure at capacity; set it to 0 to keep only the ordinary influx. Valid divisions happen first, then excess cells are removed with a bias toward low usable energy. Parents and newborns both compete. Capacity removal recycles the slot rather than leaving a corpse.";
     section.append(hint);
   }
   if (title === "Physics & reach") {
@@ -235,8 +235,10 @@ function options() {
     throw Error(
       "Initial founders must fit within one quarter of entity capacity.",
     );
-  if (cfg.capacityRate > 64)
-    throw Error("Newcomers at capacity must not exceed 64 per second.");
+  if (cfg.capacityRate > 1024)
+    throw Error(
+      "Extra newcomers at capacity must not exceed 1,024 per second.",
+    );
   if (
     cfg.floor > capacity ||
     cfg.rate > capacity ||
@@ -513,6 +515,7 @@ async function observe(now) {
     $("kills").textContent = formatNumber(c.kills);
     $("eaten").textContent = formatNumber(c.eaten);
     $("capacity-arrivals").textContent = formatNumber(c.capacityArrivals ?? 0);
+    $("capacity-deaths").textContent = formatNumber(c.capacityDeaths ?? 0);
     $("mutations").textContent = formatNumber(c.mutations);
     $("division-mutations").textContent = formatNumber(c.divisionMutations);
     $("crossovers").textContent = formatNumber(c.crossovers);
@@ -559,6 +562,7 @@ function drawPredationHistory() {
   for (const [key, color] of [
     ["attacks", "#ecad71"],
     ["kills", "#ec797c"],
+    ["capacityDeaths", "#a8a4d6"],
   ]) {
     const value = last?.[mode === "rate" ? `${key}Rate` : key];
     const label =
@@ -572,7 +576,7 @@ function drawPredationHistory() {
     const chart = $(`${key}-history`);
     chart.setAttribute(
       "aria-label",
-      `${key === "kills" ? "Confirmed attack kills" : "Attacks"} over simulated time; latest ${label}${mode === "rate" ? " per simulated minute" : " total"}`,
+      `${key === "kills" ? "Confirmed attack kills" : key === "capacityDeaths" ? "Capacity deaths" : "Attacks"} over simulated time; latest ${label}${mode === "rate" ? " per simulated minute" : " total"}`,
     );
     drawEventChart(chart, history, key, mode, color);
   }
@@ -827,7 +831,7 @@ function syncPopulationLimits() {
   for (const [id, max] of [
     ["initial", capacity / 4],
     ["rate", capacity],
-    ["capacityRate", Math.min(capacity, 64)],
+    ["capacityRate", Math.min(capacity, 1024)],
     ["floor", capacity],
   ]) {
     $(id).max = max;
@@ -839,7 +843,7 @@ $("capacity").onchange = () => {
   syncPopulationLimits();
   const n = Number($("capacity").value);
   $("rate").value = Math.max(1, n / 4096);
-  $("capacityRate").value = Math.max(1, n / 8192);
+  $("capacityRate").value = Math.min(1024, Math.max(1, n / 512));
   $("floor").value = n / 64;
   $("initial").value = n / 4;
   for (const id of ["rate", "capacityRate", "floor", "initial"])

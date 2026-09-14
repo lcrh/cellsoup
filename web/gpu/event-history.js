@@ -10,10 +10,10 @@ export function appendEventSample(history, counters, limit = 480) {
     living: counters.living,
     ...budgetSnapshot(previous, counters),
   };
-  for (const key of ["attacks", "kills"]) {
-    sample[key] = counters[key];
+  for (const key of ["attacks", "kills", "capacityDeaths"]) {
+    sample[key] = counters[key] ?? 0;
     sample[`${key}Rate`] = previous
-      ? (((counters[key] - previous[key]) >>> 0) * 3600) /
+      ? (((sample[key] - previous[key]) >>> 0) * 3600) /
         (counters.tick - previous.tick)
       : null;
   }

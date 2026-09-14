@@ -136,8 +136,8 @@ export function worldSettingsForSeed(seed, { capacity = 32768 } = {}) {
     rate: Math.min(capacity, Math.round(pick([4, 8, 12, 16]) * scale)),
     capacityRate: Math.min(
       capacity,
-      64,
-      Math.round((pick([0, 1, 2, 4, 8]) * capacity) / 32768),
+      1024,
+      Math.round((pick([16, 32, 64, 96, 128]) * capacity) / 32768),
     ),
     floor: Math.min(
       Math.floor(capacity / 16),

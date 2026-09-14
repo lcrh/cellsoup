@@ -26,6 +26,9 @@ test("random habitats stay bounded, retain thermal headroom and sustain immigrat
           s.safeTemperature <= s.ambientTemperature + 16,
       );
       assert.ok(s.rate > 0 && s.rate <= capacity);
+      assert.ok(
+        s.capacityRate >= 16 && s.capacityRate <= Math.min(capacity, 1024),
+      );
       assert.ok(s.floor > 0 && s.floor <= capacity / 16);
       assert.ok(
         s.upkeep > 0 && s.energyDecay > 0 && s.cpuCost > 0 && s.heatDamage > 0,
@@ -88,6 +91,7 @@ test("10,000 seeded worlds retain their palette and non-target settings while al
     const unchanged = { ...s };
     delete unchanged.generationDepth;
     delete unchanged.founderActions;
+    delete unchanged.capacityRate;
     // In sunless worlds even the old solar rate and fill knee must be exact.
     if (s.solarEnabled) {
       delete unchanged.solarRate;
@@ -98,11 +102,12 @@ test("10,000 seeded worlds retain their palette and non-target settings while al
   assert.equal(sunny, 8755);
   assert.equal(sunless, 1245);
   assert.ok(increasedKnee > 0);
-  // Captured from d54ae2d before tuning; protects RNG draw order and every
-  // non-target setting across the entire sample, including optional masks.
+  // Captured before the v0.9.6 influx change, excluding the intentionally
+  // tuned generation, energy and capacity-rate settings. Preserves RNG draws
+  // and every other setting, including optional masks.
   assert.equal(
     preserved.digest("hex"),
-    "483b0419d0f102406eb2942c9fd0c7a58670f004ed3b762caf34b077a45fb485",
+    "f2e26f8185f5627c88916e8e6e75c2e651a6f2d2795281b64d13288cc0caa70d",
   );
 });
 

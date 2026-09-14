@@ -62,7 +62,7 @@ test("custom and loaded settings, population counts and optional function switch
     storageFillScale: 0,
     moveCost: 0.007,
     linkedRelay: 0.95,
-    capacityRate: 64,
+    capacityRate: 512,
     attackSpeedBonus: 0.075,
   });
   const id = TREE_SCHEMA.findIndex((fn) => fn.name === "sin"),
@@ -124,7 +124,7 @@ test("bad link parameters, unknown settings and incompatible capacities fail wit
     '{"treePrograms":0}',
     '{"upkeep":"alert(1)"}',
     '{"moveCost":0.00001}',
-    '{"capacityRate":65}',
+    '{"capacityRate":1025}',
     '{"initial":9000}',
     '{"seedEnergy":1000,"energyCapacity":40}',
     '{"seedStorage":100,"storageCapacity":0}',

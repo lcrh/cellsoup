@@ -64,7 +64,7 @@ function validate(config) {
     config.initial > config.genomeCapacity ||
     config.floor > config.capacity ||
     config.rate > config.capacity ||
-    config.capacityRate > Math.min(config.capacity, 64)
+    config.capacityRate > Math.min(config.capacity, 1024)
   )
     throw Error("Population settings exceed capacity in world link");
   if (

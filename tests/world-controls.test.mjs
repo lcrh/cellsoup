@@ -59,7 +59,7 @@ test("random worlds cover every model slider within its control bounds and maint
         observed.get(id).add(value);
       }
       assert.ok(Number.isInteger(cfg.initial) && cfg.initial <= capacity / 4);
-      assert.ok(cfg.capacityRate <= Math.min(capacity, 64));
+      assert.ok(cfg.capacityRate <= Math.min(capacity, 1024));
       assert.ok(cfg.seedEnergy <= cfg.energyCapacity);
       assert.ok(cfg.seedStorage <= cfg.storageCapacity);
       assert.ok(

@@ -1,3 +1,4 @@
+import { capacitySelection } from "./capacity-selection.js";
 import { ENERGY_BUDGET_KEYS } from "./energy-ledger.js";
 import { GPU_OPS, GPU_SENSORS, GPU_FIELDS } from "./language.js";
 export function simulationShader({
@@ -12,6 +13,7 @@ export function simulationShader({
   linkedRelay = 0,
   energyCapacity = 3895,
 }) {
+  const selection = capacitySelection({ capacity, genomeCapacity });
   const types = { r: 1, v: 2, l: 3, s: 4, p: 5 };
   const signatures = GPU_OPS.map(
     (op) =>
@@ -26,6 +28,7 @@ export function simulationShader({
   return /* wgsl */ `
 const N=${capacity}u;
 const G=${genomeCapacity}u;
+const C=${2 * capacity + Math.max(genomeCapacity, 64)}u;
 const SIDE=${side}u;
 const T=${side * side}u;
 const W=${side * 32}.0;
@@ -114,6 +117,11 @@ ${treePrograms ? "  resistance:array<f32,N>," : ""}
   energyFillRemainder:array<f32,N>,
   storageFillRemainder:array<f32,N>,
   energyBudget:array<Wide,${ENERGY_BUDGET_KEYS.length}>,
+${treePrograms ? "  daughterMemory:array<vec4f,N*3>," : ""}
+  daughterAux:array<vec4f,N*2>,
+${forkMutation > 0 ? "  pendingMutationScratch:array<vec4u,N>," : ""}
+${selection.declarations}
+  materializeState:array<atomic<u32>,4>,
 }
 struct Field {
   a:array<vec2f,T>,
@@ -739,12 +747,14 @@ fn neighborhood(i:u32,mode:u32,predicate:u32,radius:f32,source:ptr<function,Cell
     : ""
 }
 fn newCell(i:u32,g:u32,identity:u32,seed:u32)->Cell {
+  if(i<N){
   s.cpuRemainder[i]=0;
   s.energyFillRemainder[i]=0;s.storageFillRemainder[i]=0;
 ${treePrograms ? "  s.resistance[i]=0;" : ""}
 ${treePrograms ? "  for(var k=0u;k<3u;k++){s.childState[i*3u+k]=vec4f(0);}" : ""}
 ${specializationStrength > 0 ? "  s.metabolicHistory[i]=vec4f(0);" : ""}
 ${linkedRelay > 0 ? "  s.relayA[i]=vec4f(0);s.relayB[i]=vec4f(0);" : ""}
+  }
   var c:Cell;
   c.p=vec4f(random(seed)*W,random(seed+1u)*W,0,0);
   c.b=vec4f(f32(quantum(cfg.energy.x)),random(seed+2u),0,0);budgetAdd(FLOW_arrivals,u32(c.b.x));
@@ -774,13 +784,16 @@ ${linkedRelay > 0 ? "  s.relayA[i]=vec4f(0);s.relayB[i]=vec4f(0);" : ""}
 }
 @compute @workgroup_size(128) fn clear(@builtin(global_invocation_id) id:vec3u) {
   let i=id.x;
+  if(i>=N&&i<C){cells[i].life.w=0u;}
   if(i==0u) {
     let nextTick=atomicAdd(&s.counter[0],1u)+1u;
+    atomicStore(&s.materializeState[3],select(0u,1u,atomicLoad(&s.counter[1])+atomicLoad(&s.counter[13])>=N));
     var wanted=0u;
     if(nextTick%60u==0u){
       let deficit=u32(max(0.0,f32(cfg.sim.w)-f32(atomicLoad(&s.counter[1]))));
       wanted=u32(cfg.arrivals.x)+min(deficit,N/512u+1u);
     }
+    if(nextTick%60u==0u&&atomicLoad(&s.counter[1])+atomicLoad(&s.counter[13])>=N){wanted+=u32(cfg.fill.z);}
     atomicStore(&s.counter[16],wanted);
     atomicStore(&s.counter[2],0u);
     atomicStore(&s.counter[3],0u);
@@ -1097,10 +1110,9 @@ ${executionTrace ? `        if(traceRow!=0xffffffffu){let n=s.traceCounts[traceR
           // Match the later life-stage energy/topology gate. An impossible
           // division is a true no-op, allowing the program to gather energy
           // or act again this tick. Feasible attempts still yield until the
-          // synchronized allocator resolves contention and competing damage.
-          // prepare has finalized free slots and immigration reservations;
-          // known-zero capacity cannot admit a birth in this tick.
-          if(birthCapacity()>0u&&c.b.x>=f32(quantum(cfg.energy.z)+2u*quantum(cfg.energy.w))&&(op==18u||any(c.link==vec4u(0)))){
+          // synchronized lifecycle resolves competing damage. Capacity is
+          // enforced afterward, with parents and daughters equally eligible.
+          if(c.b.x>=f32(quantum(cfg.energy.z)+2u*quantum(cfg.energy.w))&&(op==18u||any(c.link==vec4u(0)))){
             action.req.z=f32(op-17u);
             action.req.w=f32(d);
             yielding=true;
@@ -1576,11 +1588,6 @@ fn forces(i:u32)->vec4f {
   if(visited>=MAX_SPATIAL_VISITS){atomicAdd(&s.counter[30],1u);}
   return vec4f(f,torque,crowding);
 }
-// On immigration ticks, spare slots are reserved before competing divisions.
-fn birthCapacity()->u32 {
-  let free=atomicLoad(&s.counter[2]);
-  return free-min(free,atomicLoad(&s.counter[16]));
-}
 @compute @workgroup_size(128) fn life(@builtin(global_invocation_id) id:vec3u) {
   let i=id.x;
   if(i>=N||old[i].life.w==0u) {
@@ -1635,16 +1642,17 @@ ${
     }
   }
   if(birth>0u&&c.b.x>=f32(quantum(cfg.energy.z)+2u*quantum(cfg.energy.w))&&(birth==1u||free!=NONE)) {
-    let at=atomicAdd(&s.counter[3],1u);
-    if(at<birthCapacity()) {
-      let j=s.free[at];
+    atomicAdd(&s.counter[3],1u);
+    {
+      let j=N+i;
       let identity=atomicAdd(&s.counter[11],1u);
       var child=c;
       child.b.w=c.b.w*.5;c.b.w-=child.b.w;
-${treePrograms ? "      s.resistance[j]=s.resistance[i];" : ""}
-      s.cpuRemainder[i]*=.5;s.cpuRemainder[j]=s.cpuRemainder[i];
-      s.energyFillRemainder[i]*=.5;s.energyFillRemainder[j]=s.energyFillRemainder[i];
-      s.storageFillRemainder[i]*=.5;s.storageFillRemainder[j]=s.storageFillRemainder[i];
+      s.daughterAux[i*2u]=vec4f(0);
+${treePrograms ? "      s.daughterAux[i*2u].w=s.resistance[i];" : ""}
+      s.cpuRemainder[i]*=.5;s.daughterAux[i*2u].x=s.cpuRemainder[i];
+      s.energyFillRemainder[i]*=.5;s.daughterAux[i*2u].y=s.energyFillRemainder[i];
+      s.storageFillRemainder[i]*=.5;s.daughterAux[i*2u].z=s.storageFillRemainder[i];
       let heading=c.b.y*6.2831853;
       child.p=vec4f(wrapped(c.p.xy+vec2f(cos(heading),sin(heading))*14.0),0,0);
       let divisionFee=quantum(cfg.energy.z);budgetRecord(FLOW_reproduction,divisionFee);
@@ -1675,9 +1683,9 @@ ${treePrograms ? "      s.resistance[j]=s.resistance[i];" : ""}
         child.link[0]=i+1u;
         child.anchor[0]=fract(c.b.y+.5-child.b.y);
       }
-${treePrograms ? "      for(var q=0u;q<3u;q++){s.treeMemory[j*3u+q]=s.treeMemory[i*3u+q];s.childState[j*3u+q]=vec4f(0);}\n      let overrides=u32(s.childState[i*3u+2u].x);\n      for(var q=0u;q<8u;q++){if((overrides&(1u<<q))!=0u){s.treeMemory[j*3u+q/4u][q%4u]=s.childState[i*3u+q/4u][q%4u];}}\n      s.treeMemory[j*3u+2u].y=f32(u32(s.treeMemory[j*3u+2u].y)|overrides);\n      s.treeMemory[j*3u+2u].z=f32(overrides);\n      for(var q=0u;q<3u;q++){s.childState[i*3u+q]=vec4f(0);}" : ""}
-${specializationStrength > 0 ? "      s.metabolicHistory[j]=s.metabolicHistory[i];" : ""}
-${linkedRelay > 0 ? "      s.relayA[j]=vec4f(0);s.relayB[j]=vec4f(0);" : ""}
+${treePrograms ? "      for(var q=0u;q<3u;q++){s.daughterMemory[i*3u+q]=s.treeMemory[i*3u+q];}\n      let overrides=u32(s.childState[i*3u+2u].x);\n      for(var q=0u;q<8u;q++){if((overrides&(1u<<q))!=0u){s.daughterMemory[i*3u+q/4u][q%4u]=s.childState[i*3u+q/4u][q%4u];}}\n      s.daughterMemory[i*3u+2u].y=f32(u32(s.daughterMemory[i*3u+2u].y)|overrides);\n      s.daughterMemory[i*3u+2u].z=f32(overrides);\n      for(var q=0u;q<3u;q++){s.childState[i*3u+q]=vec4f(0);}" : ""}
+${specializationStrength > 0 ? "      s.daughterAux[i*2u+1u]=s.metabolicHistory[i];" : ""}
+
 ${
   forkMutation > 0
     ? `      if(random(hash(cfg.sim.x ^ identity ^ (tick()*0x9e3779b9u)))<cfg.arrivals.w){
@@ -1697,6 +1705,49 @@ ${
     }
   }
   cells[i]=c;budgetFlush();
+}
+${selection.source}
+@compute @workgroup_size(128) fn clearCandidateTail(@builtin(global_invocation_id) id:vec3u){let i=id.x;if(i>=N&&i<C){cells[i].life.w=0u;}}
+@compute @workgroup_size(128) fn materializeReset(@builtin(global_invocation_id) id:vec3u){if(id.x==0u){atomicStore(&s.materializeState[0],0u);atomicStore(&s.materializeState[1],0u);atomicStore(&s.materializeState[2],min(N,atomicLoad(&s.counter[25])));}}
+@compute @workgroup_size(128) fn capacityCull(@builtin(global_invocation_id) id:vec3u){
+ let i=id.x;if(i>=C){return;}
+ if(s.selectionMap[i]==0u){
+  let c=cells[i];
+  if(c.life.w==1u){budgetAdd(FLOW_turnover,u32(c.b.x));geneMetric(c.machine.y,u32(c.phen.z*256.0));atomicSub(&s.genes[c.machine.y].refs,1u);atomicSub(&s.counter[1],1u);atomicAdd(&s.counter[7],1u);atomicAdd(&s.counter[31],1u);}
+  if(c.life.w==2u){atomicSub(&s.counter[13],1u);}
+  cells[i].life.w=0u;cells[i].b.x=0.0;
+  if(i<N){let at=atomicAdd(&s.materializeState[0],1u);s.free[at]=i;}
+ }else if(i<N){s.selectionMap[i]=i+1u;}
+}
+@compute @workgroup_size(128) fn capacityAllocate(@builtin(global_invocation_id) id:vec3u){let i=id.x;if(i<N||i>=C||s.selectionMap[i]==0u){return;}let at=atomicAdd(&s.materializeState[1],1u);s.selectionMap[i]=s.free[at]+1u;}
+@compute @workgroup_size(128) fn capacityCopy(@builtin(global_invocation_id) id:vec3u){
+ let i=id.x;if(i<N||i>=C||s.selectionMap[i]==0u){return;}
+ let j=s.selectionMap[i]-1u;cells[j]=cells[i];var emptyIntent:Intent;emptyIntent.aim=vec4u(NONE);intents[j]=emptyIntent;activity[j]=Activity(vec4u(0),vec4f(0));
+ s.cpuRemainder[j]=0;s.energyFillRemainder[j]=0;s.storageFillRemainder[j]=0;
+${treePrograms ? " for(var k=0u;k<3u;k++){s.treeMemory[j*3u+k]=vec4f(0);s.childState[j*3u+k]=vec4f(0);}s.resistance[j]=0;" : ""}
+${specializationStrength > 0 ? " s.metabolicHistory[j]=vec4f(0);" : ""}
+${linkedRelay > 0 ? " s.relayA[j]=vec4f(0);s.relayB[j]=vec4f(0);" : ""}
+ if(i<2u*N){let parent=i-N;let aux=s.daughterAux[parent*2u];s.cpuRemainder[j]=aux.x;s.energyFillRemainder[j]=aux.y;s.storageFillRemainder[j]=aux.z;
+${treePrograms ? " for(var k=0u;k<3u;k++){s.treeMemory[j*3u+k]=s.daughterMemory[parent*3u+k];}s.resistance[j]=aux.w;" : ""}
+${specializationStrength > 0 ? " s.metabolicHistory[j]=s.daughterAux[parent*2u+1u];" : ""}
+ }
+}
+fn remappedHandle(handle:u32)->u32{if(handle==0u||handle>C){return 0u;}return s.selectionMap[handle-1u];}
+@compute @workgroup_size(128) fn capacityRemap(@builtin(global_invocation_id) id:vec3u){
+ let i=id.x;if(i>=N){return;}
+ if(i==0u){atomicStore(&s.counter[2],N-atomicLoad(&s.counter[1])-atomicLoad(&s.counter[13]));}
+ if(cells[i].life.w!=1u){cells[i].link=vec4u(0);return;}
+ for(var k=0u;k<4u;k++){let handle=remappedHandle(cells[i].link[k]);cells[i].link[k]=handle;if(handle==0u){cells[i].anchor[k]=0;}
+  let sender=remappedHandle(cells[i].sender[k]);cells[i].sender[k]=sender;if(sender==0u){cells[i].mail[k]=0;}
+ }
+ let aim=intents[i].aim.z;if(aim!=NONE){let mapped=remappedHandle(aim+1u);intents[i].aim.z=select(mapped-1u,NONE,mapped==0u);}
+}
+@compute @workgroup_size(128) fn capacityRemapMutations(@builtin(global_invocation_id) id:vec3u){
+${forkMutation > 0 ? " let r=id.x;if(r>=atomicLoad(&s.materializeState[2])){return;}var packet=s.birthMutations[r];let oldSlot=packet.x;packet.x=NONE;if(oldSlot<C){let destination=s.selectionMap[oldSlot];if(destination>0u&&cells[destination-1u].life.w==1u&&cells[destination-1u].machine.x==packet.y){packet.x=destination-1u;}}s.pendingMutationScratch[r]=packet;" : " return;"}
+}
+@compute @workgroup_size(128) fn capacityMutationReset(@builtin(global_invocation_id) id:vec3u){if(id.x==0u){atomicStore(&s.counter[25],0u);}}
+@compute @workgroup_size(128) fn capacityCompactMutations(@builtin(global_invocation_id) id:vec3u){
+${forkMutation > 0 ? " let r=id.x;if(r>=atomicLoad(&s.materializeState[2])){return;}let packet=s.pendingMutationScratch[r];if(packet.x!=NONE){let at=atomicAdd(&s.counter[25],1u);s.birthMutations[at]=packet;}" : " return;"}
 }
 @compute @workgroup_size(128) fn linkPlan(@builtin(global_invocation_id) id:vec3u) {
   let i=id.x;
@@ -1759,7 +1810,7 @@ ${
     }
   }
   intents[i].newLinks=links;
-  if(old[i].life.w==0u) {
+  if(old[i].life.w==0u||old[i].machine.x!=cells[i].machine.x) {
     return;
   }
   for(var ch=0u;ch<4u;ch++) {
@@ -1826,11 +1877,10 @@ ${
     return;
   }
   let wanted=atomicLoad(&s.counter[16]);
-  let start=min(atomicLoad(&s.counter[3]),birthCapacity());
-  if(r>=wanted||r>=atomicLoad(&s.counter[4])||start+r>=atomicLoad(&s.counter[2])) {
+  if(r>=wanted||r>=atomicLoad(&s.counter[4])||r>=G) {
     return;
   }
-  let i=s.free[start+r];
+  let i=2u*N+r;
   let g=s.freeGenes[r];
   let identity=atomicAdd(&s.counter[11],1u);
   let serial=atomicAdd(&s.counter[12],1u);
@@ -1902,7 +1952,7 @@ ${
   atomicStore(&s.genes[g].births,0u);
   atomicStore(&s.genes[g].harvest,0u);
   cells[i]=newCell(i,g,identity,rng+10u);
-${treePrograms ? "  for(var q=0u;q<3u;q++){s.treeMemory[i*3u+q]=vec4f(0);}" : ""}
+  if(atomicLoad(&s.materializeState[3])>0u){atomicAdd(&s.counter[28],1u);}
   atomicAdd(&s.counter[1],1u);
 }
 `;

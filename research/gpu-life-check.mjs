@@ -228,7 +228,7 @@ await test("division allocates one child and conserves energy after its cost", a
   assert.equal((await e.counters()).births, 1);
   e.destroy();
 });
-await test("simultaneous divisions respect capacity without charging failed births", async () => {
+await test("simultaneous valid divisions all pay their fee before excess offspring or parents are culled", async () => {
   const e = await setup(
     ["split r0"],
     Array.from({ length: 40 }, (_, i) => ({
@@ -240,10 +240,11 @@ await test("simultaneous divisions respect capacity without charging failed birt
   const c = (await state(e)).filter((c) => c.alive),
     stats = await e.counters();
   assert.equal(c.length, 64);
-  assert.equal(stats.births, 24);
+  assert.equal(stats.births, 40);
+  assert.equal(stats.capacityDeaths, 16);
   assert.equal(
     c.reduce((n, c) => n + c.energy, 0),
-    40 * 70 - 24 * 12,
+    40 * 70 - 40 * 12 - stats.energyBudget.turnover,
   );
   e.destroy();
 });
@@ -681,7 +682,7 @@ await test("closing immigration disables both the steady rate and low-population
   assert.equal(c.sampledArrivals, 0);
   e.destroy();
 });
-await test("newcomers retain free slots when divisions compete near capacity", async () => {
+await test("newcomers and all valid divisions compete together near capacity", async () => {
   const e = await setup(
     ["wait 58\nsplit r0\nwait 100"],
     Array.from({ length: 60 }, (_, i) => ({
@@ -693,7 +694,8 @@ await test("newcomers retain free slots when divisions compete near capacity", a
   );
   await e.step(60);
   const c = await e.counters();
-  assert.equal(c.births, 2);
+  assert.equal(c.births, 60);
+  assert.equal(c.capacityDeaths, 58);
   assert.equal(c.randomArrivals, 62);
   assert.equal(c.living, 64);
   e.destroy();
