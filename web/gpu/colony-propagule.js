@@ -53,13 +53,23 @@ export function colonyPropagule(
       )
     )
       throw Error("Invalid observed cell geometry");
-    for (const neighbor of cell.linkSlots)
-      if (
-        neighbor !== null &&
-        (!cells.has(neighbor) ||
-          !cells.get(neighbor).linkSlots?.includes(cell.slot))
+    const neighbors = cell.linkSlots.filter((neighbor) => neighbor !== null);
+    if (
+      !Number.isInteger(cell.slot) ||
+      cell.slot < 0 ||
+      new Set(neighbors).size !== neighbors.length ||
+      neighbors.some(
+        (neighbor) =>
+          !Number.isInteger(neighbor) ||
+          neighbor < 0 ||
+          neighbor === cell.slot ||
+          !cells.has(neighbor) ||
+          !cells.get(neighbor).linkSlots?.includes(cell.slot),
       )
-        throw Error("Observed link is not reciprocal within the whole body");
+    )
+      throw Error(
+        "Observed links must be unique, non-self reciprocal links within the whole body",
+      );
   }
   const root = cells.get(rootSlot ?? body.cells[0].slot);
   if (!root) throw Error("Root is outside the observed colony");

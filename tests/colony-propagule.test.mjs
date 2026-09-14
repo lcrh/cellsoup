@@ -122,3 +122,15 @@ test("fragments unwrap along links and reject a winding cycle", () => {
     [1024, 1049, 999],
   );
 });
+
+test("propagules reject duplicate and self links even when reciprocal existence holds", () => {
+  const duplicate = fixture();
+  duplicate.colonies[0].cells[0].linkSlots[1] = 20;
+  assert.throws(
+    () => colonyPropagule(duplicate),
+    /duplicate|reciprocal|topology/i,
+  );
+  const self = fixture();
+  self.colonies[0].cells[0].linkSlots[1] = 10;
+  assert.throws(() => colonyPropagule(self), /self|reciprocal|topology/i);
+});

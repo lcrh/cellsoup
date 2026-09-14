@@ -54,26 +54,41 @@ export function fragmentObservation(buffer, world, root, maxCells, genomes) {
     u[root * 52 + 31] !== 1
   )
     throw Error("Invalid live fragment root");
+  // GPU topology can be in the process of losing an edge. Archive only the
+  // reciprocal, unique, non-self graph; preserve the first valid positional
+  // slot and never change the live snapshot while cleaning an observed copy.
+  const linksFor = (slot) => {
+    const used = new Set();
+    return Array.from(u.subarray(slot * 52 + 32, slot * 52 + 36), (handle) => {
+      const neighbor = handle - 1;
+      if (
+        neighbor < 0 ||
+        neighbor >= n ||
+        neighbor === slot ||
+        used.has(neighbor) ||
+        u[neighbor * 52 + 31] !== 1 ||
+        !u.subarray(neighbor * 52 + 32, neighbor * 52 + 36).includes(slot + 1)
+      )
+        return null;
+      used.add(neighbor);
+      return neighbor;
+    });
+  };
   const selected = [root],
     seen = new Set(selected);
   for (let q = 0; q < selected.length && selected.length < maxCells; q++) {
-    const i = selected[q];
-    for (let k = 0; k < 4 && selected.length < maxCells; k++) {
-      const j = u[i * 52 + 32 + k] - 1;
-      if (
-        j >= 0 &&
-        j < n &&
-        !seen.has(j) &&
-        u[j * 52 + 31] === 1 &&
-        Array.from(u.slice(j * 52 + 32, j * 52 + 36)).includes(i + 1)
-      ) {
-        seen.add(j);
-        selected.push(j);
-      }
+    for (const neighbor of linksFor(selected[q])) {
+      if (neighbor === null || seen.has(neighbor)) continue;
+      seen.add(neighbor);
+      selected.push(neighbor);
+      if (selected.length === maxCells) break;
     }
   }
   const cells = selected.map((slot) => {
     const k = slot * 52;
+    const linkSlots = linksFor(slot).map((neighbor) =>
+      seen.has(neighbor) ? neighbor : null,
+    );
     return {
       slot,
       genomeSlot: u[k + 25],
@@ -81,16 +96,10 @@ export function fragmentObservation(buffer, world, root, maxCells, genomes) {
       y: f[k + 1],
       heading: f[k + 5],
       rest: f[k + 36],
-      anchors: Array.from(f.slice(k + 44, k + 48)),
-      linkSlots: Array.from(u.slice(k + 32, k + 36)).map((h) =>
-        h &&
-        seen.has(h - 1) &&
-        Array.from(u.slice((h - 1) * 52 + 32, (h - 1) * 52 + 36)).includes(
-          slot + 1,
-        )
-          ? h - 1
-          : null,
+      anchors: linkSlots.map((neighbor, edge) =>
+        neighbor === null ? 0 : f[k + 44 + edge],
       ),
+      linkSlots,
     };
   });
   return { world, colonies: [{ cells, size: cells.length }], genomes };

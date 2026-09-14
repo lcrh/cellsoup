@@ -1804,7 +1804,9 @@ ${forkMutation > 0 ? " let r=id.x;if(r>=atomicLoad(&s.materializeState[2])){retu
   }
   intents[i].misc.y=free;
   let j=intents[i].aim.z;
-  if(j==NONE||free==NONE||cells[j].life.w!=1u||linked(cells[i],j)||degree(cells[j])>=4u) {
+  // An unlink only clears the executing cell until the later pruning pass.
+  // Do not append a second edge to a target that still holds that backlink.
+  if(j==NONE||j>=N||j==i||free==NONE||cells[j].life.w!=1u||linked(cells[i],j)||linked(cells[j],i)||degree(cells[j])>=4u) {
     return;
   }
   atomicMin(&s.claim[i],i);
@@ -1845,6 +1847,8 @@ ${forkMutation > 0 ? " let r=id.x;if(r>=atomicLoad(&s.materializeState[2])){retu
   for(var k=0u;k<4u;k++) {
     if(links[k]>0u) {
       let j=links[k]-1u;
+      var duplicate=false;for(var previous=0u;previous<k;previous++){if(links[previous]==links[k]){duplicate=true;}}
+      if(j>=N||j==i||duplicate){links[k]=0u;continue;}
       if(cells[j].life.w!=1u||!any(cells[j].link==vec4u(i+1u))||length(delta(cells[j].p.xy,cells[i].p.xy))>65.0) {
         links[k]=0u;
       }
@@ -1872,6 +1876,7 @@ ${forkMutation > 0 ? " let r=id.x;if(r>=atomicLoad(&s.materializeState[2])){retu
   let i=id.x;
   if(i<N&&cells[i].life.w==1u) {
     cells[i].link=intents[i].newLinks;
+    for(var k=0u;k<4u;k++){if(cells[i].link[k]==0u){cells[i].anchor[k]=0.0;}}
   }
 }
 @compute @workgroup_size(128) fn geneScan(@builtin(global_invocation_id) id:vec3u) {

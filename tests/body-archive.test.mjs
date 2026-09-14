@@ -217,3 +217,76 @@ test("exact resampling and crossover without mutation preserve independent prove
   }
   assert.ok(crossovers > 50);
 });
+
+test("automatic body capture sanitizes duplicate and self links before replay", async () => {
+  const buffer = fixture(),
+    u = new Uint32Array(buffer),
+    f = new Float32Array(buffer);
+  // The GPU snapshot can contain repeated/self handles; stageBody deliberately
+  // rejects both under its reciprocal-local-handles contract.
+  u.set([2, 2, 1, 6], 32);
+  u.set([1, 1, 2, 3], 52 + 32);
+  f.set([0.1, 0.2, 0.3, 0.4], 44);
+  f.set([0.5, 0.6, 0.7, 0.8], 52 + 44);
+  const before = buffer.slice(0),
+    observation = fragmentObservation(buffer, 256, 0, 3, genotypes);
+  assert.deepEqual(
+    observation.colonies[0].cells.map((c) => c.linkSlots),
+    [
+      [1, null, null, null],
+      [0, null, null, 2],
+      [1, null, null, null],
+    ],
+  );
+  for (const cell of observation.colonies[0].cells)
+    cell.linkSlots.forEach((neighbor, edge) => {
+      if (neighbor === null) assert.equal(cell.anchors[edge], 0);
+    });
+  assert.equal(observation.colonies[0].cells[0].anchors[0], f[44]);
+  assert.equal(observation.colonies[0].cells[1].anchors[3], f[52 + 47]);
+  assert.deepEqual(buffer, before);
+  const e = engine(),
+    archive = new BodyArchive({ rng: () => 0, maxCells: 3, captureBudget: 1 });
+  assert.equal(await archive.capture(e, buffer), 1);
+  const captured = archive.snapshot();
+  for (let seed = 0; seed < 64; seed++) {
+    const plan = archive.plan(e, {
+      budget: 3,
+      freeCells: 3,
+      freeGenes: 1,
+      bodyShare: 1,
+      archiveShare: 0,
+      mutation: 0,
+      crossover: 0,
+      rng: rng(seed),
+    });
+    assert.equal(plan.source, "body");
+    assert.equal(plan.cells.length, 3);
+    for (const [i, c] of plan.cells.entries()) {
+      const neighbors = c.links.filter(Boolean);
+      assert.equal(new Set(neighbors).size, neighbors.length);
+      assert.ok(!neighbors.includes(i + 1));
+      for (const handle of neighbors)
+        assert.ok(plan.cells[handle - 1].links.includes(i + 1));
+    }
+    plan.cells[0].links.fill(0);
+  }
+  assert.deepEqual(archive.snapshot(), captured);
+});
+
+test("self-only cells never qualify as a connected structural archive entry", async () => {
+  const buffer = fixture(),
+    u = new Uint32Array(buffer);
+  for (let i = 0; i < 6; i++) u.set([i + 1, 0, 0, 0], i * 52 + 32);
+  const observation = fragmentObservation(buffer, 256, 0, 3, genotypes);
+  assert.equal(observation.colonies[0].cells.length, 1);
+  assert.deepEqual(observation.colonies[0].cells[0].linkSlots, [
+    null,
+    null,
+    null,
+    null,
+  ]);
+  const archive = new BodyArchive({ rng: rng(7), captureBudget: 6 });
+  assert.equal(await archive.capture(engine(), buffer), 0);
+  assert.equal(archive.size, 0);
+});
