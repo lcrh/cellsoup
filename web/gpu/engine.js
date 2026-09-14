@@ -139,6 +139,7 @@ export const defaults = {
   divisionCost: 12,
   minimumBirthEnergy: 12,
   exchange: 0.12,
+  shieldExchange: 0.12,
   shieldUpkeep: 0.72,
   cpuCost: 0.00005,
   moveCost: 0.004,
@@ -317,6 +318,7 @@ async function buildLifeEngine(device, options, allocated) {
     cfg.energyDecay > 1 ||
     cfg.budget > 128 ||
     cfg.exchange > 0.25 ||
+    cfg.shieldExchange > 0.25 ||
     cfg.mutation > 1 ||
     cfg.forkMutation > 1 ||
     cfg.linkedRelay > 0.95 ||
@@ -442,7 +444,7 @@ async function buildLifeEngine(device, options, allocated) {
       cfg.emitCost,
       cfg.sendCost,
       cfg.jitter,
-      0,
+      cfg.shieldExchange,
       0,
       0,
       cfg.archiveAge,

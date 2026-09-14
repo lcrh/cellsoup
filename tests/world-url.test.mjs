@@ -65,6 +65,7 @@ test("custom and loaded settings, population counts and optional function switch
     capacityRate: 512,
     pressureStrength: 23,
     pressureFrequency: 3.7,
+    shieldExchange: 0.17,
     attackSpeedBonus: 0.075,
   });
   const id = TREE_SCHEMA.findIndex((fn) => fn.name === "sin"),

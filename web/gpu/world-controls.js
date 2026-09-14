@@ -94,6 +94,7 @@ export const SETTING_GROUPS = [
       ["upkeep", "Basic upkeep / sec", 0, 20, 0.05],
       ["energyDecay", "Energy decay / sec", 0, 1, 0.01],
       ["exchange", "Storage sharing / tick", 0, 0.25, 0.01],
+      ["shieldExchange", "Barrier sharing / tick", 0, 0.25, 0.01],
       ["maximumAge", "Lifespan (seconds; 0 = unlimited)", 0, 86400, 1],
       ["corpseLifetime", "Uneaten corpse lifetime (sec)", 1, 7200, 1],
       ["corpseEnergy", "Body material value", 0, 100, 1],

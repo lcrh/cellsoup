@@ -862,7 +862,7 @@ Adjust spring rest lengths, spending energy.
 
 Number → Action.
 
-Spend up to amount energy to build a persistent barrier, limited by capacity and build efficiency. Zero does nothing. Hits consume barrier points before cell energy, with damage absorbed per point set by toughness. Unpaid upkeep erodes the barrier. Division shares existing points between parent and daughter.
+Spend up to amount energy to build a persistent barrier, limited by capacity and build efficiency. Zero does nothing. Hits consume barrier points before cell energy, with damage absorbed per point set by toughness. Unpaid upkeep erodes the barrier. Division shares existing points between parent and daughter. Barrier strength also diffuses automatically along reciprocal living links before upkeep and attacks. Barrier sharing / tick sets the transfer rate (0 disables it); this conserves barrier strength and does not spend additional energy.
 
 ```lisp
 (shield 0.5)

@@ -187,6 +187,7 @@ export function worldSettingsForSeed(seed, { capacity = 32768 } = {}) {
     emitCost: range(0.01, 0.03, 0.01),
     pressureStrength: pick([4, 8, 12, 18, 24]),
     pressureFrequency: pick([0.5, 1, 2, 4, 8]),
+    shieldExchange: pick([0, 0.04, 0.08, 0.12, 0.2, 0.25]),
   });
 }
 

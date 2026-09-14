@@ -102,6 +102,7 @@ test("10,000 seeded worlds retain their palette and non-target settings while al
     delete unchanged.capacityRate;
     delete unchanged.pressureStrength;
     delete unchanged.pressureFrequency;
+    delete unchanged.shieldExchange;
     // In sunless worlds even the old solar rate and fill knee must be exact.
     if (s.solarEnabled) {
       delete unchanged.solarRate;

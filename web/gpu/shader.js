@@ -913,6 +913,19 @@ ${specializationStrength > 0 ? "  s.metabolicHistory[i]*=cfg.specialization.y;" 
   activity[i].marks.z=c.machine.x;
   var exchange=0i;
   for(var k=0u;k<4u;k++){let j=liveLink(i,k);if(j!=NONE){exchange+=i32((old[j].res.z-old[i].res.z)*cfg.ecology.y);}}
+  // Simultaneous, symmetric transfer. At most four unique neighbours and a
+  // rate <= 1/4 make this a convex average, conserving shield before upkeep,
+  // construction, attacks and death. Reading old state avoids update-order bias.
+  let ownBarrier=clamp(old[i].b.w,0.0,cfg.ecology.x);
+  var barrierFlow=0.0;
+  if(cfg.misc.y>0.0){
+    for(var k=0u;k<4u;k++){
+      let j=liveLink(i,k);if(j==NONE||j==i){continue;}
+      var duplicate=false;for(var prior=0u;prior<k;prior++){if(old[i].link[prior]==j+1u){duplicate=true;}}
+      if(!duplicate){barrierFlow+=(clamp(old[j].b.w,0.0,cfg.ecology.x)-ownBarrier)*cfg.misc.y;}
+    }
+  }
+  c.b.w=clamp(ownBarrier+barrierFlow,0.0,cfg.ecology.x);
   var heatFlow=0.0;
   for(var k=0u;k<4u;k++){let j=liveLink(i,k);if(j!=NONE){heatFlow+=(old[j].res.w-old[i].res.w)*cfg.cooling.x;}}
   c.phen.y=action.uptake.w;

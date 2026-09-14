@@ -86,7 +86,7 @@ const descriptions = {
   turn: "Rotate by a relative number of degrees, clamped to −360…360. Costs energy.",
   contract: "Adjust spring rest lengths, spending energy.",
   shield:
-    "Spend up to amount energy to build a persistent barrier, limited by capacity and build efficiency. Zero does nothing. Hits consume barrier points before cell energy, with damage absorbed per point set by toughness. Unpaid upkeep erodes the barrier. Division shares existing points between parent and daughter.",
+    "Spend up to amount energy to build a persistent barrier, limited by capacity and build efficiency. Zero does nothing. Hits consume barrier points before cell energy, with damage absorbed per point set by toughness. Unpaid upkeep erodes the barrier. Division shares existing points between parent and daughter. Barrier strength also diffuses automatically along reciprocal living links before upkeep and attacks. Barrier sharing / tick sets the transfer rate (0 disables it); this conserves barrier strength and does not spend additional energy.",
   "color-set": "Set your visible hue, wrapping around 360 degrees.",
   "tag-set": "Set your integer tag.",
   store:
