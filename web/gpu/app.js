@@ -16,6 +16,13 @@ const functionMasks = Object.fromEntries(
 import { createRenderer } from "./renderer.js";
 import { createExecutionMeter } from "./trace-meter.js";
 import { createBehaviorMeter } from "./behavior-meter.js";
+import { appendEventSample, drawEventChart } from "./event-history.js";
+import {
+  ENERGY_INPUTS,
+  ENERGY_OUTPUTS,
+  budgetLegend,
+  drawEnergyBudget,
+} from "./energy-budget.js";
 
 import {
   snapshot,
@@ -299,6 +306,9 @@ async function start() {
   members = [];
   history = [];
   $("history-range").textContent = "";
+  $("attacks").textContent = "0";
+  $("kills").textContent = "0";
+  drawHistory();
   carry = 0;
   pendingPick = null;
   pendingFind = false;
@@ -512,14 +522,13 @@ async function observe(now) {
     speedTime = now;
     speedTick = engine.tick;
     lastMetrics = now;
-    if (history.at(-1)?.tick !== engine.tick) {
-      history.push({ tick: engine.tick, living: c.living });
-      if (history.length > 480) history.shift();
-    }
+    appendEventSample(history, c);
     drawHistory();
   }
 }
 function drawHistory() {
+  drawPredationHistory();
+  drawEnergyHistory();
   const canvas = $("history"),
     r = canvas.getBoundingClientRect(),
     dpr = Math.min(devicePixelRatio || 1, 2);
@@ -543,6 +552,77 @@ function drawHistory() {
   $("history-range").textContent =
     `· ${time(first / 60)}–${time(history.at(-1).tick / 60)}`;
 }
+function drawPredationHistory() {
+  $("predation-history-range").textContent = historyRange();
+  const mode = $("predation-history-mode").value;
+  const last = history.at(-1);
+  for (const [key, color] of [
+    ["attacks", "#ecad71"],
+    ["kills", "#ec797c"],
+  ]) {
+    const value = last?.[mode === "rate" ? `${key}Rate` : key];
+    const label =
+      value == null
+        ? "—"
+        : value.toLocaleString(undefined, {
+            maximumFractionDigits: mode === "rate" ? 1 : 0,
+          });
+    $(`${key}-history-value`).textContent =
+      `${label}${mode === "rate" ? " / min" : " total"}`;
+    const chart = $(`${key}-history`);
+    chart.setAttribute(
+      "aria-label",
+      `${key === "kills" ? "Confirmed attack kills" : "Attacks"} over simulated time; latest ${label}${mode === "rate" ? " per simulated minute" : " total"}`,
+    );
+    drawEventChart(chart, history, key, mode, color);
+  }
+}
+$("predation-history-mode").addEventListener("change", drawPredationHistory);
+function historyRange() {
+  return history.length < 2
+    ? ""
+    : `· ${time(history[0].tick / 60)}–${time(history.at(-1).tick / 60)}`;
+}
+function drawEnergyHistory() {
+  const mode = $("energy-history-mode").value;
+  $("energy-history-range").textContent = historyRange();
+  const number = (value) =>
+    value == null
+      ? "—"
+      : value.toLocaleString(undefined, {
+          maximumFractionDigits: 1,
+          notation: "compact",
+        });
+  for (const [side, categories] of [
+    ["in", ENERGY_INPUTS],
+    ["out", ENERGY_OUTPUTS],
+  ]) {
+    const { items, total } = budgetLegend(history.at(-1), categories, mode);
+    const unit = mode === "rate" ? " / min" : " total";
+    $(`energy-${side}-total`).textContent = `${number(total)}${unit}`;
+    $(`energy-${side}-legend`).replaceChildren(
+      ...items.map(({ label, color, value, description }) => {
+        const item = document.createElement("div");
+        const swatch = document.createElement("i");
+        const name = document.createElement("span");
+        const amount = document.createElement("strong");
+        swatch.style.backgroundColor = color;
+        name.textContent = label;
+        amount.textContent = number(value);
+        item.title = `${description || label}${value == null ? "" : ` — ${value.toLocaleString(undefined, { maximumFractionDigits: 2 })} energy${unit}`}`;
+        item.append(swatch, name, amount);
+        return item;
+      }),
+    );
+    const chart = $(`energy-${side}-history`);
+    chart.setAttribute(
+      "aria-label",
+      `Usable energy ${side} over simulated time. ${items.map(({ label, value }) => `${label}: ${number(value)}${unit}`).join("; ")}`,
+    );
+    drawEnergyBudget(chart, history, categories, mode);
+  }
+}
+$("energy-history-mode").addEventListener("change", drawEnergyHistory);
 async function frame(now) {
   try {
     if (pendingReset) {

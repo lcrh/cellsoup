@@ -1,3 +1,4 @@
+import { ENERGY_BUDGET_KEYS } from "./energy-ledger.js";
 import { GPU_OPS, GPU_SENSORS, GPU_FIELDS } from "./language.js";
 export function simulationShader({
   capacity,
@@ -31,6 +32,8 @@ const W=${side * 32}.0;
 const SOURCES=${sources}u;
 const ARCH=128u;
 const Q=4096.0;
+${ENERGY_BUDGET_KEYS.map((name, i) => `const FLOW_${name}=${i}u;`).join("\n")}
+var<private> localBudget:array<u32,${ENERGY_BUDGET_KEYS.length}>;
 const CAP_E=${Math.round(energyCapacity * 4096)}u;
 const DT=1.0/60.0;
 const NONE=0xffffffffu;
@@ -110,6 +113,7 @@ ${treePrograms ? "  colonyParent:array<atomic<u32>,N>, colonyCount:array<atomic<
 ${treePrograms ? "  resistance:array<f32,N>," : ""}
   energyFillRemainder:array<f32,N>,
   storageFillRemainder:array<f32,N>,
+  energyBudget:array<Wide,${ENERGY_BUDGET_KEYS.length}>,
 }
 struct Field {
   a:array<vec2f,T>,
@@ -207,6 +211,13 @@ ${
     : "  return;"
 }
 }
+fn budgetAdd(category:u32,amount:u32) {
+  if(amount==0u){return;}
+  let previous=atomicAdd(&s.energyBudget[category].lo,amount);
+  if(previous+amount<previous){atomicAdd(&s.energyBudget[category].hi,1u);}
+}
+fn budgetRecord(category:u32,amount:u32){localBudget[category]+=amount;}
+fn budgetFlush(){for(var category=0u;category<${ENERGY_BUDGET_KEYS.length}u;category++){budgetAdd(category,localBudget[category]);}}
 fn harvestEfficiency(i:u32)->f32 {
 ${
   specializationStrength > 0
@@ -296,16 +307,16 @@ fn payCPU(i:u32,c:ptr<function,Cell>)->bool {
   let accrued=s.cpuRemainder[i]+cfg.cost0.x*Q;
   let q=floor(accrued);
   if((*c).b.x-q<1.0){return false;}
-  (*c).b.x-=q;s.cpuRemainder[i]=accrued-q;
+  (*c).b.x-=q;s.cpuRemainder[i]=accrued-q;budgetRecord(FLOW_computation,u32(q));
   (*c).res.w=min(10000.0,(*c).res.w+q/Q*cfg.thermal.z);
   return true;
 }
-fn pay(c:ptr<function,Cell>,cost:f32)->bool {
+fn pay(c:ptr<function,Cell>,cost:f32,category:u32)->bool {
   let q=f32(quantum(cost));
   if((*c).b.x-q<1.0) {
     return false;
   }
-  (*c).b.x-=q;
+  (*c).b.x-=q;budgetRecord(category,u32(q));
   (*c).res.w=min(10000.0,(*c).res.w+q/Q*cfg.thermal.z);
   return true;
 }
@@ -736,7 +747,7 @@ ${specializationStrength > 0 ? "  s.metabolicHistory[i]=vec4f(0);" : ""}
 ${linkedRelay > 0 ? "  s.relayA[i]=vec4f(0);s.relayB[i]=vec4f(0);" : ""}
   var c:Cell;
   c.p=vec4f(random(seed)*W,random(seed+1u)*W,0,0);
-  c.b=vec4f(f32(quantum(cfg.energy.x)),random(seed+2u),0,0);
+  c.b=vec4f(f32(quantum(cfg.energy.x)),random(seed+2u),0,0);budgetAdd(FLOW_arrivals,u32(c.b.x));
   c.machine=vec4u(identity,g,0,0);
   c.life=vec4u(0,0,0,1);
   c.res=vec4f(1,0,round(cfg.remains.w*Q),cfg.thermal.x);
@@ -883,6 +894,7 @@ ${specializationStrength > 0 ? "  s.metabolicHistory[i]*=cfg.specialization.y;" 
   if(cfg.specialization.w>0.0&&f32(c.life.x)*DT>=cfg.specialization.w){
     // Senescence bypasses program execution and uses the ordinary corpse path.
     // A separate cause flag prevents an attack or incoming gift from changing it.
+    budgetRecord(FLOW_turnover,u32(c.b.x));budgetFlush();
     c.b.x=0.0;action.misc.w=1u;action.base.x=0u;cells[i]=c;intents[i]=action;return;
   }
 
@@ -891,13 +903,14 @@ ${specializationStrength > 0 ? "  s.metabolicHistory[i]*=cfg.specialization.y;" 
   c.res.w=min(10000.0,c.res.w+cfg.thermal.y*c.res.y*DT);
   var photons=u32(floor(cfg.sun.x*c.res.y*DT*Q));
   let metabolicLoss=min(c.b.x,f32(quantum(cfg.energy.y*DT))+round(c.b.x*(1-exp(-cfg.remains.z*DT))));
-  c.b.x-=metabolicLoss;
+  c.b.x-=metabolicLoss;budgetRecord(FLOW_upkeep,u32(metabolicLoss));
   c.res.w=min(10000.0,c.res.w+metabolicLoss/Q*cfg.thermal.z);
-  c.b.x=max(0.0,c.b.x-f32(quantum(max(0.0,c.res.w-cfg.cooling.z)*cfg.cooling.w*DT)));
+  let heatLoss=min(c.b.x,f32(quantum(max(0.0,c.res.w-cfg.cooling.z)*cfg.cooling.w*DT)));
+  c.b.x-=heatLoss;budgetRecord(FLOW_upkeep,u32(heatLoss));
   c.b.w=clamp(c.b.w,0.0,cfg.ecology.x);
   let maintenance=quantum(c.b.w/max(.000001,cfg.ecology.x)*cfg.ecology.w*DT);
   let maintenancePaid=min(maintenance,u32(max(0.0,c.b.x-1.0)));
-  c.b.x-=f32(maintenancePaid);
+  c.b.x-=f32(maintenancePaid);budgetRecord(FLOW_shields,maintenancePaid);
   c.res.w=min(10000.0,c.res.w+f32(maintenancePaid)/Q*cfg.thermal.z);
   // Unfunded maintenance erodes the corresponding construction value. It
   // neither creates a free shield nor erases the whole barrier in one tick.
@@ -1095,13 +1108,13 @@ ${executionTrace ? `        if(traceRow!=0xffffffffu){let n=s.traceCounts[traceR
         }
         case 20u: {
           let amount=clamp(a,-360.0,360.0);
-          if(pay(&c,abs(amount)*cfg.cost0.z)) {
+          if(pay(&c,abs(amount)*cfg.cost0.z,FLOW_movement)) {
             c.b.y=fract(c.b.y+amount/360.0);
           }
         }
         case 21u: {
           let amount=clamp(a,-1.0,1.0);
-          if(pay(&c,abs(amount)*cfg.cost0.y)) {
+          if(pay(&c,abs(amount)*cfg.cost0.y,FLOW_movement)) {
             let h=c.b.y*6.2831853;
             if(amount!=0){atomicAdd(&s.counter[17],1u);activity[i].marks.x=tick();activity[i].impact.w=c.b.y+select(0.0,.5,amount<0);}
             c.p=vec4f(c.p.xy,c.p.zw+vec2f(cos(h),sin(h))*amount*cfg.motion.x);
@@ -1109,7 +1122,7 @@ ${executionTrace ? `        if(traceRow!=0xffffffffu){let n=s.traceCounts[traceR
         }
         case 22u: {
           let j=slot(a);
-          if(j!=NONE&&j!=i&&length(delta(old[j].p.xy,c.p.xy))<cfg.geometry.y&&pay(&c,cfg.cost0.w)) {
+          if(j!=NONE&&j!=i&&length(delta(old[j].p.xy,c.p.xy))<cfg.geometry.y&&pay(&c,cfg.cost0.w,FLOW_communication)) {
             action.aim.z=j;
           }
         }
@@ -1126,7 +1139,7 @@ ${executionTrace ? `        if(traceRow!=0xffffffffu){let n=s.traceCounts[traceR
           }
         }
         case 24u: {
-          if(pay(&c,cfg.cost1.x)) {
+          if(pay(&c,cfg.cost1.x,FLOW_movement)) {
             c.res.x=clamp(a,.55,1.5);
           }
         }
@@ -1138,7 +1151,7 @@ ${executionTrace ? `        if(traceRow!=0xffffffffu){let n=s.traceCounts[traceR
             if(op==25u) {
               let effort=clamp(b,0.0,cfg.efficiency.x);
               let spent=quantum(effort*cfg.metabolism.y);
-              if(spent>0u&&cfg.metabolism.w>0.0&&pay(&c,cfg.cost1.y+f32(spent)/Q)) {
+              if(spent>0u&&cfg.metabolism.w>0.0&&pay(&c,cfg.cost1.y+f32(spent)/Q,FLOW_attacks)) {
                 action.aim.y=j;
                 action.misc.z=0u;
                 let separation=delta(old[j].p.xy,old[i].p.xy);
@@ -1166,7 +1179,7 @@ ${executionTrace ? `        if(traceRow!=0xffffffffu){let n=s.traceCounts[traceR
             let room=max(0.0,cfg.ecology.x-c.b.w);
             let needed=u32(min(f32(CAP_E),ceil(room*Q/cfg.ecology.z)));
             let spent=min(needed,min(quantum(a),u32(max(0.0,c.b.x-1.0))));
-            if(spent>0u&&pay(&c,f32(spent)/Q)){
+            if(spent>0u&&pay(&c,f32(spent)/Q,FLOW_shields)){
               c.b.w=min(cfg.ecology.x,c.b.w+f32(spent)/Q*cfg.ecology.z);
             }
           }
@@ -1175,7 +1188,7 @@ ${executionTrace ? `        if(traceRow!=0xffffffffu){let n=s.traceCounts[traceR
           c.phen.x=fract(a/360.0)*360.0;
         }
         case 30u: {
-          if(pay(&c,cfg.cost1.z)) {
+          if(pay(&c,cfg.cost1.z,FLOW_communication)) {
             c.signal[u32(clamp(a,0.0,3.0))]=clamp(b,-100.0,100.0);
           }
         }
@@ -1238,7 +1251,7 @@ ${executionTrace ? `        if(traceRow!=0xffffffffu){let n=s.traceCounts[traceR
               recipients++;
             }
           }
-          if(recipients>0u&&pay(&c,f32(recipients)*cfg.cost1.w)) {
+          if(recipients>0u&&pay(&c,f32(recipients)*cfg.cost1.w,FLOW_communication)) {
             action.msg[ch]=clamp(v,-100.0,100.0);
             action.dest[ch]=u32(max(0.0,a));
             action.misc.x|=1u<<ch;
@@ -1254,7 +1267,7 @@ ${executionTrace ? `        if(traceRow!=0xffffffffu){let n=s.traceCounts[traceR
         case 40u: {
           let amount=select(photons,min(photons,CAP_E-u32(c.b.x)),cfg.fill.x==0.0); photons-=amount;
           let credit=fillCredit(i,0u,c.b.x,f32(harvestCredit(i,0u,amount)));
-          c.b.x+=f32(credit); c.r[d]=f32(credit)/Q; c.phen.z+=f32(credit)/Q;
+          c.b.x+=f32(credit);budgetRecord(FLOW_photosynthesis,credit); c.r[d]=f32(credit)/Q; c.phen.z+=f32(credit)/Q;
           if(credit>0u){let previous=atomicAdd(&s.counter[18],credit);if(previous+credit<previous){atomicAdd(&s.counter[19],1u);}}
         }
         case 41u: {
@@ -1264,7 +1277,7 @@ ${executionTrace ? `        if(traceRow!=0xffffffffu){let n=s.traceCounts[traceR
           c.r[d]=0;
           let j=edibleCorpse(i,step);
           if(j!=NONE){
-            if(old[j].life.w==2u&&length(delta(old[j].p.xy,c.p.xy))<=cfg.geometry.x&&pay(&c,cfg.remains.y)){
+            if(old[j].life.w==2u&&length(delta(old[j].p.xy,c.p.xy))<=cfg.geometry.x&&pay(&c,cfg.remains.y,FLOW_upkeep)){
               action.aim.y=j;action.req.y=cfg.contact.w;action.misc.z=d+1u;
             }
           }
@@ -1273,13 +1286,13 @@ ${executionTrace ? `        if(traceRow!=0xffffffffu){let n=s.traceCounts[traceR
           let requested=min(quantum(max(0.0,b)),u32(max(0.0,c.b.x-1.0)));
           let amount=select(requested,min(requested,u32(max(0.0,cfg.metabolism.x*Q-c.res.z))),cfg.fill.y==0.0);
           let credit=fillCredit(i,1u,c.res.z,f32(amount));
-          c.b.x-=f32(amount);c.res.z+=f32(credit);c.r[d]=f32(credit)/Q;
+          c.b.x-=f32(amount);budgetRecord(FLOW_storage,amount);c.res.z+=f32(credit);c.r[d]=f32(credit)/Q;
         }
         case 44u:{
           let requested=min(quantum(max(0.0,b)),u32(c.res.z));
           let amount=select(requested,min(requested,CAP_E-u32(c.b.x)),cfg.fill.x==0.0);
           let credit=fillCredit(i,0u,c.b.x,f32(harvestCredit(i,2u,amount)));
-          c.res.z-=f32(amount);c.b.x+=f32(credit);c.r[d]=f32(credit)/Q;
+          c.res.z-=f32(amount);c.b.x+=f32(credit);budgetRecord(FLOW_mobilized,credit);c.r[d]=f32(credit)/Q;
         }
 ${
   treePrograms
@@ -1292,7 +1305,7 @@ ${
         case 58u:{
           let ch=u32(clamp(a,0.0,3.0));var mask=0u;var recipients=0u;
           for(var k=0u;k<4u;k++){let j=liveLink(i,k);if(j!=NONE&&filterMatch(i,j,u32(max(0.0,v)),&c)){mask|=1u<<k;recipients++;}}
-          if(recipients>0u&&pay(&c,f32(recipients)*cfg.cost1.w)){action.msg[ch]=clamp(b,-100.0,100.0);action.dest[ch]=0x80000000u|mask;action.misc.x|=1u<<ch;}
+          if(recipients>0u&&pay(&c,f32(recipients)*cfg.cost1.w,FLOW_communication)){action.msg[ch]=clamp(b,-100.0,100.0);action.dest[ch]=0x80000000u|mask;action.misc.x|=1u<<ch;}
         }
         case 59u:{let ch=u32(clamp(b,0.0,3.0));let j=slot(f32(c.sender[ch]));c.r[d]=0;if(j!=NONE&&filterMatch(i,j,u32(max(v,0.0)),&c)){c.r[d]=c.mail[ch];c.sender[ch]=0u;c.mail[ch]=0;}}
         case 50u,51u:{
@@ -1350,7 +1363,7 @@ ${executionTrace ? `      if(traceRow!=0xffffffffu){let n=s.traceCounts[traceRow
     }
   }
   if(vmVisits==0u||filterSteps==0u){atomicAdd(&s.counter[29],1u);}
-  action.base.x=u32(c.b.x);
+  action.base.x=u32(c.b.x);budgetFlush();
   cells[i]=c;
   intents[i]=action;
 }
@@ -1404,8 +1417,11 @@ ${executionTrace ? `      if(traceRow!=0xffffffffu){let n=s.traceCounts[traceRow
   if(i>=N||old[i].life.w==0u) {
     return;
   }
-  var balance=intents[i].base.x-intents[i].base.y+atomicLoad(&s.giftCredit[i]);
-  if(cfg.fill.x>0.0&&old[i].life.w==1u){balance+=fillCredit(i,0u,f32(balance),wideGift(i));}
+  let afterSending=intents[i].base.x-intents[i].base.y;
+  var received=atomicLoad(&s.giftCredit[i]);
+  if(cfg.fill.x>0.0&&old[i].life.w==1u){received=fillCredit(i,0u,f32(afterSending),wideGift(i));}
+  let balance=afterSending+received;
+  if(old[i].life.w==1u){budgetAdd(FLOW_giftsSent,intents[i].base.y);budgetAdd(FLOW_giftsReceived,received);}
   intents[i].base.z=balance;
   let j=intents[i].aim.y;
   if(j==NONE) {
@@ -1437,7 +1453,7 @@ fn barrierAbsorption(i:u32)->u32 {
   let eating=intents[i].misc.z>0u;
   var credit=0u;
   if(eating){credit=fillCredit(i,0u,f32(intents[i].base.z),f32(harvestCredit(i,1u,amount)));}
-  atomicAdd(&s.theftCredit[i],credit);
+  atomicAdd(&s.theftCredit[i],credit);budgetAdd(FLOW_scavenging,credit);
   if(eating){if(credit>0u){activity[i].marks.w=tick();}cells[i].r[intents[i].misc.z-1u]=f32(credit)/Q;let previous=atomicAdd(&s.counter[15],credit);if(previous+credit<previous){atomicAdd(&s.counter[23],1u);}cells[i].phen.z+=f32(credit)/Q;}
   else if(amount>0u){activity[i].marks.y=tick();activity[i].impact=vec4f(old[j].p.xy,f32(amount)/Q,activity[i].impact.w);atomicAdd(&s.counter[14],1u);let previous=atomicAdd(&s.counter[20],amount);if(previous+amount<previous){atomicAdd(&s.counter[21],1u);}}
 }
@@ -1582,9 +1598,12 @@ fn birthCapacity()->u32 {
     if(c.b.x<=0){c.life.w=0u;atomicSub(&s.counter[13],1u);}
     cells[i]=c;return;
   }
+  budgetAdd(FLOW_attackDamage,damage-blocked);
   if(c.b.x==0.0||intents[i].misc.w!=0u) {
     c.life.w=select(0u,2u,cfg.clouds.w>0||c.res.z>0);c.life.x=0u;c.link=vec4u(0);c.b.w=0.0;c.b.x=round(cfg.clouds.w*Q)+c.res.z;c.res.z=c.b.x;c.p=vec4f(c.p.xy,0,0);
-    if(intents[i].misc.w==0u&&atomicLoad(&s.theftDebit[i])>0u){atomicAdd(&s.counter[22],1u);}
+    // Only damage that penetrated the barrier can cause an energy death.
+    // A shield hit on a cell already starved or overheated is not a kill.
+    if(intents[i].misc.w==0u&&damage>blocked){atomicAdd(&s.counter[22],1u);}
     atomicSub(&s.genes[c.machine.y].refs,1u);atomicSub(&s.counter[1],1u);atomicAdd(&s.counter[7],1u);
     if(c.life.w==2u){atomicAdd(&s.counter[13],1u);}
     geneMetric(c.machine.y,u32(c.phen.z*256.0));cells[i]=c;return;
@@ -1597,7 +1616,7 @@ fn birthCapacity()->u32 {
 ${
   treePrograms
     ? `
-  if(!pay(&c,s.resistance[i]*cfg.bracing.x*DT)){s.resistance[i]=0;}
+  if(!pay(&c,s.resistance[i]*cfg.bracing.x*DT,FLOW_movement)){s.resistance[i]=0;}
   braceDamping=exp(-s.resistance[i]*cfg.bracing.y*DT);
 `
     : ""
@@ -1628,7 +1647,8 @@ ${treePrograms ? "      s.resistance[j]=s.resistance[i];" : ""}
       s.storageFillRemainder[i]*=.5;s.storageFillRemainder[j]=s.storageFillRemainder[i];
       let heading=c.b.y*6.2831853;
       child.p=vec4f(wrapped(c.p.xy+vec2f(cos(heading),sin(heading))*14.0),0,0);
-      let remaining=u32(c.b.x)-quantum(cfg.energy.z);
+      let divisionFee=quantum(cfg.energy.z);budgetRecord(FLOW_reproduction,divisionFee);
+      let remaining=u32(c.b.x)-divisionFee;
       child.b.x=f32(remaining/2u);
       c.b.x=f32(remaining-remaining/2u);
       child.b.y=fract(c.b.y+(random(identity)-.5)*2.0*cfg.misc.x/360.0${treePrograms ? "+s.childState[i*3u+2u].y/360.0" : ""});
@@ -1676,7 +1696,7 @@ ${
       atomicAdd(&s.counter[6],1u);
     }
   }
-  cells[i]=c;
+  cells[i]=c;budgetFlush();
 }
 @compute @workgroup_size(128) fn linkPlan(@builtin(global_invocation_id) id:vec3u) {
   let i=id.x;

@@ -1,4 +1,9 @@
 import {
+  ENERGY_BUDGET_BYTES,
+  decodeEnergyBudget,
+  addEnergyBudgetQuanta,
+} from "./energy-ledger.js";
+import {
   MAX_ENERGY_CAPACITY,
   MAX_STORAGE_CAPACITY,
   MAX_FILL_SCALE,
@@ -323,8 +328,16 @@ async function buildLifeEngine(device, options, allocated) {
         GPUBufferUsage.COPY_DST,
     });
   const state = [storage(n * CELL_BYTES), storage(n * CELL_BYTES)];
-  const treeMemoryOffset =
-    Math.ceil((40 * n + 20 * t + 20 * g + 640) / 16) * 16;
+  const scalarScratchEnd = 40 * n + 20 * t + 20 * g + 640;
+  const hasVectorScratch =
+    cfg.treePrograms ||
+    cfg.executionTrace ||
+    cfg.forkMutation > 0 ||
+    cfg.specializationStrength > 0 ||
+    cfg.linkedRelay > 0;
+  const treeMemoryOffset = hasVectorScratch
+    ? Math.ceil(scalarScratchEnd / 16) * 16
+    : scalarScratchEnd;
   const childStateOffset = treeMemoryOffset + (cfg.treePrograms ? 48 * n : 0);
   const traceOffset = childStateOffset + (cfg.treePrograms ? 48 * n : 0);
   const traceBytes = 16 + 32 * 16 + 8192 * 4 + 1048576 * 4;
@@ -340,7 +353,10 @@ async function buildLifeEngine(device, options, allocated) {
     (cfg.treePrograms ? n * 8 : 0);
   const resistanceOffset = cpuRemainderOffset + n * 4;
   const fillRemainderOffset = resistanceOffset + (cfg.treePrograms ? n * 4 : 0);
-  const scratch = storage(Math.ceil((fillRemainderOffset + n * 8) / 16) * 16),
+  const energyBudgetOffset = fillRemainderOffset + n * 8;
+  const scratch = storage(
+      Math.ceil((energyBudgetOffset + ENERGY_BUDGET_BYTES) / 16) * 16,
+    ),
     genomes = storage(g * GENOME_BYTES),
     archive = storage(128 * GENOME_BYTES),
     food = storage(t * 16 + cfg.sources * 32),
@@ -950,11 +966,14 @@ async function buildLifeEngine(device, options, allocated) {
         throw Error("Body links must be reciprocal local handles");
     });
     {
-      const [stateData, counterData, geneData] = await Promise.all([
+      const [stateData, counterData, geneData, budgetData] = await Promise.all([
         read(state[parity]),
         read(scratch, counterOffset, 128),
         read(scratch, geneOffset, g * 16),
+        read(scratch, energyBudgetOffset, ENERGY_BUDGET_BYTES),
       ]);
+      const budgetWords = new Uint32Array(budgetData);
+      const oldValues = new Float32Array(stateData);
       const oldWords = new Uint32Array(stateData),
         counters = new Uint32Array(counterData),
         stats = new Uint32Array(geneData);
@@ -979,6 +998,7 @@ async function buildLifeEngine(device, options, allocated) {
         const at = slot * 52,
           life = oldWords[at + 31];
         if (life === 1) {
+          addEnergyBudgetQuanta(budgetWords, "turnover", oldValues[at + 4]);
           const gene = oldWords[at + 25];
           if (gene >= g || !stats[gene * 4])
             throw Error("Invalid retiring genome reference");
@@ -1087,7 +1107,14 @@ async function buildLifeEngine(device, options, allocated) {
       counters[24] += prepared.filter((p) => p.secondOrigin).length;
       counters[2] = freeCells.length - seeds.length;
       counters[4] = freeGenes.length - programs.length;
+      for (const packet of packets)
+        addEnergyBudgetQuanta(
+          budgetWords,
+          "arrivals",
+          new Float32Array(packet)[4],
+        );
       // Validation and all allocation decisions precede the first mutation.
+      device.queue.writeBuffer(scratch, energyBudgetOffset, budgetWords);
       counters[28] += retireSlots.length;
       if (retired.size) {
         device.queue.writeBuffer(state[parity], 0, stateData);
@@ -1470,8 +1497,13 @@ async function buildLifeEngine(device, options, allocated) {
       device.queue.writeBuffer(uniform, 0, settings);
     },
     async counters() {
-      const c = new Uint32Array(await read(scratch, counterOffset, 128));
+      const [counterData, budgetData] = await Promise.all([
+        read(scratch, counterOffset, 128),
+        read(scratch, energyBudgetOffset, ENERGY_BUDGET_BYTES),
+      ]);
+      const c = new Uint32Array(counterData);
       return {
+        energyBudget: decodeEnergyBudget(new Uint32Array(budgetData)),
         tick: c[0],
         living: c[1],
         corpses: c[13],
@@ -1646,6 +1678,11 @@ async function buildLifeEngine(device, options, allocated) {
       counters[11] = n + 1;
       counters[12] = programs.length + 1;
       device.queue.writeBuffer(scratch, counterOffset, counters);
+      const budgetWords = new Uint32Array(ENERGY_BUDGET_BYTES / 4);
+      for (let i = 0; i < n; i++)
+        if (cu[i * 52 + 31] === 1)
+          addEnergyBudgetQuanta(budgetWords, "arrivals", cf[i * 52 + 4]);
+      device.queue.writeBuffer(scratch, energyBudgetOffset, budgetWords);
       const nutrients = new Float32Array(t * 4);
       for (let i = 0; i < t * 2; i++) nutrients.set([sunlight, 0], i * 2);
       device.queue.writeBuffer(food, 0, nutrients);

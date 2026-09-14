@@ -65,3 +65,21 @@ Spring links are soft collision barriers. Cells near a segment are repelled and 
 Division mutations are prepared at fixed 16-tick boundaries, independently of frame batching. Selected newborns pause only their program until then; physics and energy costs continue. They get a private genotype and restart its program, while parent and sibling genomes remain unchanged. Typed mutants start with fresh registers and memory and a daughter birth-result of 1; assembly mutants keep inherited registers. Unmutated copies retain their original execution state. If genome slots are full, the daughter resumes as an exact copy and the skipped mutation is counted. [Release details](release-0.8.7.md).
 
 The random-world generator now preserves the full founder grammar and couples sunlight input to reproductive energy costs; see [room for colonies](release-0.9.4.md) and the [structure audit](../research/structure-regression-audit.md).
+
+## Predation and usable-energy histories
+
+The statistics panel plots landed attacks and confirmed attack kills separately.
+A kill is counted once per victim, only when damage penetrates its shield and
+depletes usable energy; unrelated deaths do not count. Stacked plots break down
+usable-energy intake and expenditure, including explicit reserve and gift
+transfers, newcomer seeding, and energy discarded at turnover. They can show
+cumulative totals or interval-average rates per simulated minute. See the
+[metric definitions](release-0.9.5.md).
+
+The GPU records actual credits and debits in 16 cumulative counters, each an
+integer pair extending beyond 32 bits. Per-cell instruction charges are
+aggregated before being added to the global ledger; zero contributions are
+skipped. The plots read a bounded history once per wall-clock second without
+copying whole populations. Reproduce the focused accounting and kill checks
+with `node research/gpu-energy-ledger-check.mjs` and
+`node research/gpu-kill-counter-check.mjs` on a native WebGPU device.

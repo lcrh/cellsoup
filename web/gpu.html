@@ -79,8 +79,9 @@
               <strong id="corpses">—</strong><span>edible corpses</span>
             </div>
             <div>
-              <strong id="attacks">—</strong><span>successful attacks</span>
+              <strong id="attacks">—</strong><span>landed attacks</span>
             </div>
+            <div><strong id="kills">—</strong><span>confirmed kills</span></div>
             <div><strong id="births">—</strong><span>divisions</span></div>
           </div>
           <div class="view-controls">
@@ -114,6 +115,96 @@
             ></canvas
             ><span>Population history <span id="history-range"></span></span>
           </div>
+          <section
+            class="predation-history"
+            aria-label="Attacks and kills over time"
+          >
+            <div class="predation-heading">
+              <h2>
+                Predation over time <span id="predation-history-range"></span>
+              </h2>
+              <label
+                >Show
+                <select id="predation-history-mode">
+                  <option value="rate">Per simulated minute</option>
+                  <option value="total">Cumulative totals</option>
+                </select>
+              </label>
+            </div>
+            <div class="predation-charts">
+              <div>
+                <div class="event-heading">
+                  <span>Landed attacks</span
+                  ><strong id="attacks-history-value">—</strong>
+                </div>
+                <canvas
+                  id="attacks-history"
+                  aria-label="Attacks over simulated time"
+                ></canvas>
+              </div>
+              <div>
+                <div class="event-heading">
+                  <span>Confirmed kills</span
+                  ><strong id="kills-history-value">—</strong>
+                </div>
+                <canvas
+                  id="kills-history"
+                  aria-label="Confirmed attack kills over simulated time"
+                ></canvas>
+              </div>
+            </div>
+            <p class="hint">
+              Same time window as population history, with separate vertical
+              scales. Rates average each sampling interval. Kills count cells
+              whose energy was depleted by an attack; shield-only hits and other
+              deaths are excluded. Totals start at world creation.
+            </p>
+          </section>
+          <section
+            class="energy-history"
+            aria-label="Energy intake and expenditure over time"
+          >
+            <div class="predation-heading">
+              <h2>
+                Where the energy goes <span id="energy-history-range"></span>
+              </h2>
+              <label
+                >Show
+                <select id="energy-history-mode">
+                  <option value="rate">Per simulated minute</option>
+                  <option value="total">Cumulative totals</option>
+                </select>
+              </label>
+            </div>
+            <div class="energy-chart-panel">
+              <div class="event-heading">
+                <span>Energy in</span><strong id="energy-in-total">—</strong>
+              </div>
+              <canvas
+                id="energy-in-history"
+                aria-label="Sources of usable energy over time"
+              ></canvas>
+              <div id="energy-in-legend" class="energy-legend"></div>
+            </div>
+            <div class="energy-chart-panel">
+              <div class="event-heading">
+                <span>Energy out</span><strong id="energy-out-total">—</strong>
+              </div>
+              <canvas
+                id="energy-out-history"
+                aria-label="Uses and losses of usable energy over time"
+              ></canvas>
+              <div id="energy-out-legend" class="energy-legend"></div>
+            </div>
+            <p class="hint">
+              Colored bands show actual usable energy gained or spent, with
+              separate vertical scales. Storing and mobilizing move energy
+              between pools; gifts move it between cells. These transfers appear
+              on the relevant sides, so intake is not all newly produced energy.
+              Failed actions spend no action energy; ordinary computation costs
+              still apply.
+            </p>
+          </section>
           <section
             class="behavior-panel"
             aria-label="Execution trace compression"
@@ -287,7 +378,6 @@
             <span id="division-mutations">0</span> division mutations ·
             <span id="archive">0</span> archived lineages ·
             <span id="crossovers">0</span> crossovers ·
-            <span id="kills">0</span> attack kills ·
             <span id="eaten">0</span> energy eaten ·
             <span id="capacity-arrivals">0</span> newcomers at capacity
           </p>
