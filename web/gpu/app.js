@@ -14,6 +14,7 @@ const functionMasks = Object.fromEntries(
   [0, 1, 2, 3].map((i) => ["functionMask" + i, 4294967295]),
 );
 import { createRenderer } from "./renderer.js";
+import { attachCameraControls } from "./camera-controls.js";
 import { createExecutionMeter } from "./trace-meter.js";
 import { createBehaviorMeter } from "./behavior-meter.js";
 import { appendEventSample, drawEventChart } from "./event-history.js";
@@ -892,81 +893,20 @@ $("copy-export").onclick = async () => {
   }
 };
 
-let pointer = null;
-canvas.addEventListener("pointerdown", (event) => {
-  if (!engine || busy) return;
-  pointer = {
-    id: event.pointerId,
-    x: event.clientX,
-    y: event.clientY,
-    startX: event.clientX,
-    startY: event.clientY,
-    moved: false,
-  };
-  canvas.setPointerCapture(event.pointerId);
-});
-canvas.addEventListener("pointermove", (event) => {
-  if (!pointer || event.pointerId !== pointer.id) return;
-  const dx = event.clientX - pointer.x,
-    dy = event.clientY - pointer.y;
-  if (
-    Math.hypot(event.clientX - pointer.startX, event.clientY - pointer.startY) >
-    4
-  )
-    pointer.moved = true;
-  if (pointer.moved) {
-    camera.overview = false;
-    camera.x -= (dx * camera.width) / canvas.clientWidth;
-    camera.y -= (dy * camera.width) / canvas.clientWidth;
+attachCameraControls(canvas, camera, {
+  enabled: () => !!engine && !busy,
+  maxWidth: () =>
+    engine.cfg.side *
+    32 *
+    Math.max(1, canvas.clientWidth / canvas.clientHeight),
+  isFollowing: () => $("follow").checked,
+  onNavigate: () => {
     $("follow").checked = false;
-  }
-  pointer.x = event.clientX;
-  pointer.y = event.clientY;
-});
-canvas.addEventListener("pointerup", (event) => {
-  if (!pointer || event.pointerId !== pointer.id) return;
-  if (!pointer.moved) {
-    const r = canvas.getBoundingClientRect();
-    pendingPick = {
-      x:
-        camera.x +
-        ((event.clientX - r.left - r.width / 2) * camera.width) / r.width,
-      y:
-        camera.y +
-        ((event.clientY - r.top - r.height / 2) * camera.width) / r.width,
-      radius: Math.max(8, (camera.width / r.width) * 12),
-    };
-  }
-  pointer = null;
-});
-canvas.addEventListener("pointercancel", () => {
-  pointer = null;
-});
-canvas.addEventListener(
-  "wheel",
-  (event) => {
-    if (!engine || busy) return;
-    event.preventDefault();
-    const r = canvas.getBoundingClientRect(),
-      old = camera.width;
-    camera.overview = false;
-    camera.width = Math.min(
-      engine.cfg.side *
-        32 *
-        Math.max(1, canvas.clientWidth / canvas.clientHeight),
-      Math.max(80, old * Math.exp(event.deltaY * 0.0015)),
-    );
-    if (!$("follow").checked) {
-      camera.x +=
-        ((event.clientX - r.left - r.width / 2) / r.width) *
-        (old - camera.width);
-      camera.y +=
-        ((event.clientY - r.top - r.height / 2) / r.width) *
-        (old - camera.width);
-    }
   },
-  { passive: false },
-);
+  onPick: (point) => {
+    pendingPick = point;
+  },
+});
 document.addEventListener("keydown", (event) => {
   if (
     event.repeat ||
@@ -1032,7 +972,7 @@ function renderReference() {
     toggle.onchange = () => {
       const id = TREE_SCHEMA.findIndex((s) => s.name === fn.name),
         key = "functionMask" + Math.floor(id / 32),
-        bit = 1 << (id % 32);
+        bit = 1 << id % 32;
       functionMasks[key] =
         (toggle.checked
           ? functionMasks[key] | bit
