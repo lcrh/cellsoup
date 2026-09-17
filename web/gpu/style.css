@@ -44,6 +44,13 @@ header {
   color: #9caeac;
   font-size: 13px;
 }
+.site-backlink {
+  color: #6f8683;
+  font-size: 12px;
+}
+.site-backlink:hover {
+  color: #9fdccc;
+}
 .badge {
   font-size: 10px;
   text-transform: uppercase;
@@ -615,6 +622,9 @@ footer {
     font-size: 20px;
   }
   .edition {
+    font-size: 10px;
+  }
+  .site-backlink {
     font-size: 10px;
   }
   main {
